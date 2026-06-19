@@ -14,6 +14,7 @@ Simple C# WinForms and OpenCvSharp4 image viewer for Visual Studio 2019 and .NET
 - Keep the loaded OpenCV `Mat` ready for future image processing.
 - Build as x64 and copy the OpenCV native runtime beside the executable.
 - Show four independent binary preprocessing results at the same time.
+- Keep image viewing on the first main tab and binary preprocessing on the second main tab.
 - Preprocess 1 and 2 detect bright objects with `Gray > Threshold`.
 - Preprocess 3 and 4 detect dark objects with `Gray < Threshold`.
 - Configure enable, threshold, erode, dilate, open, and close independently for every pipeline.
