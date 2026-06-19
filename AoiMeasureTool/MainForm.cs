@@ -24,6 +24,7 @@ namespace AoiMeasureTool
         private NumericUpDown[] _openInputs;
         private NumericUpDown[] _closeInputs;
         private bool _synchronizingThreshold;
+        private int _selectedPreprocessIndex;
         private float _imageScale = 1f;
         private float _fitScale = 1f;
         private bool _isDraggingImage;
@@ -56,11 +57,13 @@ namespace AoiMeasureTool
                     }
 
                     displayImage = BitmapConverter.ToBitmap(loadedImage);
+                    var binaryOriginalImage = new Bitmap(displayImage);
 
                     var oldImage = pictureBoxImage.Image;
                     pictureBoxImage.Image = displayImage;
                     displayImage = null;
                     oldImage?.Dispose();
+                    SetPictureBoxImage(pictureBoxBinaryOriginal, binaryOriginalImage);
                     FitImageToViewport();
 
                     _sourceImage?.Dispose();
@@ -165,11 +168,67 @@ namespace AoiMeasureTool
             if (_grayImage == null || _grayImage.Empty() || !_preprocessEnabledChecks[index].Checked)
             {
                 SetPictureBoxImage(_preprocessPictureBoxes[index], null);
+                if (index == _selectedPreprocessIndex)
+                {
+                    UpdateActivePreprocessPreview();
+                }
                 return;
             }
 
             _preprocessImages[index] = ImageProcessor.Preprocess(_grayImage, CreatePreprocessParam(index));
             SetPictureBoxImage(_preprocessPictureBoxes[index], BitmapConverter.ToBitmap(_preprocessImages[index]));
+            if (index == _selectedPreprocessIndex)
+            {
+                UpdateActivePreprocessPreview();
+            }
+        }
+
+        private void PreprocessThumbnail_Click(object sender, EventArgs e)
+        {
+            var control = sender as Control;
+            if (control == null || control.Tag == null)
+            {
+                return;
+            }
+
+            _selectedPreprocessIndex = Convert.ToInt32(control.Tag);
+            tabControlPreprocess.SelectedIndex = _selectedPreprocessIndex;
+            UpdateActivePreprocessPreview();
+        }
+
+        private void UpdateActivePreprocessPreview()
+        {
+            if (_preprocessPictureBoxes == null)
+            {
+                return;
+            }
+
+            var sourceImage = _preprocessPictureBoxes[_selectedPreprocessIndex].Image;
+            SetPictureBoxImage(
+                pictureBoxActivePreprocess,
+                sourceImage == null ? null : new Bitmap(sourceImage));
+            labelActivePreprocess.Text = string.Format(
+                "正在調整：前處理 {0}（按住左鍵看原圖）",
+                _selectedPreprocessIndex + 1);
+        }
+
+        private void ActivePreprocess_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left || pictureBoxBinaryOriginal.Image == null)
+            {
+                return;
+            }
+
+            SetPictureBoxImage(pictureBoxActivePreprocess, new Bitmap(pictureBoxBinaryOriginal.Image));
+            labelActivePreprocess.Text = "原圖（放開左鍵返回處理結果）";
+        }
+
+        private void ActivePreprocess_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                UpdateActivePreprocessPreview();
+            }
         }
 
         private static void SetPictureBoxImage(PictureBox pictureBox, Bitmap image)
@@ -377,6 +436,8 @@ namespace AoiMeasureTool
         {
             pictureBoxImage.Image?.Dispose();
             pictureBoxImage.Image = null;
+            SetPictureBoxImage(pictureBoxBinaryOriginal, null);
+            SetPictureBoxImage(pictureBoxActivePreprocess, null);
             _sourceImage?.Dispose();
             _sourceImage = null;
             _grayImage?.Dispose();
