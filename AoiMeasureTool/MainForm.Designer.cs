@@ -21,7 +21,7 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Label labelTitle;
         private System.Windows.Forms.Label labelImageInfo;
         private System.Windows.Forms.Label labelWorkspace;
-        private System.Windows.Forms.PictureBox pictureBoxImage;
+        private AoiMeasureTool.ZoomablePictureBox pictureBoxImage;
         private System.Windows.Forms.OpenFileDialog openFileDialogImage;
 
         protected override void Dispose(bool disposing)
@@ -51,7 +51,7 @@ namespace AoiMeasureTool
             this.labelNavigation = new System.Windows.Forms.Label();
             this.labelAppName = new System.Windows.Forms.Label();
             this.panelMain = new System.Windows.Forms.Panel();
-            this.pictureBoxImage = new System.Windows.Forms.PictureBox();
+            this.pictureBoxImage = new AoiMeasureTool.ZoomablePictureBox();
             this.labelWorkspace = new System.Windows.Forms.Label();
             this.panelHeader = new System.Windows.Forms.Panel();
             this.labelImageInfo = new System.Windows.Forms.Label();
@@ -60,7 +60,6 @@ namespace AoiMeasureTool
             this.menuStripMain.SuspendLayout();
             this.panelSidebar.SuspendLayout();
             this.panelMain.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxImage)).BeginInit();
             this.panelHeader.SuspendLayout();
             this.SuspendLayout();
             //
@@ -209,13 +208,11 @@ namespace AoiMeasureTool
             // pictureBoxImage
             //
             this.pictureBoxImage.BackColor = System.Drawing.Color.FromArgb(239, 241, 243);
-            this.pictureBoxImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBoxImage.Location = new System.Drawing.Point(32, 118);
             this.pictureBoxImage.Name = "pictureBoxImage";
             this.pictureBoxImage.Size = new System.Drawing.Size(820, 600);
-            this.pictureBoxImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxImage.TabIndex = 2;
-            this.pictureBoxImage.TabStop = false;
+            this.pictureBoxImage.TabStop = true;
             //
             // labelWorkspace
             //
@@ -288,7 +285,6 @@ namespace AoiMeasureTool
             this.panelSidebar.PerformLayout();
             this.panelMain.ResumeLayout(false);
             this.panelMain.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxImage)).EndInit();
             this.panelHeader.ResumeLayout(false);
             this.panelHeader.PerformLayout();
             this.ResumeLayout(false);
