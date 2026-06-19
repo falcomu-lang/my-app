@@ -21,7 +21,8 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Label labelTitle;
         private System.Windows.Forms.Label labelImageInfo;
         private System.Windows.Forms.Label labelWorkspace;
-        private AoiMeasureTool.ZoomablePictureBox pictureBoxImage;
+        private System.Windows.Forms.Panel panelImageViewport;
+        private System.Windows.Forms.PictureBox pictureBoxImage;
         private System.Windows.Forms.OpenFileDialog openFileDialogImage;
 
         protected override void Dispose(bool disposing)
@@ -51,7 +52,8 @@ namespace AoiMeasureTool
             this.labelNavigation = new System.Windows.Forms.Label();
             this.labelAppName = new System.Windows.Forms.Label();
             this.panelMain = new System.Windows.Forms.Panel();
-            this.pictureBoxImage = new AoiMeasureTool.ZoomablePictureBox();
+            this.panelImageViewport = new System.Windows.Forms.Panel();
+            this.pictureBoxImage = new System.Windows.Forms.PictureBox();
             this.labelWorkspace = new System.Windows.Forms.Label();
             this.panelHeader = new System.Windows.Forms.Panel();
             this.labelImageInfo = new System.Windows.Forms.Label();
@@ -60,6 +62,8 @@ namespace AoiMeasureTool
             this.menuStripMain.SuspendLayout();
             this.panelSidebar.SuspendLayout();
             this.panelMain.SuspendLayout();
+            this.panelImageViewport.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxImage)).BeginInit();
             this.panelHeader.SuspendLayout();
             this.SuspendLayout();
             //
@@ -197,7 +201,7 @@ namespace AoiMeasureTool
             // panelMain
             //
             this.panelMain.BackColor = System.Drawing.Color.FromArgb(248, 249, 250);
-            this.panelMain.Controls.Add(this.pictureBoxImage);
+            this.panelMain.Controls.Add(this.panelImageViewport);
             this.panelMain.Controls.Add(this.labelWorkspace);
             this.panelMain.Controls.Add(this.panelHeader);
             this.panelMain.Location = new System.Drawing.Point(240, 42);
@@ -205,14 +209,32 @@ namespace AoiMeasureTool
             this.panelMain.Size = new System.Drawing.Size(1040, 758);
             this.panelMain.TabIndex = 2;
             //
+            // panelImageViewport
+            //
+            this.panelImageViewport.BackColor = System.Drawing.Color.FromArgb(239, 241, 243);
+            this.panelImageViewport.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelImageViewport.Controls.Add(this.pictureBoxImage);
+            this.panelImageViewport.Location = new System.Drawing.Point(32, 118);
+            this.panelImageViewport.Name = "panelImageViewport";
+            this.panelImageViewport.Size = new System.Drawing.Size(820, 600);
+            this.panelImageViewport.TabIndex = 2;
+            this.panelImageViewport.MouseEnter += new System.EventHandler(this.ImageViewport_MouseEnter);
+            this.panelImageViewport.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.PictureBoxImage_MouseWheel);
+            //
             // pictureBoxImage
             //
             this.pictureBoxImage.BackColor = System.Drawing.Color.FromArgb(239, 241, 243);
-            this.pictureBoxImage.Location = new System.Drawing.Point(32, 118);
+            this.pictureBoxImage.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxImage.Name = "pictureBoxImage";
-            this.pictureBoxImage.Size = new System.Drawing.Size(820, 600);
-            this.pictureBoxImage.TabIndex = 2;
+            this.pictureBoxImage.Size = new System.Drawing.Size(818, 598);
+            this.pictureBoxImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxImage.TabIndex = 0;
             this.pictureBoxImage.TabStop = true;
+            this.pictureBoxImage.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PictureBoxImage_MouseDown);
+            this.pictureBoxImage.MouseEnter += new System.EventHandler(this.ImageViewport_MouseEnter);
+            this.pictureBoxImage.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PictureBoxImage_MouseMove);
+            this.pictureBoxImage.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PictureBoxImage_MouseUp);
+            this.pictureBoxImage.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.PictureBoxImage_MouseWheel);
             //
             // labelWorkspace
             //
@@ -285,6 +307,8 @@ namespace AoiMeasureTool
             this.panelSidebar.PerformLayout();
             this.panelMain.ResumeLayout(false);
             this.panelMain.PerformLayout();
+            this.panelImageViewport.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxImage)).EndInit();
             this.panelHeader.ResumeLayout(false);
             this.panelHeader.PerformLayout();
             this.ResumeLayout(false);
