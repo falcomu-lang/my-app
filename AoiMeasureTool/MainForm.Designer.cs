@@ -108,7 +108,9 @@ namespace AoiMeasureTool
             this.Controls.Add(this.pictureBoxImage);
             this.Controls.Add(this.buttonClose);
             this.Controls.Add(this.buttonLoadImage);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = true;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Image Viewer";
