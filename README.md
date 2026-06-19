@@ -12,6 +12,7 @@ Simple C# WinForms and OpenCvSharp4 image viewer for Visual Studio 2019 and .NET
 - Fit the image when loaded, zoom with the mouse wheel, and pan by dragging with the left mouse button.
 - Display file name and image dimensions.
 - Keep the loaded OpenCV `Mat` ready for future image processing.
+- Build as x64 and copy the OpenCV native runtime beside the executable.
 
 ## Open in Visual Studio
 
