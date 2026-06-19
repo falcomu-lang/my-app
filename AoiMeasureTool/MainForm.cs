@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using OpenCvSharp.Extensions;
 using Cv2 = OpenCvSharp.Cv2;
+using ColorConversionCodes = OpenCvSharp.ColorConversionCodes;
 using CvMat = OpenCvSharp.Mat;
 using ImreadModes = OpenCvSharp.ImreadModes;
 
@@ -12,6 +13,17 @@ namespace AoiMeasureTool
     public partial class MainForm : Form
     {
         private CvMat _sourceImage;
+        private CvMat _grayImage;
+        private readonly CvMat[] _preprocessImages = new CvMat[4];
+        private PictureBox[] _preprocessPictureBoxes;
+        private CheckBox[] _preprocessEnabledChecks;
+        private TrackBar[] _thresholdTrackBars;
+        private NumericUpDown[] _thresholdInputs;
+        private NumericUpDown[] _erodeInputs;
+        private NumericUpDown[] _dilateInputs;
+        private NumericUpDown[] _openInputs;
+        private NumericUpDown[] _closeInputs;
+        private bool _synchronizingThreshold;
         private float _imageScale = 1f;
         private float _fitScale = 1f;
         private bool _isDraggingImage;
@@ -20,6 +32,7 @@ namespace AoiMeasureTool
         public MainForm()
         {
             InitializeComponent();
+            InitializePreprocessControls();
         }
 
         private void LoadImageButton_Click(object sender, EventArgs e)
@@ -54,6 +67,11 @@ namespace AoiMeasureTool
                     _sourceImage = loadedImage;
                     loadedImage = null;
 
+                    _grayImage?.Dispose();
+                    _grayImage = new CvMat();
+                    Cv2.CvtColor(_sourceImage, _grayImage, ColorConversionCodes.BGR2GRAY);
+                    UpdateAllPreprocessImages();
+
                     labelImageInfo.Text = string.Format(
                         "{0}    {1} x {2} px",
                         Path.GetFileName(openFileDialogImage.FileName),
@@ -80,6 +98,171 @@ namespace AoiMeasureTool
         private void CloseButton_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void InitializePreprocessControls()
+        {
+            _preprocessPictureBoxes = new[]
+            {
+                pictureBoxPreprocess1,
+                pictureBoxPreprocess2,
+                pictureBoxPreprocess3,
+                pictureBoxPreprocess4
+            };
+
+            _preprocessEnabledChecks = new[]
+            {
+                checkBoxPreprocess1Enabled,
+                checkBoxPreprocess2Enabled,
+                checkBoxPreprocess3Enabled,
+                checkBoxPreprocess4Enabled
+            };
+
+            _thresholdTrackBars = new[] { trackBarThreshold1, trackBarThreshold2, trackBarThreshold3, trackBarThreshold4 };
+            _thresholdInputs = new[] { numericThreshold1, numericThreshold2, numericThreshold3, numericThreshold4 };
+            _erodeInputs = new[] { numericErode1, numericErode2, numericErode3, numericErode4 };
+            _dilateInputs = new[] { numericDilate1, numericDilate2, numericDilate3, numericDilate4 };
+            _openInputs = new[] { numericOpen1, numericOpen2, numericOpen3, numericOpen4 };
+            _closeInputs = new[] { numericClose1, numericClose2, numericClose3, numericClose4 };
+
+            for (var i = 0; i < 4; i++)
+            {
+                SetPreprocessControlsEnabled(i, _preprocessEnabledChecks[i].Checked);
+            }
+        }
+
+        private PreprocessParam CreatePreprocessParam(int index)
+        {
+            return new PreprocessParam
+            {
+                Enabled = _preprocessEnabledChecks[index].Checked,
+                WhiteObject = index < 2,
+                Threshold = (int)_thresholdInputs[index].Value,
+                ErodeIterations = (int)_erodeInputs[index].Value,
+                DilateIterations = (int)_dilateInputs[index].Value,
+                OpenIterations = (int)_openInputs[index].Value,
+                CloseIterations = (int)_closeInputs[index].Value
+            };
+        }
+
+        private void UpdateAllPreprocessImages()
+        {
+            if (_preprocessPictureBoxes == null)
+            {
+                return;
+            }
+
+            for (var i = 0; i < 4; i++)
+            {
+                UpdatePreprocessImage(i);
+            }
+        }
+
+        private void UpdatePreprocessImage(int index)
+        {
+            DisposePreprocessImage(index);
+
+            if (_grayImage == null || _grayImage.Empty() || !_preprocessEnabledChecks[index].Checked)
+            {
+                SetPictureBoxImage(_preprocessPictureBoxes[index], null);
+                return;
+            }
+
+            _preprocessImages[index] = ImageProcessor.Preprocess(_grayImage, CreatePreprocessParam(index));
+            SetPictureBoxImage(_preprocessPictureBoxes[index], BitmapConverter.ToBitmap(_preprocessImages[index]));
+        }
+
+        private static void SetPictureBoxImage(PictureBox pictureBox, Bitmap image)
+        {
+            var oldImage = pictureBox.Image;
+            pictureBox.Image = image;
+            oldImage?.Dispose();
+        }
+
+        private void DisposePreprocessImage(int index)
+        {
+            _preprocessImages[index]?.Dispose();
+            _preprocessImages[index] = null;
+        }
+
+        private void PreprocessEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_preprocessEnabledChecks == null)
+            {
+                return;
+            }
+
+            var index = Array.IndexOf(_preprocessEnabledChecks, sender as CheckBox);
+            if (index < 0)
+            {
+                return;
+            }
+
+            SetPreprocessControlsEnabled(index, _preprocessEnabledChecks[index].Checked);
+            UpdatePreprocessImage(index);
+        }
+
+        private void SetPreprocessControlsEnabled(int index, bool enabled)
+        {
+            _thresholdTrackBars[index].Enabled = enabled;
+            _thresholdInputs[index].Enabled = enabled;
+            _erodeInputs[index].Enabled = enabled;
+            _dilateInputs[index].Enabled = enabled;
+            _openInputs[index].Enabled = enabled;
+            _closeInputs[index].Enabled = enabled;
+        }
+
+        private void ThresholdTrackBar_Scroll(object sender, EventArgs e)
+        {
+            if (_synchronizingThreshold || _thresholdTrackBars == null)
+            {
+                return;
+            }
+
+            var index = Array.IndexOf(_thresholdTrackBars, sender as TrackBar);
+            if (index < 0)
+            {
+                return;
+            }
+
+            _synchronizingThreshold = true;
+            _thresholdInputs[index].Value = _thresholdTrackBars[index].Value;
+            _synchronizingThreshold = false;
+            UpdatePreprocessImage(index);
+        }
+
+        private void ThresholdValue_ValueChanged(object sender, EventArgs e)
+        {
+            if (_synchronizingThreshold || _thresholdInputs == null)
+            {
+                return;
+            }
+
+            var index = Array.IndexOf(_thresholdInputs, sender as NumericUpDown);
+            if (index < 0)
+            {
+                return;
+            }
+
+            _synchronizingThreshold = true;
+            _thresholdTrackBars[index].Value = (int)_thresholdInputs[index].Value;
+            _synchronizingThreshold = false;
+            UpdatePreprocessImage(index);
+        }
+
+        private void MorphologyValue_ValueChanged(object sender, EventArgs e)
+        {
+            if (_erodeInputs == null)
+            {
+                return;
+            }
+
+            var input = sender as NumericUpDown;
+            var index = Array.IndexOf(_erodeInputs, input);
+            if (index < 0) index = Array.IndexOf(_dilateInputs, input);
+            if (index < 0) index = Array.IndexOf(_openInputs, input);
+            if (index < 0) index = Array.IndexOf(_closeInputs, input);
+            if (index >= 0) UpdatePreprocessImage(index);
         }
 
         private void FitImageToViewport()
@@ -196,6 +379,17 @@ namespace AoiMeasureTool
             pictureBoxImage.Image = null;
             _sourceImage?.Dispose();
             _sourceImage = null;
+            _grayImage?.Dispose();
+            _grayImage = null;
+
+            for (var i = 0; i < _preprocessImages.Length; i++)
+            {
+                DisposePreprocessImage(i);
+                if (_preprocessPictureBoxes != null)
+                {
+                    SetPictureBoxImage(_preprocessPictureBoxes[i], null);
+                }
+            }
         }
     }
 }
