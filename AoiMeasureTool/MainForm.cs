@@ -2,11 +2,15 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using OpenCvSharp;
+using OpenCvSharp.Extensions;
 
 namespace AoiMeasureTool
 {
     public partial class MainForm : Form
     {
+        private Mat _sourceImage;
+
         public MainForm()
         {
             InitializeComponent();
@@ -21,18 +25,38 @@ namespace AoiMeasureTool
 
             try
             {
-                using (var sourceImage = Image.FromFile(openFileDialogImage.FileName))
+                Mat loadedImage = null;
+                Bitmap displayImage = null;
+
+                try
                 {
-                    var displayImage = new Bitmap(sourceImage);
+                    loadedImage = Cv2.ImRead(openFileDialogImage.FileName, ImreadModes.Color);
+                    if (loadedImage.Empty())
+                    {
+                        throw new InvalidOperationException("OpenCV could not decode this image.");
+                    }
+
+                    displayImage = BitmapConverter.ToBitmap(loadedImage);
+
                     var oldImage = pictureBoxImage.Image;
                     pictureBoxImage.Image = displayImage;
+                    displayImage = null;
                     oldImage?.Dispose();
+
+                    _sourceImage?.Dispose();
+                    _sourceImage = loadedImage;
+                    loadedImage = null;
 
                     labelImageInfo.Text = string.Format(
                         "{0}    {1} x {2} px",
                         Path.GetFileName(openFileDialogImage.FileName),
-                        displayImage.Width,
-                        displayImage.Height);
+                        _sourceImage.Width,
+                        _sourceImage.Height);
+                }
+                finally
+                {
+                    displayImage?.Dispose();
+                    loadedImage?.Dispose();
                 }
             }
             catch (Exception ex)
@@ -55,6 +79,8 @@ namespace AoiMeasureTool
         {
             pictureBoxImage.Image?.Dispose();
             pictureBoxImage.Image = null;
+            _sourceImage?.Dispose();
+            _sourceImage = null;
         }
     }
 }

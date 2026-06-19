@@ -1,14 +1,15 @@
 # WinForms Image Viewer
 
-Simple C# WinForms image viewer for Visual Studio 2019 and .NET Framework 4.8.
+Simple C# WinForms and OpenCvSharp4 image viewer for Visual Studio 2019 and .NET Framework 4.8.
 
 ## Features
 
 - Fixed 1920 x 1080 interface.
 - Standard WinForms Designer controls with fixed locations and sizes.
-- Load BMP, JPG, PNG, and TIFF images.
+- Load BMP, JPG, PNG, and TIFF images through `Cv2.ImRead`.
 - Display the selected image with `PictureBoxSizeMode.Zoom`.
 - Display file name and image dimensions.
+- Keep the loaded OpenCV `Mat` ready for future image processing.
 
 ## Open in Visual Studio
 
