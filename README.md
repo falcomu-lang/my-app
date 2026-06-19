@@ -4,7 +4,7 @@ Simple C# WinForms and OpenCvSharp4 image viewer for Visual Studio 2019 and .NET
 
 ## Features
 
-- Fixed 1920 x 1080 interface.
+- Fixed 1280 x 800 interface with an 820 x 600 image preview.
 - Standard WinForms Designer controls with fixed locations and sizes.
 - Light desktop-tool layout with a top menu, left navigation, and main preview workspace.
 - Load BMP, JPG, PNG, and TIFF images through `Cv2.ImRead`.

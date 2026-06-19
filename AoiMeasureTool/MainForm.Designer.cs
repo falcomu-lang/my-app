@@ -77,7 +77,7 @@ namespace AoiMeasureTool
             this.menuStripMain.Location = new System.Drawing.Point(0, 0);
             this.menuStripMain.Name = "menuStripMain";
             this.menuStripMain.Padding = new System.Windows.Forms.Padding(18, 8, 0, 8);
-            this.menuStripMain.Size = new System.Drawing.Size(1920, 42);
+            this.menuStripMain.Size = new System.Drawing.Size(1280, 42);
             this.menuStripMain.TabIndex = 0;
             //
             // menuFile
@@ -141,7 +141,7 @@ namespace AoiMeasureTool
             this.panelSidebar.Controls.Add(this.labelAppName);
             this.panelSidebar.Location = new System.Drawing.Point(0, 42);
             this.panelSidebar.Name = "panelSidebar";
-            this.panelSidebar.Size = new System.Drawing.Size(300, 1038);
+            this.panelSidebar.Size = new System.Drawing.Size(240, 758);
             this.panelSidebar.TabIndex = 1;
             //
             // labelOpenCvStatus
@@ -149,7 +149,7 @@ namespace AoiMeasureTool
             this.labelOpenCvStatus.AutoSize = true;
             this.labelOpenCvStatus.Font = new System.Drawing.Font("Microsoft JhengHei UI", 10F);
             this.labelOpenCvStatus.ForeColor = System.Drawing.Color.FromArgb(110, 115, 120);
-            this.labelOpenCvStatus.Location = new System.Drawing.Point(24, 986);
+            this.labelOpenCvStatus.Location = new System.Drawing.Point(24, 706);
             this.labelOpenCvStatus.Name = "labelOpenCvStatus";
             this.labelOpenCvStatus.Size = new System.Drawing.Size(147, 18);
             this.labelOpenCvStatus.TabIndex = 3;
@@ -166,7 +166,7 @@ namespace AoiMeasureTool
             this.buttonLoadImage.Location = new System.Drawing.Point(16, 116);
             this.buttonLoadImage.Name = "buttonLoadImage";
             this.buttonLoadImage.Padding = new System.Windows.Forms.Padding(14, 0, 0, 0);
-            this.buttonLoadImage.Size = new System.Drawing.Size(268, 48);
+            this.buttonLoadImage.Size = new System.Drawing.Size(208, 48);
             this.buttonLoadImage.TabIndex = 2;
             this.buttonLoadImage.Text = "+   讀取圖片";
             this.buttonLoadImage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -201,9 +201,9 @@ namespace AoiMeasureTool
             this.panelMain.Controls.Add(this.pictureBoxImage);
             this.panelMain.Controls.Add(this.labelWorkspace);
             this.panelMain.Controls.Add(this.panelHeader);
-            this.panelMain.Location = new System.Drawing.Point(300, 42);
+            this.panelMain.Location = new System.Drawing.Point(240, 42);
             this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(1620, 1038);
+            this.panelMain.Size = new System.Drawing.Size(1040, 758);
             this.panelMain.TabIndex = 2;
             //
             // pictureBoxImage
@@ -212,7 +212,7 @@ namespace AoiMeasureTool
             this.pictureBoxImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBoxImage.Location = new System.Drawing.Point(32, 118);
             this.pictureBoxImage.Name = "pictureBoxImage";
-            this.pictureBoxImage.Size = new System.Drawing.Size(1556, 888);
+            this.pictureBoxImage.Size = new System.Drawing.Size(820, 600);
             this.pictureBoxImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxImage.TabIndex = 2;
             this.pictureBoxImage.TabStop = false;
@@ -236,7 +236,7 @@ namespace AoiMeasureTool
             this.panelHeader.Controls.Add(this.labelTitle);
             this.panelHeader.Location = new System.Drawing.Point(0, 0);
             this.panelHeader.Name = "panelHeader";
-            this.panelHeader.Size = new System.Drawing.Size(1620, 72);
+            this.panelHeader.Size = new System.Drawing.Size(1040, 72);
             this.panelHeader.TabIndex = 0;
             //
             // labelImageInfo
@@ -270,7 +270,7 @@ namespace AoiMeasureTool
             //
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(248, 249, 250);
-            this.ClientSize = new System.Drawing.Size(1920, 1080);
+            this.ClientSize = new System.Drawing.Size(1280, 800);
             this.Controls.Add(this.panelMain);
             this.Controls.Add(this.panelSidebar);
             this.Controls.Add(this.menuStripMain);
