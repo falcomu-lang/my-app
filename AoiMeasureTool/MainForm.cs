@@ -166,7 +166,7 @@ namespace AoiMeasureTool
             }
         }
 
-        private void UpdatePreprocessImage(int index)
+        private void UpdatePreprocessImage(int index, bool preserveActiveView = false)
         {
             DisposePreprocessImage(index);
 
@@ -175,7 +175,7 @@ namespace AoiMeasureTool
                 SetPictureBoxImage(_preprocessPictureBoxes[index], null);
                 if (index == _selectedPreprocessIndex)
                 {
-                    UpdateActivePreprocessPreview();
+                    UpdateActivePreprocessPreview(false);
                 }
                 return;
             }
@@ -184,7 +184,7 @@ namespace AoiMeasureTool
             SetPictureBoxImage(_preprocessPictureBoxes[index], BitmapConverter.ToBitmap(_preprocessImages[index]));
             if (index == _selectedPreprocessIndex)
             {
-                UpdateActivePreprocessPreview();
+                UpdateActivePreprocessPreview(preserveActiveView);
             }
         }
 
@@ -198,10 +198,10 @@ namespace AoiMeasureTool
 
             _selectedPreprocessIndex = Convert.ToInt32(control.Tag);
             tabControlPreprocess.SelectedIndex = _selectedPreprocessIndex;
-            UpdateActivePreprocessPreview();
+            UpdateActivePreprocessPreview(false);
         }
 
-        private void UpdateActivePreprocessPreview()
+        private void UpdateActivePreprocessPreview(bool preserveView = false)
         {
             if (_preprocessPictureBoxes == null || _showingOriginalInActivePreview)
             {
@@ -209,7 +209,28 @@ namespace AoiMeasureTool
             }
 
             var sourceImage = _preprocessPictureBoxes[_selectedPreprocessIndex].Image;
-            SetActivePreviewImage(sourceImage == null ? null : new Bitmap(sourceImage));
+            if (sourceImage == null)
+            {
+                SetActivePreviewImage(null);
+            }
+            else if (preserveView && pictureBoxActivePreprocess.Image != null)
+            {
+                var savedScale = _activeImageScale;
+                var savedLeft = pictureBoxActivePreprocess.Left;
+                var savedTop = pictureBoxActivePreprocess.Top;
+                SetPictureBoxImage(pictureBoxActivePreprocess, new Bitmap(sourceImage));
+                _activeImageScale = savedScale;
+                pictureBoxActivePreprocess.Size = new Size(
+                    Math.Max(1, (int)Math.Round(pictureBoxActivePreprocess.Image.Width * _activeImageScale)),
+                    Math.Max(1, (int)Math.Round(pictureBoxActivePreprocess.Image.Height * _activeImageScale)));
+                pictureBoxActivePreprocess.Left = savedLeft;
+                pictureBoxActivePreprocess.Top = savedTop;
+                ConstrainActiveImagePosition();
+            }
+            else
+            {
+                SetActivePreviewImage(new Bitmap(sourceImage));
+            }
             labelActivePreprocess.Text = string.Format(
                 "前處理 {0}｜滾輪縮放、左鍵拖曳、右鍵看原圖",
                 _selectedPreprocessIndex + 1);
@@ -255,7 +276,7 @@ namespace AoiMeasureTool
             if (e.Button == MouseButtons.Right)
             {
                 _showingOriginalInActivePreview = false;
-                UpdateActivePreprocessPreview();
+                UpdateActivePreprocessPreview(false);
                 return;
             }
 
@@ -362,7 +383,7 @@ namespace AoiMeasureTool
             }
 
             SetPreprocessControlsEnabled(index, _preprocessEnabledChecks[index].Checked);
-            UpdatePreprocessImage(index);
+            UpdatePreprocessImage(index, false);
         }
 
         private void SetPreprocessControlsEnabled(int index, bool enabled)
@@ -391,7 +412,7 @@ namespace AoiMeasureTool
             _synchronizingThreshold = true;
             _thresholdInputs[index].Value = _thresholdTrackBars[index].Value;
             _synchronizingThreshold = false;
-            UpdatePreprocessImage(index);
+            UpdatePreprocessImage(index, true);
         }
 
         private void ThresholdValue_ValueChanged(object sender, EventArgs e)
@@ -410,7 +431,7 @@ namespace AoiMeasureTool
             _synchronizingThreshold = true;
             _thresholdTrackBars[index].Value = (int)_thresholdInputs[index].Value;
             _synchronizingThreshold = false;
-            UpdatePreprocessImage(index);
+            UpdatePreprocessImage(index, true);
         }
 
         private void MorphologyValue_ValueChanged(object sender, EventArgs e)
@@ -425,7 +446,7 @@ namespace AoiMeasureTool
             if (index < 0) index = Array.IndexOf(_dilateInputs, input);
             if (index < 0) index = Array.IndexOf(_openInputs, input);
             if (index < 0) index = Array.IndexOf(_closeInputs, input);
-            if (index >= 0) UpdatePreprocessImage(index);
+            if (index >= 0) UpdatePreprocessImage(index, true);
         }
 
         private void FitImageToViewport()
