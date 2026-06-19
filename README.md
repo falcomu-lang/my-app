@@ -16,6 +16,7 @@ Simple C# WinForms and OpenCvSharp4 image viewer for Visual Studio 2019 and .NET
 - Show four independent binary preprocessing results at the same time.
 - Keep image viewing on the first main tab and binary preprocessing on the second main tab.
 - Arrange binarization as original image, active preview, settings, and four result thumbnails.
+- Zoom the active preprocess preview with the mouse wheel, pan with left-drag, and hold the right mouse button to compare the original image.
 - Preprocess 1 and 2 detect bright objects with `Gray > Threshold`.
 - Preprocess 3 and 4 detect dark objects with `Gray < Threshold`.
 - Configure enable, threshold, erode, dilate, open, and close independently for every pipeline.

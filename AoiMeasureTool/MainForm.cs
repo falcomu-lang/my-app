@@ -25,6 +25,11 @@ namespace AoiMeasureTool
         private NumericUpDown[] _closeInputs;
         private bool _synchronizingThreshold;
         private int _selectedPreprocessIndex;
+        private float _activeImageScale = 1f;
+        private float _activeFitScale = 1f;
+        private bool _isDraggingActiveImage;
+        private bool _showingOriginalInActivePreview;
+        private Point _lastActiveMousePosition;
         private float _imageScale = 1f;
         private float _fitScale = 1f;
         private bool _isDraggingImage;
@@ -198,37 +203,136 @@ namespace AoiMeasureTool
 
         private void UpdateActivePreprocessPreview()
         {
-            if (_preprocessPictureBoxes == null)
+            if (_preprocessPictureBoxes == null || _showingOriginalInActivePreview)
             {
                 return;
             }
 
             var sourceImage = _preprocessPictureBoxes[_selectedPreprocessIndex].Image;
-            SetPictureBoxImage(
-                pictureBoxActivePreprocess,
-                sourceImage == null ? null : new Bitmap(sourceImage));
+            SetActivePreviewImage(sourceImage == null ? null : new Bitmap(sourceImage));
             labelActivePreprocess.Text = string.Format(
-                "正在調整：前處理 {0}（按住左鍵看原圖）",
+                "前處理 {0}｜滾輪縮放、左鍵拖曳、右鍵看原圖",
                 _selectedPreprocessIndex + 1);
         }
 
         private void ActivePreprocess_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button != MouseButtons.Left || pictureBoxBinaryOriginal.Image == null)
+            if (e.Button == MouseButtons.Right && pictureBoxBinaryOriginal.Image != null)
+            {
+                _showingOriginalInActivePreview = true;
+                SetActivePreviewImage(new Bitmap(pictureBoxBinaryOriginal.Image));
+                labelActivePreprocess.Text = "原圖（放開右鍵返回處理結果）";
+                return;
+            }
+
+            if (e.Button != MouseButtons.Left || pictureBoxActivePreprocess.Image == null)
             {
                 return;
             }
 
-            SetPictureBoxImage(pictureBoxActivePreprocess, new Bitmap(pictureBoxBinaryOriginal.Image));
-            labelActivePreprocess.Text = "原圖（放開左鍵返回處理結果）";
+            _isDraggingActiveImage = true;
+            _lastActiveMousePosition = panelActiveViewport.PointToClient(pictureBoxActivePreprocess.PointToScreen(e.Location));
+            pictureBoxActivePreprocess.Cursor = Cursors.SizeAll;
+            pictureBoxActivePreprocess.Capture = true;
+        }
+
+        private void ActivePreprocess_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!_isDraggingActiveImage)
+            {
+                return;
+            }
+
+            var currentPosition = panelActiveViewport.PointToClient(pictureBoxActivePreprocess.PointToScreen(e.Location));
+            pictureBoxActivePreprocess.Left += currentPosition.X - _lastActiveMousePosition.X;
+            pictureBoxActivePreprocess.Top += currentPosition.Y - _lastActiveMousePosition.Y;
+            _lastActiveMousePosition = currentPosition;
+            ConstrainActiveImagePosition();
         }
 
         private void ActivePreprocess_MouseUp(object sender, MouseEventArgs e)
         {
+            if (e.Button == MouseButtons.Right)
+            {
+                _showingOriginalInActivePreview = false;
+                UpdateActivePreprocessPreview();
+                return;
+            }
+
             if (e.Button == MouseButtons.Left)
             {
-                UpdateActivePreprocessPreview();
+                _isDraggingActiveImage = false;
+                pictureBoxActivePreprocess.Cursor = Cursors.Default;
+                pictureBoxActivePreprocess.Capture = false;
             }
+        }
+
+        private void ActivePreprocess_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (pictureBoxActivePreprocess.Image == null)
+            {
+                return;
+            }
+
+            var sourceControl = (Control)sender;
+            var mousePosition = panelActiveViewport.PointToClient(sourceControl.PointToScreen(e.Location));
+            var imageX = (mousePosition.X - pictureBoxActivePreprocess.Left) / _activeImageScale;
+            var imageY = (mousePosition.Y - pictureBoxActivePreprocess.Top) / _activeImageScale;
+            var zoomFactor = e.Delta > 0 ? 1.15f : 1f / 1.15f;
+            var minimumScale = _activeFitScale * 0.25f;
+            var maximumScale = _activeFitScale * 20f;
+            _activeImageScale = Math.Max(minimumScale, Math.Min(maximumScale, _activeImageScale * zoomFactor));
+
+            var width = Math.Max(1, (int)Math.Round(pictureBoxActivePreprocess.Image.Width * _activeImageScale));
+            var height = Math.Max(1, (int)Math.Round(pictureBoxActivePreprocess.Image.Height * _activeImageScale));
+            pictureBoxActivePreprocess.Size = new Size(width, height);
+            pictureBoxActivePreprocess.Left = (int)Math.Round(mousePosition.X - imageX * _activeImageScale);
+            pictureBoxActivePreprocess.Top = (int)Math.Round(mousePosition.Y - imageY * _activeImageScale);
+            ConstrainActiveImagePosition();
+        }
+
+        private void ActivePreview_MouseEnter(object sender, EventArgs e)
+        {
+            pictureBoxActivePreprocess.Focus();
+        }
+
+        private void SetActivePreviewImage(Bitmap image)
+        {
+            SetPictureBoxImage(pictureBoxActivePreprocess, image);
+            FitActiveImageToViewport();
+        }
+
+        private void FitActiveImageToViewport()
+        {
+            if (pictureBoxActivePreprocess.Image == null)
+            {
+                pictureBoxActivePreprocess.Location = Point.Empty;
+                pictureBoxActivePreprocess.Size = panelActiveViewport.ClientSize;
+                _activeImageScale = 1f;
+                _activeFitScale = 1f;
+                return;
+            }
+
+            var scaleX = panelActiveViewport.ClientSize.Width / (float)pictureBoxActivePreprocess.Image.Width;
+            var scaleY = panelActiveViewport.ClientSize.Height / (float)pictureBoxActivePreprocess.Image.Height;
+            _activeFitScale = Math.Min(scaleX, scaleY);
+            _activeImageScale = _activeFitScale;
+            var width = Math.Max(1, (int)Math.Round(pictureBoxActivePreprocess.Image.Width * _activeImageScale));
+            var height = Math.Max(1, (int)Math.Round(pictureBoxActivePreprocess.Image.Height * _activeImageScale));
+            pictureBoxActivePreprocess.Size = new Size(width, height);
+            pictureBoxActivePreprocess.Left = (panelActiveViewport.ClientSize.Width - width) / 2;
+            pictureBoxActivePreprocess.Top = (panelActiveViewport.ClientSize.Height - height) / 2;
+        }
+
+        private void ConstrainActiveImagePosition()
+        {
+            pictureBoxActivePreprocess.Left = pictureBoxActivePreprocess.Width <= panelActiveViewport.ClientSize.Width
+                ? (panelActiveViewport.ClientSize.Width - pictureBoxActivePreprocess.Width) / 2
+                : Math.Max(panelActiveViewport.ClientSize.Width - pictureBoxActivePreprocess.Width, Math.Min(0, pictureBoxActivePreprocess.Left));
+
+            pictureBoxActivePreprocess.Top = pictureBoxActivePreprocess.Height <= panelActiveViewport.ClientSize.Height
+                ? (panelActiveViewport.ClientSize.Height - pictureBoxActivePreprocess.Height) / 2
+                : Math.Max(panelActiveViewport.ClientSize.Height - pictureBoxActivePreprocess.Height, Math.Min(0, pictureBoxActivePreprocess.Top));
         }
 
         private static void SetPictureBoxImage(PictureBox pictureBox, Bitmap image)

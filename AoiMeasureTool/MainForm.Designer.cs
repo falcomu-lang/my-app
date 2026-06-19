@@ -31,6 +31,7 @@ namespace AoiMeasureTool
         private System.Windows.Forms.PictureBox pictureBoxBinaryOriginal;
         private System.Windows.Forms.Panel panelActivePreprocess;
         private System.Windows.Forms.Label labelActivePreprocess;
+        private System.Windows.Forms.Panel panelActiveViewport;
         private System.Windows.Forms.PictureBox pictureBoxActivePreprocess;
         private System.Windows.Forms.Panel panelPreprocess1;
         private System.Windows.Forms.Panel panelPreprocess2;
@@ -139,6 +140,7 @@ namespace AoiMeasureTool
             this.pictureBoxBinaryOriginal = new System.Windows.Forms.PictureBox();
             this.panelActivePreprocess = new System.Windows.Forms.Panel();
             this.labelActivePreprocess = new System.Windows.Forms.Label();
+            this.panelActiveViewport = new System.Windows.Forms.Panel();
             this.pictureBoxActivePreprocess = new System.Windows.Forms.PictureBox();
             this.panelPreprocess1 = new System.Windows.Forms.Panel();
             this.panelPreprocess2 = new System.Windows.Forms.Panel();
@@ -368,7 +370,7 @@ namespace AoiMeasureTool
             this.panelActivePreprocess.BackColor = System.Drawing.Color.White;
             this.panelActivePreprocess.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelActivePreprocess.Controls.Add(this.labelActivePreprocess);
-            this.panelActivePreprocess.Controls.Add(this.pictureBoxActivePreprocess);
+            this.panelActivePreprocess.Controls.Add(this.panelActiveViewport);
             this.panelActivePreprocess.Location = new System.Drawing.Point(366, 20);
             this.panelActivePreprocess.Name = "panelActivePreprocess";
             this.panelActivePreprocess.Size = new System.Drawing.Size(300, 280);
@@ -376,15 +378,25 @@ namespace AoiMeasureTool
             this.labelActivePreprocess.Font = new System.Drawing.Font("Microsoft JhengHei UI", 10F, System.Drawing.FontStyle.Bold);
             this.labelActivePreprocess.Location = new System.Drawing.Point(10, 8);
             this.labelActivePreprocess.Name = "labelActivePreprocess";
-            this.labelActivePreprocess.Text = "正在調整：前處理 1（按住左鍵看原圖）";
+            this.labelActivePreprocess.Text = "前處理 1｜滾輪縮放、左鍵拖曳、右鍵看原圖";
+            this.panelActiveViewport.BackColor = System.Drawing.Color.FromArgb(232, 234, 236);
+            this.panelActiveViewport.Controls.Add(this.pictureBoxActivePreprocess);
+            this.panelActiveViewport.Location = new System.Drawing.Point(10, 34);
+            this.panelActiveViewport.Name = "panelActiveViewport";
+            this.panelActiveViewport.Size = new System.Drawing.Size(278, 234);
+            this.panelActiveViewport.MouseEnter += new System.EventHandler(this.ActivePreview_MouseEnter);
+            this.panelActiveViewport.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.ActivePreprocess_MouseWheel);
             this.pictureBoxActivePreprocess.BackColor = System.Drawing.Color.FromArgb(232, 234, 236);
-            this.pictureBoxActivePreprocess.Location = new System.Drawing.Point(10, 34);
+            this.pictureBoxActivePreprocess.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxActivePreprocess.Name = "pictureBoxActivePreprocess";
             this.pictureBoxActivePreprocess.Size = new System.Drawing.Size(278, 234);
-            this.pictureBoxActivePreprocess.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxActivePreprocess.TabStop = false;
+            this.pictureBoxActivePreprocess.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxActivePreprocess.TabStop = true;
             this.pictureBoxActivePreprocess.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ActivePreprocess_MouseDown);
+            this.pictureBoxActivePreprocess.MouseEnter += new System.EventHandler(this.ActivePreview_MouseEnter);
+            this.pictureBoxActivePreprocess.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ActivePreprocess_MouseMove);
             this.pictureBoxActivePreprocess.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ActivePreprocess_MouseUp);
+            this.pictureBoxActivePreprocess.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.ActivePreprocess_MouseWheel);
 
             this.panelPreprocess1.BackColor = System.Drawing.Color.White;
             this.panelPreprocess1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
