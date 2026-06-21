@@ -1,0 +1,88 @@
+using System.Collections.Generic;
+using System.Drawing;
+
+namespace AoiMeasureTool
+{
+    internal sealed class ReferenceBasis
+    {
+        public Point Anchor { get; set; }
+        public PointF UnitX { get; set; }
+        public PointF UnitY { get; set; }
+        public double Length { get; set; }
+    }
+
+    internal sealed class MeasureRecord
+    {
+        public Point StartPoint { get; set; }
+        public Point EndPoint { get; set; }
+        public Point CenterPoint { get; set; }
+        public Point ReferenceTopLeft { get; set; }
+        public Point ReferenceTopRight { get; set; }
+        public double ReferenceLength { get; set; }
+        public PointF LocalStartPoint { get; set; }
+        public PointF LocalEndPoint { get; set; }
+        public double Distance { get; set; }
+        public string SourceName { get; set; }
+        public string DirectionName { get; set; }
+    }
+
+    internal enum MeasureDirectionMode
+    {
+        None = 0,
+        Parallel = 1,
+        Perpendicular = 2
+    }
+
+    internal sealed class PreprocessSnapshot
+    {
+        public bool Enabled { get; set; }
+        public int Threshold { get; set; }
+        public int ErodeIterations { get; set; }
+        public int DilateIterations { get; set; }
+        public int OpenIterations { get; set; }
+        public int CloseIterations { get; set; }
+    }
+
+    internal sealed class ReferenceCornerSnapshot
+    {
+        public bool Enabled { get; set; }
+        public int SourceIndex { get; set; }
+        public Rectangle Roi { get; set; }
+        public bool RoiSaved { get; set; }
+        public bool CornerFound { get; set; }
+    }
+
+    internal sealed class ReferenceCornerCandidate
+    {
+        public ReferenceCornerCandidate(OpenCvSharp.RotatedRect rotatedRect, Point topLeft, Point topRight, Point centerPoint, Rectangle boundingRect)
+        {
+            RotatedRect = rotatedRect;
+            TopLeft = topLeft;
+            TopRight = topRight;
+            CenterPoint = centerPoint;
+            BoundingRect = boundingRect;
+        }
+
+        public OpenCvSharp.RotatedRect RotatedRect { get; }
+        public Point TopLeft { get; }
+        public Point TopRight { get; }
+        public Point CenterPoint { get; }
+        public Rectangle BoundingRect { get; }
+    }
+
+    internal sealed class AppSettingsData
+    {
+        public AppSettingsData()
+        {
+            PreprocessProfiles = new Dictionary<string, PreprocessSnapshot[]>(System.StringComparer.OrdinalIgnoreCase);
+            ReferenceCornerProfiles = new Dictionary<string, ReferenceCornerSnapshot>(System.StringComparer.OrdinalIgnoreCase);
+            MeasureProfiles = new Dictionary<string, List<MeasureRecord>>(System.StringComparer.OrdinalIgnoreCase);
+        }
+
+        public string LastImagePath { get; set; }
+        public string ActiveProductKey { get; set; }
+        public Dictionary<string, PreprocessSnapshot[]> PreprocessProfiles { get; }
+        public Dictionary<string, ReferenceCornerSnapshot> ReferenceCornerProfiles { get; }
+        public Dictionary<string, List<MeasureRecord>> MeasureProfiles { get; }
+    }
+}

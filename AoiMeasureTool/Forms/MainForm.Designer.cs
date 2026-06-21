@@ -17,6 +17,8 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Button buttonLoadImage;
         private System.Windows.Forms.Button buttonLoadImageInViewer;
         private System.Windows.Forms.Button buttonReferenceCorner;
+        private System.Windows.Forms.Button buttonMeasureDistance;
+        private System.Windows.Forms.Button buttonMultiImageConfirm;
         private System.Windows.Forms.Label labelOpenCvStatus;
         private System.Windows.Forms.Panel panelMain;
         private System.Windows.Forms.Panel panelHeader;
@@ -26,6 +28,8 @@ namespace AoiMeasureTool
         private System.Windows.Forms.TabPage tabPageImageViewer;
         private System.Windows.Forms.TabPage tabPageBinarization;
         private System.Windows.Forms.TabPage tabPageReferenceCorner;
+        private System.Windows.Forms.TabPage tabPageMeasureDistance;
+        private System.Windows.Forms.TabPage tabPageMultiImageConfirm;
         private System.Windows.Forms.Label labelWorkspace;
         private System.Windows.Forms.Panel panelReferenceCornerControls;
         private System.Windows.Forms.CheckBox checkBoxReferenceCornerEnabled;
@@ -35,6 +39,12 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Label labelReferenceCornerStatus;
         private System.Windows.Forms.Panel panelReferencePreview;
         private System.Windows.Forms.PictureBox pictureBoxReferencePreview;
+        private System.Windows.Forms.Panel panelMultiImageConfirmViewport;
+        private System.Windows.Forms.PictureBox pictureBoxMultiImageConfirm;
+        private System.Windows.Forms.Button buttonLoadMultiImageFolder;
+        private System.Windows.Forms.Label labelMultiImageStatus;
+        private System.Windows.Forms.Button buttonMultiImagePrev;
+        private System.Windows.Forms.Button buttonMultiImageNext;
         private System.Windows.Forms.Panel panelImageViewport;
         private System.Windows.Forms.PictureBox pictureBoxImage;
         private System.Windows.Forms.Panel panelBinaryOriginal;
@@ -138,6 +148,8 @@ namespace AoiMeasureTool
             this.labelNavigation = new System.Windows.Forms.Label();
             this.buttonLoadImage = new System.Windows.Forms.Button();
             this.buttonReferenceCorner = new System.Windows.Forms.Button();
+            this.buttonMeasureDistance = new System.Windows.Forms.Button();
+            this.buttonMultiImageConfirm = new System.Windows.Forms.Button();
             this.labelOpenCvStatus = new System.Windows.Forms.Label();
             this.buttonLoadImageInViewer = new System.Windows.Forms.Button();
             this.panelMain = new System.Windows.Forms.Panel();
@@ -234,6 +246,14 @@ namespace AoiMeasureTool
             this.panelReferencePreview = new System.Windows.Forms.Panel();
             this.pictureBoxReferencePreview = new System.Windows.Forms.PictureBox();
             this.labelReferenceCornerStatus = new System.Windows.Forms.Label();
+            this.tabPageMeasureDistance = new System.Windows.Forms.TabPage();
+            this.tabPageMultiImageConfirm = new System.Windows.Forms.TabPage();
+            this.buttonLoadMultiImageFolder = new System.Windows.Forms.Button();
+            this.labelMultiImageStatus = new System.Windows.Forms.Label();
+            this.buttonMultiImagePrev = new System.Windows.Forms.Button();
+            this.buttonMultiImageNext = new System.Windows.Forms.Button();
+            this.panelMultiImageConfirmViewport = new System.Windows.Forms.Panel();
+            this.pictureBoxMultiImageConfirm = new System.Windows.Forms.PictureBox();
             this.openFileDialogImage = new System.Windows.Forms.OpenFileDialog();
             this.menuStripMain.SuspendLayout();
             this.panelSidebar.SuspendLayout();
@@ -291,6 +311,9 @@ namespace AoiMeasureTool
             this.panelReferenceCornerControls.SuspendLayout();
             this.panelReferencePreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxReferencePreview)).BeginInit();
+            this.tabPageMultiImageConfirm.SuspendLayout();
+            this.panelMultiImageConfirmViewport.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMultiImageConfirm)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStripMain
@@ -363,6 +386,8 @@ namespace AoiMeasureTool
             this.panelSidebar.Controls.Add(this.labelNavigation);
             this.panelSidebar.Controls.Add(this.buttonLoadImage);
             this.panelSidebar.Controls.Add(this.buttonReferenceCorner);
+            this.panelSidebar.Controls.Add(this.buttonMeasureDistance);
+            this.panelSidebar.Controls.Add(this.buttonMultiImageConfirm);
             this.panelSidebar.Controls.Add(this.labelOpenCvStatus);
             this.panelSidebar.Location = new System.Drawing.Point(0, 42);
             this.panelSidebar.Name = "panelSidebar";
@@ -421,6 +446,38 @@ namespace AoiMeasureTool
             this.buttonReferenceCorner.UseVisualStyleBackColor = false;
             this.buttonReferenceCorner.Click += new System.EventHandler(this.ReferenceCornerButton_Click);
             // 
+            // buttonMeasureDistance
+            // 
+            this.buttonMeasureDistance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonMeasureDistance.FlatAppearance.BorderSize = 0;
+            this.buttonMeasureDistance.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonMeasureDistance.Font = new System.Drawing.Font("Microsoft JhengHei UI", 12F);
+            this.buttonMeasureDistance.Location = new System.Drawing.Point(16, 228);
+            this.buttonMeasureDistance.Name = "buttonMeasureDistance";
+            this.buttonMeasureDistance.Padding = new System.Windows.Forms.Padding(14, 0, 0, 0);
+            this.buttonMeasureDistance.Size = new System.Drawing.Size(208, 48);
+            this.buttonMeasureDistance.TabIndex = 4;
+            this.buttonMeasureDistance.Text = "+   框選量測的距離";
+            this.buttonMeasureDistance.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonMeasureDistance.UseVisualStyleBackColor = false;
+            this.buttonMeasureDistance.Click += new System.EventHandler(this.MeasureDistanceButton_Click);
+            // 
+            // buttonMultiImageConfirm
+            // 
+            this.buttonMultiImageConfirm.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonMultiImageConfirm.FlatAppearance.BorderSize = 0;
+            this.buttonMultiImageConfirm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonMultiImageConfirm.Font = new System.Drawing.Font("Microsoft JhengHei UI", 12F);
+            this.buttonMultiImageConfirm.Location = new System.Drawing.Point(16, 284);
+            this.buttonMultiImageConfirm.Name = "buttonMultiImageConfirm";
+            this.buttonMultiImageConfirm.Padding = new System.Windows.Forms.Padding(14, 0, 0, 0);
+            this.buttonMultiImageConfirm.Size = new System.Drawing.Size(208, 48);
+            this.buttonMultiImageConfirm.TabIndex = 5;
+            this.buttonMultiImageConfirm.Text = "+   多影像確認結果";
+            this.buttonMultiImageConfirm.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonMultiImageConfirm.UseVisualStyleBackColor = false;
+            this.buttonMultiImageConfirm.Click += new System.EventHandler(this.MultiImageConfirmButton_Click);
+            // 
             // labelOpenCvStatus
             // 
             this.labelOpenCvStatus.AutoSize = true;
@@ -428,7 +485,7 @@ namespace AoiMeasureTool
             this.labelOpenCvStatus.Location = new System.Drawing.Point(24, 706);
             this.labelOpenCvStatus.Name = "labelOpenCvStatus";
             this.labelOpenCvStatus.Size = new System.Drawing.Size(109, 12);
-            this.labelOpenCvStatus.TabIndex = 4;
+            this.labelOpenCvStatus.TabIndex = 5;
             this.labelOpenCvStatus.Text = "OpenCV 4.13 已就緒";
             // 
             // buttonLoadImageInViewer
@@ -489,6 +546,9 @@ namespace AoiMeasureTool
             // 
             this.tabControlMain.Controls.Add(this.tabPageImageViewer);
             this.tabControlMain.Controls.Add(this.tabPageBinarization);
+            this.tabControlMain.Controls.Add(this.tabPageReferenceCorner);
+            this.tabControlMain.Controls.Add(this.tabPageMeasureDistance);
+            this.tabControlMain.Controls.Add(this.tabPageMultiImageConfirm);
             this.tabControlMain.Font = new System.Drawing.Font("Microsoft JhengHei UI", 10F);
             this.tabControlMain.Location = new System.Drawing.Point(0, 72);
             this.tabControlMain.Name = "tabControlMain";
@@ -539,6 +599,7 @@ namespace AoiMeasureTool
             this.pictureBoxImage.Size = new System.Drawing.Size(818, 568);
             this.pictureBoxImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBoxImage.TabIndex = 0;
+            this.pictureBoxImage.TabStop = false;
             this.pictureBoxImage.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PictureBoxImage_MouseDown);
             this.pictureBoxImage.MouseEnter += new System.EventHandler(this.ImageViewport_MouseEnter);
             this.pictureBoxImage.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PictureBoxImage_MouseMove);
@@ -634,6 +695,7 @@ namespace AoiMeasureTool
             this.pictureBoxActivePreprocess.Size = new System.Drawing.Size(278, 234);
             this.pictureBoxActivePreprocess.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBoxActivePreprocess.TabIndex = 0;
+            this.pictureBoxActivePreprocess.TabStop = false;
             this.pictureBoxActivePreprocess.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ActivePreprocess_MouseDown);
             this.pictureBoxActivePreprocess.MouseEnter += new System.EventHandler(this.ActivePreview_MouseEnter);
             this.pictureBoxActivePreprocess.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ActivePreprocess_MouseMove);
@@ -1494,7 +1556,7 @@ namespace AoiMeasureTool
             this.checkBoxReferenceCornerEnabled.AutoSize = true;
             this.checkBoxReferenceCornerEnabled.Location = new System.Drawing.Point(16, 16);
             this.checkBoxReferenceCornerEnabled.Name = "checkBoxReferenceCornerEnabled";
-            this.checkBoxReferenceCornerEnabled.Size = new System.Drawing.Size(120, 16);
+            this.checkBoxReferenceCornerEnabled.Size = new System.Drawing.Size(139, 22);
             this.checkBoxReferenceCornerEnabled.TabIndex = 0;
             this.checkBoxReferenceCornerEnabled.Text = "啟用參考角點搜尋";
             this.checkBoxReferenceCornerEnabled.CheckedChanged += new System.EventHandler(this.ReferenceCornerEnabled_CheckedChanged);
@@ -1504,7 +1566,7 @@ namespace AoiMeasureTool
             this.labelReferenceSource.AutoSize = true;
             this.labelReferenceSource.Location = new System.Drawing.Point(16, 56);
             this.labelReferenceSource.Name = "labelReferenceSource";
-            this.labelReferenceSource.Size = new System.Drawing.Size(89, 12);
+            this.labelReferenceSource.Size = new System.Drawing.Size(106, 18);
             this.labelReferenceSource.TabIndex = 1;
             this.labelReferenceSource.Text = "前處理影像來源";
             // 
@@ -1514,7 +1576,7 @@ namespace AoiMeasureTool
             this.comboBoxReferenceSource.FormattingEnabled = true;
             this.comboBoxReferenceSource.Location = new System.Drawing.Point(16, 78);
             this.comboBoxReferenceSource.Name = "comboBoxReferenceSource";
-            this.comboBoxReferenceSource.Size = new System.Drawing.Size(280, 20);
+            this.comboBoxReferenceSource.Size = new System.Drawing.Size(280, 25);
             this.comboBoxReferenceSource.TabIndex = 2;
             this.comboBoxReferenceSource.SelectedIndexChanged += new System.EventHandler(this.ReferenceSource_SelectedIndexChanged);
             // 
@@ -1551,6 +1613,7 @@ namespace AoiMeasureTool
             this.pictureBoxReferencePreview.Size = new System.Drawing.Size(978, 350);
             this.pictureBoxReferencePreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBoxReferencePreview.TabIndex = 0;
+            this.pictureBoxReferencePreview.TabStop = false;
             this.pictureBoxReferencePreview.Paint += new System.Windows.Forms.PaintEventHandler(this.ReferencePreview_Paint);
             this.pictureBoxReferencePreview.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ReferencePreview_MouseDown);
             this.pictureBoxReferencePreview.MouseEnter += new System.EventHandler(this.ReferencePreview_MouseEnter);
@@ -1564,9 +1627,101 @@ namespace AoiMeasureTool
             this.labelReferenceCornerStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(130)))), ((int)(((byte)(134)))), ((int)(((byte)(138)))));
             this.labelReferenceCornerStatus.Location = new System.Drawing.Point(383, 39);
             this.labelReferenceCornerStatus.Name = "labelReferenceCornerStatus";
-            this.labelReferenceCornerStatus.Size = new System.Drawing.Size(460, 12);
+            this.labelReferenceCornerStatus.Size = new System.Drawing.Size(540, 18);
             this.labelReferenceCornerStatus.TabIndex = 2;
             this.labelReferenceCornerStatus.Text = "勾選後選擇基礎前處理影像，直接在大圖上左鍵拖曳框選 ROI，並讓標的物盡量靠中。";
+            // 
+            // tabPageMeasureDistance
+            // 
+            this.tabPageMeasureDistance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
+            this.tabPageMeasureDistance.Location = new System.Drawing.Point(4, 26);
+            this.tabPageMeasureDistance.Name = "tabPageMeasureDistance";
+            this.tabPageMeasureDistance.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageMeasureDistance.Size = new System.Drawing.Size(1032, 656);
+            this.tabPageMeasureDistance.TabIndex = 2;
+            this.tabPageMeasureDistance.Text = "框選量測的距離";
+            // 
+            // tabPageMultiImageConfirm
+            // 
+            this.tabPageMultiImageConfirm.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
+            this.tabPageMultiImageConfirm.Controls.Add(this.buttonLoadMultiImageFolder);
+            this.tabPageMultiImageConfirm.Controls.Add(this.labelMultiImageStatus);
+            this.tabPageMultiImageConfirm.Controls.Add(this.buttonMultiImagePrev);
+            this.tabPageMultiImageConfirm.Controls.Add(this.buttonMultiImageNext);
+            this.tabPageMultiImageConfirm.Controls.Add(this.panelMultiImageConfirmViewport);
+            this.tabPageMultiImageConfirm.Location = new System.Drawing.Point(4, 26);
+            this.tabPageMultiImageConfirm.Name = "tabPageMultiImageConfirm";
+            this.tabPageMultiImageConfirm.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageMultiImageConfirm.Size = new System.Drawing.Size(1032, 656);
+            this.tabPageMultiImageConfirm.TabIndex = 3;
+            this.tabPageMultiImageConfirm.Text = "多影像確認結果";
+            // 
+            // buttonLoadMultiImageFolder
+            // 
+            this.buttonLoadMultiImageFolder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonLoadMultiImageFolder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonLoadMultiImageFolder.Location = new System.Drawing.Point(20, 432);
+            this.buttonLoadMultiImageFolder.Name = "buttonLoadMultiImageFolder";
+            this.buttonLoadMultiImageFolder.Size = new System.Drawing.Size(180, 36);
+            this.buttonLoadMultiImageFolder.TabIndex = 1;
+            this.buttonLoadMultiImageFolder.Text = "讀取資料夾";
+            this.buttonLoadMultiImageFolder.UseVisualStyleBackColor = false;
+            this.buttonLoadMultiImageFolder.Click += new System.EventHandler(this.LoadMultiImageFolder_Click);
+            // 
+            // labelMultiImageStatus
+            // 
+            this.labelMultiImageStatus.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.labelMultiImageStatus.Location = new System.Drawing.Point(290, 432);
+            this.labelMultiImageStatus.Name = "labelMultiImageStatus";
+            this.labelMultiImageStatus.Size = new System.Drawing.Size(160, 36);
+            this.labelMultiImageStatus.TabIndex = 2;
+            this.labelMultiImageStatus.Text = "0 / 0";
+            this.labelMultiImageStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // buttonMultiImagePrev
+            // 
+            this.buttonMultiImagePrev.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonMultiImagePrev.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonMultiImagePrev.Location = new System.Drawing.Point(578, 432);
+            this.buttonMultiImagePrev.Name = "buttonMultiImagePrev";
+            this.buttonMultiImagePrev.Size = new System.Drawing.Size(44, 36);
+            this.buttonMultiImagePrev.TabIndex = 3;
+            this.buttonMultiImagePrev.Text = "←";
+            this.buttonMultiImagePrev.UseVisualStyleBackColor = false;
+            this.buttonMultiImagePrev.Click += new System.EventHandler(this.MultiImageConfirmPrev_Click);
+            // 
+            // buttonMultiImageNext
+            // 
+            this.buttonMultiImageNext.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonMultiImageNext.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonMultiImageNext.Location = new System.Drawing.Point(628, 432);
+            this.buttonMultiImageNext.Name = "buttonMultiImageNext";
+            this.buttonMultiImageNext.Size = new System.Drawing.Size(44, 36);
+            this.buttonMultiImageNext.TabIndex = 4;
+            this.buttonMultiImageNext.Text = "→";
+            this.buttonMultiImageNext.UseVisualStyleBackColor = false;
+            this.buttonMultiImageNext.Click += new System.EventHandler(this.MultiImageConfirmNext_Click);
+            // 
+            // panelMultiImageConfirmViewport
+            // 
+            this.panelMultiImageConfirmViewport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(241)))), ((int)(((byte)(243)))));
+            this.panelMultiImageConfirmViewport.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelMultiImageConfirmViewport.Controls.Add(this.pictureBoxMultiImageConfirm);
+            this.panelMultiImageConfirmViewport.Location = new System.Drawing.Point(20, 20);
+            this.panelMultiImageConfirmViewport.Name = "panelMultiImageConfirmViewport";
+            this.panelMultiImageConfirmViewport.Size = new System.Drawing.Size(652, 400);
+            this.panelMultiImageConfirmViewport.TabIndex = 0;
+            this.panelMultiImageConfirmViewport.TabStop = true;
+            // 
+            // pictureBoxMultiImageConfirm
+            // 
+            this.pictureBoxMultiImageConfirm.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(241)))), ((int)(((byte)(243)))));
+            this.pictureBoxMultiImageConfirm.Location = new System.Drawing.Point(20, 20);
+            this.pictureBoxMultiImageConfirm.Name = "pictureBoxMultiImageConfirm";
+            this.pictureBoxMultiImageConfirm.Size = new System.Drawing.Size(496, 306);
+            this.pictureBoxMultiImageConfirm.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxMultiImageConfirm.TabIndex = 0;
+            this.pictureBoxMultiImageConfirm.TabStop = false;
             // 
             // openFileDialogImage
             // 
@@ -1660,6 +1815,9 @@ namespace AoiMeasureTool
             this.panelReferenceCornerControls.PerformLayout();
             this.panelReferencePreview.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxReferencePreview)).EndInit();
+            this.tabPageMultiImageConfirm.ResumeLayout(false);
+            this.panelMultiImageConfirmViewport.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMultiImageConfirm)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
