@@ -93,6 +93,7 @@ namespace AoiMeasureTool
         private ComboBox _comboBoxMeasureSource;
         private Label _labelMeasureStatus;
         private ContextMenuStrip _measureRecordMenu;
+        private ToolStripMenuItem _measureEditMenuItem;
         private ToolStripMenuItem _measureDeleteMenuItem;
         private System.Windows.Forms.Timer _measureBlinkTimer;
         private MeasureRecord _measureBlinkRecord;

@@ -5,6 +5,7 @@
 The multi-image confirm workflow is implemented and currently stable at the current stage.
 The current UI / interaction behavior is the approved baseline for handoff.
 The multi-image confirm viewport overlay now tracks the displayed image correctly during zoom and pan, so ROI / baseline / measurement overlays stay aligned with the image.
+The multi-image confirm preprocess preview and overlay behavior has been verified by the user as correct.
 The project target framework is now .NET Framework 4.7.2.
 
 ## Implemented Behavior
@@ -15,8 +16,14 @@ The project target framework is now .NET Framework 4.7.2.
   - folder loading for confirm-result images
   - previous / next navigation buttons
   - a centered status label area for image index display
+  - a preprocess preview source group with:
+    - a dropdown for preprocess image 1-4
+    - a load-preprocess-image button
+    - an original-image button
 - Folder loading reads image files from the selected folder and builds an ordered image list.
 - The navigation buttons switch between images in sequence.
+- When preprocess preview mode is enabled, previous / next navigation keeps showing preprocess output for each image until original-image mode is selected.
+- The preprocess preview dropdown selects which preprocess profile output to display.
 - The viewer supports:
   - initial full-image display after loading
   - zoom in / zoom out
@@ -24,11 +31,32 @@ The project target framework is now .NET Framework 4.7.2.
 - Rendering uses a custom paint-based approach to avoid flicker and layout issues.
 - Double buffering is enabled for the relevant tab / viewport to reduce redraw flicker.
 - The multi-image confirm overlay is drawn using the current image scale and offset, so the boxes and baseline follow the image during zooming and panning.
+- Multi-image confirm overlays are mapped against the original source image coordinate size even when the displayed bitmap is a preprocess preview.
+- The preprocess preview bitmap is display-only; measurement lines, ROI, and reference baseline continue to use source-image coordinates.
+
+## Multi-Image Preprocess Preview Behavior
+
+- Multi-image confirm has a preview source group below the folder-load controls.
+- The dropdown contains:
+  - preprocess image 1
+  - preprocess image 2
+  - preprocess image 3
+  - preprocess image 4
+- The load-preprocess-image button displays the selected preprocess output for the currently displayed confirm image.
+- The original-image button returns the viewport to the original image.
+- The selected preprocess preview mode persists while navigating previous / next images.
+- Preprocess preview generation uses the current product's preprocess parameters.
+- Multi-image confirm uses the current product context as the product key. Confirm-result folder names should not replace the active product profile.
+- If current unsaved product parameters exist in the UI, they are used for preview so the result reflects the current working state.
 
 ## Reference Corner / ROI Behavior
 
 - The reference corner workflow uses a selected preprocess source as the baseline for detection.
 - Multi-image confirm reuses the same preprocess parameters selected for the reference source.
+- Multi-image confirm reference detection uses the current product's reference corner profile:
+  - enabled state
+  - source preprocess index
+  - saved ROI
 - The current logic does not fall back to Otsu for reference detection in multi-image confirm.
 - Multi-image confirm uses the same reference candidate selection rule as reference corner detection:
   - choose a white object fully inside the ROI
@@ -40,6 +68,17 @@ The project target framework is now .NET Framework 4.7.2.
   - choose a white object fully inside the ROI
   - prefer the largest object by area
 - The top baseline endpoints are derived from the detected rotated rectangle corners to reduce drift caused by contour irregularities.
+- Reference detection in multi-image confirm is always computed from the original image file, then the product profile preprocess source is applied for detection.
+- Do not run reference detection from the already displayed preprocess preview bitmap, or the reference candidate can drift.
+
+## Measurement Overlay Behavior
+
+- Multi-image confirm measurement lines use the current product's measurement records.
+- If the current product has live in-memory measurement records, those are preferred so unsaved current UI changes are reflected.
+- If live records are not available, the saved product measurement profile is used.
+- As a fallback, currently loaded measurement records may be used so existing lines continue to render.
+- Measurement line reprojection uses the reference candidate detected from the current confirm image.
+- Measurement, ROI, and reference baseline overlays must all use the same source-image coordinate mapping.
 
 ## Files Touched
 
@@ -58,6 +97,9 @@ The project target framework is now .NET Framework 4.7.2.
 - The middle status area is used to show the current image index / total count.
 - The reference corner and multi-image confirm flows should stay aligned on the same preprocess source.
 - The multi-image confirm overlay should continue to use the same image-space to display-space mapping as the image transform itself.
+- Do not infer the product profile from the confirm-result folder name unless product selection behavior is explicitly redesigned.
+- Keep source-image coordinate mapping separate from the displayed preprocess preview bitmap.
+- If future changes affect preprocess preview, verify that measurement lines still fit the displayed image in both original-image and preprocess-preview modes.
 
 ## Suggested Next Step
 

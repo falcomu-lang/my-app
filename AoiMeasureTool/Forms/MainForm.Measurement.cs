@@ -157,8 +157,11 @@ namespace AoiMeasureTool
                 }
                 _dataGridViewMeasureRecords.MouseDown += MeasureRecords_MouseDown;
                 _measureRecordMenu = new ContextMenuStrip();
+                _measureEditMenuItem = new ToolStripMenuItem("編輯");
+                _measureEditMenuItem.Click += MeasureEditMenuItem_Click;
                 _measureDeleteMenuItem = new ToolStripMenuItem("刪除");
                 _measureDeleteMenuItem.Click += MeasureDeleteMenuItem_Click;
+                _measureRecordMenu.Items.Add(_measureEditMenuItem);
                 _measureRecordMenu.Items.Add(_measureDeleteMenuItem);
                 _dataGridViewMeasureRecords.ContextMenuStrip = _measureRecordMenu;
                 _dataGridViewMeasureRecords.SelectionChanged += MeasureRecords_SelectionChanged;
@@ -1406,13 +1409,24 @@ namespace AoiMeasureTool
 
         private void MeasureDeleteMenuItem_Click(object sender, EventArgs e)
         {
-            if (_dataGridViewMeasureRecords.SelectedRows.Count == 0)
+            var selectedRow = GetSelectedMeasureRecordRow();
+            if (selectedRow == null)
             {
                 return;
             }
 
-            var row = _dataGridViewMeasureRecords.SelectedRows[0];
-            if (row.Tag is MeasureRecord record)
+            var confirm = MessageBox.Show(
+                this,
+                "刪除這條量測線段會影響後續計算與已保存的量測結果，確定要刪除嗎？",
+                "刪除量測線段",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+            if (confirm != DialogResult.Yes)
+            {
+                return;
+            }
+
+            if (selectedRow.Tag is MeasureRecord record)
             {
                 if (ReferenceEquals(_measureBlinkRecord, record))
                 {
@@ -1422,15 +1436,56 @@ namespace AoiMeasureTool
                 }
                 _measureRecords.Remove(record);
             }
-            if (!row.IsNewRow)
+            if (!selectedRow.IsNewRow)
             {
-                _dataGridViewMeasureRecords.Rows.Remove(row);
+                _dataGridViewMeasureRecords.Rows.Remove(selectedRow);
             }
 
             ReindexMeasureRows();
             RefreshMeasureDistancePreview();
             UpdateMeasureSourceAvailability();
             SaveCurrentAppSettings();
+        }
+
+        private void MeasureEditMenuItem_Click(object sender, EventArgs e)
+        {
+            var selectedRow = GetSelectedMeasureRecordRow();
+            if (selectedRow == null)
+            {
+                return;
+            }
+
+            if (!(selectedRow.Tag is MeasureRecord record))
+            {
+                return;
+            }
+
+            using (var dialog = new MeasureRecordEditForm(record))
+            {
+                if (dialog.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                var updatedRecord = dialog.BuildUpdatedRecord(record);
+                var listIndex = _measureRecords.IndexOf(record);
+                if (listIndex >= 0)
+                {
+                    _measureRecords[listIndex] = updatedRecord;
+                }
+
+                selectedRow.Tag = updatedRecord;
+                UpdateMeasureRecordRow(selectedRow, updatedRecord);
+
+                if (ReferenceEquals(_measureBlinkRecord, record))
+                {
+                    _measureBlinkRecord = updatedRecord;
+                }
+
+                RefreshMeasureDistancePreview();
+                UpdateMeasureSourceAvailability();
+                SaveCurrentAppSettings();
+            }
         }
 
         private void ClearAllMeasureRecords()
@@ -1670,6 +1725,43 @@ namespace AoiMeasureTool
                 record.SourceName,
                 record.DirectionName);
             _dataGridViewMeasureRecords.Rows[rowIndex].Tag = record;
+        }
+
+        private void UpdateMeasureRecordRow(DataGridViewRow row, MeasureRecord record)
+        {
+            if (row == null || record == null)
+            {
+                return;
+            }
+
+            row.Cells[1].Value = record.StartPoint.X;
+            row.Cells[2].Value = record.StartPoint.Y;
+            row.Cells[3].Value = record.EndPoint.X;
+            row.Cells[4].Value = record.EndPoint.Y;
+            row.Cells[5].Value = record.ReferenceTopLeft.X;
+            row.Cells[6].Value = record.ReferenceTopLeft.Y;
+            row.Cells[7].Value = record.ReferenceTopRight.X;
+            row.Cells[8].Value = record.ReferenceTopRight.Y;
+            row.Cells[9].Value = record.ReferenceLength.ToString("0.###", CultureInfo.InvariantCulture);
+            row.Cells[10].Value = record.CenterPoint.X;
+            row.Cells[11].Value = record.CenterPoint.Y;
+            row.Cells[12].Value = record.LocalStartPoint.X.ToString("0.###", CultureInfo.InvariantCulture);
+            row.Cells[13].Value = record.LocalStartPoint.Y.ToString("0.###", CultureInfo.InvariantCulture);
+            row.Cells[14].Value = record.LocalEndPoint.X.ToString("0.###", CultureInfo.InvariantCulture);
+            row.Cells[15].Value = record.LocalEndPoint.Y.ToString("0.###", CultureInfo.InvariantCulture);
+            row.Cells[16].Value = record.Distance.ToString("0.##");
+            row.Cells[17].Value = record.SourceName;
+            row.Cells[18].Value = record.DirectionName;
+        }
+
+        private DataGridViewRow GetSelectedMeasureRecordRow()
+        {
+            if (_dataGridViewMeasureRecords == null || _dataGridViewMeasureRecords.SelectedRows.Count == 0)
+            {
+                return null;
+            }
+
+            return _dataGridViewMeasureRecords.SelectedRows[0];
         }
     }
 }
