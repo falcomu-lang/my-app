@@ -5,6 +5,7 @@
 The multi-image confirm workflow is implemented and currently stable at the current stage.
 The current UI / interaction behavior is the approved baseline for handoff.
 The multi-image confirm viewport overlay now tracks the displayed image correctly during zoom and pan, so ROI / baseline / measurement overlays stay aligned with the image.
+The project target framework is now .NET Framework 4.7.2.
 
 ## Implemented Behavior
 
