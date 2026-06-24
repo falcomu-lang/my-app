@@ -469,7 +469,7 @@ namespace AoiMeasureTool
             this.buttonReferenceCorner.FlatAppearance.BorderSize = 0;
             this.buttonReferenceCorner.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonReferenceCorner.Font = new System.Drawing.Font("Microsoft JhengHei UI", 12F);
-            this.buttonReferenceCorner.Location = new System.Drawing.Point(16, 284);
+            this.buttonReferenceCorner.Location = new System.Drawing.Point(16, 172);
             this.buttonReferenceCorner.Name = "buttonReferenceCorner";
             this.buttonReferenceCorner.Padding = new System.Windows.Forms.Padding(14, 0, 0, 0);
             this.buttonReferenceCorner.Size = new System.Drawing.Size(208, 48);
@@ -485,7 +485,7 @@ namespace AoiMeasureTool
             this.buttonMeasureDistance.FlatAppearance.BorderSize = 0;
             this.buttonMeasureDistance.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonMeasureDistance.Font = new System.Drawing.Font("Microsoft JhengHei UI", 12F);
-            this.buttonMeasureDistance.Location = new System.Drawing.Point(16, 172);
+            this.buttonMeasureDistance.Location = new System.Drawing.Point(16, 228);
             this.buttonMeasureDistance.Name = "buttonMeasureDistance";
             this.buttonMeasureDistance.Padding = new System.Windows.Forms.Padding(14, 0, 0, 0);
             this.buttonMeasureDistance.Size = new System.Drawing.Size(208, 48);
@@ -501,7 +501,7 @@ namespace AoiMeasureTool
             this.buttonMultiImageConfirm.FlatAppearance.BorderSize = 0;
             this.buttonMultiImageConfirm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonMultiImageConfirm.Font = new System.Drawing.Font("Microsoft JhengHei UI", 12F);
-            this.buttonMultiImageConfirm.Location = new System.Drawing.Point(16, 340);
+            this.buttonMultiImageConfirm.Location = new System.Drawing.Point(16, 284);
             this.buttonMultiImageConfirm.Name = "buttonMultiImageConfirm";
             this.buttonMultiImageConfirm.Padding = new System.Windows.Forms.Padding(14, 0, 0, 0);
             this.buttonMultiImageConfirm.Size = new System.Drawing.Size(208, 48);
