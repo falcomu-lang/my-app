@@ -568,8 +568,7 @@ namespace AoiMeasureTool
             var productKey = string.IsNullOrWhiteSpace(_multiImageConfirmProductKey)
                 ? GetCurrentProductKeyOrDefault()
                 : _multiImageConfirmProductKey;
-            var state = _productProfileService.GetOrCreateState(productKey);
-            var snapshots = state?.PreprocessSnapshots;
+            var snapshots = GetPreprocessSnapshotsForProduct(productKey);
             if (snapshots == null || preprocessIndex >= snapshots.Length)
             {
                 return false;

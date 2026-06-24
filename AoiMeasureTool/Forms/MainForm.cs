@@ -303,6 +303,18 @@ namespace AoiMeasureTool
                 _closeInputs);
         }
 
+        private PreprocessSnapshot[] GetPreprocessSnapshotsForProduct(string productKey)
+        {
+            productKey = string.IsNullOrWhiteSpace(productKey) ? "DEFAULT" : productKey;
+
+            if (string.Equals(GetCurrentProductKeyOrDefault(), productKey, System.StringComparison.OrdinalIgnoreCase))
+            {
+                return CaptureCurrentSnapshots();
+            }
+
+            return _productProfileService.GetOrCreateState(productKey).PreprocessSnapshots;
+        }
+
         private void PersistActiveProductProfile()
         {
             _productProfileService.PersistProduct(
