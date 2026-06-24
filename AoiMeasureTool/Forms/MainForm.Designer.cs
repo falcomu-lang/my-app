@@ -31,8 +31,18 @@ namespace AoiMeasureTool
         private System.Windows.Forms.TabPage tabPageMeasureDistance;
         private System.Windows.Forms.TabPage tabPageMultiImageConfirm;
         private System.Windows.Forms.Label labelWorkspace;
-        private System.Windows.Forms.Panel panelMeasureDistanceDesignSurface;
-        private System.Windows.Forms.Label labelMeasureDistanceDesignSurface;
+        private System.Windows.Forms.Panel panelMeasureSource;
+        private System.Windows.Forms.Label labelMeasureSource;
+        private System.Windows.Forms.ComboBox comboBoxMeasureSource;
+        private System.Windows.Forms.Button buttonSaveMeasurePoint;
+        private System.Windows.Forms.Button buttonClearMeasurePoint;
+        private System.Windows.Forms.Button buttonSaveMeasureRecords;
+        private System.Windows.Forms.Button buttonParallelMeasure;
+        private System.Windows.Forms.Button buttonPerpendicularMeasure;
+        private System.Windows.Forms.Label labelMeasureStatus;
+        private System.Windows.Forms.Panel panelMeasurePreview;
+        private System.Windows.Forms.PictureBox pictureBoxMeasurePreview;
+        private System.Windows.Forms.DataGridView dataGridViewMeasureRecords;
         private System.Windows.Forms.Panel panelReferenceCornerControls;
         private System.Windows.Forms.CheckBox checkBoxReferenceCornerEnabled;
         private System.Windows.Forms.Label labelReferenceSource;
@@ -253,8 +263,18 @@ namespace AoiMeasureTool
             this.pictureBoxReferencePreview = new System.Windows.Forms.PictureBox();
             this.labelReferenceCornerStatus = new System.Windows.Forms.Label();
             this.tabPageMeasureDistance = new System.Windows.Forms.TabPage();
-            this.panelMeasureDistanceDesignSurface = new System.Windows.Forms.Panel();
-            this.labelMeasureDistanceDesignSurface = new System.Windows.Forms.Label();
+            this.panelMeasureSource = new System.Windows.Forms.Panel();
+            this.labelMeasureSource = new System.Windows.Forms.Label();
+            this.comboBoxMeasureSource = new System.Windows.Forms.ComboBox();
+            this.buttonParallelMeasure = new System.Windows.Forms.Button();
+            this.buttonPerpendicularMeasure = new System.Windows.Forms.Button();
+            this.buttonSaveMeasurePoint = new System.Windows.Forms.Button();
+            this.buttonClearMeasurePoint = new System.Windows.Forms.Button();
+            this.labelMeasureStatus = new System.Windows.Forms.Label();
+            this.panelMeasurePreview = new System.Windows.Forms.Panel();
+            this.pictureBoxMeasurePreview = new System.Windows.Forms.PictureBox();
+            this.dataGridViewMeasureRecords = new System.Windows.Forms.DataGridView();
+            this.buttonSaveMeasureRecords = new System.Windows.Forms.Button();
             this.tabPageMultiImageConfirm = new System.Windows.Forms.TabPage();
             this.buttonLoadMultiImageFolder = new System.Windows.Forms.Button();
             this.groupBoxMultiImagePreviewSource = new System.Windows.Forms.GroupBox();
@@ -1647,7 +1667,10 @@ namespace AoiMeasureTool
             // tabPageMeasureDistance
             // 
             this.tabPageMeasureDistance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
-            this.tabPageMeasureDistance.Controls.Add(this.panelMeasureDistanceDesignSurface);
+            this.tabPageMeasureDistance.Controls.Add(this.panelMeasureSource);
+            this.tabPageMeasureDistance.Controls.Add(this.dataGridViewMeasureRecords);
+            this.tabPageMeasureDistance.Controls.Add(this.buttonSaveMeasureRecords);
+            this.tabPageMeasureDistance.Controls.Add(this.panelMeasurePreview);
             this.tabPageMeasureDistance.Location = new System.Drawing.Point(4, 26);
             this.tabPageMeasureDistance.Name = "tabPageMeasureDistance";
             this.tabPageMeasureDistance.Padding = new System.Windows.Forms.Padding(3);
@@ -1655,24 +1678,121 @@ namespace AoiMeasureTool
             this.tabPageMeasureDistance.TabIndex = 2;
             this.tabPageMeasureDistance.Text = "框選量測的距離";
             // 
-            // panelMeasureDistanceDesignSurface
+            // panelMeasureSource
             // 
-            this.panelMeasureDistanceDesignSurface.BackColor = System.Drawing.Color.White;
-            this.panelMeasureDistanceDesignSurface.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelMeasureDistanceDesignSurface.Controls.Add(this.labelMeasureDistanceDesignSurface);
-            this.panelMeasureDistanceDesignSurface.Location = new System.Drawing.Point(20, 20);
-            this.panelMeasureDistanceDesignSurface.Name = "panelMeasureDistanceDesignSurface";
-            this.panelMeasureDistanceDesignSurface.Size = new System.Drawing.Size(300, 180);
-            this.panelMeasureDistanceDesignSurface.TabIndex = 0;
+            this.panelMeasureSource.BackColor = System.Drawing.Color.White;
+            this.panelMeasureSource.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelMeasureSource.Controls.Add(this.labelMeasureSource);
+            this.panelMeasureSource.Controls.Add(this.comboBoxMeasureSource);
+            this.panelMeasureSource.Controls.Add(this.buttonParallelMeasure);
+            this.panelMeasureSource.Controls.Add(this.buttonPerpendicularMeasure);
+            this.panelMeasureSource.Controls.Add(this.buttonSaveMeasurePoint);
+            this.panelMeasureSource.Controls.Add(this.buttonClearMeasurePoint);
+            this.panelMeasureSource.Controls.Add(this.labelMeasureStatus);
+            this.panelMeasureSource.Location = new System.Drawing.Point(20, 20);
+            this.panelMeasureSource.Name = "panelMeasureSource";
+            this.panelMeasureSource.Size = new System.Drawing.Size(330, 238);
+            this.panelMeasureSource.TabIndex = 0;
             // 
-            // labelMeasureDistanceDesignSurface
+            // labelMeasureSource
             // 
-            this.labelMeasureDistanceDesignSurface.AutoSize = true;
-            this.labelMeasureDistanceDesignSurface.Location = new System.Drawing.Point(16, 16);
-            this.labelMeasureDistanceDesignSurface.Name = "labelMeasureDistanceDesignSurface";
-            this.labelMeasureDistanceDesignSurface.Size = new System.Drawing.Size(118, 18);
-            this.labelMeasureDistanceDesignSurface.TabIndex = 0;
-            this.labelMeasureDistanceDesignSurface.Text = "量測頁面設計區";
+            this.labelMeasureSource.AutoSize = true;
+            this.labelMeasureSource.Location = new System.Drawing.Point(16, 16);
+            this.labelMeasureSource.Name = "labelMeasureSource";
+            this.labelMeasureSource.Size = new System.Drawing.Size(88, 18);
+            this.labelMeasureSource.TabIndex = 0;
+            this.labelMeasureSource.Text = "前處理影像來源";
+            // 
+            // comboBoxMeasureSource
+            // 
+            this.comboBoxMeasureSource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxMeasureSource.FormattingEnabled = true;
+            this.comboBoxMeasureSource.Location = new System.Drawing.Point(16, 42);
+            this.comboBoxMeasureSource.Name = "comboBoxMeasureSource";
+            this.comboBoxMeasureSource.Size = new System.Drawing.Size(280, 25);
+            this.comboBoxMeasureSource.TabIndex = 1;
+            // 
+            // buttonParallelMeasure
+            // 
+            this.buttonParallelMeasure.Location = new System.Drawing.Point(16, 76);
+            this.buttonParallelMeasure.Name = "buttonParallelMeasure";
+            this.buttonParallelMeasure.Size = new System.Drawing.Size(136, 36);
+            this.buttonParallelMeasure.TabIndex = 2;
+            this.buttonParallelMeasure.Text = "平行";
+            this.buttonParallelMeasure.UseVisualStyleBackColor = true;
+            // 
+            // buttonPerpendicularMeasure
+            // 
+            this.buttonPerpendicularMeasure.Location = new System.Drawing.Point(160, 76);
+            this.buttonPerpendicularMeasure.Name = "buttonPerpendicularMeasure";
+            this.buttonPerpendicularMeasure.Size = new System.Drawing.Size(136, 36);
+            this.buttonPerpendicularMeasure.TabIndex = 3;
+            this.buttonPerpendicularMeasure.Text = "垂直";
+            this.buttonPerpendicularMeasure.UseVisualStyleBackColor = true;
+            // 
+            // buttonSaveMeasurePoint
+            // 
+            this.buttonSaveMeasurePoint.Location = new System.Drawing.Point(16, 126);
+            this.buttonSaveMeasurePoint.Name = "buttonSaveMeasurePoint";
+            this.buttonSaveMeasurePoint.Size = new System.Drawing.Size(280, 40);
+            this.buttonSaveMeasurePoint.TabIndex = 4;
+            this.buttonSaveMeasurePoint.Text = "保存量測點";
+            this.buttonSaveMeasurePoint.UseVisualStyleBackColor = true;
+            // 
+            // buttonClearMeasurePoint
+            // 
+            this.buttonClearMeasurePoint.Location = new System.Drawing.Point(16, 172);
+            this.buttonClearMeasurePoint.Name = "buttonClearMeasurePoint";
+            this.buttonClearMeasurePoint.Size = new System.Drawing.Size(280, 40);
+            this.buttonClearMeasurePoint.TabIndex = 5;
+            this.buttonClearMeasurePoint.Text = "清除量測點";
+            this.buttonClearMeasurePoint.UseVisualStyleBackColor = true;
+            // 
+            // labelMeasureStatus
+            // 
+            this.labelMeasureStatus.AutoSize = true;
+            this.labelMeasureStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(130)))), ((int)(((byte)(134)))), ((int)(((byte)(138)))));
+            this.labelMeasureStatus.Location = new System.Drawing.Point(16, 220);
+            this.labelMeasureStatus.Name = "labelMeasureStatus";
+            this.labelMeasureStatus.Size = new System.Drawing.Size(188, 18);
+            this.labelMeasureStatus.TabIndex = 6;
+            this.labelMeasureStatus.Text = "點兩下影像建立兩點量測";
+            // 
+            // panelMeasurePreview
+            // 
+            this.panelMeasurePreview.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(241)))), ((int)(((byte)(243)))));
+            this.panelMeasurePreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelMeasurePreview.Controls.Add(this.pictureBoxMeasurePreview);
+            this.panelMeasurePreview.Location = new System.Drawing.Point(20, 264);
+            this.panelMeasurePreview.Name = "panelMeasurePreview";
+            this.panelMeasurePreview.Size = new System.Drawing.Size(992, 352);
+            this.panelMeasurePreview.TabIndex = 1;
+            // 
+            // pictureBoxMeasurePreview
+            // 
+            this.pictureBoxMeasurePreview.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(241)))), ((int)(((byte)(243)))));
+            this.pictureBoxMeasurePreview.Location = new System.Drawing.Point(0, 0);
+            this.pictureBoxMeasurePreview.Name = "pictureBoxMeasurePreview";
+            this.pictureBoxMeasurePreview.Size = new System.Drawing.Size(990, 350);
+            this.pictureBoxMeasurePreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxMeasurePreview.TabIndex = 0;
+            this.pictureBoxMeasurePreview.TabStop = false;
+            // 
+            // dataGridViewMeasureRecords
+            // 
+            this.dataGridViewMeasureRecords.Location = new System.Drawing.Point(366, 20);
+            this.dataGridViewMeasureRecords.Name = "dataGridViewMeasureRecords";
+            this.dataGridViewMeasureRecords.Size = new System.Drawing.Size(646, 178);
+            this.dataGridViewMeasureRecords.TabIndex = 2;
+            // 
+            // buttonSaveMeasureRecords
+            // 
+            this.buttonSaveMeasureRecords.Location = new System.Drawing.Point(366, 206);
+            this.buttonSaveMeasureRecords.Name = "buttonSaveMeasureRecords";
+            this.buttonSaveMeasureRecords.Size = new System.Drawing.Size(646, 42);
+            this.buttonSaveMeasureRecords.TabIndex = 3;
+            this.buttonSaveMeasureRecords.Text = "保存紀錄";
+            this.buttonSaveMeasureRecords.UseVisualStyleBackColor = true;
             // 
             // tabPageMultiImageConfirm
             // 

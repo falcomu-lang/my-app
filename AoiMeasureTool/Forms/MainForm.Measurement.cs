@@ -69,202 +69,18 @@ namespace AoiMeasureTool
 
         private void InitializeMeasureDistanceControls()
         {
-            _tabPageMeasureDistance = new TabPage
-            {
-                BackColor = Color.FromArgb(248, 249, 250),
-                Location = new Point(4, 26),
-                Name = "tabPageMeasureDistance",
-                Padding = new Padding(3),
-                Size = new Size(1032, 656),
-                TabIndex = 2,
-                Text = "框選量測的距離"
-            };
-
-            _tabPageMultiImageConfirm = new TabPage
-            {
-                BackColor = Color.FromArgb(248, 249, 250),
-                Location = new Point(4, 26),
-                Name = "tabPageMultiImageConfirm",
-                Padding = new Padding(3),
-                Size = new Size(1032, 656),
-                TabIndex = 3,
-                Text = "多影像確認結果"
-            };
-
-            _pictureBoxMultiImageConfirm = new PictureBox
-            {
-                BackColor = Color.FromArgb(239, 241, 243),
-                BorderStyle = BorderStyle.FixedSingle,
-                Location = new Point(20, 20),
-                Size = new Size(496, 306),
-                SizeMode = PictureBoxSizeMode.Zoom
-            };
-
-            _tabPageMultiImageConfirm.Controls.Add(_pictureBoxMultiImageConfirm);
-
-            var panelMeasureSource = new Panel
-            {
-                BackColor = Color.White,
-                BorderStyle = BorderStyle.FixedSingle,
-                Location = new Point(20, 20),
-                Size = new Size(330, 238)
-            };
-
-            var labelMeasureSource = new Label
-            {
-                AutoSize = true,
-                Location = new Point(16, 16),
-                Text = "前處理影像來源"
-            };
-
-            _comboBoxMeasureSource = new ComboBox
-            {
-                DropDownStyle = ComboBoxStyle.DropDownList,
-                Location = new Point(16, 42),
-                Size = new Size(280, 20)
-            };
-            _comboBoxMeasureSource.Items.AddRange(new object[] { "前處理 1", "前處理 2", "前處理 3", "前處理 4" });
-            _comboBoxMeasureSource.SelectedIndex = 0;
-            _comboBoxMeasureSource.SelectedIndexChanged += MeasureSource_SelectedIndexChanged;
-
-            _buttonSaveMeasurePoint = new Button
-            {
-                BackColor = Color.FromArgb(224, 228, 231),
-                FlatStyle = FlatStyle.Flat,
-                Location = new Point(16, 126),
-                Size = new Size(280, 40),
-                Text = "保存量測點",
-                UseVisualStyleBackColor = false
-            };
-            _buttonSaveMeasurePoint.Click += SaveMeasurePoint_Click;
-
-            _buttonClearMeasurePoint = new Button
-            {
-                BackColor = Color.FromArgb(224, 228, 231),
-                FlatStyle = FlatStyle.Flat,
-                Location = new Point(16, 172),
-                Size = new Size(280, 40),
-                Text = "清除量測點",
-                UseVisualStyleBackColor = false
-            };
-            _buttonClearMeasurePoint.Click += ClearMeasurePoint_Click;
-
-            _buttonSaveMeasureRecords = new Button
-            {
-                BackColor = Color.FromArgb(224, 228, 231),
-                FlatStyle = FlatStyle.Flat,
-                Location = new Point(366, 206),
-                Size = new Size(646, 42),
-                Text = "保存紀錄",
-                UseVisualStyleBackColor = false
-            };
-            _buttonSaveMeasureRecords.Click += SaveMeasureRecords_Click;
-
-            _buttonParallelMeasure = new Button
-            {
-                BackColor = Color.FromArgb(224, 228, 231),
-                FlatStyle = FlatStyle.Flat,
-                Location = new Point(16, 76),
-                Size = new Size(136, 36),
-                Text = "平行",
-                UseVisualStyleBackColor = false
-            };
-            _buttonParallelMeasure.Click += ParallelMeasure_Click;
-
-            _buttonPerpendicularMeasure = new Button
-            {
-                BackColor = Color.FromArgb(224, 228, 231),
-                FlatStyle = FlatStyle.Flat,
-                Location = new Point(160, 76),
-                Size = new Size(136, 36),
-                Text = "垂直",
-                UseVisualStyleBackColor = false
-            };
-            _buttonPerpendicularMeasure.Click += PerpendicularMeasure_Click;
-
-            _labelMeasureStatus = new Label
-            {
-                AutoSize = true,
-                Location = new Point(16, 220),
-                ForeColor = Color.FromArgb(130, 134, 138),
-                Text = "點兩下影像建立兩點量測，保存後寫入表格"
-            };
-
-            panelMeasureSource.Controls.Add(labelMeasureSource);
-            panelMeasureSource.Controls.Add(_comboBoxMeasureSource);
-            panelMeasureSource.Controls.Add(_buttonParallelMeasure);
-            panelMeasureSource.Controls.Add(_buttonPerpendicularMeasure);
-            panelMeasureSource.Controls.Add(_buttonSaveMeasurePoint);
-            panelMeasureSource.Controls.Add(_buttonClearMeasurePoint);
-            panelMeasureSource.Controls.Add(_labelMeasureStatus);
-
-            _panelMeasurePreview = new Panel
-            {
-                BackColor = Color.FromArgb(239, 241, 243),
-                BorderStyle = BorderStyle.FixedSingle,
-                Location = new Point(20, 264),
-                Size = new Size(992, 352)
-            };
-
-            _pictureBoxMeasurePreview = new PictureBox
-            {
-                BackColor = Color.FromArgb(239, 241, 243),
-                Location = new Point(0, 0),
-                Size = new Size(990, 350),
-                SizeMode = PictureBoxSizeMode.Zoom
-            };
-            _pictureBoxMeasurePreview.MouseDown += PictureBoxMeasurePreview_MouseDown;
-            _pictureBoxMeasurePreview.MouseMove += PictureBoxMeasurePreview_MouseMove;
-            _pictureBoxMeasurePreview.MouseUp += PictureBoxMeasurePreview_MouseUp;
-            _pictureBoxMeasurePreview.MouseWheel += PictureBoxMeasurePreview_MouseWheel;
-            _pictureBoxMeasurePreview.MouseEnter += PictureBoxMeasurePreview_MouseEnter;
-            _pictureBoxMeasurePreview.Paint += PictureBoxMeasurePreview_Paint;
-            _panelMeasurePreview.Controls.Add(_pictureBoxMeasurePreview);
-
-            _dataGridViewMeasureRecords = new DataGridView
-            {
-                Location = new Point(366, 20),
-                Size = new Size(646, 178),
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                AllowUserToDeleteRows = false,
-                RowHeadersVisible = false,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            };
-            _dataGridViewMeasureRecords.Columns.Add("colIndex", "編號");
-            _dataGridViewMeasureRecords.Columns.Add("colX1", "X1");
-            _dataGridViewMeasureRecords.Columns.Add("colY1", "Y1");
-            _dataGridViewMeasureRecords.Columns.Add("colX2", "X2");
-            _dataGridViewMeasureRecords.Columns.Add("colY2", "Y2");
-            _dataGridViewMeasureRecords.Columns.Add("colLtX", "LT X");
-            _dataGridViewMeasureRecords.Columns.Add("colLtY", "LT Y");
-            _dataGridViewMeasureRecords.Columns.Add("colRtX", "RT X");
-            _dataGridViewMeasureRecords.Columns.Add("colRtY", "RT Y");
-            _dataGridViewMeasureRecords.Columns.Add("colRefLen", "Ref Len");
-            _dataGridViewMeasureRecords.Columns.Add("colCx", "Center X");
-            _dataGridViewMeasureRecords.Columns.Add("colCy", "Center Y");
-            _dataGridViewMeasureRecords.Columns.Add("colLocalX1", "Local X1");
-            _dataGridViewMeasureRecords.Columns.Add("colLocalY1", "Local Y1");
-            _dataGridViewMeasureRecords.Columns.Add("colLocalX2", "Local X2");
-            _dataGridViewMeasureRecords.Columns.Add("colLocalY2", "Local Y2");
-            _dataGridViewMeasureRecords.Columns.Add("colDistance", "Distance(px)");
-            _dataGridViewMeasureRecords.Columns.Add("colSource", "來源");
-            _dataGridViewMeasureRecords.Columns.Add("colMode", "方向");
-            _dataGridViewMeasureRecords.MouseDown += MeasureRecords_MouseDown;
-
-            _measureRecordMenu = new ContextMenuStrip();
-            _measureDeleteMenuItem = new ToolStripMenuItem("刪除");
-            _measureDeleteMenuItem.Click += MeasureDeleteMenuItem_Click;
-            _measureRecordMenu.Items.Add(_measureDeleteMenuItem);
-            _dataGridViewMeasureRecords.ContextMenuStrip = _measureRecordMenu;
-            _dataGridViewMeasureRecords.SelectionChanged += MeasureRecords_SelectionChanged;
-
-            _measureBlinkTimer = new System.Windows.Forms.Timer();
-            _measureBlinkTimer.Interval = 180;
-            _measureBlinkTimer.Tick += MeasureBlinkTimer_Tick;
-
             _tabPageMeasureDistance = tabPageMeasureDistance;
             _tabPageMultiImageConfirm = tabPageMultiImageConfirm;
+            _panelMeasurePreview = panelMeasurePreview;
+            _pictureBoxMeasurePreview = pictureBoxMeasurePreview;
+            _dataGridViewMeasureRecords = dataGridViewMeasureRecords;
+            _buttonSaveMeasurePoint = buttonSaveMeasurePoint;
+            _buttonClearMeasurePoint = buttonClearMeasurePoint;
+            _buttonSaveMeasureRecords = buttonSaveMeasureRecords;
+            _buttonParallelMeasure = buttonParallelMeasure;
+            _buttonPerpendicularMeasure = buttonPerpendicularMeasure;
+            _comboBoxMeasureSource = comboBoxMeasureSource;
+            _labelMeasureStatus = labelMeasureStatus;
             _panelMultiImageConfirmViewport = panelMultiImageConfirmViewport;
             _pictureBoxMultiImageConfirm = pictureBoxMultiImageConfirm;
             _buttonLoadMultiImageFolder = buttonLoadMultiImageFolder;
@@ -274,6 +90,82 @@ namespace AoiMeasureTool
             comboBoxMultiImagePreviewSource = comboBoxMultiImagePreviewSource ?? this.comboBoxMultiImagePreviewSource;
             buttonLoadMultiImagePreprocess = buttonLoadMultiImagePreprocess ?? this.buttonLoadMultiImagePreprocess;
             buttonLoadMultiImageOriginal = buttonLoadMultiImageOriginal ?? this.buttonLoadMultiImageOriginal;
+            if (_comboBoxMeasureSource != null)
+            {
+                _comboBoxMeasureSource.Items.Clear();
+                _comboBoxMeasureSource.Items.AddRange(new object[] { "前處理 1", "前處理 2", "前處理 3", "前處理 4" });
+                _comboBoxMeasureSource.SelectedIndex = 0;
+                _comboBoxMeasureSource.SelectedIndexChanged += MeasureSource_SelectedIndexChanged;
+            }
+            if (_buttonSaveMeasurePoint != null)
+            {
+                _buttonSaveMeasurePoint.Click += SaveMeasurePoint_Click;
+            }
+            if (_buttonClearMeasurePoint != null)
+            {
+                _buttonClearMeasurePoint.Click += ClearMeasurePoint_Click;
+            }
+            if (_buttonSaveMeasureRecords != null)
+            {
+                _buttonSaveMeasureRecords.Click += SaveMeasureRecords_Click;
+            }
+            if (_buttonParallelMeasure != null)
+            {
+                _buttonParallelMeasure.Click += ParallelMeasure_Click;
+            }
+            if (_buttonPerpendicularMeasure != null)
+            {
+                _buttonPerpendicularMeasure.Click += PerpendicularMeasure_Click;
+            }
+            if (_pictureBoxMeasurePreview != null)
+            {
+                _pictureBoxMeasurePreview.MouseDown += PictureBoxMeasurePreview_MouseDown;
+                _pictureBoxMeasurePreview.MouseMove += PictureBoxMeasurePreview_MouseMove;
+                _pictureBoxMeasurePreview.MouseUp += PictureBoxMeasurePreview_MouseUp;
+                _pictureBoxMeasurePreview.MouseWheel += PictureBoxMeasurePreview_MouseWheel;
+                _pictureBoxMeasurePreview.MouseEnter += PictureBoxMeasurePreview_MouseEnter;
+                _pictureBoxMeasurePreview.Paint += PictureBoxMeasurePreview_Paint;
+            }
+            if (_dataGridViewMeasureRecords != null)
+            {
+                _dataGridViewMeasureRecords.ReadOnly = true;
+                _dataGridViewMeasureRecords.AllowUserToAddRows = false;
+                _dataGridViewMeasureRecords.AllowUserToDeleteRows = false;
+                _dataGridViewMeasureRecords.RowHeadersVisible = false;
+                _dataGridViewMeasureRecords.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                if (_dataGridViewMeasureRecords.Columns.Count == 0)
+                {
+                    _dataGridViewMeasureRecords.Columns.Add("colIndex", "編號");
+                    _dataGridViewMeasureRecords.Columns.Add("colX1", "X1");
+                    _dataGridViewMeasureRecords.Columns.Add("colY1", "Y1");
+                    _dataGridViewMeasureRecords.Columns.Add("colX2", "X2");
+                    _dataGridViewMeasureRecords.Columns.Add("colY2", "Y2");
+                    _dataGridViewMeasureRecords.Columns.Add("colLtX", "LT X");
+                    _dataGridViewMeasureRecords.Columns.Add("colLtY", "LT Y");
+                    _dataGridViewMeasureRecords.Columns.Add("colRtX", "RT X");
+                    _dataGridViewMeasureRecords.Columns.Add("colRtY", "RT Y");
+                    _dataGridViewMeasureRecords.Columns.Add("colRefLen", "Ref Len");
+                    _dataGridViewMeasureRecords.Columns.Add("colCx", "Center X");
+                    _dataGridViewMeasureRecords.Columns.Add("colCy", "Center Y");
+                    _dataGridViewMeasureRecords.Columns.Add("colLocalX1", "Local X1");
+                    _dataGridViewMeasureRecords.Columns.Add("colLocalY1", "Local Y1");
+                    _dataGridViewMeasureRecords.Columns.Add("colLocalX2", "Local X2");
+                    _dataGridViewMeasureRecords.Columns.Add("colLocalY2", "Local Y2");
+                    _dataGridViewMeasureRecords.Columns.Add("colDistance", "Distance(px)");
+                    _dataGridViewMeasureRecords.Columns.Add("colSource", "來源");
+                    _dataGridViewMeasureRecords.Columns.Add("colMode", "方向");
+                }
+                _dataGridViewMeasureRecords.MouseDown += MeasureRecords_MouseDown;
+                _measureRecordMenu = new ContextMenuStrip();
+                _measureDeleteMenuItem = new ToolStripMenuItem("刪除");
+                _measureDeleteMenuItem.Click += MeasureDeleteMenuItem_Click;
+                _measureRecordMenu.Items.Add(_measureDeleteMenuItem);
+                _dataGridViewMeasureRecords.ContextMenuStrip = _measureRecordMenu;
+                _dataGridViewMeasureRecords.SelectionChanged += MeasureRecords_SelectionChanged;
+            }
+            _measureBlinkTimer = new System.Windows.Forms.Timer();
+            _measureBlinkTimer.Interval = 180;
+            _measureBlinkTimer.Tick += MeasureBlinkTimer_Tick;
             if (groupBoxMultiImagePreviewSource != null)
             {
                 groupBoxMultiImagePreviewSource.Text = "預覽來源";
@@ -298,9 +190,6 @@ namespace AoiMeasureTool
                 });
                 comboBoxMultiImagePreviewSource.SelectedIndex = 0;
             }
-            _buttonLoadMultiImageFolder?.BringToFront();
-            _buttonMultiImagePrev?.BringToFront();
-            _buttonMultiImageNext?.BringToFront();
             if (_panelMultiImageConfirmViewport != null)
             {
                 _panelMultiImageConfirmViewport.MouseDown += PictureBoxMultiImageConfirm_MouseDown;
@@ -320,11 +209,6 @@ namespace AoiMeasureTool
                 _pictureBoxMultiImageConfirm.Visible = false;
             }
             UpdateMultiImageNavigationButtons();
-
-            _tabPageMeasureDistance.Controls.Add(panelMeasureSource);
-            _tabPageMeasureDistance.Controls.Add(_dataGridViewMeasureRecords);
-            _tabPageMeasureDistance.Controls.Add(_buttonSaveMeasureRecords);
-            _tabPageMeasureDistance.Controls.Add(_panelMeasurePreview);
             UpdateMeasureSourceAvailability();
             UpdateMeasureDirectionButtons();
         }
