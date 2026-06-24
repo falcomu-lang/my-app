@@ -315,6 +315,18 @@ namespace AoiMeasureTool
             return _productProfileService.GetOrCreateState(productKey).PreprocessSnapshots;
         }
 
+        private ReferenceCornerSnapshot GetReferenceCornerSnapshotForProduct(string productKey)
+        {
+            productKey = string.IsNullOrWhiteSpace(productKey) ? "DEFAULT" : productKey;
+
+            if (string.Equals(GetCurrentProductKeyOrDefault(), productKey, System.StringComparison.OrdinalIgnoreCase))
+            {
+                return CaptureCurrentReferenceCornerSnapshot();
+            }
+
+            return _productProfileService.GetOrCreateState(productKey).ReferenceCornerSnapshot;
+        }
+
         private void PersistActiveProductProfile()
         {
             _productProfileService.PersistProduct(

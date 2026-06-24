@@ -950,18 +950,30 @@ namespace AoiMeasureTool
                 return null;
             }
 
-            PreprocessParam preprocessParam;
-            if (TryGetReferenceCornerPreprocessParam(out preprocessParam))
+            var productKey = string.IsNullOrWhiteSpace(_multiImageConfirmProductKey)
+                ? GetCurrentProductKeyOrDefault()
+                : _multiImageConfirmProductKey;
+            var referenceSnapshot = GetReferenceCornerSnapshotForProduct(productKey);
+            if (referenceSnapshot == null || !referenceSnapshot.Enabled)
             {
-                return PreprocessPipelineService.Build(grayMat, preprocessParam);
+                return null;
             }
 
-            return null;
+            return BuildMultiImageConfirmReferenceBinary(grayMat, productKey, referenceSnapshot.SourceIndex);
         }
 
         private Rectangle GetMultiImageConfirmReferenceRoi(OpenCvSharp.Size imageSize)
         {
-            var roi = _referenceRoiRectangle;
+            var productKey = string.IsNullOrWhiteSpace(_multiImageConfirmProductKey)
+                ? GetCurrentProductKeyOrDefault()
+                : _multiImageConfirmProductKey;
+            var referenceSnapshot = GetReferenceCornerSnapshotForProduct(productKey);
+            if (referenceSnapshot == null || !referenceSnapshot.RoiSaved)
+            {
+                return Rectangle.Empty;
+            }
+
+            var roi = ReferenceCornerSelectionService.NormalizeRectangle(referenceSnapshot.Roi);
             if (roi.Width <= 0 || roi.Height <= 0)
             {
                 return Rectangle.Empty;
@@ -979,6 +991,33 @@ namespace AoiMeasureTool
             var right = Math.Max(left + 1, Math.Min(roi.Right, maxWidth));
             var bottom = Math.Max(top + 1, Math.Min(roi.Bottom, maxHeight));
             return Rectangle.FromLTRB(left, top, right, bottom);
+        }
+
+        private OpenCvSharp.Mat BuildMultiImageConfirmReferenceBinary(OpenCvSharp.Mat grayMat, string productKey, int referenceSourceIndex)
+        {
+            var snapshots = GetPreprocessSnapshotsForProduct(productKey);
+            if (snapshots == null || referenceSourceIndex < 0 || referenceSourceIndex >= snapshots.Length)
+            {
+                return null;
+            }
+
+            var snapshot = snapshots[referenceSourceIndex];
+            if (snapshot == null || !snapshot.Enabled)
+            {
+                return null;
+            }
+
+            var preprocessParam = new PreprocessParam
+            {
+                Enabled = snapshot.Enabled,
+                WhiteObject = referenceSourceIndex < 2,
+                Threshold = snapshot.Threshold,
+                ErodeIterations = snapshot.ErodeIterations,
+                DilateIterations = snapshot.DilateIterations,
+                OpenIterations = snapshot.OpenIterations,
+                CloseIterations = snapshot.CloseIterations
+            };
+            return PreprocessPipelineService.Build(grayMat, preprocessParam);
         }
 
         private void DrawMultiImageConfirmReferenceRoi(Graphics graphics, Rectangle imageRect)
