@@ -102,56 +102,6 @@ namespace AoiMeasureTool
 
             _tabPageMultiImageConfirm.Controls.Add(_pictureBoxMultiImageConfirm);
 
-            groupBoxMultiImagePreviewSource = new GroupBox
-            {
-                Location = new Point(20, 476),
-                Size = new Size(440, 126),
-                Text = "預覽來源"
-            };
-
-            comboBoxMultiImagePreviewSource = new ComboBox
-            {
-                DropDownStyle = ComboBoxStyle.DropDownList,
-                Location = new Point(16, 28),
-                Size = new Size(202, 25)
-            };
-            comboBoxMultiImagePreviewSource.Items.AddRange(new object[]
-            {
-                "前處理影像 1",
-                "前處理影像 2",
-                "前處理影像 3",
-                "前處理影像 4"
-            });
-            comboBoxMultiImagePreviewSource.SelectedIndex = 0;
-            comboBoxMultiImagePreviewSource.SelectedIndexChanged += MultiImagePreviewSource_SelectedIndexChanged;
-
-            buttonLoadMultiImagePreprocess = new Button
-            {
-                BackColor = Color.FromArgb(224, 228, 231),
-                FlatStyle = FlatStyle.Flat,
-                Location = new Point(16, 66),
-                Size = new Size(202, 36),
-                Text = "讀取前處理影像",
-                UseVisualStyleBackColor = false
-            };
-            buttonLoadMultiImagePreprocess.Click += LoadMultiImagePreprocess_Click;
-
-            buttonLoadMultiImageOriginal = new Button
-            {
-                BackColor = Color.FromArgb(224, 228, 231),
-                FlatStyle = FlatStyle.Flat,
-                Location = new Point(230, 28),
-                Size = new Size(188, 74),
-                Text = "原始影像",
-                UseVisualStyleBackColor = false
-            };
-            buttonLoadMultiImageOriginal.Click += LoadMultiImageOriginal_Click;
-
-            groupBoxMultiImagePreviewSource.Controls.Add(comboBoxMultiImagePreviewSource);
-            groupBoxMultiImagePreviewSource.Controls.Add(buttonLoadMultiImagePreprocess);
-            groupBoxMultiImagePreviewSource.Controls.Add(buttonLoadMultiImageOriginal);
-            _tabPageMultiImageConfirm.Controls.Add(groupBoxMultiImagePreviewSource);
-
             var panelMeasureSource = new Panel
             {
                 BackColor = Color.White,
@@ -320,6 +270,34 @@ namespace AoiMeasureTool
             _buttonLoadMultiImageFolder = buttonLoadMultiImageFolder;
             _buttonMultiImagePrev = buttonMultiImagePrev;
             _buttonMultiImageNext = buttonMultiImageNext;
+            groupBoxMultiImagePreviewSource = groupBoxMultiImagePreviewSource ?? this.groupBoxMultiImagePreviewSource;
+            comboBoxMultiImagePreviewSource = comboBoxMultiImagePreviewSource ?? this.comboBoxMultiImagePreviewSource;
+            buttonLoadMultiImagePreprocess = buttonLoadMultiImagePreprocess ?? this.buttonLoadMultiImagePreprocess;
+            buttonLoadMultiImageOriginal = buttonLoadMultiImageOriginal ?? this.buttonLoadMultiImageOriginal;
+            if (groupBoxMultiImagePreviewSource != null)
+            {
+                groupBoxMultiImagePreviewSource.Text = "預覽來源";
+            }
+            if (buttonLoadMultiImagePreprocess != null)
+            {
+                buttonLoadMultiImagePreprocess.Text = "讀取前處理影像";
+            }
+            if (buttonLoadMultiImageOriginal != null)
+            {
+                buttonLoadMultiImageOriginal.Text = "原始影像";
+            }
+            if (comboBoxMultiImagePreviewSource != null)
+            {
+                comboBoxMultiImagePreviewSource.Items.Clear();
+                comboBoxMultiImagePreviewSource.Items.AddRange(new object[]
+                {
+                    "前處理影像 1",
+                    "前處理影像 2",
+                    "前處理影像 3",
+                    "前處理影像 4"
+                });
+                comboBoxMultiImagePreviewSource.SelectedIndex = 0;
+            }
             _buttonLoadMultiImageFolder?.BringToFront();
             _buttonMultiImagePrev?.BringToFront();
             _buttonMultiImageNext?.BringToFront();
