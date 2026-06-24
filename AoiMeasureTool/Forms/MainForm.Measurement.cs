@@ -1105,19 +1105,21 @@ namespace AoiMeasureTool
 
             if (_buttonParallelMeasure != null)
             {
-                _buttonParallelMeasure.Enabled = _measureSourceAvailable && _referenceCornerFound && _referenceCornerCandidate != null;
+                _buttonParallelMeasure.Enabled = _measureSourceAvailable && _referenceCornerFound && _referenceCornerCandidate != null && !_isEditingMeasureRecord;
             }
 
             if (_buttonPerpendicularMeasure != null)
             {
-                _buttonPerpendicularMeasure.Enabled = _measureSourceAvailable && _referenceCornerFound && _referenceCornerCandidate != null;
+                _buttonPerpendicularMeasure.Enabled = _measureSourceAvailable && _referenceCornerFound && _referenceCornerCandidate != null && !_isEditingMeasureRecord;
             }
 
             if (_labelMeasureStatus != null)
             {
-                _labelMeasureStatus.Text = _measureSourceAvailable
-                    ? "點兩下影像建立兩點量測，保存後寫入表格"
-                    : "目前沒有可用的前處理影像，無法設定量測點";
+                _labelMeasureStatus.Text = _isEditingMeasureRecord
+                    ? "請重新點選兩個點，完成後按確認修改，取消則不變更"
+                    : (_measureSourceAvailable
+                        ? "點兩下影像建立兩點量測，保存後寫入表格"
+                        : "目前沒有可用的前處理影像，無法設定量測點");
             }
 
             UpdateMeasureDirectionButtons();
@@ -1125,7 +1127,7 @@ namespace AoiMeasureTool
 
         private void PictureBoxMeasurePreview_MouseDown(object sender, MouseEventArgs e)
         {
-            if (!_measureSourceAvailable)
+            if (!_measureSourceAvailable && !_isEditingMeasureRecord)
             {
                 return;
             }
@@ -1155,7 +1157,7 @@ namespace AoiMeasureTool
                 _measurePoints.Clear();
                 _measurePoints.Add(imagePoint);
                 _isMeasureSelecting = true;
-                _labelMeasureStatus.Text = "請再點第二個點";
+                _labelMeasureStatus.Text = _isEditingMeasureRecord ? "請再點第二個點，完成後按確認修改" : "請再點第二個點";
             }
             else
             {
@@ -1280,6 +1282,12 @@ namespace AoiMeasureTool
 
         private void SaveMeasurePoint_Click(object sender, EventArgs e)
         {
+            if (_isEditingMeasureRecord)
+            {
+                ConfirmMeasureRecordEdit();
+                return;
+            }
+
             if (_measurePoints.Count < 2)
             {
                 MessageBox.Show(this, "請先在影像上點選兩個點。", "量測距離", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1311,6 +1319,12 @@ namespace AoiMeasureTool
 
         private void ClearMeasurePoint_Click(object sender, EventArgs e)
         {
+            if (_isEditingMeasureRecord)
+            {
+                CancelMeasureRecordEdit();
+                return;
+            }
+
             _measurePoints.Clear();
             _isMeasureSelecting = false;
             _labelMeasureStatus.Text = "點兩下影像建立兩點量測，保存後寫入表格";
@@ -1327,6 +1341,10 @@ namespace AoiMeasureTool
 
         private void MeasureSource_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_isEditingMeasureRecord)
+            {
+                CancelMeasureRecordEdit();
+            }
             _measurePoints.Clear();
             _isMeasureSelecting = false;
             RefreshMeasureDistancePreview();
@@ -1460,36 +1478,113 @@ namespace AoiMeasureTool
                 return;
             }
 
-            using (var dialog = new MeasureRecordEditForm(record))
+            using (var dialog = new MeasureDirectionDialog(_measureDirectionMode))
             {
                 if (dialog.ShowDialog(this) != DialogResult.OK)
                 {
                     return;
                 }
 
-                var updatedRecord = dialog.BuildUpdatedRecord(record);
-                var listIndex = _measureRecords.IndexOf(record);
-                if (listIndex >= 0)
-                {
-                    _measureRecords[listIndex] = updatedRecord;
-                }
-
-                selectedRow.Tag = updatedRecord;
-                UpdateMeasureRecordRow(selectedRow, updatedRecord);
-
-                if (ReferenceEquals(_measureBlinkRecord, record))
-                {
-                    _measureBlinkRecord = updatedRecord;
-                }
-
-                RefreshMeasureDistancePreview();
-                UpdateMeasureSourceAvailability();
-                SaveCurrentAppSettings();
+                BeginMeasureRecordEdit(record, selectedRow, dialog.SelectedMode);
             }
+        }
+
+        private void BeginMeasureRecordEdit(MeasureRecord record, DataGridViewRow row, MeasureDirectionMode mode)
+        {
+            if (record == null || row == null)
+            {
+                return;
+            }
+
+            _editingMeasureRecord = record;
+            _editingMeasureRow = row;
+            _isEditingMeasureRecord = true;
+            _measureDirectionMode = mode;
+            _measurePoints.Clear();
+            _isMeasureSelecting = false;
+            _buttonSaveMeasurePoint.Text = "確認修改";
+            _buttonClearMeasurePoint.Text = "取消修改";
+            _labelMeasureStatus.Text = "請重新點選兩個點，完成後按確認修改，取消則不變更";
+            _pictureBoxMeasurePreview.Invalidate();
+            UpdateMeasureDirectionButtons();
+        }
+
+        private void ConfirmMeasureRecordEdit()
+        {
+            if (!_isEditingMeasureRecord || _editingMeasureRecord == null || _editingMeasureRow == null)
+            {
+                return;
+            }
+
+            if (_measurePoints.Count < 2)
+            {
+                MessageBox.Show(this, "請先重新點選兩個點。", "量測距離", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (_referenceCornerCandidate == null)
+            {
+                MessageBox.Show(this, "請先完成左上角與右上角基準的辨識，才能修改量測資料。", "量測距離", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var updatedRecord = MeasurementRecordService.CreateRecord(
+                _measurePoints[0],
+                _measurePoints[1],
+                _referenceCornerCandidate,
+                _editingMeasureRecord.SourceName,
+                GetMeasureDirectionName());
+
+            var listIndex = _measureRecords.IndexOf(_editingMeasureRecord);
+            if (listIndex >= 0)
+            {
+                _measureRecords[listIndex] = updatedRecord;
+            }
+
+            _editingMeasureRow.Tag = updatedRecord;
+            UpdateMeasureRecordRow(_editingMeasureRow, updatedRecord);
+
+            if (ReferenceEquals(_measureBlinkRecord, _editingMeasureRecord))
+            {
+                _measureBlinkRecord = updatedRecord;
+            }
+
+            ExitMeasureRecordEdit("已修改量測線段。");
+            RefreshMeasureDistancePreview();
+            UpdateMeasureSourceAvailability();
+            SaveCurrentAppSettings();
+        }
+
+        private void CancelMeasureRecordEdit()
+        {
+            if (!_isEditingMeasureRecord)
+            {
+                return;
+            }
+
+            ExitMeasureRecordEdit("已取消修改。");
+        }
+
+        private void ExitMeasureRecordEdit(string statusText)
+        {
+            _isEditingMeasureRecord = false;
+            _editingMeasureRecord = null;
+            _editingMeasureRow = null;
+            _measurePoints.Clear();
+            _isMeasureSelecting = false;
+            _buttonSaveMeasurePoint.Text = "保存量測點";
+            _buttonClearMeasurePoint.Text = "清除量測點";
+            _labelMeasureStatus.Text = statusText;
+            _pictureBoxMeasurePreview.Invalidate();
+            UpdateMeasureDirectionButtons();
         }
 
         private void ClearAllMeasureRecords()
         {
+            if (_isEditingMeasureRecord)
+            {
+                CancelMeasureRecordEdit();
+            }
             _measureBlinkTimer?.Stop();
             _measureBlinkRecord = null;
             _measureBlinkRemainingTicks = 0;
@@ -1515,6 +1610,10 @@ namespace AoiMeasureTool
 
         private void ApplyMeasureRecords(List<MeasureRecord> records)
         {
+            if (_isEditingMeasureRecord)
+            {
+                CancelMeasureRecordEdit();
+            }
             _measurePoints.Clear();
             _measureRecords.Clear();
             _isMeasureSelecting = false;

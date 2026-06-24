@@ -101,6 +101,9 @@ namespace AoiMeasureTool
         private bool _isMeasureSelecting;
         private readonly List<Point> _measurePoints = new List<Point>(2);
         private readonly List<MeasureRecord> _measureRecords = new List<MeasureRecord>();
+        private MeasureRecord _editingMeasureRecord;
+        private DataGridViewRow _editingMeasureRow;
+        private bool _isEditingMeasureRecord;
         private bool _measureSourceAvailable;
         private MeasureDirectionMode _measureDirectionMode = MeasureDirectionMode.None;
         private readonly List<string> _multiImageConfirmImagePaths = new List<string>();
