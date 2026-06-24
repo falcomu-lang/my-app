@@ -61,6 +61,7 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Label labelMultiImageStatus;
         private System.Windows.Forms.Button buttonMultiImagePrev;
         private System.Windows.Forms.Button buttonMultiImageNext;
+        private System.Windows.Forms.Button buttonMultiImageLineSequence;
         private System.Windows.Forms.Panel panelMultiImageInfo;
         private System.Windows.Forms.DataGridView dataGridViewMultiImageInfo;
         private System.Windows.Forms.Panel panelImageViewport;
@@ -286,6 +287,7 @@ namespace AoiMeasureTool
             this.labelMultiImageStatus = new System.Windows.Forms.Label();
             this.buttonMultiImagePrev = new System.Windows.Forms.Button();
             this.buttonMultiImageNext = new System.Windows.Forms.Button();
+            this.buttonMultiImageLineSequence = new System.Windows.Forms.Button();
             this.panelMultiImageInfo = new System.Windows.Forms.Panel();
             this.dataGridViewMultiImageInfo = new System.Windows.Forms.DataGridView();
             this.panelMultiImageConfirmViewport = new System.Windows.Forms.Panel();
@@ -1808,6 +1810,7 @@ namespace AoiMeasureTool
             this.tabPageMultiImageConfirm.Controls.Add(this.labelMultiImageStatus);
             this.tabPageMultiImageConfirm.Controls.Add(this.buttonMultiImagePrev);
             this.tabPageMultiImageConfirm.Controls.Add(this.buttonMultiImageNext);
+            this.tabPageMultiImageConfirm.Controls.Add(this.buttonMultiImageLineSequence);
             this.tabPageMultiImageConfirm.Controls.Add(this.panelMultiImageInfo);
             this.tabPageMultiImageConfirm.Controls.Add(this.panelMultiImageConfirmViewport);
             this.tabPageMultiImageConfirm.Location = new System.Drawing.Point(4, 26);
@@ -1909,6 +1912,18 @@ namespace AoiMeasureTool
             this.buttonMultiImageNext.UseVisualStyleBackColor = false;
             this.buttonMultiImageNext.Click += new System.EventHandler(this.MultiImageConfirmNext_Click);
             // 
+            // buttonMultiImageLineSequence
+            // 
+            this.buttonMultiImageLineSequence.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonMultiImageLineSequence.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonMultiImageLineSequence.Location = new System.Drawing.Point(578, 476);
+            this.buttonMultiImageLineSequence.Name = "buttonMultiImageLineSequence";
+            this.buttonMultiImageLineSequence.Size = new System.Drawing.Size(94, 36);
+            this.buttonMultiImageLineSequence.TabIndex = 7;
+            this.buttonMultiImageLineSequence.Text = "線序";
+            this.buttonMultiImageLineSequence.UseVisualStyleBackColor = false;
+            this.buttonMultiImageLineSequence.Click += new System.EventHandler(this.MultiImageLineSequence_Click);
+            // 
             // panelMultiImageInfo
             // 
             this.panelMultiImageInfo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(241)))), ((int)(((byte)(243)))));
@@ -1916,8 +1931,8 @@ namespace AoiMeasureTool
             this.panelMultiImageInfo.Controls.Add(this.dataGridViewMultiImageInfo);
             this.panelMultiImageInfo.Location = new System.Drawing.Point(690, 20);
             this.panelMultiImageInfo.Name = "panelMultiImageInfo";
-            this.panelMultiImageInfo.Size = new System.Drawing.Size(326, 596);
-            this.panelMultiImageInfo.TabIndex = 6;
+            this.panelMultiImageInfo.Size = new System.Drawing.Size(326, 400);
+            this.panelMultiImageInfo.TabIndex = 8;
             // 
             // dataGridViewMultiImageInfo
             // 
@@ -1935,7 +1950,7 @@ namespace AoiMeasureTool
             this.dataGridViewMultiImageInfo.RowHeadersVisible = false;
             this.dataGridViewMultiImageInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dataGridViewMultiImageInfo.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewMultiImageInfo.Size = new System.Drawing.Size(300, 570);
+            this.dataGridViewMultiImageInfo.Size = new System.Drawing.Size(300, 366);
             this.dataGridViewMultiImageInfo.TabIndex = 0;
             // 
             // panelMultiImageConfirmViewport
@@ -1945,7 +1960,7 @@ namespace AoiMeasureTool
             this.panelMultiImageConfirmViewport.Controls.Add(this.pictureBoxMultiImageConfirm);
             this.panelMultiImageConfirmViewport.Location = new System.Drawing.Point(20, 20);
             this.panelMultiImageConfirmViewport.Name = "panelMultiImageConfirmViewport";
-            this.panelMultiImageConfirmViewport.Size = new System.Drawing.Size(652, 596);
+            this.panelMultiImageConfirmViewport.Size = new System.Drawing.Size(652, 400);
             this.panelMultiImageConfirmViewport.TabIndex = 0;
             this.panelMultiImageConfirmViewport.TabStop = true;
             // 

@@ -84,6 +84,7 @@ namespace AoiMeasureTool
         private Button _buttonLoadMultiImageFolder;
         private Button _buttonMultiImagePrev;
         private Button _buttonMultiImageNext;
+        private Button _buttonMultiImageLineSequence;
         private DataGridView _dataGridViewMultiImageInfo;
         private DataGridView _dataGridViewMeasureRecords;
         private Button _buttonSaveMeasurePoint;
@@ -99,6 +100,9 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Timer _measureBlinkTimer;
         private MeasureRecord _measureBlinkRecord;
         private int _measureBlinkRemainingTicks;
+        private System.Windows.Forms.Timer _multiImageLineSequenceTimer;
+        private bool _multiImageLineSequenceVisible;
+        private int _multiImageLineSequenceRemainingTicks;
         private bool _isMeasureSelecting;
         private readonly List<Point> _measurePoints = new List<Point>(2);
         private readonly List<MeasureRecord> _measureRecords = new List<MeasureRecord>();

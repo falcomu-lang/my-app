@@ -86,6 +86,7 @@ namespace AoiMeasureTool
             _buttonLoadMultiImageFolder = buttonLoadMultiImageFolder;
             _buttonMultiImagePrev = buttonMultiImagePrev;
             _buttonMultiImageNext = buttonMultiImageNext;
+            _buttonMultiImageLineSequence = buttonMultiImageLineSequence;
             _dataGridViewMultiImageInfo = dataGridViewMultiImageInfo;
             groupBoxMultiImagePreviewSource = groupBoxMultiImagePreviewSource ?? this.groupBoxMultiImagePreviewSource;
             comboBoxMultiImagePreviewSource = comboBoxMultiImagePreviewSource ?? this.comboBoxMultiImagePreviewSource;
@@ -170,6 +171,9 @@ namespace AoiMeasureTool
             _measureBlinkTimer = new System.Windows.Forms.Timer();
             _measureBlinkTimer.Interval = 180;
             _measureBlinkTimer.Tick += MeasureBlinkTimer_Tick;
+            _multiImageLineSequenceTimer = new System.Windows.Forms.Timer();
+            _multiImageLineSequenceTimer.Interval = 180;
+            _multiImageLineSequenceTimer.Tick += MultiImageLineSequenceTimer_Tick;
             if (groupBoxMultiImagePreviewSource != null)
             {
                 groupBoxMultiImagePreviewSource.Text = "預覽來源";
@@ -211,6 +215,10 @@ namespace AoiMeasureTool
             if (_pictureBoxMultiImageConfirm != null)
             {
                 _pictureBoxMultiImageConfirm.Visible = false;
+            }
+            if (_buttonMultiImageLineSequence != null)
+            {
+                _buttonMultiImageLineSequence.Click += MultiImageLineSequence_Click;
             }
             InitializeMultiImageInfoGrid();
             UpdateMultiImageNavigationButtons();
@@ -381,6 +389,11 @@ namespace AoiMeasureTool
             if (_buttonMultiImageNext != null)
             {
                 _buttonMultiImageNext.Enabled = hasImages;
+            }
+
+            if (_buttonMultiImageLineSequence != null)
+            {
+                _buttonMultiImageLineSequence.Enabled = hasImages;
             }
         }
 
@@ -842,6 +855,34 @@ namespace AoiMeasureTool
             ShowCurrentMultiImageConfirmImage();
         }
 
+        private void MultiImageLineSequence_Click(object sender, EventArgs e)
+        {
+            if (_multiImageConfirmImagePaths.Count == 0)
+            {
+                return;
+            }
+
+            _multiImageLineSequenceVisible = true;
+            _multiImageLineSequenceRemainingTicks = 17;
+            _multiImageLineSequenceTimer.Stop();
+            _multiImageLineSequenceTimer.Start();
+            _panelMultiImageConfirmViewport?.Invalidate();
+        }
+
+        private void MultiImageLineSequenceTimer_Tick(object sender, EventArgs e)
+        {
+            if (_multiImageLineSequenceRemainingTicks > 0)
+            {
+                _multiImageLineSequenceRemainingTicks--;
+                _panelMultiImageConfirmViewport?.Invalidate();
+                return;
+            }
+
+            _multiImageLineSequenceTimer.Stop();
+            _multiImageLineSequenceVisible = false;
+            _panelMultiImageConfirmViewport?.Invalidate();
+        }
+
         private void PictureBoxMultiImageConfirm_Paint(object sender, PaintEventArgs e)
         {
             if (_multiImageConfirmBitmap == null)
@@ -882,19 +923,52 @@ namespace AoiMeasureTool
                 return;
             }
 
-            foreach (var record in measureRecords)
+            for (var i = 0; i < measureRecords.Count; i++)
             {
+                var record = measureRecords[i];
                 var color = MeasurementOverlayService.GetSourceColor(record.SourceName);
                 using (var pen = new Pen(color, 2f))
                 using (var brush = new SolidBrush(color))
                 {
+                    var startPoint = GetMultiImageConfirmDisplayPoint(record.StartPoint, imageRect);
+                    var endPoint = GetMultiImageConfirmDisplayPoint(record.EndPoint, imageRect);
                     MeasurementOverlayService.DrawMeasureRecord(
                         e.Graphics,
                         pen,
                         brush,
-                        GetMultiImageConfirmDisplayPoint(record.StartPoint, imageRect),
-                        GetMultiImageConfirmDisplayPoint(record.EndPoint, imageRect));
+                        startPoint,
+                        endPoint);
+
+                    if (_multiImageLineSequenceVisible)
+                    {
+                        DrawMultiImageLineSequenceLabel(e.Graphics, i + 1, startPoint);
+                    }
                 }
+            }
+        }
+
+        private void DrawMultiImageLineSequenceLabel(Graphics graphics, int index, Point startPoint)
+        {
+            if (graphics == null || index <= 0)
+            {
+                return;
+            }
+
+            using (var font = new Font("Microsoft JhengHei UI", 11f, FontStyle.Bold))
+            using (var backgroundBrush = new SolidBrush(Color.FromArgb(210, Color.White)))
+            using (var textBrush = new SolidBrush(Color.Black))
+            using (var borderPen = new Pen(Color.Black, 1f))
+            {
+                var text = index.ToString();
+                var size = graphics.MeasureString(text, font);
+                var rect = new Rectangle(
+                    startPoint.X + 6,
+                    startPoint.Y - (int)Math.Ceiling(size.Height) - 4,
+                    (int)Math.Ceiling(size.Width) + 8,
+                    (int)Math.Ceiling(size.Height) + 4);
+                graphics.FillRectangle(backgroundBrush, rect);
+                graphics.DrawRectangle(borderPen, rect);
+                graphics.DrawString(text, font, textBrush, rect.X + 4, rect.Y + 1);
             }
         }
 
