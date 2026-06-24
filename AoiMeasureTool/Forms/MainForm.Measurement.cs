@@ -391,7 +391,7 @@ namespace AoiMeasureTool
         private void LoadMultiImageConfirmFolder(string folderPath, string selectedImagePath)
         {
             _multiImageConfirmImagePaths.Clear();
-            _multiImageConfirmProductKey = GetCurrentProductKeyOrDefault();
+            _multiImageConfirmProductKey = ResolveMultiImageConfirmProductKey(folderPath, selectedImagePath);
             if (System.IO.Directory.Exists(folderPath))
             {
                 var candidates = System.IO.Directory.GetFiles(folderPath, "*.*", System.IO.SearchOption.TopDirectoryOnly);
@@ -425,6 +425,38 @@ namespace AoiMeasureTool
             ShowCurrentMultiImageConfirmImage();
             UpdateMultiImageNavigationButtons();
             UpdateMultiImageStatusLabel();
+        }
+
+        private string ResolveMultiImageConfirmProductKey(string folderPath, string selectedImagePath)
+        {
+            var currentProductKey = GetCurrentProductKeyOrDefault();
+
+            if (!string.IsNullOrWhiteSpace(folderPath))
+            {
+                var normalizedFolderPath = folderPath.TrimEnd(
+                    System.IO.Path.DirectorySeparatorChar,
+                    System.IO.Path.AltDirectorySeparatorChar);
+                var folderName = System.IO.Path.GetFileName(normalizedFolderPath);
+                if (!string.IsNullOrWhiteSpace(folderName) &&
+                    !string.Equals(folderName, "outputs", StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(folderName, "work", StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(folderName, "preview", StringComparison.OrdinalIgnoreCase))
+                {
+                    return folderName.Trim();
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(selectedImagePath))
+            {
+                var fileProductKey = GetProductKeyFromImagePath(selectedImagePath);
+                if (!string.IsNullOrWhiteSpace(fileProductKey) &&
+                    !string.Equals(fileProductKey, "1", StringComparison.OrdinalIgnoreCase))
+                {
+                    return fileProductKey;
+                }
+            }
+
+            return currentProductKey;
         }
 
         private void ShowCurrentMultiImageConfirmImage()
@@ -877,7 +909,9 @@ namespace AoiMeasureTool
 
         private List<MeasureRecord> GetMultiImageConfirmMeasureRecords(ReferenceCornerCandidate referenceCandidate)
         {
-            var productKey = GetCurrentProductKeyOrDefault();
+            var productKey = string.IsNullOrWhiteSpace(_multiImageConfirmProductKey)
+                ? GetCurrentProductKeyOrDefault()
+                : _multiImageConfirmProductKey;
             if (string.IsNullOrWhiteSpace(productKey) || !_measureProfiles.ContainsKey(productKey))
             {
                 return new List<MeasureRecord>();
