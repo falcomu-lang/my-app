@@ -31,6 +31,8 @@ namespace AoiMeasureTool
         private System.Windows.Forms.TabPage tabPageMeasureDistance;
         private System.Windows.Forms.TabPage tabPageMultiImageConfirm;
         private System.Windows.Forms.Label labelWorkspace;
+        private System.Windows.Forms.Panel panelMeasureDistanceDesignSurface;
+        private System.Windows.Forms.Label labelMeasureDistanceDesignSurface;
         private System.Windows.Forms.Panel panelReferenceCornerControls;
         private System.Windows.Forms.CheckBox checkBoxReferenceCornerEnabled;
         private System.Windows.Forms.Label labelReferenceSource;
@@ -251,6 +253,8 @@ namespace AoiMeasureTool
             this.pictureBoxReferencePreview = new System.Windows.Forms.PictureBox();
             this.labelReferenceCornerStatus = new System.Windows.Forms.Label();
             this.tabPageMeasureDistance = new System.Windows.Forms.TabPage();
+            this.panelMeasureDistanceDesignSurface = new System.Windows.Forms.Panel();
+            this.labelMeasureDistanceDesignSurface = new System.Windows.Forms.Label();
             this.tabPageMultiImageConfirm = new System.Windows.Forms.TabPage();
             this.buttonLoadMultiImageFolder = new System.Windows.Forms.Button();
             this.groupBoxMultiImagePreviewSource = new System.Windows.Forms.GroupBox();
@@ -1643,12 +1647,32 @@ namespace AoiMeasureTool
             // tabPageMeasureDistance
             // 
             this.tabPageMeasureDistance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
+            this.tabPageMeasureDistance.Controls.Add(this.panelMeasureDistanceDesignSurface);
             this.tabPageMeasureDistance.Location = new System.Drawing.Point(4, 26);
             this.tabPageMeasureDistance.Name = "tabPageMeasureDistance";
             this.tabPageMeasureDistance.Padding = new System.Windows.Forms.Padding(3);
             this.tabPageMeasureDistance.Size = new System.Drawing.Size(1032, 656);
             this.tabPageMeasureDistance.TabIndex = 2;
             this.tabPageMeasureDistance.Text = "框選量測的距離";
+            // 
+            // panelMeasureDistanceDesignSurface
+            // 
+            this.panelMeasureDistanceDesignSurface.BackColor = System.Drawing.Color.White;
+            this.panelMeasureDistanceDesignSurface.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelMeasureDistanceDesignSurface.Controls.Add(this.labelMeasureDistanceDesignSurface);
+            this.panelMeasureDistanceDesignSurface.Location = new System.Drawing.Point(20, 20);
+            this.panelMeasureDistanceDesignSurface.Name = "panelMeasureDistanceDesignSurface";
+            this.panelMeasureDistanceDesignSurface.Size = new System.Drawing.Size(300, 180);
+            this.panelMeasureDistanceDesignSurface.TabIndex = 0;
+            // 
+            // labelMeasureDistanceDesignSurface
+            // 
+            this.labelMeasureDistanceDesignSurface.AutoSize = true;
+            this.labelMeasureDistanceDesignSurface.Location = new System.Drawing.Point(16, 16);
+            this.labelMeasureDistanceDesignSurface.Name = "labelMeasureDistanceDesignSurface";
+            this.labelMeasureDistanceDesignSurface.Size = new System.Drawing.Size(118, 18);
+            this.labelMeasureDistanceDesignSurface.TabIndex = 0;
+            this.labelMeasureDistanceDesignSurface.Text = "量測頁面設計區";
             // 
             // tabPageMultiImageConfirm
             // 
