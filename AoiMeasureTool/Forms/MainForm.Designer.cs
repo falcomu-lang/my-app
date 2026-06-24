@@ -61,6 +61,8 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Label labelMultiImageStatus;
         private System.Windows.Forms.Button buttonMultiImagePrev;
         private System.Windows.Forms.Button buttonMultiImageNext;
+        private System.Windows.Forms.Panel panelMultiImageInfo;
+        private System.Windows.Forms.DataGridView dataGridViewMultiImageInfo;
         private System.Windows.Forms.Panel panelImageViewport;
         private System.Windows.Forms.PictureBox pictureBoxImage;
         private System.Windows.Forms.Panel panelBinaryOriginal;
@@ -284,6 +286,8 @@ namespace AoiMeasureTool
             this.labelMultiImageStatus = new System.Windows.Forms.Label();
             this.buttonMultiImagePrev = new System.Windows.Forms.Button();
             this.buttonMultiImageNext = new System.Windows.Forms.Button();
+            this.panelMultiImageInfo = new System.Windows.Forms.Panel();
+            this.dataGridViewMultiImageInfo = new System.Windows.Forms.DataGridView();
             this.panelMultiImageConfirmViewport = new System.Windows.Forms.Panel();
             this.pictureBoxMultiImageConfirm = new System.Windows.Forms.PictureBox();
             this.openFileDialogImage = new System.Windows.Forms.OpenFileDialog();
@@ -345,6 +349,8 @@ namespace AoiMeasureTool
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxReferencePreview)).BeginInit();
             this.tabPageMultiImageConfirm.SuspendLayout();
             this.groupBoxMultiImagePreviewSource.SuspendLayout();
+            this.panelMultiImageInfo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMultiImageInfo)).BeginInit();
             this.panelMultiImageConfirmViewport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMultiImageConfirm)).BeginInit();
             this.SuspendLayout();
@@ -1802,6 +1808,7 @@ namespace AoiMeasureTool
             this.tabPageMultiImageConfirm.Controls.Add(this.labelMultiImageStatus);
             this.tabPageMultiImageConfirm.Controls.Add(this.buttonMultiImagePrev);
             this.tabPageMultiImageConfirm.Controls.Add(this.buttonMultiImageNext);
+            this.tabPageMultiImageConfirm.Controls.Add(this.panelMultiImageInfo);
             this.tabPageMultiImageConfirm.Controls.Add(this.panelMultiImageConfirmViewport);
             this.tabPageMultiImageConfirm.Location = new System.Drawing.Point(4, 26);
             this.tabPageMultiImageConfirm.Name = "tabPageMultiImageConfirm";
@@ -1902,6 +1909,35 @@ namespace AoiMeasureTool
             this.buttonMultiImageNext.UseVisualStyleBackColor = false;
             this.buttonMultiImageNext.Click += new System.EventHandler(this.MultiImageConfirmNext_Click);
             // 
+            // panelMultiImageInfo
+            // 
+            this.panelMultiImageInfo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(241)))), ((int)(((byte)(243)))));
+            this.panelMultiImageInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelMultiImageInfo.Controls.Add(this.dataGridViewMultiImageInfo);
+            this.panelMultiImageInfo.Location = new System.Drawing.Point(690, 20);
+            this.panelMultiImageInfo.Name = "panelMultiImageInfo";
+            this.panelMultiImageInfo.Size = new System.Drawing.Size(326, 596);
+            this.panelMultiImageInfo.TabIndex = 6;
+            // 
+            // dataGridViewMultiImageInfo
+            // 
+            this.dataGridViewMultiImageInfo.AllowUserToAddRows = false;
+            this.dataGridViewMultiImageInfo.AllowUserToDeleteRows = false;
+            this.dataGridViewMultiImageInfo.AllowUserToResizeColumns = false;
+            this.dataGridViewMultiImageInfo.AllowUserToResizeRows = false;
+            this.dataGridViewMultiImageInfo.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(241)))), ((int)(((byte)(243)))));
+            this.dataGridViewMultiImageInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dataGridViewMultiImageInfo.ColumnHeadersVisible = false;
+            this.dataGridViewMultiImageInfo.Location = new System.Drawing.Point(12, 12);
+            this.dataGridViewMultiImageInfo.MultiSelect = false;
+            this.dataGridViewMultiImageInfo.Name = "dataGridViewMultiImageInfo";
+            this.dataGridViewMultiImageInfo.ReadOnly = true;
+            this.dataGridViewMultiImageInfo.RowHeadersVisible = false;
+            this.dataGridViewMultiImageInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.dataGridViewMultiImageInfo.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewMultiImageInfo.Size = new System.Drawing.Size(300, 570);
+            this.dataGridViewMultiImageInfo.TabIndex = 0;
+            // 
             // panelMultiImageConfirmViewport
             // 
             this.panelMultiImageConfirmViewport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(241)))), ((int)(((byte)(243)))));
@@ -1909,7 +1945,7 @@ namespace AoiMeasureTool
             this.panelMultiImageConfirmViewport.Controls.Add(this.pictureBoxMultiImageConfirm);
             this.panelMultiImageConfirmViewport.Location = new System.Drawing.Point(20, 20);
             this.panelMultiImageConfirmViewport.Name = "panelMultiImageConfirmViewport";
-            this.panelMultiImageConfirmViewport.Size = new System.Drawing.Size(652, 400);
+            this.panelMultiImageConfirmViewport.Size = new System.Drawing.Size(652, 596);
             this.panelMultiImageConfirmViewport.TabIndex = 0;
             this.panelMultiImageConfirmViewport.TabStop = true;
             // 
@@ -2017,6 +2053,8 @@ namespace AoiMeasureTool
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxReferencePreview)).EndInit();
             this.tabPageMultiImageConfirm.ResumeLayout(false);
             this.groupBoxMultiImagePreviewSource.ResumeLayout(false);
+            this.panelMultiImageInfo.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMultiImageInfo)).EndInit();
             this.panelMultiImageConfirmViewport.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMultiImageConfirm)).EndInit();
             this.ResumeLayout(false);

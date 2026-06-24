@@ -86,6 +86,7 @@ namespace AoiMeasureTool
             _buttonLoadMultiImageFolder = buttonLoadMultiImageFolder;
             _buttonMultiImagePrev = buttonMultiImagePrev;
             _buttonMultiImageNext = buttonMultiImageNext;
+            _dataGridViewMultiImageInfo = dataGridViewMultiImageInfo;
             groupBoxMultiImagePreviewSource = groupBoxMultiImagePreviewSource ?? this.groupBoxMultiImagePreviewSource;
             comboBoxMultiImagePreviewSource = comboBoxMultiImagePreviewSource ?? this.comboBoxMultiImagePreviewSource;
             buttonLoadMultiImagePreprocess = buttonLoadMultiImagePreprocess ?? this.buttonLoadMultiImagePreprocess;
@@ -211,9 +212,38 @@ namespace AoiMeasureTool
             {
                 _pictureBoxMultiImageConfirm.Visible = false;
             }
+            InitializeMultiImageInfoGrid();
             UpdateMultiImageNavigationButtons();
             UpdateMeasureSourceAvailability();
             UpdateMeasureDirectionButtons();
+            UpdateMultiImageInfoTable();
+        }
+
+        private void InitializeMultiImageInfoGrid()
+        {
+            if (_dataGridViewMultiImageInfo == null)
+            {
+                return;
+            }
+
+            _dataGridViewMultiImageInfo.ReadOnly = true;
+            _dataGridViewMultiImageInfo.AllowUserToAddRows = false;
+            _dataGridViewMultiImageInfo.AllowUserToDeleteRows = false;
+            _dataGridViewMultiImageInfo.AllowUserToResizeColumns = false;
+            _dataGridViewMultiImageInfo.AllowUserToResizeRows = false;
+            _dataGridViewMultiImageInfo.RowHeadersVisible = false;
+            _dataGridViewMultiImageInfo.ColumnHeadersVisible = false;
+            _dataGridViewMultiImageInfo.MultiSelect = false;
+            _dataGridViewMultiImageInfo.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            _dataGridViewMultiImageInfo.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            if (_dataGridViewMultiImageInfo.Columns.Count == 0)
+            {
+                _dataGridViewMultiImageInfo.Columns.Add("colItem", "項目");
+                _dataGridViewMultiImageInfo.Columns.Add("colValue", "內容");
+            }
+
+            _dataGridViewMultiImageInfo.Columns[0].FillWeight = 42f;
+            _dataGridViewMultiImageInfo.Columns[1].FillWeight = 58f;
         }
 
         private void RefreshMeasureDistancePreview()
@@ -312,6 +342,7 @@ namespace AoiMeasureTool
             ShowCurrentMultiImageConfirmImage();
             UpdateMultiImageNavigationButtons();
             UpdateMultiImageStatusLabel();
+            UpdateMultiImageInfoTable();
         }
 
         private string ResolveMultiImageConfirmProductKey(string folderPath, string selectedImagePath)
@@ -336,6 +367,7 @@ namespace AoiMeasureTool
                 ShowMultiImageConfirmImage(imagePath);
             }
             UpdateMultiImageStatusLabel();
+            UpdateMultiImageInfoTable();
         }
 
         private void UpdateMultiImageNavigationButtons()
@@ -366,6 +398,93 @@ namespace AoiMeasureTool
             }
 
             labelMultiImageStatus.Text = string.Format("{0} / {1}", _multiImageConfirmImageIndex + 1, _multiImageConfirmImagePaths.Count);
+        }
+
+        private void UpdateMultiImageInfoTable()
+        {
+            if (_dataGridViewMultiImageInfo == null)
+            {
+                return;
+            }
+
+            _dataGridViewMultiImageInfo.Rows.Clear();
+
+            var referenceCandidate = GetMultiImageConfirmReferenceCandidate();
+            var allPointsInsideRoi = AreAllMultiImageConfirmPointsInsideRoi(referenceCandidate);
+            var hasReferenceCornerAndBaseline = referenceCandidate != null;
+            var canJudge = allPointsInsideRoi && hasReferenceCornerAndBaseline;
+
+            AddMultiImageInfoRow("是否可以判斷", canJudge ? "可以判斷" : "不可判斷");
+            AddMultiImageInfoRow("所有點都在 ROI 內", allPointsInsideRoi ? "是" : "否");
+            AddMultiImageInfoRow("是否找到參考角點與基準線", hasReferenceCornerAndBaseline ? "是" : "否");
+        }
+
+        private void AddMultiImageInfoRow(string item, string value)
+        {
+            if (_dataGridViewMultiImageInfo == null)
+            {
+                return;
+            }
+
+            _dataGridViewMultiImageInfo.Rows.Add(item, value);
+        }
+
+        private bool AreAllMultiImageConfirmPointsInsideRoi(ReferenceCornerCandidate referenceCandidate)
+        {
+            if (referenceCandidate == null)
+            {
+                return false;
+            }
+
+            var productKey = string.IsNullOrWhiteSpace(_multiImageConfirmProductKey)
+                ? GetCurrentProductKeyOrDefault()
+                : _multiImageConfirmProductKey;
+            var referenceSnapshot = GetReferenceCornerSnapshotForProduct(productKey);
+            if (referenceSnapshot == null || !referenceSnapshot.RoiSaved)
+            {
+                return false;
+            }
+
+            var roi = ReferenceCornerSelectionService.NormalizeRectangle(referenceSnapshot.Roi);
+            if (roi.Width <= 0 || roi.Height <= 0)
+            {
+                return false;
+            }
+
+            var points = new List<Point>
+            {
+                referenceCandidate.TopLeft,
+                referenceCandidate.TopRight,
+                referenceCandidate.CenterPoint
+            };
+
+            var records = GetMultiImageConfirmMeasureRecords(referenceCandidate);
+            foreach (var record in records)
+            {
+                points.Add(record.StartPoint);
+                points.Add(record.EndPoint);
+                points.Add(record.CenterPoint);
+                points.Add(record.ReferenceTopLeft);
+                points.Add(record.ReferenceTopRight);
+            }
+
+            foreach (var point in points)
+            {
+                if (!IsPointInsideRectangleInclusive(point, roi))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static bool IsPointInsideRectangleInclusive(Point point, Rectangle rectangle)
+        {
+            return point.X >= rectangle.Left
+                && point.X <= rectangle.Right
+                && point.Y >= rectangle.Top
+                && point.Y <= rectangle.Bottom;
         }
 
         private string FindMultiImageConfirmImage(string folderPath)

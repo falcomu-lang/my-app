@@ -84,6 +84,7 @@ namespace AoiMeasureTool
         private Button _buttonLoadMultiImageFolder;
         private Button _buttonMultiImagePrev;
         private Button _buttonMultiImageNext;
+        private DataGridView _dataGridViewMultiImageInfo;
         private DataGridView _dataGridViewMeasureRecords;
         private Button _buttonSaveMeasurePoint;
         private Button _buttonClearMeasurePoint;
@@ -129,6 +130,7 @@ namespace AoiMeasureTool
         private void EnableDoubleBuffering()
         {
             SetControlDoubleBuffered(_panelMultiImageConfirmViewport, true);
+            SetControlDoubleBuffered(panelMultiImageInfo, true);
             SetControlDoubleBuffered(_tabPageMultiImageConfirm, true);
         }
 

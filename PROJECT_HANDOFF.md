@@ -6,6 +6,11 @@ The multi-image confirm workflow is implemented and currently stable at the curr
 The current UI / interaction behavior is the approved baseline for handoff.
 The multi-image confirm viewport overlay now tracks the displayed image correctly during zoom and pan, so ROI / baseline / measurement overlays stay aligned with the image.
 The multi-image confirm preprocess preview and overlay behavior has been verified by the user as correct.
+The left sidebar work items now control which tabpages are shown.
+The `圖片檢視` work item only shows the `圖片檢視` and `二值化處理` tabpages.
+The `參考角點`, `框選量測的距離`, and `多影像確認結果` work items each show their matching workspace tabs when selected.
+The measurement-distance workflow now supports editing an existing line segment by reselecting two points after choosing parallel or perpendicular mode.
+When deleting a measurement line segment, the UI shows a warning that the deletion will affect downstream calculations and saved measurement results.
 The project target framework is now .NET Framework 4.7.2.
 
 ## Implemented Behavior
@@ -33,6 +38,22 @@ The project target framework is now .NET Framework 4.7.2.
 - The multi-image confirm overlay is drawn using the current image scale and offset, so the boxes and baseline follow the image during zooming and panning.
 - Multi-image confirm overlays are mapped against the original source image coordinate size even when the displayed bitmap is a preprocess preview.
 - The preprocess preview bitmap is display-only; measurement lines, ROI, and reference baseline continue to use source-image coordinates.
+- The main workspace only shows the `圖片檢視` and `二值化處理` tabpages when entering the image viewer work item.
+
+## Sidebar Workspace Behavior
+
+- The left sidebar work items are ordered as:
+  - `圖片檢視`
+  - `參考角點`
+  - `框選量測的距離`
+  - `多影像確認結果`
+- Selecting a work item shows only the corresponding tabpages for that workspace.
+- The image viewer workspace shows only:
+  - `圖片檢視`
+  - `二值化處理`
+- The reference-corner workspace shows only the reference-corner tab.
+- The measurement-distance workspace shows only the measurement-distance tab.
+- The multi-image confirm workspace shows only the multi-image confirm tab.
 
 ## Multi-Image Preprocess Preview Behavior
 
@@ -80,11 +101,21 @@ The project target framework is now .NET Framework 4.7.2.
 - Measurement line reprojection uses the reference candidate detected from the current confirm image.
 - Measurement, ROI, and reference baseline overlays must all use the same source-image coordinate mapping.
 
+## Measurement Editing Behavior
+
+- Existing measurement line segments can be edited from the record table.
+- Editing requires choosing parallel or perpendicular mode first.
+- After choosing the mode, the user reselects two points on the image.
+- Confirmation writes the updated line back to the selected record.
+- Cancel leaves the original record unchanged.
+- Deleting a measurement line segment prompts a warning because it affects later calculations and saved results.
+
 ## Files Touched
 
 - `AoiMeasureTool/Forms/MainForm.Designer.cs`
 - `AoiMeasureTool/Forms/MainForm.cs`
 - `AoiMeasureTool/Forms/MainForm.Measurement.cs`
+- `AoiMeasureTool/Forms/MeasureDirectionDialog.cs`
 - `AoiMeasureTool/Forms/MainForm.Preprocess.cs`
 - `AoiMeasureTool/Forms/MainForm.ReferenceCorner.cs`
 - `AoiMeasureTool/Services/ReferenceCornerDetectionService.cs`
@@ -99,6 +130,8 @@ The project target framework is now .NET Framework 4.7.2.
 - The multi-image confirm overlay should continue to use the same image-space to display-space mapping as the image transform itself.
 - Do not infer the product profile from the confirm-result folder name unless product selection behavior is explicitly redesigned.
 - Keep source-image coordinate mapping separate from the displayed preprocess preview bitmap.
+- Keep workspace tab visibility aligned with the left sidebar item that launched the workspace.
+- Preserve the reselect-two-points editing flow for measurement records unless the user requests a redesign.
 - If future changes affect preprocess preview, verify that measurement lines still fit the displayed image in both original-image and preprocess-preview modes.
 
 ## Suggested Next Step
