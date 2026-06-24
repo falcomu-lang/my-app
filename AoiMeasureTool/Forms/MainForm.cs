@@ -106,6 +106,7 @@ namespace AoiMeasureTool
         private int _multiImageConfirmImageIndex = -1;
         private Bitmap _multiImageConfirmBitmap;
         private bool _multiImageConfirmShowingPreprocess;
+        private string _multiImageConfirmProductKey;
 
         public MainForm()
         {

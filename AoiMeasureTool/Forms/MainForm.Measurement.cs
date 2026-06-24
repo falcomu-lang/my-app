@@ -391,6 +391,7 @@ namespace AoiMeasureTool
         private void LoadMultiImageConfirmFolder(string folderPath, string selectedImagePath)
         {
             _multiImageConfirmImagePaths.Clear();
+            _multiImageConfirmProductKey = GetCurrentProductKeyOrDefault();
             if (System.IO.Directory.Exists(folderPath))
             {
                 var candidates = System.IO.Directory.GetFiles(folderPath, "*.*", System.IO.SearchOption.TopDirectoryOnly);
@@ -556,6 +557,43 @@ namespace AoiMeasureTool
             _panelMultiImageConfirmViewport.Invalidate();
         }
 
+        private bool TryGetMultiImageConfirmPreprocessParam(int preprocessIndex, out PreprocessParam preprocessParam)
+        {
+            preprocessParam = null;
+            if (preprocessIndex < 0 || preprocessIndex > 3)
+            {
+                return false;
+            }
+
+            var productKey = string.IsNullOrWhiteSpace(_multiImageConfirmProductKey)
+                ? GetCurrentProductKeyOrDefault()
+                : _multiImageConfirmProductKey;
+            var state = _productProfileService.GetOrCreateState(productKey);
+            var snapshots = state?.PreprocessSnapshots;
+            if (snapshots == null || preprocessIndex >= snapshots.Length)
+            {
+                return false;
+            }
+
+            var snapshot = snapshots[preprocessIndex];
+            if (snapshot == null)
+            {
+                return false;
+            }
+
+            preprocessParam = new PreprocessParam
+            {
+                Enabled = snapshot.Enabled,
+                WhiteObject = preprocessIndex < 2,
+                Threshold = snapshot.Threshold,
+                ErodeIterations = snapshot.ErodeIterations,
+                DilateIterations = snapshot.DilateIterations,
+                OpenIterations = snapshot.OpenIterations,
+                CloseIterations = snapshot.CloseIterations
+            };
+            return true;
+        }
+
         private void ShowMultiImageConfirmPreprocessImage(string imagePath, int preprocessIndex)
         {
             if (_pictureBoxMultiImageConfirm == null || string.IsNullOrWhiteSpace(imagePath))
@@ -566,6 +604,13 @@ namespace AoiMeasureTool
             if (preprocessIndex < 0 || preprocessIndex > 3)
             {
                 preprocessIndex = 0;
+            }
+
+            PreprocessParam preprocessParam;
+            if (!TryGetMultiImageConfirmPreprocessParam(preprocessIndex, out preprocessParam))
+            {
+                MessageBox.Show(this, "找不到此產品的前處理參數。", "多影像確認結果", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
 
             Bitmap bitmap = null;
@@ -581,7 +626,7 @@ namespace AoiMeasureTool
                     using (var grayMat = new CvMat())
                     {
                         Cv2.CvtColor(sourceMat, grayMat, ColorConversionCodes.BGR2GRAY);
-                        using (var processedMat = PreprocessPipelineService.Build(grayMat, CreatePreprocessParam(preprocessIndex)))
+                        using (var processedMat = PreprocessPipelineService.Build(grayMat, preprocessParam))
                         {
                             if (processedMat == null || processedMat.Empty())
                             {
