@@ -429,48 +429,7 @@ namespace AoiMeasureTool
 
         private string ResolveMultiImageConfirmProductKey(string folderPath, string selectedImagePath)
         {
-            var currentProductKey = GetCurrentProductKeyOrDefault();
-
-            if (!string.IsNullOrWhiteSpace(folderPath))
-            {
-                var normalizedFolderPath = folderPath.TrimEnd(
-                    System.IO.Path.DirectorySeparatorChar,
-                    System.IO.Path.AltDirectorySeparatorChar);
-                var folderName = System.IO.Path.GetFileName(normalizedFolderPath);
-                if (!string.IsNullOrWhiteSpace(folderName) &&
-                    !string.Equals(folderName, "outputs", StringComparison.OrdinalIgnoreCase) &&
-                    !string.Equals(folderName, "work", StringComparison.OrdinalIgnoreCase) &&
-                    !string.Equals(folderName, "preview", StringComparison.OrdinalIgnoreCase) &&
-                    HasProductProfile(folderName))
-                {
-                    return folderName.Trim();
-                }
-            }
-
-            if (!string.IsNullOrWhiteSpace(selectedImagePath))
-            {
-                var fileProductKey = GetProductKeyFromImagePath(selectedImagePath);
-                if (!string.IsNullOrWhiteSpace(fileProductKey) &&
-                    !string.Equals(fileProductKey, "1", StringComparison.OrdinalIgnoreCase) &&
-                    HasProductProfile(fileProductKey))
-                {
-                    return fileProductKey;
-                }
-            }
-
-            return currentProductKey;
-        }
-
-        private bool HasProductProfile(string productKey)
-        {
-            if (string.IsNullOrWhiteSpace(productKey))
-            {
-                return false;
-            }
-
-            return _productProfiles.ContainsKey(productKey) ||
-                _referenceCornerProfiles.ContainsKey(productKey) ||
-                _measureProfiles.ContainsKey(productKey);
+            return GetCurrentProductKeyOrDefault();
         }
 
         private void ShowCurrentMultiImageConfirmImage()
@@ -598,6 +557,7 @@ namespace AoiMeasureTool
 
             _multiImageConfirmBitmap?.Dispose();
             _multiImageConfirmBitmap = bitmap;
+            _multiImageConfirmSourceImageSize = bitmap.Size;
             _pictureBoxMultiImageConfirm.Image = null;
             FitMultiImageConfirmToViewport();
             _panelMultiImageConfirmViewport.Invalidate();
@@ -668,6 +628,7 @@ namespace AoiMeasureTool
                         return;
                     }
 
+                    _multiImageConfirmSourceImageSize = new Size(sourceMat.Width, sourceMat.Height);
                     using (var grayMat = new CvMat())
                     {
                         Cv2.CvtColor(sourceMat, grayMat, ColorConversionCodes.BGR2GRAY);
@@ -695,6 +656,16 @@ namespace AoiMeasureTool
             _pictureBoxMultiImageConfirm.Image = null;
             FitMultiImageConfirmToViewport();
             _panelMultiImageConfirmViewport.Invalidate();
+        }
+
+        private Size GetMultiImageConfirmOverlayImageSize()
+        {
+            if (_multiImageConfirmSourceImageSize.Width > 0 && _multiImageConfirmSourceImageSize.Height > 0)
+            {
+                return _multiImageConfirmSourceImageSize;
+            }
+
+            return _multiImageConfirmBitmap == null ? Size.Empty : _multiImageConfirmBitmap.Size;
         }
 
         private void FitMultiImageConfirmToViewport()
@@ -1098,7 +1069,8 @@ namespace AoiMeasureTool
                 return;
             }
 
-            var roi = GetMultiImageConfirmReferenceRoi(new OpenCvSharp.Size(_multiImageConfirmBitmap.Width, _multiImageConfirmBitmap.Height));
+            var overlayImageSize = GetMultiImageConfirmOverlayImageSize();
+            var roi = GetMultiImageConfirmReferenceRoi(new OpenCvSharp.Size(overlayImageSize.Width, overlayImageSize.Height));
             if (roi.Width <= 0 || roi.Height <= 0)
             {
                 return;
@@ -1165,7 +1137,7 @@ namespace AoiMeasureTool
                 return imagePoint;
             }
 
-            return MeasurementOverlayService.ToDisplayPoint(imagePoint, imageRect, _multiImageConfirmBitmap.Size);
+            return MeasurementOverlayService.ToDisplayPoint(imagePoint, imageRect, GetMultiImageConfirmOverlayImageSize());
         }
 
         private Bitmap AnnotateMeasurePreviewBitmap(Bitmap sourceBitmap)

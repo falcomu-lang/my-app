@@ -105,6 +105,7 @@ namespace AoiMeasureTool
         private readonly List<string> _multiImageConfirmImagePaths = new List<string>();
         private int _multiImageConfirmImageIndex = -1;
         private Bitmap _multiImageConfirmBitmap;
+        private Size _multiImageConfirmSourceImageSize = Size.Empty;
         private bool _multiImageConfirmShowingPreprocess;
         private string _multiImageConfirmProductKey;
 
