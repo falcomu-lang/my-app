@@ -440,7 +440,8 @@ namespace AoiMeasureTool
                 if (!string.IsNullOrWhiteSpace(folderName) &&
                     !string.Equals(folderName, "outputs", StringComparison.OrdinalIgnoreCase) &&
                     !string.Equals(folderName, "work", StringComparison.OrdinalIgnoreCase) &&
-                    !string.Equals(folderName, "preview", StringComparison.OrdinalIgnoreCase))
+                    !string.Equals(folderName, "preview", StringComparison.OrdinalIgnoreCase) &&
+                    HasProductProfile(folderName))
                 {
                     return folderName.Trim();
                 }
@@ -450,13 +451,26 @@ namespace AoiMeasureTool
             {
                 var fileProductKey = GetProductKeyFromImagePath(selectedImagePath);
                 if (!string.IsNullOrWhiteSpace(fileProductKey) &&
-                    !string.Equals(fileProductKey, "1", StringComparison.OrdinalIgnoreCase))
+                    !string.Equals(fileProductKey, "1", StringComparison.OrdinalIgnoreCase) &&
+                    HasProductProfile(fileProductKey))
                 {
                     return fileProductKey;
                 }
             }
 
             return currentProductKey;
+        }
+
+        private bool HasProductProfile(string productKey)
+        {
+            if (string.IsNullOrWhiteSpace(productKey))
+            {
+                return false;
+            }
+
+            return _productProfiles.ContainsKey(productKey) ||
+                _referenceCornerProfiles.ContainsKey(productKey) ||
+                _measureProfiles.ContainsKey(productKey);
         }
 
         private void ShowCurrentMultiImageConfirmImage()
@@ -934,12 +948,14 @@ namespace AoiMeasureTool
 
         private ReferenceCornerCandidate GetMultiImageConfirmReferenceCandidate()
         {
-            if (_multiImageConfirmBitmap == null)
+            if (_multiImageConfirmBitmap == null ||
+                _multiImageConfirmImageIndex < 0 ||
+                _multiImageConfirmImageIndex >= _multiImageConfirmImagePaths.Count)
             {
                 return null;
             }
 
-            using (var sourceMat = BitmapConverter.ToMat(_multiImageConfirmBitmap))
+            using (var sourceMat = Cv2.ImRead(_multiImageConfirmImagePaths[_multiImageConfirmImageIndex], ImreadModes.Color))
             using (var grayMat = new OpenCvSharp.Mat())
             {
                 if (sourceMat.Empty())
