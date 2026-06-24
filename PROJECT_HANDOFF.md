@@ -30,6 +30,9 @@ The project target framework is now .NET Framework 4.7.2.
 - The reference corner workflow uses a selected preprocess source as the baseline for detection.
 - Multi-image confirm reuses the same preprocess parameters selected for the reference source.
 - The current logic does not fall back to Otsu for reference detection in multi-image confirm.
+- Multi-image confirm uses the same reference candidate selection rule as reference corner detection:
+  - choose a white object fully inside the ROI
+  - prefer the largest object by area
 - The reference ROI is drawn on the multi-image confirm viewport as a green overlay.
 - The detected reference baseline is also drawn on the multi-image confirm viewport.
 - The reference baseline is derived from the detected candidate and is displayed together with the ROI so the relative relationship can be inspected visually.
