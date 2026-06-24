@@ -4,6 +4,10 @@ using System.Drawing;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Cv2 = OpenCvSharp.Cv2;
+using CvMat = OpenCvSharp.Mat;
+using ImreadModes = OpenCvSharp.ImreadModes;
+using ColorConversionCodes = OpenCvSharp.ColorConversionCodes;
 using OpenCvSharp.Extensions;
 
 namespace AoiMeasureTool
@@ -77,6 +81,56 @@ namespace AoiMeasureTool
             };
 
             _tabPageMultiImageConfirm.Controls.Add(_pictureBoxMultiImageConfirm);
+
+            groupBoxMultiImagePreviewSource = new GroupBox
+            {
+                Location = new Point(20, 476),
+                Size = new Size(440, 126),
+                Text = "預覽來源"
+            };
+
+            comboBoxMultiImagePreviewSource = new ComboBox
+            {
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Location = new Point(16, 28),
+                Size = new Size(202, 25)
+            };
+            comboBoxMultiImagePreviewSource.Items.AddRange(new object[]
+            {
+                "前處理影像 1",
+                "前處理影像 2",
+                "前處理影像 3",
+                "前處理影像 4"
+            });
+            comboBoxMultiImagePreviewSource.SelectedIndex = 0;
+            comboBoxMultiImagePreviewSource.SelectedIndexChanged += MultiImagePreviewSource_SelectedIndexChanged;
+
+            buttonLoadMultiImagePreprocess = new Button
+            {
+                BackColor = Color.FromArgb(224, 228, 231),
+                FlatStyle = FlatStyle.Flat,
+                Location = new Point(16, 66),
+                Size = new Size(202, 36),
+                Text = "讀取前處理影像",
+                UseVisualStyleBackColor = false
+            };
+            buttonLoadMultiImagePreprocess.Click += LoadMultiImagePreprocess_Click;
+
+            buttonLoadMultiImageOriginal = new Button
+            {
+                BackColor = Color.FromArgb(224, 228, 231),
+                FlatStyle = FlatStyle.Flat,
+                Location = new Point(230, 28),
+                Size = new Size(188, 74),
+                Text = "原始影像",
+                UseVisualStyleBackColor = false
+            };
+            buttonLoadMultiImageOriginal.Click += LoadMultiImageOriginal_Click;
+
+            groupBoxMultiImagePreviewSource.Controls.Add(comboBoxMultiImagePreviewSource);
+            groupBoxMultiImagePreviewSource.Controls.Add(buttonLoadMultiImagePreprocess);
+            groupBoxMultiImagePreviewSource.Controls.Add(buttonLoadMultiImageOriginal);
+            _tabPageMultiImageConfirm.Controls.Add(groupBoxMultiImagePreviewSource);
 
             var panelMeasureSource = new Panel
             {
@@ -314,6 +368,28 @@ namespace AoiMeasureTool
             }
         }
 
+        private void MultiImagePreviewSource_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!_multiImageConfirmShowingPreprocess || _multiImageConfirmImageIndex < 0)
+            {
+                return;
+            }
+
+            ShowCurrentMultiImageConfirmImage();
+        }
+
+        private void LoadMultiImagePreprocess_Click(object sender, EventArgs e)
+        {
+            _multiImageConfirmShowingPreprocess = true;
+            ShowCurrentMultiImageConfirmImage();
+        }
+
+        private void LoadMultiImageOriginal_Click(object sender, EventArgs e)
+        {
+            _multiImageConfirmShowingPreprocess = false;
+            ShowCurrentMultiImageConfirmImage();
+        }
+
         private void LoadMultiImageConfirmFolder(string folderPath, string selectedImagePath)
         {
             _multiImageConfirmImagePaths.Clear();
@@ -346,6 +422,7 @@ namespace AoiMeasureTool
                 _multiImageConfirmImageIndex = 0;
             }
 
+            _multiImageConfirmShowingPreprocess = false;
             ShowCurrentMultiImageConfirmImage();
             UpdateMultiImageNavigationButtons();
             UpdateMultiImageStatusLabel();
@@ -358,7 +435,15 @@ namespace AoiMeasureTool
                 return;
             }
 
-            ShowMultiImageConfirmImage(_multiImageConfirmImagePaths[_multiImageConfirmImageIndex]);
+            var imagePath = _multiImageConfirmImagePaths[_multiImageConfirmImageIndex];
+            if (_multiImageConfirmShowingPreprocess)
+            {
+                ShowMultiImageConfirmPreprocessImage(imagePath, comboBoxMultiImagePreviewSource.SelectedIndex);
+            }
+            else
+            {
+                ShowMultiImageConfirmImage(imagePath);
+            }
             UpdateMultiImageStatusLabel();
         }
 
@@ -463,6 +548,57 @@ namespace AoiMeasureTool
             {
                 bitmap?.Dispose();
                 MessageBox.Show(this, "圖片載入失敗。", "多影像確認結果", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            _multiImageConfirmBitmap?.Dispose();
+            _multiImageConfirmBitmap = bitmap;
+            _pictureBoxMultiImageConfirm.Image = null;
+            FitMultiImageConfirmToViewport();
+            _panelMultiImageConfirmViewport.Invalidate();
+        }
+
+        private void ShowMultiImageConfirmPreprocessImage(string imagePath, int preprocessIndex)
+        {
+            if (_pictureBoxMultiImageConfirm == null || string.IsNullOrWhiteSpace(imagePath))
+            {
+                return;
+            }
+
+            if (preprocessIndex < 0 || preprocessIndex > 3)
+            {
+                preprocessIndex = 0;
+            }
+
+            Bitmap bitmap = null;
+            try
+            {
+                using (var sourceMat = Cv2.ImRead(imagePath, ImreadModes.Color))
+                {
+                    if (sourceMat.Empty())
+                    {
+                        return;
+                    }
+
+                    using (var grayMat = new CvMat())
+                    {
+                        Cv2.CvtColor(sourceMat, grayMat, ColorConversionCodes.BGR2GRAY);
+                        using (var processedMat = PreprocessPipelineService.Build(grayMat, CreatePreprocessParam(preprocessIndex)))
+                        {
+                            if (processedMat == null || processedMat.Empty())
+                            {
+                                return;
+                            }
+
+                            bitmap = BitmapConverter.ToBitmap(processedMat);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                bitmap?.Dispose();
+                MessageBox.Show(this, "無法讀取前處理影像。", "多影像確認結果", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 

@@ -42,6 +42,10 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Panel panelMultiImageConfirmViewport;
         private System.Windows.Forms.PictureBox pictureBoxMultiImageConfirm;
         private System.Windows.Forms.Button buttonLoadMultiImageFolder;
+        private System.Windows.Forms.GroupBox groupBoxMultiImagePreviewSource;
+        private System.Windows.Forms.ComboBox comboBoxMultiImagePreviewSource;
+        private System.Windows.Forms.Button buttonLoadMultiImagePreprocess;
+        private System.Windows.Forms.Button buttonLoadMultiImageOriginal;
         private System.Windows.Forms.Label labelMultiImageStatus;
         private System.Windows.Forms.Button buttonMultiImagePrev;
         private System.Windows.Forms.Button buttonMultiImageNext;
@@ -249,6 +253,10 @@ namespace AoiMeasureTool
             this.tabPageMeasureDistance = new System.Windows.Forms.TabPage();
             this.tabPageMultiImageConfirm = new System.Windows.Forms.TabPage();
             this.buttonLoadMultiImageFolder = new System.Windows.Forms.Button();
+            this.groupBoxMultiImagePreviewSource = new System.Windows.Forms.GroupBox();
+            this.comboBoxMultiImagePreviewSource = new System.Windows.Forms.ComboBox();
+            this.buttonLoadMultiImagePreprocess = new System.Windows.Forms.Button();
+            this.buttonLoadMultiImageOriginal = new System.Windows.Forms.Button();
             this.labelMultiImageStatus = new System.Windows.Forms.Label();
             this.buttonMultiImagePrev = new System.Windows.Forms.Button();
             this.buttonMultiImageNext = new System.Windows.Forms.Button();
@@ -312,6 +320,7 @@ namespace AoiMeasureTool
             this.panelReferencePreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxReferencePreview)).BeginInit();
             this.tabPageMultiImageConfirm.SuspendLayout();
+            this.groupBoxMultiImagePreviewSource.SuspendLayout();
             this.panelMultiImageConfirmViewport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMultiImageConfirm)).BeginInit();
             this.SuspendLayout();
@@ -1645,6 +1654,7 @@ namespace AoiMeasureTool
             // 
             this.tabPageMultiImageConfirm.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
             this.tabPageMultiImageConfirm.Controls.Add(this.buttonLoadMultiImageFolder);
+            this.tabPageMultiImageConfirm.Controls.Add(this.groupBoxMultiImagePreviewSource);
             this.tabPageMultiImageConfirm.Controls.Add(this.labelMultiImageStatus);
             this.tabPageMultiImageConfirm.Controls.Add(this.buttonMultiImagePrev);
             this.tabPageMultiImageConfirm.Controls.Add(this.buttonMultiImageNext);
@@ -1667,6 +1677,52 @@ namespace AoiMeasureTool
             this.buttonLoadMultiImageFolder.Text = "讀取資料夾";
             this.buttonLoadMultiImageFolder.UseVisualStyleBackColor = false;
             this.buttonLoadMultiImageFolder.Click += new System.EventHandler(this.LoadMultiImageFolder_Click);
+            // 
+            // groupBoxMultiImagePreviewSource
+            // 
+            this.groupBoxMultiImagePreviewSource.Controls.Add(this.comboBoxMultiImagePreviewSource);
+            this.groupBoxMultiImagePreviewSource.Controls.Add(this.buttonLoadMultiImagePreprocess);
+            this.groupBoxMultiImagePreviewSource.Controls.Add(this.buttonLoadMultiImageOriginal);
+            this.groupBoxMultiImagePreviewSource.Location = new System.Drawing.Point(20, 476);
+            this.groupBoxMultiImagePreviewSource.Name = "groupBoxMultiImagePreviewSource";
+            this.groupBoxMultiImagePreviewSource.Size = new System.Drawing.Size(440, 126);
+            this.groupBoxMultiImagePreviewSource.TabIndex = 5;
+            this.groupBoxMultiImagePreviewSource.TabStop = false;
+            this.groupBoxMultiImagePreviewSource.Text = "預覽來源";
+            // 
+            // comboBoxMultiImagePreviewSource
+            // 
+            this.comboBoxMultiImagePreviewSource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxMultiImagePreviewSource.FormattingEnabled = true;
+            this.comboBoxMultiImagePreviewSource.Location = new System.Drawing.Point(16, 28);
+            this.comboBoxMultiImagePreviewSource.Name = "comboBoxMultiImagePreviewSource";
+            this.comboBoxMultiImagePreviewSource.Size = new System.Drawing.Size(202, 25);
+            this.comboBoxMultiImagePreviewSource.TabIndex = 0;
+            this.comboBoxMultiImagePreviewSource.SelectedIndexChanged += new System.EventHandler(this.MultiImagePreviewSource_SelectedIndexChanged);
+            // 
+            // buttonLoadMultiImagePreprocess
+            // 
+            this.buttonLoadMultiImagePreprocess.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonLoadMultiImagePreprocess.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonLoadMultiImagePreprocess.Location = new System.Drawing.Point(16, 66);
+            this.buttonLoadMultiImagePreprocess.Name = "buttonLoadMultiImagePreprocess";
+            this.buttonLoadMultiImagePreprocess.Size = new System.Drawing.Size(202, 36);
+            this.buttonLoadMultiImagePreprocess.TabIndex = 1;
+            this.buttonLoadMultiImagePreprocess.Text = "讀取前處理影像";
+            this.buttonLoadMultiImagePreprocess.UseVisualStyleBackColor = false;
+            this.buttonLoadMultiImagePreprocess.Click += new System.EventHandler(this.LoadMultiImagePreprocess_Click);
+            // 
+            // buttonLoadMultiImageOriginal
+            // 
+            this.buttonLoadMultiImageOriginal.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonLoadMultiImageOriginal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonLoadMultiImageOriginal.Location = new System.Drawing.Point(230, 28);
+            this.buttonLoadMultiImageOriginal.Name = "buttonLoadMultiImageOriginal";
+            this.buttonLoadMultiImageOriginal.Size = new System.Drawing.Size(188, 74);
+            this.buttonLoadMultiImageOriginal.TabIndex = 2;
+            this.buttonLoadMultiImageOriginal.Text = "原始影像";
+            this.buttonLoadMultiImageOriginal.UseVisualStyleBackColor = false;
+            this.buttonLoadMultiImageOriginal.Click += new System.EventHandler(this.LoadMultiImageOriginal_Click);
             // 
             // labelMultiImageStatus
             // 
@@ -1816,6 +1872,7 @@ namespace AoiMeasureTool
             this.panelReferencePreview.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxReferencePreview)).EndInit();
             this.tabPageMultiImageConfirm.ResumeLayout(false);
+            this.groupBoxMultiImagePreviewSource.ResumeLayout(false);
             this.panelMultiImageConfirmViewport.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMultiImageConfirm)).EndInit();
             this.ResumeLayout(false);
