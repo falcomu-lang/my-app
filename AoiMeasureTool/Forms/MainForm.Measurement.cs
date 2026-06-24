@@ -926,12 +926,33 @@ namespace AoiMeasureTool
             var productKey = string.IsNullOrWhiteSpace(_multiImageConfirmProductKey)
                 ? GetCurrentProductKeyOrDefault()
                 : _multiImageConfirmProductKey;
-            if (string.IsNullOrWhiteSpace(productKey) || !_measureProfiles.ContainsKey(productKey))
+
+            List<MeasureRecord> records = null;
+            if (!string.IsNullOrWhiteSpace(productKey) &&
+                string.Equals(productKey, GetCurrentProductKeyOrDefault(), StringComparison.OrdinalIgnoreCase) &&
+                _measureRecords.Count > 0)
+            {
+                records = CloneMeasureRecords(_measureRecords);
+            }
+            else if (!string.IsNullOrWhiteSpace(productKey))
+            {
+                List<MeasureRecord> profileRecords;
+                if (_measureProfiles.TryGetValue(productKey, out profileRecords) && profileRecords.Count > 0)
+                {
+                    records = CloneMeasureRecords(profileRecords);
+                }
+            }
+
+            if ((records == null || records.Count == 0) && _measureRecords.Count > 0)
+            {
+                records = CloneMeasureRecords(_measureRecords);
+            }
+
+            if (records == null || records.Count == 0)
             {
                 return new List<MeasureRecord>();
             }
 
-            var records = CloneMeasureRecords(_measureProfiles[productKey]);
             if (referenceCandidate == null)
             {
                 return records;
