@@ -430,6 +430,23 @@ namespace AoiMeasureTool
             AddMultiImageInfoRow("是否可以判斷", canJudge ? "可以判斷" : "不可判斷");
             AddMultiImageInfoRow("所有點都在 ROI 內", allPointsInsideRoi ? "是" : "否");
             AddMultiImageInfoRow("是否找到參考角點與基準線", hasReferenceCornerAndBaseline ? "是" : "否");
+
+            var lineMeasurements = BuildMultiImageConfirmLineMeasurements(referenceCandidate);
+            if (lineMeasurements.Count == 0)
+            {
+                AddMultiImageInfoRow("線段量測", "無可用結果");
+                return;
+            }
+
+            AddMultiImageInfoRow("線段量測", string.Empty);
+            for (var i = 0; i < lineMeasurements.Count; i++)
+            {
+                var measurement = lineMeasurements[i];
+                var label = string.Format("線段 {0}", i + 1);
+                AddMultiImageInfoRow(label, measurement.IsValid
+                    ? string.Format("{0:0.##} px", measurement.Distance)
+                    : "不可判斷");
+            }
         }
 
         private void AddMultiImageInfoRow(string item, string value)
@@ -498,6 +515,237 @@ namespace AoiMeasureTool
                 && point.X <= rectangle.Right
                 && point.Y >= rectangle.Top
                 && point.Y <= rectangle.Bottom;
+        }
+
+        private sealed class MultiImageLineMeasurementResult
+        {
+            public bool IsValid { get; set; }
+            public Point StartPoint { get; set; }
+            public Point EndPoint { get; set; }
+            public double Distance { get; set; }
+
+            public static MultiImageLineMeasurementResult Invalid()
+            {
+                return new MultiImageLineMeasurementResult();
+            }
+        }
+
+        private List<MultiImageLineMeasurementResult> BuildMultiImageConfirmLineMeasurements(ReferenceCornerCandidate referenceCandidate)
+        {
+            var results = new List<MultiImageLineMeasurementResult>();
+            var records = GetMultiImageConfirmMeasureRecords(referenceCandidate);
+            if (records.Count == 0)
+            {
+                return results;
+            }
+
+            var imagePath = GetCurrentMultiImageConfirmImagePath();
+            if (string.IsNullOrWhiteSpace(imagePath))
+            {
+                return results;
+            }
+
+            using (var sourceGray = LoadMultiImageConfirmGrayImage(imagePath))
+            {
+                if (sourceGray == null || sourceGray.Empty())
+                {
+                    return results;
+                }
+
+                for (var i = 0; i < records.Count; i++)
+                {
+                    var record = records[i];
+                    var sourceIndex = GetMeasureSourceIndexFromName(record.SourceName);
+                    var preprocessParam = TryGetMultiImageConfirmPreprocessParam(sourceIndex, out var param) ? param : null;
+                    if (preprocessParam == null || !preprocessParam.Enabled)
+                    {
+                        results.Add(MultiImageLineMeasurementResult.Invalid());
+                        continue;
+                    }
+
+                    using (var binary = PreprocessPipelineService.Build(sourceGray, preprocessParam))
+                    {
+                        results.Add(AnalyzeMultiImageLineMeasurement(binary, record.StartPoint, record.EndPoint));
+                    }
+                }
+            }
+
+            return results;
+        }
+
+        private string GetCurrentMultiImageConfirmImagePath()
+        {
+            if (_multiImageConfirmImageIndex < 0 || _multiImageConfirmImageIndex >= _multiImageConfirmImagePaths.Count)
+            {
+                return null;
+            }
+
+            return _multiImageConfirmImagePaths[_multiImageConfirmImageIndex];
+        }
+
+        private OpenCvSharp.Mat LoadMultiImageConfirmGrayImage(string imagePath)
+        {
+            if (string.IsNullOrWhiteSpace(imagePath))
+            {
+                return null;
+            }
+
+            using (var sourceMat = Cv2.ImRead(imagePath, ImreadModes.Color))
+            {
+                if (sourceMat.Empty())
+                {
+                    return null;
+                }
+
+                var grayMat = new OpenCvSharp.Mat();
+                if (sourceMat.Channels() == 1)
+                {
+                    sourceMat.CopyTo(grayMat);
+                }
+                else
+                {
+                    OpenCvSharp.Cv2.CvtColor(sourceMat, grayMat, OpenCvSharp.ColorConversionCodes.BGR2GRAY);
+                }
+
+                return grayMat;
+            }
+        }
+
+        private static int GetMeasureSourceIndexFromName(string sourceName)
+        {
+            if (string.IsNullOrWhiteSpace(sourceName))
+            {
+                return -1;
+            }
+
+            var match = Regex.Match(sourceName, @"\d+");
+            int index;
+            if (match.Success && int.TryParse(match.Value, out index))
+            {
+                return Math.Max(0, index - 1);
+            }
+
+            return -1;
+        }
+
+        private static MultiImageLineMeasurementResult AnalyzeMultiImageLineMeasurement(OpenCvSharp.Mat binaryMat, Point startPoint, Point endPoint)
+        {
+            if (binaryMat == null || binaryMat.Empty())
+            {
+                return MultiImageLineMeasurementResult.Invalid();
+            }
+
+            var samplePoints = SampleLinePoints(startPoint, endPoint);
+            if (samplePoints.Count < 2)
+            {
+                return MultiImageLineMeasurementResult.Invalid();
+            }
+
+            var whiteThreshold = 127;
+            var bestRunStart = -1;
+            var bestRunLength = 0;
+            var currentRunStart = -1;
+
+            for (var i = 0; i < samplePoints.Count; i++)
+            {
+                var point = samplePoints[i];
+                if (point.X < 0 || point.Y < 0 || point.X >= binaryMat.Width || point.Y >= binaryMat.Height)
+                {
+                    if (currentRunStart >= 0)
+                    {
+                        var currentRunLength = i - currentRunStart;
+                        if (currentRunLength > bestRunLength)
+                        {
+                            bestRunStart = currentRunStart;
+                            bestRunLength = currentRunLength;
+                        }
+                        currentRunStart = -1;
+                    }
+                    continue;
+                }
+
+                var isWhite = binaryMat.At<byte>(point.Y, point.X) > whiteThreshold;
+                if (isWhite)
+                {
+                    if (currentRunStart < 0)
+                    {
+                        currentRunStart = i;
+                    }
+                }
+                else if (currentRunStart >= 0)
+                {
+                    var currentRunLength = i - currentRunStart;
+                    if (currentRunLength > bestRunLength)
+                    {
+                        bestRunStart = currentRunStart;
+                        bestRunLength = currentRunLength;
+                    }
+                    currentRunStart = -1;
+                }
+            }
+
+            if (currentRunStart >= 0)
+            {
+                var currentRunLength = samplePoints.Count - currentRunStart;
+                if (currentRunLength > bestRunLength)
+                {
+                    bestRunStart = currentRunStart;
+                    bestRunLength = currentRunLength;
+                }
+            }
+
+            if (bestRunStart < 0 || bestRunLength < 2)
+            {
+                return MultiImageLineMeasurementResult.Invalid();
+            }
+
+            var firstPoint = samplePoints[bestRunStart];
+            var lastPoint = samplePoints[bestRunStart + bestRunLength - 1];
+            var distance = Math.Sqrt(
+                Math.Pow(lastPoint.X - firstPoint.X, 2) +
+                Math.Pow(lastPoint.Y - firstPoint.Y, 2));
+            return new MultiImageLineMeasurementResult
+            {
+                IsValid = true,
+                StartPoint = firstPoint,
+                EndPoint = lastPoint,
+                Distance = distance
+            };
+        }
+
+        private static List<Point> SampleLinePoints(Point startPoint, Point endPoint)
+        {
+            var points = new List<Point>();
+            var dx = Math.Abs(endPoint.X - startPoint.X);
+            var dy = Math.Abs(endPoint.Y - startPoint.Y);
+            var sx = startPoint.X < endPoint.X ? 1 : -1;
+            var sy = startPoint.Y < endPoint.Y ? 1 : -1;
+            var err = dx - dy;
+            var current = startPoint;
+
+            while (true)
+            {
+                points.Add(current);
+                if (current == endPoint)
+                {
+                    break;
+                }
+
+                var e2 = 2 * err;
+                if (e2 > -dy)
+                {
+                    err -= dy;
+                    current = new Point(current.X + sx, current.Y);
+                }
+
+                if (e2 < dx)
+                {
+                    err += dx;
+                    current = new Point(current.X, current.Y + sy);
+                }
+            }
+
+            return points;
         }
 
         private string FindMultiImageConfirmImage(string folderPath)
