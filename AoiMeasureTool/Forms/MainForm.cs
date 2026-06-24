@@ -256,7 +256,6 @@ namespace AoiMeasureTool
             tabControlMain.TabPages.Clear();
             tabControlMain.TabPages.Add(tabPageImageViewer);
             tabControlMain.TabPages.Add(tabPageBinarization);
-            tabControlMain.TabPages.Add(tabPageMeasureDistance);
 
             tabControlMain.SelectedTab = tabPageImageViewer;
         }
