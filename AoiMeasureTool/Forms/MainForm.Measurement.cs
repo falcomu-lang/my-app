@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -45,6 +45,26 @@ namespace AoiMeasureTool
             }
 
             tabControlMain.SelectedTab = _tabPageMultiImageConfirm;
+            EnsureMultiImagePreviewSourceItems();
+        }
+
+        private void EnsureMultiImagePreviewSourceItems()
+        {
+            if (comboBoxMultiImagePreviewSource == null)
+            {
+                return;
+            }
+
+            if (comboBoxMultiImagePreviewSource.Items.Count > 0)
+            {
+                return;
+            }
+
+            comboBoxMultiImagePreviewSource.Items.Add("前處理影像 1");
+            comboBoxMultiImagePreviewSource.Items.Add("前處理影像 2");
+            comboBoxMultiImagePreviewSource.Items.Add("前處理影像 3");
+            comboBoxMultiImagePreviewSource.Items.Add("前處理影像 4");
+            comboBoxMultiImagePreviewSource.SelectedIndex = 0;
         }
 
         private void InitializeMeasureDistanceControls()
