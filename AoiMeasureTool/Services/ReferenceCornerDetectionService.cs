@@ -19,7 +19,6 @@ namespace AoiMeasureTool
             {
                 var componentCount = Cv2.ConnectedComponentsWithStats(binaryMat, labels, stats, centroids);
                 ReferenceCornerCandidate bestCandidate = null;
-                var bestTop = int.MaxValue;
                 var bestArea = -1;
 
                 for (var i = 1; i < componentCount; i++)
@@ -36,12 +35,7 @@ namespace AoiMeasureTool
                         continue;
                     }
 
-                    if (top > bestTop)
-                    {
-                        continue;
-                    }
-
-                    if (top == bestTop && area <= bestArea)
+                    if (area <= bestArea)
                     {
                         continue;
                     }
@@ -53,7 +47,6 @@ namespace AoiMeasureTool
                     }
 
                     bestCandidate = candidate;
-                    bestTop = top;
                     bestArea = area;
                 }
 

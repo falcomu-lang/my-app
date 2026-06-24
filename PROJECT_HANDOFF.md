@@ -35,8 +35,7 @@ The project target framework is now .NET Framework 4.7.2.
 - The reference baseline is derived from the detected candidate and is displayed together with the ROI so the relative relationship can be inspected visually.
 - The current candidate selection rule is:
   - choose a white object fully inside the ROI
-  - prefer the object whose top edge is highest
-  - if needed, prefer the larger area among objects with the same top position
+  - prefer the largest object by area
 - The top baseline endpoints are derived from the detected rotated rectangle corners to reduce drift caused by contour irregularities.
 
 ## Files Touched
