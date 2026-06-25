@@ -832,13 +832,7 @@ namespace AoiMeasureTool
                 return;
             }
 
-            _multiImageConfirmBitmap?.Dispose();
-            _multiImageConfirmBitmap = bitmap;
-            _multiImageConfirmSourceImageSize = bitmap.Size;
-            InvalidateMultiImageLineMeasurementCache();
-            _pictureBoxMultiImageConfirm.Image = null;
-            FitMultiImageConfirmToViewport();
-            _panelMultiImageConfirmViewport.Invalidate();
+            SetMultiImageConfirmBitmap(bitmap, bitmap.Size, true);
         }
 
         private bool TryGetMultiImageConfirmPreprocessParam(int preprocessIndex, out PreprocessParam preprocessParam)
@@ -929,11 +923,66 @@ namespace AoiMeasureTool
                 return;
             }
 
+            SetMultiImageConfirmBitmap(bitmap, _multiImageConfirmSourceImageSize, true);
+        }
+
+        private void SetMultiImageConfirmBitmap(Bitmap bitmap, Size sourceImageSize, bool preserveView)
+        {
+            if (bitmap == null)
+            {
+                return;
+            }
+
+            var hasExistingView =
+                preserveView &&
+                _multiImageConfirmBitmap != null &&
+                _panelMultiImageConfirmViewport != null &&
+                _multiImageConfirmImageScale > 0f &&
+                _multiImageConfirmFitScale > 0f;
+
+            var viewportCenter = PointF.Empty;
+            var zoomRatio = 1f;
+            if (hasExistingView)
+            {
+                var viewportMidX = _panelMultiImageConfirmViewport.ClientSize.Width / 2f;
+                var viewportMidY = _panelMultiImageConfirmViewport.ClientSize.Height / 2f;
+                viewportCenter = new PointF(
+                    (viewportMidX - _multiImageConfirmOffsetX) / _multiImageConfirmImageScale,
+                    (viewportMidY - _multiImageConfirmOffsetY) / _multiImageConfirmImageScale);
+                zoomRatio = _multiImageConfirmImageScale / _multiImageConfirmFitScale;
+            }
+
             _multiImageConfirmBitmap?.Dispose();
             _multiImageConfirmBitmap = bitmap;
-            _pictureBoxMultiImageConfirm.Image = null;
+            _multiImageConfirmSourceImageSize = sourceImageSize.Width > 0 && sourceImageSize.Height > 0
+                ? sourceImageSize
+                : bitmap.Size;
             InvalidateMultiImageLineMeasurementCache();
-            FitMultiImageConfirmToViewport();
+            _pictureBoxMultiImageConfirm.Image = null;
+
+            if (!hasExistingView)
+            {
+                FitMultiImageConfirmToViewport();
+                _panelMultiImageConfirmViewport.Invalidate();
+                return;
+            }
+
+            var panelWidth = Math.Max(1, _panelMultiImageConfirmViewport.ClientSize.Width);
+            var panelHeight = Math.Max(1, _panelMultiImageConfirmViewport.ClientSize.Height);
+            var scaleX = (float)panelWidth / _multiImageConfirmBitmap.Width;
+            var scaleY = (float)panelHeight / _multiImageConfirmBitmap.Height;
+            _multiImageConfirmFitScale = Math.Max(0.01f, Math.Min(scaleX, scaleY));
+
+            var minimumScale = _multiImageConfirmFitScale * 0.25f;
+            var maximumScale = _multiImageConfirmFitScale * 20f;
+            _multiImageConfirmImageScale = Math.Max(minimumScale, Math.Min(maximumScale, _multiImageConfirmFitScale * zoomRatio));
+
+            var viewportMidpointX = _panelMultiImageConfirmViewport.ClientSize.Width / 2f;
+            var viewportMidpointY = _panelMultiImageConfirmViewport.ClientSize.Height / 2f;
+            _multiImageConfirmOffsetX = viewportMidpointX - viewportCenter.X * _multiImageConfirmImageScale;
+            _multiImageConfirmOffsetY = viewportMidpointY - viewportCenter.Y * _multiImageConfirmImageScale;
+            _multiImageConfirmPanning = false;
+            ConstrainMultiImageConfirmImagePosition();
             _panelMultiImageConfirmViewport.Invalidate();
         }
 
