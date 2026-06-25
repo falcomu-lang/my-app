@@ -112,6 +112,8 @@ namespace AoiMeasureTool
         private bool _multiImageLineSequenceVisible;
         private int _multiImageLineSequenceRemainingTicks;
         private MultiImageLineDisplayMode _multiImageLineDisplayMode = MultiImageLineDisplayMode.FoundLines;
+        private readonly Dictionary<string, List<MultiImageLineMeasurementResult>> _multiImageLineMeasurementCache =
+            new Dictionary<string, List<MultiImageLineMeasurementResult>>(StringComparer.OrdinalIgnoreCase);
         private bool _isMeasureSelecting;
         private readonly List<Point> _measurePoints = new List<Point>(2);
         private readonly List<MeasureRecord> _measureRecords = new List<MeasureRecord>();

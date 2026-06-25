@@ -835,6 +835,7 @@ namespace AoiMeasureTool
             _multiImageConfirmBitmap?.Dispose();
             _multiImageConfirmBitmap = bitmap;
             _multiImageConfirmSourceImageSize = bitmap.Size;
+            InvalidateMultiImageLineMeasurementCache();
             _pictureBoxMultiImageConfirm.Image = null;
             FitMultiImageConfirmToViewport();
             _panelMultiImageConfirmViewport.Invalidate();
@@ -931,6 +932,7 @@ namespace AoiMeasureTool
             _multiImageConfirmBitmap?.Dispose();
             _multiImageConfirmBitmap = bitmap;
             _pictureBoxMultiImageConfirm.Image = null;
+            InvalidateMultiImageLineMeasurementCache();
             FitMultiImageConfirmToViewport();
             _panelMultiImageConfirmViewport.Invalidate();
         }
@@ -1138,6 +1140,11 @@ namespace AoiMeasureTool
             _panelMultiImageConfirmViewport?.Invalidate();
         }
 
+        private void InvalidateMultiImageLineMeasurementCache()
+        {
+            _multiImageLineMeasurementCache.Clear();
+        }
+
         private void MultiImageLineSequenceTimer_Tick(object sender, EventArgs e)
         {
             if (_multiImageLineSequenceRemainingTicks > 0)
@@ -1235,7 +1242,7 @@ namespace AoiMeasureTool
                 return;
             }
 
-            var lineResult = AnalyzeMultiImageLineMeasurementForCurrentRecord(record);
+            var lineResult = GetCachedMultiImageLineMeasurement(record);
             if (lineResult == null || !lineResult.IsValid)
             {
                 return;
@@ -1249,6 +1256,40 @@ namespace AoiMeasureTool
             {
                 MeasurementOverlayService.DrawMeasureRecord(graphics, pen, brush, startPoint, endPoint);
             }
+        }
+
+        private MultiImageLineMeasurementResult GetCachedMultiImageLineMeasurement(MeasureRecord record)
+        {
+            if (record == null)
+            {
+                return null;
+            }
+
+            var imagePath = GetCurrentMultiImageConfirmImagePath();
+            if (string.IsNullOrWhiteSpace(imagePath))
+            {
+                return null;
+            }
+
+            var cacheKey = string.Format(
+                "{0}|{1}|{2}|{3},{4}|{5},{6}",
+                imagePath,
+                (int)_multiImageLineDisplayMode,
+                record.SourceName ?? string.Empty,
+                record.StartPoint.X,
+                record.StartPoint.Y,
+                record.EndPoint.X,
+                record.EndPoint.Y);
+
+            List<MultiImageLineMeasurementResult> cached;
+            if (_multiImageLineMeasurementCache.TryGetValue(cacheKey, out cached) && cached.Count > 0)
+            {
+                return cached[0];
+            }
+
+            var result = AnalyzeMultiImageLineMeasurementForCurrentRecord(record);
+            _multiImageLineMeasurementCache[cacheKey] = new List<MultiImageLineMeasurementResult> { result };
+            return result;
         }
 
         private MultiImageLineMeasurementResult AnalyzeMultiImageLineMeasurementForCurrentRecord(MeasureRecord record)
