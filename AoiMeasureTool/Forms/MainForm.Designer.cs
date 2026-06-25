@@ -19,6 +19,8 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Button buttonReferenceCorner;
         private System.Windows.Forms.Button buttonMeasureDistance;
         private System.Windows.Forms.Button buttonMultiImageConfirm;
+        private System.Windows.Forms.Button buttonInnerSettings;
+        private System.Windows.Forms.Button buttonJudgementCriteria;
         private System.Windows.Forms.Label labelOpenCvStatus;
         private System.Windows.Forms.Panel panelMain;
         private System.Windows.Forms.Panel panelHeader;
@@ -30,7 +32,16 @@ namespace AoiMeasureTool
         private System.Windows.Forms.TabPage tabPageReferenceCorner;
         private System.Windows.Forms.TabPage tabPageMeasureDistance;
         private System.Windows.Forms.TabPage tabPageMultiImageConfirm;
+        private System.Windows.Forms.TabPage tabPageInnerSettings;
+        private System.Windows.Forms.TabPage tabPageJudgementCriteria;
         private System.Windows.Forms.Label labelWorkspace;
+        private System.Windows.Forms.Label labelInnerSettingsTitle;
+        private System.Windows.Forms.Panel panelInnerSettings;
+        private System.Windows.Forms.Label labelInnerCcdXPrecision;
+        private System.Windows.Forms.NumericUpDown numericInnerCcdXPrecision;
+        private System.Windows.Forms.Label labelInnerCcdYPrecision;
+        private System.Windows.Forms.NumericUpDown numericInnerCcdYPrecision;
+        private System.Windows.Forms.Button buttonSaveInnerSettings;
         private System.Windows.Forms.Panel panelMeasureSource;
         private System.Windows.Forms.Label labelMeasureSource;
         private System.Windows.Forms.ComboBox comboBoxMeasureSource;
@@ -170,6 +181,8 @@ namespace AoiMeasureTool
             this.buttonReferenceCorner = new System.Windows.Forms.Button();
             this.buttonMeasureDistance = new System.Windows.Forms.Button();
             this.buttonMultiImageConfirm = new System.Windows.Forms.Button();
+            this.buttonInnerSettings = new System.Windows.Forms.Button();
+            this.buttonJudgementCriteria = new System.Windows.Forms.Button();
             this.labelOpenCvStatus = new System.Windows.Forms.Label();
             this.buttonLoadImageInViewer = new System.Windows.Forms.Button();
             this.panelMain = new System.Windows.Forms.Panel();
@@ -267,6 +280,15 @@ namespace AoiMeasureTool
             this.pictureBoxReferencePreview = new System.Windows.Forms.PictureBox();
             this.labelReferenceCornerStatus = new System.Windows.Forms.Label();
             this.tabPageMeasureDistance = new System.Windows.Forms.TabPage();
+            this.tabPageInnerSettings = new System.Windows.Forms.TabPage();
+            this.labelInnerSettingsTitle = new System.Windows.Forms.Label();
+            this.panelInnerSettings = new System.Windows.Forms.Panel();
+            this.labelInnerCcdXPrecision = new System.Windows.Forms.Label();
+            this.numericInnerCcdXPrecision = new System.Windows.Forms.NumericUpDown();
+            this.labelInnerCcdYPrecision = new System.Windows.Forms.Label();
+            this.numericInnerCcdYPrecision = new System.Windows.Forms.NumericUpDown();
+            this.buttonSaveInnerSettings = new System.Windows.Forms.Button();
+            this.tabPageJudgementCriteria = new System.Windows.Forms.TabPage();
             this.panelMeasureSource = new System.Windows.Forms.Panel();
             this.labelMeasureSource = new System.Windows.Forms.Label();
             this.comboBoxMeasureSource = new System.Windows.Forms.ComboBox();
@@ -431,6 +453,8 @@ namespace AoiMeasureTool
             this.panelSidebar.Controls.Add(this.buttonReferenceCorner);
             this.panelSidebar.Controls.Add(this.buttonMeasureDistance);
             this.panelSidebar.Controls.Add(this.buttonMultiImageConfirm);
+            this.panelSidebar.Controls.Add(this.buttonInnerSettings);
+            this.panelSidebar.Controls.Add(this.buttonJudgementCriteria);
             this.panelSidebar.Controls.Add(this.labelOpenCvStatus);
             this.panelSidebar.Location = new System.Drawing.Point(0, 42);
             this.panelSidebar.Name = "panelSidebar";
@@ -521,6 +545,38 @@ namespace AoiMeasureTool
             this.buttonMultiImageConfirm.UseVisualStyleBackColor = false;
             this.buttonMultiImageConfirm.Click += new System.EventHandler(this.MultiImageConfirmButton_Click);
             // 
+            // buttonInnerSettings
+            // 
+            this.buttonInnerSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonInnerSettings.FlatAppearance.BorderSize = 0;
+            this.buttonInnerSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonInnerSettings.Font = new System.Drawing.Font("Microsoft JhengHei UI", 12F);
+            this.buttonInnerSettings.Location = new System.Drawing.Point(16, 340);
+            this.buttonInnerSettings.Name = "buttonInnerSettings";
+            this.buttonInnerSettings.Padding = new System.Windows.Forms.Padding(14, 0, 0, 0);
+            this.buttonInnerSettings.Size = new System.Drawing.Size(208, 48);
+            this.buttonInnerSettings.TabIndex = 6;
+            this.buttonInnerSettings.Text = "+   內部參數";
+            this.buttonInnerSettings.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonInnerSettings.UseVisualStyleBackColor = false;
+            this.buttonInnerSettings.Click += new System.EventHandler(this.InnerSettingsButton_Click);
+            // 
+            // buttonJudgementCriteria
+            // 
+            this.buttonJudgementCriteria.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonJudgementCriteria.FlatAppearance.BorderSize = 0;
+            this.buttonJudgementCriteria.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonJudgementCriteria.Font = new System.Drawing.Font("Microsoft JhengHei UI", 12F);
+            this.buttonJudgementCriteria.Location = new System.Drawing.Point(16, 396);
+            this.buttonJudgementCriteria.Name = "buttonJudgementCriteria";
+            this.buttonJudgementCriteria.Padding = new System.Windows.Forms.Padding(14, 0, 0, 0);
+            this.buttonJudgementCriteria.Size = new System.Drawing.Size(208, 48);
+            this.buttonJudgementCriteria.TabIndex = 7;
+            this.buttonJudgementCriteria.Text = "+   良品判斷條件";
+            this.buttonJudgementCriteria.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonJudgementCriteria.UseVisualStyleBackColor = false;
+            this.buttonJudgementCriteria.Click += new System.EventHandler(this.JudgementCriteriaButton_Click);
+            // 
             // labelOpenCvStatus
             // 
             this.labelOpenCvStatus.AutoSize = true;
@@ -592,6 +648,8 @@ namespace AoiMeasureTool
             this.tabControlMain.Controls.Add(this.tabPageReferenceCorner);
             this.tabControlMain.Controls.Add(this.tabPageMeasureDistance);
             this.tabControlMain.Controls.Add(this.tabPageMultiImageConfirm);
+            this.tabControlMain.Controls.Add(this.tabPageInnerSettings);
+            this.tabControlMain.Controls.Add(this.tabPageJudgementCriteria);
             this.tabControlMain.Font = new System.Drawing.Font("Microsoft JhengHei UI", 10F);
             this.tabControlMain.Location = new System.Drawing.Point(0, 72);
             this.tabControlMain.Name = "tabControlMain";
@@ -1673,6 +1731,105 @@ namespace AoiMeasureTool
             this.labelReferenceCornerStatus.Size = new System.Drawing.Size(540, 18);
             this.labelReferenceCornerStatus.TabIndex = 2;
             this.labelReferenceCornerStatus.Text = "勾選後選擇基礎前處理影像，直接在大圖上左鍵拖曳框選 ROI，並讓標的物盡量靠中。";
+            // 
+            // tabPageInnerSettings
+            // 
+            this.tabPageInnerSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
+            this.tabPageInnerSettings.Controls.Add(this.labelInnerSettingsTitle);
+            this.tabPageInnerSettings.Controls.Add(this.panelInnerSettings);
+            this.tabPageInnerSettings.Location = new System.Drawing.Point(4, 26);
+            this.tabPageInnerSettings.Name = "tabPageInnerSettings";
+            this.tabPageInnerSettings.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageInnerSettings.Size = new System.Drawing.Size(1032, 656);
+            this.tabPageInnerSettings.TabIndex = 4;
+            this.tabPageInnerSettings.Text = "內部參數";
+            // 
+            // labelInnerSettingsTitle
+            // 
+            this.labelInnerSettingsTitle.AutoSize = true;
+            this.labelInnerSettingsTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(130)))), ((int)(((byte)(134)))), ((int)(((byte)(138)))));
+            this.labelInnerSettingsTitle.Location = new System.Drawing.Point(31, 21);
+            this.labelInnerSettingsTitle.Name = "labelInnerSettingsTitle";
+            this.labelInnerSettingsTitle.Size = new System.Drawing.Size(64, 18);
+            this.labelInnerSettingsTitle.TabIndex = 0;
+            this.labelInnerSettingsTitle.Text = "內部參數";
+            // 
+            // panelInnerSettings
+            // 
+            this.panelInnerSettings.BackColor = System.Drawing.Color.White;
+            this.panelInnerSettings.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelInnerSettings.Controls.Add(this.labelInnerCcdXPrecision);
+            this.panelInnerSettings.Controls.Add(this.numericInnerCcdXPrecision);
+            this.panelInnerSettings.Controls.Add(this.labelInnerCcdYPrecision);
+            this.panelInnerSettings.Controls.Add(this.numericInnerCcdYPrecision);
+            this.panelInnerSettings.Controls.Add(this.buttonSaveInnerSettings);
+            this.panelInnerSettings.Location = new System.Drawing.Point(28, 46);
+            this.panelInnerSettings.Name = "panelInnerSettings";
+            this.panelInnerSettings.Size = new System.Drawing.Size(420, 190);
+            this.panelInnerSettings.TabIndex = 1;
+            // 
+            // labelInnerCcdXPrecision
+            // 
+            this.labelInnerCcdXPrecision.AutoSize = true;
+            this.labelInnerCcdXPrecision.Location = new System.Drawing.Point(24, 32);
+            this.labelInnerCcdXPrecision.Name = "labelInnerCcdXPrecision";
+            this.labelInnerCcdXPrecision.Size = new System.Drawing.Size(87, 18);
+            this.labelInnerCcdXPrecision.TabIndex = 0;
+            this.labelInnerCcdXPrecision.Text = "CCD X向精度";
+            // 
+            // numericInnerCcdXPrecision
+            // 
+            this.numericInnerCcdXPrecision.DecimalPlaces = 4;
+            this.numericInnerCcdXPrecision.Increment = new decimal(new int[] {1, 0, 0, 262144});
+            this.numericInnerCcdXPrecision.Location = new System.Drawing.Point(160, 28);
+            this.numericInnerCcdXPrecision.Maximum = new decimal(new int[] {1000, 0, 0, 0});
+            this.numericInnerCcdXPrecision.Name = "numericInnerCcdXPrecision";
+            this.numericInnerCcdXPrecision.Size = new System.Drawing.Size(180, 25);
+            this.numericInnerCcdXPrecision.TabIndex = 1;
+            this.numericInnerCcdXPrecision.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // labelInnerCcdYPrecision
+            // 
+            this.labelInnerCcdYPrecision.AutoSize = true;
+            this.labelInnerCcdYPrecision.Location = new System.Drawing.Point(24, 78);
+            this.labelInnerCcdYPrecision.Name = "labelInnerCcdYPrecision";
+            this.labelInnerCcdYPrecision.Size = new System.Drawing.Size(86, 18);
+            this.labelInnerCcdYPrecision.TabIndex = 2;
+            this.labelInnerCcdYPrecision.Text = "CCD Y向精度";
+            // 
+            // numericInnerCcdYPrecision
+            // 
+            this.numericInnerCcdYPrecision.DecimalPlaces = 4;
+            this.numericInnerCcdYPrecision.Increment = new decimal(new int[] {1, 0, 0, 262144});
+            this.numericInnerCcdYPrecision.Location = new System.Drawing.Point(160, 74);
+            this.numericInnerCcdYPrecision.Maximum = new decimal(new int[] {1000, 0, 0, 0});
+            this.numericInnerCcdYPrecision.Name = "numericInnerCcdYPrecision";
+            this.numericInnerCcdYPrecision.Size = new System.Drawing.Size(180, 25);
+            this.numericInnerCcdYPrecision.TabIndex = 3;
+            this.numericInnerCcdYPrecision.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // buttonSaveInnerSettings
+            // 
+            this.buttonSaveInnerSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonSaveInnerSettings.FlatAppearance.BorderSize = 0;
+            this.buttonSaveInnerSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSaveInnerSettings.Location = new System.Drawing.Point(24, 126);
+            this.buttonSaveInnerSettings.Name = "buttonSaveInnerSettings";
+            this.buttonSaveInnerSettings.Size = new System.Drawing.Size(120, 36);
+            this.buttonSaveInnerSettings.TabIndex = 4;
+            this.buttonSaveInnerSettings.Text = "儲存";
+            this.buttonSaveInnerSettings.UseVisualStyleBackColor = false;
+            this.buttonSaveInnerSettings.Click += new System.EventHandler(this.SaveInnerSettingsButton_Click);
+            // 
+            // tabPageJudgementCriteria
+            // 
+            this.tabPageJudgementCriteria.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
+            this.tabPageJudgementCriteria.Location = new System.Drawing.Point(4, 26);
+            this.tabPageJudgementCriteria.Name = "tabPageJudgementCriteria";
+            this.tabPageJudgementCriteria.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageJudgementCriteria.Size = new System.Drawing.Size(1032, 656);
+            this.tabPageJudgementCriteria.TabIndex = 5;
+            this.tabPageJudgementCriteria.Text = "良品判斷條件";
             // 
             // tabPageMeasureDistance
             // 
