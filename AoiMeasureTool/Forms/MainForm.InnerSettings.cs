@@ -90,8 +90,8 @@ namespace AoiMeasureTool
             _numericInnerCcdXPrecision = new NumericUpDown
             {
                 Name = "numericInnerCcdXPrecision",
-                DecimalPlaces = 6,
-                Increment = 0.000001M,
+                DecimalPlaces = 4,
+                Increment = 0.0001M,
                 Minimum = 0,
                 Maximum = 1000,
                 Location = new Point(160, 28),
@@ -110,8 +110,8 @@ namespace AoiMeasureTool
             _numericInnerCcdYPrecision = new NumericUpDown
             {
                 Name = "numericInnerCcdYPrecision",
-                DecimalPlaces = 6,
-                Increment = 0.000001M,
+                DecimalPlaces = 4,
+                Increment = 0.0001M,
                 Minimum = 0,
                 Maximum = 1000,
                 Location = new Point(160, 74),
