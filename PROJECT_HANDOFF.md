@@ -6,9 +6,13 @@ The multi-image confirm workflow is implemented and currently stable at the curr
 The current UI / interaction behavior is the approved baseline for handoff.
 The multi-image confirm viewport overlay now tracks the displayed image correctly during zoom and pan, so ROI / baseline / measurement overlays stay aligned with the image.
 The multi-image confirm preprocess preview and overlay behavior has been verified by the user as correct.
+The multi-image confirm right-side info table is now part of the approved baseline.
+The multi-image confirm supports showing the configured source lines, the detected measured line segments, or hiding line overlays entirely.
+The detected-line overlay path is now cached so zooming and panning do not re-run line analysis on every paint.
+Switching between preprocess preview and original image now preserves the current zoom ratio and viewport position instead of resetting to fit.
 The left sidebar work items now control which tabpages are shown.
-The `圖片檢視` work item only shows the `圖片檢視` and `二值化處理` tabpages.
-The `參考角點`, `框選量測的距離`, and `多影像確認結果` work items each show their matching workspace tabs when selected.
+The image viewer work item only shows the image viewer and binarization tabpages.
+The reference-corner, measurement-distance, and multi-image-confirm work items each show their matching workspace tabs when selected.
 The measurement-distance workflow now supports editing an existing line segment by reselecting two points after choosing parallel or perpendicular mode.
 When deleting a measurement line segment, the UI shows a warning that the deletion will affect downstream calculations and saved measurement results.
 The project target framework is now .NET Framework 4.7.2.
@@ -25,6 +29,9 @@ The project target framework is now .NET Framework 4.7.2.
     - a dropdown for preprocess image 1-4
     - a load-preprocess-image button
     - an original-image button
+  - a right-side info table
+  - a line-sequence button
+  - a line-display-mode selector
 - Folder loading reads image files from the selected folder and builds an ordered image list.
 - The navigation buttons switch between images in sequence.
 - When preprocess preview mode is enabled, previous / next navigation keeps showing preprocess output for each image until original-image mode is selected.
@@ -38,22 +45,22 @@ The project target framework is now .NET Framework 4.7.2.
 - The multi-image confirm overlay is drawn using the current image scale and offset, so the boxes and baseline follow the image during zooming and panning.
 - Multi-image confirm overlays are mapped against the original source image coordinate size even when the displayed bitmap is a preprocess preview.
 - The preprocess preview bitmap is display-only; measurement lines, ROI, and reference baseline continue to use source-image coordinates.
-- The main workspace only shows the `圖片檢視` and `二值化處理` tabpages when entering the image viewer work item.
+- The main workspace only shows the image viewer and binarization tabpages when entering the image viewer work item.
 
 ## Sidebar Workspace Behavior
 
 - The left sidebar work items are ordered as:
-  - `圖片檢視`
-  - `參考角點`
-  - `框選量測的距離`
-  - `多影像確認結果`
+  - image viewer
+  - reference corner
+  - measurement distance
+  - multi-image confirm
 - Selecting a work item shows only the corresponding tabpages for that workspace.
 - The image viewer workspace shows only:
-  - `圖片檢視`
-  - `二值化處理`
+  - image viewer
+  - binarization
 - The reference-corner workspace shows only the reference-corner tab.
 - The measurement-distance workspace shows only the measurement-distance tab.
-- The multi-image confirm workspace shows only the multi-image confirm tab.
+- The multi-image-confirm workspace shows only the multi-image-confirm tab.
 
 ## Multi-Image Preprocess Preview Behavior
 
@@ -69,6 +76,8 @@ The project target framework is now .NET Framework 4.7.2.
 - Preprocess preview generation uses the current product's preprocess parameters.
 - Multi-image confirm uses the current product context as the product key. Confirm-result folder names should not replace the active product profile.
 - If current unsaved product parameters exist in the UI, they are used for preview so the result reflects the current working state.
+- Switching between original image and preprocess preview preserves the current zoom ratio and current viewport center when possible.
+- The image toggle should not force a refit unless there was no valid previous view state.
 
 ## Reference Corner / ROI Behavior
 
@@ -100,6 +109,31 @@ The project target framework is now .NET Framework 4.7.2.
 - As a fallback, currently loaded measurement records may be used so existing lines continue to render.
 - Measurement line reprojection uses the reference candidate detected from the current confirm image.
 - Measurement, ROI, and reference baseline overlays must all use the same source-image coordinate mapping.
+- A line-display-mode selector now controls whether the viewport shows:
+  - the configured source lines
+  - the detected measured line segments
+  - no line overlays
+- Changing the line-display mode should only trigger a redraw. It must not reset zoom or pan.
+- The line-sequence button temporarily labels line start points with 1-based indices for about three seconds.
+
+## Multi-Image Line Measurement Behavior
+
+- The right-side info table includes a top-level judgement row and per-line measurement results.
+- The `whether it can be judged` row is `can judge` only when:
+  - all relevant points are inside the saved ROI
+  - a reference corner / baseline candidate was found
+- For each line segment, the measurement logic uses the preprocess source that was originally associated with that line segment.
+- The implementation currently infers the preprocess source from the saved `SourceName` text such as `preprocess 1` through `preprocess 4`.
+- For each line segment:
+  - build the corresponding binary preprocess image for the current confirm image
+  - sample points along the segment path
+  - find white runs along that path
+  - keep only the longest continuous white run
+  - use the two ends of that longest white run as the detected measured line
+  - report the resulting distance in pixels
+- When the detected-line display mode is active, the viewport draws the detected longest-white-run segment instead of the configured source line.
+- The detected-line analysis path is cached per image / line / mode so pan and zoom do not re-run preprocess analysis during paint.
+- The current result table displays pixel distances only. No physical-unit conversion is implemented yet.
 
 ## Measurement Editing Behavior
 
@@ -119,10 +153,14 @@ The project target framework is now .NET Framework 4.7.2.
 - `AoiMeasureTool/Forms/MainForm.Preprocess.cs`
 - `AoiMeasureTool/Forms/MainForm.ReferenceCorner.cs`
 - `AoiMeasureTool/Services/ReferenceCornerDetectionService.cs`
+- `AoiMeasureTool/Services/MeasurementOverlayService.cs`
+- `AoiMeasureTool/Services/MeasurementRecordService.cs`
+- `AoiMeasureTool/Services/PreprocessPipelineService.cs`
+- `AoiMeasureTool/Utilities/ImageProcessor.cs`
 
 ## Important Notes
 
-- The current state is considered correct by the user.
+- The current state is considered correct by the user unless a later request changes behavior explicitly.
 - Do not rework the viewer interaction unless the user requests it.
 - The image navigation list is sorted with numeric-aware filename ordering.
 - The middle status area is used to show the current image index / total count.
@@ -133,6 +171,9 @@ The project target framework is now .NET Framework 4.7.2.
 - Keep workspace tab visibility aligned with the left sidebar item that launched the workspace.
 - Preserve the reselect-two-points editing flow for measurement records unless the user requests a redesign.
 - If future changes affect preprocess preview, verify that measurement lines still fit the displayed image in both original-image and preprocess-preview modes.
+- If future changes affect detected-line measurement, preserve the rule that each line uses its own associated preprocess source rather than the currently selected preview source.
+- The current association to a preprocess source is text-derived from `SourceName`; if this area is refactored later, prefer storing an explicit preprocess index on the measure record.
+- Keep detected-line measurement work out of the paint path. Recompute only when the image, source, or relevant measurement inputs change.
 
 ## Suggested Next Step
 

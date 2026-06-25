@@ -86,8 +86,7 @@ namespace AoiMeasureTool
                 }
 
                 var rotatedRect = Cv2.MinAreaRect(bestContour);
-                var vertices = rotatedRect.Points();
-                var topPoints = GetTopEdgePoints(vertices);
+                var topPoints = GetContourTopEdgePoints(bestContour);
                 var topLeft = topPoints.Item1;
                 var topRight = topPoints.Item2;
                 return new ReferenceCornerCandidate(
@@ -99,42 +98,63 @@ namespace AoiMeasureTool
             }
         }
 
-        private static Tuple<System.Drawing.Point, System.Drawing.Point> GetTopEdgePoints(Point2f[] vertices)
+        private static Tuple<System.Drawing.Point, System.Drawing.Point> GetContourTopEdgePoints(OpenCvSharp.Point[] contour)
         {
-            if (vertices == null || vertices.Length == 0)
+            if (contour == null || contour.Length == 0)
             {
                 return Tuple.Create(System.Drawing.Point.Empty, System.Drawing.Point.Empty);
             }
 
-            var top1 = vertices[0];
-            var top2 = vertices.Length > 1 ? vertices[1] : vertices[0];
-
-            for (var i = 1; i < vertices.Length; i++)
+            var minY = contour[0].Y;
+            for (var i = 1; i < contour.Length; i++)
             {
-                var candidate = vertices[i];
-                if (candidate.Y < top1.Y || (Math.Abs(candidate.Y - top1.Y) < 0.5f && candidate.X < top1.X))
+                if (contour[i].Y < minY)
                 {
-                    top2 = top1;
-                    top1 = candidate;
+                    minY = contour[i].Y;
+                }
+            }
+
+            var tolerance = 1;
+            var topLeft = contour[0];
+            var topRight = contour[0];
+            var foundAny = false;
+
+            for (var i = 0; i < contour.Length; i++)
+            {
+                var candidate = contour[i];
+                if (candidate.Y > minY + tolerance)
+                {
                     continue;
                 }
 
-                if (candidate.Y < top2.Y || (Math.Abs(candidate.Y - top2.Y) < 0.5f && candidate.X < top2.X))
+                if (!foundAny)
                 {
-                    top2 = candidate;
+                    topLeft = candidate;
+                    topRight = candidate;
+                    foundAny = true;
+                    continue;
+                }
+
+                if (candidate.X < topLeft.X || (candidate.X == topLeft.X && candidate.Y < topLeft.Y))
+                {
+                    topLeft = candidate;
+                }
+
+                if (candidate.X > topRight.X || (candidate.X == topRight.X && candidate.Y < topRight.Y))
+                {
+                    topRight = candidate;
                 }
             }
 
-            if (top1.X <= top2.X)
+            if (!foundAny)
             {
-                return Tuple.Create(
-                    new System.Drawing.Point((int)Math.Round(top1.X), (int)Math.Round(top1.Y)),
-                    new System.Drawing.Point((int)Math.Round(top2.X), (int)Math.Round(top2.Y)));
+                topLeft = contour[0];
+                topRight = contour[0];
             }
 
             return Tuple.Create(
-                new System.Drawing.Point((int)Math.Round(top2.X), (int)Math.Round(top2.Y)),
-                new System.Drawing.Point((int)Math.Round(top1.X), (int)Math.Round(top1.Y)));
+                new System.Drawing.Point(topLeft.X, topLeft.Y),
+                new System.Drawing.Point(topRight.X, topRight.Y));
         }
 
         private static bool IsTargetFullyInsideRoi(Rectangle rect, Rectangle roi)
