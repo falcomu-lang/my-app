@@ -87,6 +87,7 @@ namespace AoiMeasureTool
             _buttonMultiImagePrev = buttonMultiImagePrev;
             _buttonMultiImageNext = buttonMultiImageNext;
             _buttonMultiImageLineSequence = buttonMultiImageLineSequence;
+            _comboBoxMultiImageLineDisplayMode = comboBoxMultiImageLineDisplayMode;
             _dataGridViewMultiImageInfo = dataGridViewMultiImageInfo;
             groupBoxMultiImagePreviewSource = groupBoxMultiImagePreviewSource ?? this.groupBoxMultiImagePreviewSource;
             comboBoxMultiImagePreviewSource = comboBoxMultiImagePreviewSource ?? this.comboBoxMultiImagePreviewSource;
@@ -219,6 +220,15 @@ namespace AoiMeasureTool
             if (_buttonMultiImageLineSequence != null)
             {
                 _buttonMultiImageLineSequence.Click += MultiImageLineSequence_Click;
+            }
+            if (_comboBoxMultiImageLineDisplayMode != null)
+            {
+                _comboBoxMultiImageLineDisplayMode.Items.Clear();
+                _comboBoxMultiImageLineDisplayMode.Items.Add("設定的線段");
+                _comboBoxMultiImageLineDisplayMode.Items.Add("找出的線段");
+                _comboBoxMultiImageLineDisplayMode.Items.Add("都不要顯示");
+                _comboBoxMultiImageLineDisplayMode.SelectedIndex = 1;
+                _comboBoxMultiImageLineDisplayMode.SelectedIndexChanged += MultiImageLineDisplayMode_SelectedIndexChanged;
             }
             InitializeMultiImageInfoGrid();
             UpdateMultiImageNavigationButtons();
@@ -1117,6 +1127,17 @@ namespace AoiMeasureTool
             _panelMultiImageConfirmViewport?.Invalidate();
         }
 
+        private void MultiImageLineDisplayMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_comboBoxMultiImageLineDisplayMode == null)
+            {
+                return;
+            }
+
+            _multiImageLineDisplayMode = (MultiImageLineDisplayMode)Math.Max(0, Math.Min(2, _comboBoxMultiImageLineDisplayMode.SelectedIndex));
+            _panelMultiImageConfirmViewport?.Invalidate();
+        }
+
         private void MultiImageLineSequenceTimer_Tick(object sender, EventArgs e)
         {
             if (_multiImageLineSequenceRemainingTicks > 0)
@@ -1180,17 +1201,91 @@ namespace AoiMeasureTool
                 {
                     var startPoint = GetMultiImageConfirmDisplayPoint(record.StartPoint, imageRect);
                     var endPoint = GetMultiImageConfirmDisplayPoint(record.EndPoint, imageRect);
-                    MeasurementOverlayService.DrawMeasureRecord(
-                        e.Graphics,
-                        pen,
-                        brush,
-                        startPoint,
-                        endPoint);
+                    if (_multiImageLineDisplayMode == MultiImageLineDisplayMode.Hidden)
+                    {
+                        continue;
+                    }
 
-                    if (_multiImageLineSequenceVisible)
+                    if (_multiImageLineDisplayMode == MultiImageLineDisplayMode.SourceLines)
+                    {
+                        MeasurementOverlayService.DrawMeasureRecord(
+                            e.Graphics,
+                            pen,
+                            brush,
+                            GetMultiImageConfirmDisplayPoint(record.StartPoint, imageRect),
+                            GetMultiImageConfirmDisplayPoint(record.EndPoint, imageRect));
+                    }
+                    else
+                    {
+                        DrawMultiImageConfirmedLineMeasurement(e.Graphics, record, imageRect);
+                    }
+
+                    if (_multiImageLineSequenceVisible && _multiImageLineDisplayMode != MultiImageLineDisplayMode.Hidden)
                     {
                         DrawMultiImageLineSequenceLabel(e.Graphics, i + 1, startPoint);
                     }
+                }
+            }
+        }
+
+        private void DrawMultiImageConfirmedLineMeasurement(Graphics graphics, MeasureRecord record, Rectangle imageRect)
+        {
+            if (graphics == null || record == null || imageRect == Rectangle.Empty)
+            {
+                return;
+            }
+
+            var lineResult = AnalyzeMultiImageLineMeasurementForCurrentRecord(record);
+            if (lineResult == null || !lineResult.IsValid)
+            {
+                return;
+            }
+
+            var startPoint = GetMultiImageConfirmDisplayPoint(lineResult.StartPoint, imageRect);
+            var endPoint = GetMultiImageConfirmDisplayPoint(lineResult.EndPoint, imageRect);
+            var color = Color.LimeGreen;
+            using (var pen = new Pen(color, 2f))
+            using (var brush = new SolidBrush(color))
+            {
+                MeasurementOverlayService.DrawMeasureRecord(graphics, pen, brush, startPoint, endPoint);
+            }
+        }
+
+        private MultiImageLineMeasurementResult AnalyzeMultiImageLineMeasurementForCurrentRecord(MeasureRecord record)
+        {
+            if (record == null)
+            {
+                return null;
+            }
+
+            var imagePath = GetCurrentMultiImageConfirmImagePath();
+            if (string.IsNullOrWhiteSpace(imagePath))
+            {
+                return null;
+            }
+
+            var sourceIndex = GetMeasureSourceIndexFromName(record.SourceName);
+            if (sourceIndex < 0)
+            {
+                return null;
+            }
+
+            PreprocessParam preprocessParam;
+            if (!TryGetMultiImageConfirmPreprocessParam(sourceIndex, out preprocessParam) || preprocessParam == null || !preprocessParam.Enabled)
+            {
+                return null;
+            }
+
+            using (var sourceGray = LoadMultiImageConfirmGrayImage(imagePath))
+            {
+                if (sourceGray == null || sourceGray.Empty())
+                {
+                    return null;
+                }
+
+                using (var binary = PreprocessPipelineService.Build(sourceGray, preprocessParam))
+                {
+                    return AnalyzeMultiImageLineMeasurement(binary, record.StartPoint, record.EndPoint);
                 }
             }
         }

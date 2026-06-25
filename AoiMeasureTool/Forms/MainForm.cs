@@ -14,6 +14,13 @@ namespace AoiMeasureTool
 {
     public partial class MainForm : Form
     {
+        private enum MultiImageLineDisplayMode
+        {
+            SourceLines = 0,
+            FoundLines = 1,
+            Hidden = 2
+        }
+
         private CvMat _sourceImage;
         private CvMat _grayImage;
         private readonly CvMat[] _preprocessImages = new CvMat[4];
@@ -85,6 +92,7 @@ namespace AoiMeasureTool
         private Button _buttonMultiImagePrev;
         private Button _buttonMultiImageNext;
         private Button _buttonMultiImageLineSequence;
+        private ComboBox _comboBoxMultiImageLineDisplayMode;
         private DataGridView _dataGridViewMultiImageInfo;
         private DataGridView _dataGridViewMeasureRecords;
         private Button _buttonSaveMeasurePoint;
@@ -103,6 +111,7 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Timer _multiImageLineSequenceTimer;
         private bool _multiImageLineSequenceVisible;
         private int _multiImageLineSequenceRemainingTicks;
+        private MultiImageLineDisplayMode _multiImageLineDisplayMode = MultiImageLineDisplayMode.FoundLines;
         private bool _isMeasureSelecting;
         private readonly List<Point> _measurePoints = new List<Point>(2);
         private readonly List<MeasureRecord> _measureRecords = new List<MeasureRecord>();

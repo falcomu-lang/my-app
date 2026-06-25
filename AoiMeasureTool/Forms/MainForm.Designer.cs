@@ -62,6 +62,7 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Button buttonMultiImagePrev;
         private System.Windows.Forms.Button buttonMultiImageNext;
         private System.Windows.Forms.Button buttonMultiImageLineSequence;
+        private System.Windows.Forms.ComboBox comboBoxMultiImageLineDisplayMode;
         private System.Windows.Forms.Panel panelMultiImageInfo;
         private System.Windows.Forms.DataGridView dataGridViewMultiImageInfo;
         private System.Windows.Forms.Panel panelImageViewport;
@@ -288,6 +289,7 @@ namespace AoiMeasureTool
             this.buttonMultiImagePrev = new System.Windows.Forms.Button();
             this.buttonMultiImageNext = new System.Windows.Forms.Button();
             this.buttonMultiImageLineSequence = new System.Windows.Forms.Button();
+            this.comboBoxMultiImageLineDisplayMode = new System.Windows.Forms.ComboBox();
             this.panelMultiImageInfo = new System.Windows.Forms.Panel();
             this.dataGridViewMultiImageInfo = new System.Windows.Forms.DataGridView();
             this.panelMultiImageConfirmViewport = new System.Windows.Forms.Panel();
@@ -1811,6 +1813,7 @@ namespace AoiMeasureTool
             this.tabPageMultiImageConfirm.Controls.Add(this.buttonMultiImagePrev);
             this.tabPageMultiImageConfirm.Controls.Add(this.buttonMultiImageNext);
             this.tabPageMultiImageConfirm.Controls.Add(this.buttonMultiImageLineSequence);
+            this.tabPageMultiImageConfirm.Controls.Add(this.comboBoxMultiImageLineDisplayMode);
             this.tabPageMultiImageConfirm.Controls.Add(this.panelMultiImageInfo);
             this.tabPageMultiImageConfirm.Controls.Add(this.panelMultiImageConfirmViewport);
             this.tabPageMultiImageConfirm.Location = new System.Drawing.Point(4, 26);
@@ -1924,6 +1927,16 @@ namespace AoiMeasureTool
             this.buttonMultiImageLineSequence.UseVisualStyleBackColor = false;
             this.buttonMultiImageLineSequence.Click += new System.EventHandler(this.MultiImageLineSequence_Click);
             // 
+            // comboBoxMultiImageLineDisplayMode
+            // 
+            this.comboBoxMultiImageLineDisplayMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxMultiImageLineDisplayMode.FormattingEnabled = true;
+            this.comboBoxMultiImageLineDisplayMode.Location = new System.Drawing.Point(578, 520);
+            this.comboBoxMultiImageLineDisplayMode.Name = "comboBoxMultiImageLineDisplayMode";
+            this.comboBoxMultiImageLineDisplayMode.Size = new System.Drawing.Size(210, 25);
+            this.comboBoxMultiImageLineDisplayMode.TabIndex = 8;
+            this.comboBoxMultiImageLineDisplayMode.SelectedIndexChanged += new System.EventHandler(this.MultiImageLineDisplayMode_SelectedIndexChanged);
+            // 
             // panelMultiImageInfo
             // 
             this.panelMultiImageInfo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(241)))), ((int)(((byte)(243)))));
@@ -1932,7 +1945,7 @@ namespace AoiMeasureTool
             this.panelMultiImageInfo.Location = new System.Drawing.Point(690, 20);
             this.panelMultiImageInfo.Name = "panelMultiImageInfo";
             this.panelMultiImageInfo.Size = new System.Drawing.Size(326, 400);
-            this.panelMultiImageInfo.TabIndex = 8;
+            this.panelMultiImageInfo.TabIndex = 9;
             // 
             // dataGridViewMultiImageInfo
             // 
