@@ -16,6 +16,12 @@ The reference-corner, measurement-distance, and multi-image-confirm work items e
 The measurement-distance workflow now supports editing an existing line segment by reselecting two points after choosing parallel or perpendicular mode.
 When deleting a measurement line segment, the UI shows a warning that the deletion will affect downstream calculations and saved measurement results.
 The project target framework is now .NET Framework 4.7.2.
+The left sidebar now also includes `inner settings` and `judgement criteria` work items.
+The inner-settings and judgement-criteria tabs are real designer-managed tabpages and controls, so future UI edits can be made directly in the WinForms designer.
+The inner-settings and judgement-criteria tabs do not appear in the main tab strip on startup; they are only shown when their matching left-sidebar work item is selected.
+The inner settings are stored in `innerSetting.ini` beside the executable and do not change when the active product changes.
+The inner settings currently expose CCD X precision and CCD Y precision with a dedicated save button.
+The multi-image confirm right-side info table now shows each valid line measurement as millimeters first with pixel distance in parentheses.
 
 ## Implemented Behavior
 
@@ -54,6 +60,8 @@ The project target framework is now .NET Framework 4.7.2.
   - reference corner
   - measurement distance
   - multi-image confirm
+  - inner settings
+  - judgement criteria
 - Selecting a work item shows only the corresponding tabpages for that workspace.
 - The image viewer workspace shows only:
   - image viewer
@@ -61,6 +69,9 @@ The project target framework is now .NET Framework 4.7.2.
 - The reference-corner workspace shows only the reference-corner tab.
 - The measurement-distance workspace shows only the measurement-distance tab.
 - The multi-image-confirm workspace shows only the multi-image-confirm tab.
+- The inner-settings workspace shows only the inner-settings tab.
+- The judgement-criteria workspace shows only the judgement-criteria tab.
+- The inner-settings and judgement-criteria tabpages are part of the form designer, but they remain hidden from the startup tab strip until their sidebar item is selected.
 
 ## Multi-Image Preprocess Preview Behavior
 
@@ -114,7 +125,7 @@ The project target framework is now .NET Framework 4.7.2.
   - the detected measured line segments
   - no line overlays
 - Changing the line-display mode should only trigger a redraw. It must not reset zoom or pan.
-- The line-sequence button temporarily labels line start points with 1-based indices for about three seconds.
+- The line-sequence button temporarily labels line start points with the 1-based line sequence defined in the measurement distance setup for about three seconds.
 
 ## Multi-Image Line Measurement Behavior
 
@@ -131,9 +142,29 @@ The project target framework is now .NET Framework 4.7.2.
   - keep only the longest continuous white run
   - use the two ends of that longest white run as the detected measured line
   - report the resulting distance in pixels
+  - convert the detected segment to millimeters using inner-settings CCD X precision and CCD Y precision
 - When the detected-line display mode is active, the viewport draws the detected longest-white-run segment instead of the configured source line.
 - The detected-line analysis path is cached per image / line / mode so pan and zoom do not re-run preprocess analysis during paint.
-- The current result table displays pixel distances only. No physical-unit conversion is implemented yet.
+- The current result table displays each valid line as `{mm} mm ({px} px)`.
+- Millimeter conversion uses anisotropic scaling: multiply X delta by CCD X precision, multiply Y delta by CCD Y precision, then calculate Euclidean distance in millimeters.
+- The line-sequence overlay must follow the configured measurement line order from the distance setup, not a screen-position sort.
+
+## Inner Settings Behavior
+
+- Inner settings are not product-specific.
+- The file path is `innerSetting.ini` in the executable directory.
+- The current fields are:
+  - CCD X precision
+  - CCD Y precision
+- Inner settings use an explicit save button; they are not intended to be treated as product profile state.
+- The inner-settings UI is now designer-managed so the controls can be repositioned or extended visually in the WinForms designer.
+
+## Judgement Criteria Workspace Behavior
+
+- A dedicated judgement-criteria work item exists in the left sidebar.
+- Selecting it shows a dedicated judgement-criteria tabpage.
+- The tabpage is intentionally empty for now and acts as a reserved workspace for future conditions UI.
+- The judgement-criteria tabpage is designer-managed so future controls can be added and repositioned visually.
 
 ## Measurement Editing Behavior
 
@@ -149,6 +180,8 @@ The project target framework is now .NET Framework 4.7.2.
 - `AoiMeasureTool/Forms/MainForm.Designer.cs`
 - `AoiMeasureTool/Forms/MainForm.cs`
 - `AoiMeasureTool/Forms/MainForm.Measurement.cs`
+- `AoiMeasureTool/Forms/MainForm.InnerSettings.cs`
+- `AoiMeasureTool/Forms/MainForm.JudgementCriteria.cs`
 - `AoiMeasureTool/Forms/MeasureDirectionDialog.cs`
 - `AoiMeasureTool/Forms/MainForm.Preprocess.cs`
 - `AoiMeasureTool/Forms/MainForm.ReferenceCorner.cs`
@@ -157,6 +190,9 @@ The project target framework is now .NET Framework 4.7.2.
 - `AoiMeasureTool/Services/MeasurementRecordService.cs`
 - `AoiMeasureTool/Services/PreprocessPipelineService.cs`
 - `AoiMeasureTool/Utilities/ImageProcessor.cs`
+- `AoiMeasureTool/Repositories/InnerSettingsRepository.cs`
+- `AoiMeasureTool/Models/ProfileModels.cs`
+- `AoiMeasureTool/AoiMeasureTool.csproj`
 
 ## Important Notes
 
@@ -174,6 +210,9 @@ The project target framework is now .NET Framework 4.7.2.
 - If future changes affect detected-line measurement, preserve the rule that each line uses its own associated preprocess source rather than the currently selected preview source.
 - The current association to a preprocess source is text-derived from `SourceName`; if this area is refactored later, prefer storing an explicit preprocess index on the measure record.
 - Keep detected-line measurement work out of the paint path. Recompute only when the image, source, or relevant measurement inputs change.
+- Keep inner settings separate from `setting.ini` product-profile persistence.
+- Keep startup workspace behavior such that inner-settings and judgement-criteria tabs are hidden until explicitly opened from the sidebar.
+- If future changes extend inner settings or judgement criteria, prefer continuing to manage their controls in the WinForms designer rather than reverting to runtime-generated controls.
 
 ## Suggested Next Step
 
