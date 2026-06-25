@@ -454,7 +454,7 @@ namespace AoiMeasureTool
                 var measurement = lineMeasurements[i];
                 var label = string.Format("線段 {0}", i + 1);
                 AddMultiImageInfoRow(label, measurement.IsValid
-                    ? string.Format("{0:0.##} px", measurement.Distance)
+                    ? string.Format("{0:0.##} px ({1:0.##} mm)", measurement.Distance, measurement.MillimeterDistance)
                     : "不可判斷");
             }
         }
@@ -533,6 +533,7 @@ namespace AoiMeasureTool
             public Point StartPoint { get; set; }
             public Point EndPoint { get; set; }
             public double Distance { get; set; }
+            public double MillimeterDistance { get; set; }
 
             public static MultiImageLineMeasurementResult Invalid()
             {
@@ -575,7 +576,12 @@ namespace AoiMeasureTool
 
                     using (var binary = PreprocessPipelineService.Build(sourceGray, preprocessParam))
                     {
-                        results.Add(AnalyzeMultiImageLineMeasurement(binary, record.StartPoint, record.EndPoint));
+                        results.Add(AnalyzeMultiImageLineMeasurement(
+                            binary,
+                            record.StartPoint,
+                            record.EndPoint,
+                            _innerSettings.CcdXPrecision,
+                            _innerSettings.CcdYPrecision));
                     }
                 }
             }
@@ -638,7 +644,12 @@ namespace AoiMeasureTool
             return -1;
         }
 
-        private static MultiImageLineMeasurementResult AnalyzeMultiImageLineMeasurement(OpenCvSharp.Mat binaryMat, Point startPoint, Point endPoint)
+        private static MultiImageLineMeasurementResult AnalyzeMultiImageLineMeasurement(
+            OpenCvSharp.Mat binaryMat,
+            Point startPoint,
+            Point endPoint,
+            double ccdXPrecision,
+            double ccdYPrecision)
         {
             if (binaryMat == null || binaryMat.Empty())
             {
@@ -711,15 +722,21 @@ namespace AoiMeasureTool
 
             var firstPoint = samplePoints[bestRunStart];
             var lastPoint = samplePoints[bestRunStart + bestRunLength - 1];
+            var deltaX = lastPoint.X - firstPoint.X;
+            var deltaY = lastPoint.Y - firstPoint.Y;
             var distance = Math.Sqrt(
-                Math.Pow(lastPoint.X - firstPoint.X, 2) +
-                Math.Pow(lastPoint.Y - firstPoint.Y, 2));
+                Math.Pow(deltaX, 2) +
+                Math.Pow(deltaY, 2));
+            var millimeterDistance = Math.Sqrt(
+                Math.Pow(deltaX * ccdXPrecision, 2) +
+                Math.Pow(deltaY * ccdYPrecision, 2));
             return new MultiImageLineMeasurementResult
             {
                 IsValid = true,
                 StartPoint = firstPoint,
                 EndPoint = lastPoint,
-                Distance = distance
+                Distance = distance,
+                MillimeterDistance = millimeterDistance
             };
         }
 
@@ -1380,7 +1397,12 @@ namespace AoiMeasureTool
 
                 using (var binary = PreprocessPipelineService.Build(sourceGray, preprocessParam))
                 {
-                    return AnalyzeMultiImageLineMeasurement(binary, record.StartPoint, record.EndPoint);
+                    return AnalyzeMultiImageLineMeasurement(
+                        binary,
+                        record.StartPoint,
+                        record.EndPoint,
+                        _innerSettings.CcdXPrecision,
+                        _innerSettings.CcdYPrecision);
                 }
             }
         }
