@@ -26,6 +26,7 @@ namespace AoiMeasureTool
         private readonly CvMat[] _preprocessImages = new CvMat[4];
         private readonly string _settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "setting.ini");
         private readonly IniSettingsRepository _settingsRepository = new IniSettingsRepository();
+        private readonly InnerSettingsRepository _innerSettingsRepository = new InnerSettingsRepository();
         private string _lastImagePath;
         private string _activeProductKey;
         private readonly System.Collections.Generic.Dictionary<string, PreprocessSnapshot[]> _productProfiles =
@@ -75,6 +76,7 @@ namespace AoiMeasureTool
         private bool _suppressPersistOnProductSwitch;
         private bool _isApplyingProductState;
         private bool _isApplyingReferenceCornerState;
+        private InnerSettingsData _innerSettings = new InnerSettingsData();
         private float _savedActiveImageScale = 1f;
         private int _savedActiveImageLeft;
         private int _savedActiveImageTop;
@@ -84,6 +86,7 @@ namespace AoiMeasureTool
         private Point _lastMousePosition;
         private TabPage _tabPageMeasureDistance;
         private TabPage _tabPageMultiImageConfirm;
+        private TabPage _tabPageInnerSettings;
         private Panel _panelMeasurePreview;
         private Panel _panelMultiImageConfirmViewport;
         private PictureBox _pictureBoxMultiImageConfirm;
@@ -95,9 +98,14 @@ namespace AoiMeasureTool
         private ComboBox _comboBoxMultiImageLineDisplayMode;
         private DataGridView _dataGridViewMultiImageInfo;
         private DataGridView _dataGridViewMeasureRecords;
+        private NumericUpDown _numericInnerCcdXPrecision;
+        private NumericUpDown _numericInnerCcdYPrecision;
+        private Label _labelInnerCcdXPrecision;
+        private Label _labelInnerCcdYPrecision;
         private Button _buttonSaveMeasurePoint;
         private Button _buttonClearMeasurePoint;
         private Button _buttonSaveMeasureRecords;
+        private Button _buttonSaveInnerSettings;
         private Button _buttonParallelMeasure;
         private Button _buttonPerpendicularMeasure;
         private ComboBox _comboBoxMeasureSource;
@@ -137,6 +145,7 @@ namespace AoiMeasureTool
             InitializePreprocessControls();
             InitializeReferenceCornerControls();
             InitializeMeasureDistanceControls();
+            InitializeInnerSettingsControls();
             EnableDoubleBuffering();
             LoadSavedAppSettings();
             LoadLastImageIfAvailable();
@@ -263,6 +272,11 @@ namespace AoiMeasureTool
             ShowMultiImageConfirmWorkspace();
         }
 
+        private void InnerSettingsButton_Click(object sender, EventArgs e)
+        {
+            ShowInnerSettingsWorkspace();
+        }
+
         private void ShowMainWorkspaceTabs()
         {
             if (tabControlMain == null)
@@ -275,6 +289,18 @@ namespace AoiMeasureTool
             tabControlMain.TabPages.Add(tabPageBinarization);
 
             tabControlMain.SelectedTab = tabPageImageViewer;
+        }
+
+        private void ShowInnerSettingsWorkspace()
+        {
+            if (tabControlMain == null)
+            {
+                return;
+            }
+
+            tabControlMain.TabPages.Clear();
+            tabControlMain.TabPages.Add(_tabPageInnerSettings);
+            tabControlMain.SelectedTab = _tabPageInnerSettings;
         }
 
         private void ApplySnapshots(PreprocessSnapshot[] snapshots)
@@ -435,6 +461,7 @@ namespace AoiMeasureTool
             {
                 var loadedData = _settingsRepository.Load(_settingsPath);
                 _productProfileService.ReplaceAll(loadedData);
+                _innerSettings = _innerSettingsRepository.Load(GetInnerSettingsPath());
 
                 _lastImagePath = loadedData.LastImagePath;
                 _activeProductKey = string.IsNullOrWhiteSpace(loadedData.ActiveProductKey) ? null : loadedData.ActiveProductKey;
@@ -463,6 +490,7 @@ namespace AoiMeasureTool
                 }
 
                 ApplyProductState(_productProfileService.GetOrCreateState(GetCurrentProductKeyOrDefault()));
+                ApplyInnerSettings(_innerSettings);
             }
             catch
             {
@@ -487,6 +515,58 @@ namespace AoiMeasureTool
             {
                 MessageBox.Show(this, "Unable to save settings.\r\n\r\n" + ex.Message, "Settings", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private string GetInnerSettingsPath()
+        {
+            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "innerSetting.ini");
+        }
+
+        private void ApplyInnerSettings(InnerSettingsData data)
+        {
+            if (data == null)
+            {
+                data = new InnerSettingsData();
+            }
+
+            _innerSettings = data;
+
+            if (_numericInnerCcdXPrecision != null)
+            {
+                _numericInnerCcdXPrecision.Value = ClampNumericUpDown(_numericInnerCcdXPrecision, (decimal)data.CcdXPrecision);
+            }
+
+            if (_numericInnerCcdYPrecision != null)
+            {
+                _numericInnerCcdYPrecision.Value = ClampNumericUpDown(_numericInnerCcdYPrecision, (decimal)data.CcdYPrecision);
+            }
+        }
+
+        private void SaveInnerSettings()
+        {
+            if (_numericInnerCcdXPrecision == null || _numericInnerCcdYPrecision == null)
+            {
+                return;
+            }
+
+            _innerSettings.CcdXPrecision = (double)_numericInnerCcdXPrecision.Value;
+            _innerSettings.CcdYPrecision = (double)_numericInnerCcdYPrecision.Value;
+            _innerSettingsRepository.Save(GetInnerSettingsPath(), _innerSettings);
+        }
+
+        private static decimal ClampNumericUpDown(NumericUpDown control, decimal value)
+        {
+            if (value < control.Minimum)
+            {
+                return control.Minimum;
+            }
+
+            if (value > control.Maximum)
+            {
+                return control.Maximum;
+            }
+
+            return value;
         }
 
         private void LoadLastImageIfAvailable()

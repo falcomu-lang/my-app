@@ -85,4 +85,10 @@ namespace AoiMeasureTool
         public Dictionary<string, ReferenceCornerSnapshot> ReferenceCornerProfiles { get; }
         public Dictionary<string, List<MeasureRecord>> MeasureProfiles { get; }
     }
+
+    internal sealed class InnerSettingsData
+    {
+        public double CcdXPrecision { get; set; }
+        public double CcdYPrecision { get; set; }
+    }
 }
