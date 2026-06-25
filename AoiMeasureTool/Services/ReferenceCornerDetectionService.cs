@@ -86,7 +86,8 @@ namespace AoiMeasureTool
                 }
 
                 var rotatedRect = Cv2.MinAreaRect(bestContour);
-                var topPoints = GetContourTopEdgePoints(bestContour);
+                var rectTopPoints = GetTopEdgePoints(rotatedRect.Points());
+                var topPoints = GetNearestContourTopPoints(bestContour, rectTopPoints.Item1, rectTopPoints.Item2);
                 var topLeft = topPoints.Item1;
                 var topRight = topPoints.Item2;
                 return new ReferenceCornerCandidate(
@@ -98,63 +99,108 @@ namespace AoiMeasureTool
             }
         }
 
-        private static Tuple<System.Drawing.Point, System.Drawing.Point> GetContourTopEdgePoints(OpenCvSharp.Point[] contour)
+        private static Tuple<System.Drawing.Point, System.Drawing.Point> GetTopEdgePoints(Point2f[] vertices)
+        {
+            if (vertices == null || vertices.Length == 0)
+            {
+                return Tuple.Create(System.Drawing.Point.Empty, System.Drawing.Point.Empty);
+            }
+
+            var top1 = vertices[0];
+            var top2 = vertices.Length > 1 ? vertices[1] : vertices[0];
+
+            for (var i = 1; i < vertices.Length; i++)
+            {
+                var candidate = vertices[i];
+                if (candidate.Y < top1.Y || (Math.Abs(candidate.Y - top1.Y) < 0.5f && candidate.X < top1.X))
+                {
+                    top2 = top1;
+                    top1 = candidate;
+                    continue;
+                }
+
+                if (candidate.Y < top2.Y || (Math.Abs(candidate.Y - top2.Y) < 0.5f && candidate.X < top2.X))
+                {
+                    top2 = candidate;
+                }
+            }
+
+            if (top1.X <= top2.X)
+            {
+                return Tuple.Create(
+                    new System.Drawing.Point((int)Math.Round(top1.X), (int)Math.Round(top1.Y)),
+                    new System.Drawing.Point((int)Math.Round(top2.X), (int)Math.Round(top2.Y)));
+            }
+
+            return Tuple.Create(
+                new System.Drawing.Point((int)Math.Round(top2.X), (int)Math.Round(top2.Y)),
+                new System.Drawing.Point((int)Math.Round(top1.X), (int)Math.Round(top1.Y)));
+        }
+
+        private static Tuple<System.Drawing.Point, System.Drawing.Point> GetNearestContourTopPoints(
+            OpenCvSharp.Point[] contour,
+            System.Drawing.Point idealTopLeft,
+            System.Drawing.Point idealTopRight)
         {
             if (contour == null || contour.Length == 0)
             {
                 return Tuple.Create(System.Drawing.Point.Empty, System.Drawing.Point.Empty);
             }
 
-            var minY = contour[0].Y;
-            for (var i = 1; i < contour.Length; i++)
-            {
-                if (contour[i].Y < minY)
-                {
-                    minY = contour[i].Y;
-                }
-            }
+            var topLeft = FindNearestContourPoint(contour, idealTopLeft, -1);
+            var topRight = FindNearestContourPoint(contour, idealTopRight, topLeft.Item2);
 
-            var tolerance = 1;
-            var topLeft = contour[0];
-            var topRight = contour[0];
-            var foundAny = false;
+            return Tuple.Create(
+                new System.Drawing.Point(topLeft.Item1.X, topLeft.Item1.Y),
+                new System.Drawing.Point(topRight.Item1.X, topRight.Item1.Y));
+        }
+
+        private static Tuple<OpenCvSharp.Point, int> FindNearestContourPoint(
+            OpenCvSharp.Point[] contour,
+            System.Drawing.Point target,
+            int excludedIndex)
+        {
+            var bestIndex = -1;
+            var bestDistance = double.MaxValue;
+            var bestPoint = contour[0];
 
             for (var i = 0; i < contour.Length; i++)
             {
+                if (i == excludedIndex)
+                {
+                    continue;
+                }
+
                 var candidate = contour[i];
-                if (candidate.Y > minY + tolerance)
+                var dx = candidate.X - target.X;
+                var dy = candidate.Y - target.Y;
+                var distance = dx * dx + dy * dy;
+
+                if (distance < bestDistance)
                 {
+                    bestDistance = distance;
+                    bestIndex = i;
+                    bestPoint = candidate;
                     continue;
                 }
 
-                if (!foundAny)
+                if (Math.Abs(distance - bestDistance) < 0.0001)
                 {
-                    topLeft = candidate;
-                    topRight = candidate;
-                    foundAny = true;
-                    continue;
-                }
-
-                if (candidate.Y < topLeft.Y || (candidate.Y == topLeft.Y && candidate.X < topLeft.X))
-                {
-                    topLeft = candidate;
-                }
-
-                if (candidate.Y < topRight.Y || (candidate.Y == topRight.Y && candidate.X > topRight.X))
-                {
-                    topRight = candidate;
+                    if (candidate.Y < bestPoint.Y || (candidate.Y == bestPoint.Y && candidate.X < bestPoint.X))
+                    {
+                        bestIndex = i;
+                        bestPoint = candidate;
+                    }
                 }
             }
 
-            if (!foundAny)
+            if (bestIndex < 0)
             {
-                topLeft = contour[0];
-                topRight = contour[0];
+                bestIndex = 0;
+                bestPoint = contour[0];
             }
 
-            return Tuple.Create(
-                new System.Drawing.Point(topLeft.X, topLeft.Y),
-                new System.Drawing.Point(topRight.X, topRight.Y));
+            return Tuple.Create(bestPoint, bestIndex);
         }
 
         private static bool IsTargetFullyInsideRoi(Rectangle rect, Rectangle roi)
