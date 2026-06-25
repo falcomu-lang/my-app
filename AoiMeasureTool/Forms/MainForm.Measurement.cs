@@ -540,6 +540,12 @@ namespace AoiMeasureTool
             }
         }
 
+        private sealed class MultiImageLineSequenceItem
+        {
+            public MeasureRecord Record { get; set; }
+            public Point LabelPoint { get; set; }
+        }
+
         private List<MultiImageLineMeasurementResult> BuildMultiImageConfirmLineMeasurements(ReferenceCornerCandidate referenceCandidate)
         {
             var results = new List<MultiImageLineMeasurementResult>();
@@ -1248,6 +1254,10 @@ namespace AoiMeasureTool
                 return;
             }
 
+            var sequenceItems = _multiImageLineSequenceVisible && _multiImageLineDisplayMode != MultiImageLineDisplayMode.Hidden
+                ? BuildMultiImageLineSequenceItems(measureRecords)
+                : null;
+
             for (var i = 0; i < measureRecords.Count; i++)
             {
                 var record = measureRecords[i];
@@ -1255,30 +1265,39 @@ namespace AoiMeasureTool
                 using (var pen = new Pen(color, 2f))
                 using (var brush = new SolidBrush(color))
                 {
-                    var startPoint = GetMultiImageConfirmDisplayPoint(record.StartPoint, imageRect);
-                    var endPoint = GetMultiImageConfirmDisplayPoint(record.EndPoint, imageRect);
                     if (_multiImageLineDisplayMode == MultiImageLineDisplayMode.Hidden)
                     {
                         continue;
                     }
 
+                    Point startPoint;
+                    Point endPoint;
                     if (_multiImageLineDisplayMode == MultiImageLineDisplayMode.SourceLines)
                     {
-                        MeasurementOverlayService.DrawMeasureRecord(
-                            e.Graphics,
-                            pen,
-                            brush,
-                            GetMultiImageConfirmDisplayPoint(record.StartPoint, imageRect),
-                            GetMultiImageConfirmDisplayPoint(record.EndPoint, imageRect));
+                        startPoint = GetMultiImageConfirmDisplayPoint(record.StartPoint, imageRect);
+                        endPoint = GetMultiImageConfirmDisplayPoint(record.EndPoint, imageRect);
+                        MeasurementOverlayService.DrawMeasureRecord(e.Graphics, pen, brush, startPoint, endPoint);
                     }
                     else
                     {
-                        DrawMultiImageConfirmedLineMeasurement(e.Graphics, record, imageRect);
+                        var lineResult = GetCachedMultiImageLineMeasurement(record);
+                        if (lineResult == null || !lineResult.IsValid)
+                        {
+                            continue;
+                        }
+
+                        startPoint = GetMultiImageConfirmDisplayPoint(lineResult.StartPoint, imageRect);
+                        endPoint = GetMultiImageConfirmDisplayPoint(lineResult.EndPoint, imageRect);
+                        MeasurementOverlayService.DrawMeasureRecord(e.Graphics, pen, brush, startPoint, endPoint);
                     }
 
-                    if (_multiImageLineSequenceVisible && _multiImageLineDisplayMode != MultiImageLineDisplayMode.Hidden)
+                    if (sequenceItems != null)
                     {
-                        DrawMultiImageLineSequenceLabel(e.Graphics, i + 1, startPoint);
+                        var sequenceIndex = sequenceItems.FindIndex(item => object.ReferenceEquals(item.Record, record));
+                        if (sequenceIndex >= 0)
+                        {
+                            DrawMultiImageLineSequenceLabel(e.Graphics, sequenceIndex + 1, startPoint);
+                        }
                     }
                 }
             }
@@ -1305,6 +1324,53 @@ namespace AoiMeasureTool
             {
                 MeasurementOverlayService.DrawMeasureRecord(graphics, pen, brush, startPoint, endPoint);
             }
+        }
+
+        private List<MultiImageLineSequenceItem> BuildMultiImageLineSequenceItems(List<MeasureRecord> measureRecords)
+        {
+            var items = new List<MultiImageLineSequenceItem>();
+            if (measureRecords == null || measureRecords.Count == 0)
+            {
+                return items;
+            }
+
+            for (var i = 0; i < measureRecords.Count; i++)
+            {
+                var record = measureRecords[i];
+                if (record == null)
+                {
+                    continue;
+                }
+
+                var labelPoint = _multiImageLineDisplayMode == MultiImageLineDisplayMode.SourceLines
+                    ? record.StartPoint
+                    : GetCachedMultiImageLineMeasurement(record)?.StartPoint ?? Point.Empty;
+
+                if (_multiImageLineDisplayMode == MultiImageLineDisplayMode.FoundLines &&
+                    labelPoint == Point.Empty)
+                {
+                    continue;
+                }
+
+                items.Add(new MultiImageLineSequenceItem
+                {
+                    Record = record,
+                    LabelPoint = labelPoint
+                });
+            }
+
+            items.Sort((left, right) =>
+            {
+                var yCompare = left.LabelPoint.Y.CompareTo(right.LabelPoint.Y);
+                if (yCompare != 0)
+                {
+                    return yCompare;
+                }
+
+                return left.LabelPoint.X.CompareTo(right.LabelPoint.X);
+            });
+
+            return items;
         }
 
         private MultiImageLineMeasurementResult GetCachedMultiImageLineMeasurement(MeasureRecord record)
