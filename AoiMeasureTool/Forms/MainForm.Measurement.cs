@@ -454,7 +454,7 @@ namespace AoiMeasureTool
                 var measurement = lineMeasurements[i];
                 var label = string.Format("線段 {0}", i + 1);
                 AddMultiImageInfoRow(label, measurement.IsValid
-                    ? string.Format("{0:0.##} px ({1:0.##} mm)", measurement.Distance, measurement.MillimeterDistance)
+                    ? string.Format("{0:0.##} mm ({1:0.##} px)", measurement.MillimeterDistance, measurement.Distance)
                     : "不可判斷");
             }
         }
