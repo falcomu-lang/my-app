@@ -135,12 +135,12 @@ namespace AoiMeasureTool
                     continue;
                 }
 
-                if (candidate.X < topLeft.X || (candidate.X == topLeft.X && candidate.Y < topLeft.Y))
+                if (candidate.Y < topLeft.Y || (candidate.Y == topLeft.Y && candidate.X < topLeft.X))
                 {
                     topLeft = candidate;
                 }
 
-                if (candidate.X > topRight.X || (candidate.X == topRight.X && candidate.Y < topRight.Y))
+                if (candidate.Y < topRight.Y || (candidate.Y == topRight.Y && candidate.X > topRight.X))
                 {
                     topRight = candidate;
                 }
