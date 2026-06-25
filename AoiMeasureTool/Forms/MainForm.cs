@@ -87,6 +87,7 @@ namespace AoiMeasureTool
         private TabPage _tabPageMeasureDistance;
         private TabPage _tabPageMultiImageConfirm;
         private TabPage _tabPageInnerSettings;
+        private TabPage _tabPageJudgementCriteria;
         private Panel _panelMeasurePreview;
         private Panel _panelMultiImageConfirmViewport;
         private PictureBox _pictureBoxMultiImageConfirm;
@@ -146,6 +147,7 @@ namespace AoiMeasureTool
             InitializeReferenceCornerControls();
             InitializeMeasureDistanceControls();
             InitializeInnerSettingsControls();
+            InitializeJudgementCriteriaControls();
             EnableDoubleBuffering();
             LoadSavedAppSettings();
             LoadLastImageIfAvailable();
@@ -277,6 +279,11 @@ namespace AoiMeasureTool
             ShowInnerSettingsWorkspace();
         }
 
+        private void JudgementCriteriaButton_Click(object sender, EventArgs e)
+        {
+            ShowJudgementCriteriaWorkspace();
+        }
+
         private void ShowMainWorkspaceTabs()
         {
             if (tabControlMain == null)
@@ -301,6 +308,18 @@ namespace AoiMeasureTool
             tabControlMain.TabPages.Clear();
             tabControlMain.TabPages.Add(_tabPageInnerSettings);
             tabControlMain.SelectedTab = _tabPageInnerSettings;
+        }
+
+        private void ShowJudgementCriteriaWorkspace()
+        {
+            if (tabControlMain == null)
+            {
+                return;
+            }
+
+            tabControlMain.TabPages.Clear();
+            tabControlMain.TabPages.Add(_tabPageJudgementCriteria);
+            tabControlMain.SelectedTab = _tabPageJudgementCriteria;
         }
 
         private void ApplySnapshots(PreprocessSnapshot[] snapshots)
