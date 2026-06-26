@@ -674,21 +674,36 @@ namespace AoiMeasureTool
         private static bool TryParseRangeSpec(string spec, double value, out bool pass)
         {
             pass = false;
-            var match = Regex.Match(
+            var ascendingMatch = Regex.Match(
                 spec,
                 @"^(-?\d+(?:\.\d+)?)(<=|<)x(<=|<)(-?\d+(?:\.\d+)?)$");
-            if (!match.Success)
+            if (ascendingMatch.Success)
+            {
+                var lower = double.Parse(ascendingMatch.Groups[1].Value, CultureInfo.InvariantCulture);
+                var lowerOperator = ascendingMatch.Groups[2].Value == "<" ? ">" : ">=";
+                var upperOperator = ascendingMatch.Groups[3].Value;
+                var upper = double.Parse(ascendingMatch.Groups[4].Value, CultureInfo.InvariantCulture);
+
+                pass = EvaluateComparison(value, lowerOperator, lower) &&
+                    EvaluateComparison(value, upperOperator, upper);
+                return true;
+            }
+
+            var descendingMatch = Regex.Match(
+                spec,
+                @"^(-?\d+(?:\.\d+)?)(>=|>)x(>=|>)(-?\d+(?:\.\d+)?)$");
+            if (!descendingMatch.Success)
             {
                 return false;
             }
 
-            var lower = double.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
-            var lowerOperator = match.Groups[2].Value == "<" ? ">" : ">=";
-            var upperOperator = match.Groups[3].Value;
-            var upper = double.Parse(match.Groups[4].Value, CultureInfo.InvariantCulture);
+            var upperBound = double.Parse(descendingMatch.Groups[1].Value, CultureInfo.InvariantCulture);
+            var upperOperatorFromLeft = descendingMatch.Groups[2].Value == ">" ? "<" : "<=";
+            var lowerOperatorFromRight = descendingMatch.Groups[3].Value == ">" ? ">" : ">=";
+            var lowerBound = double.Parse(descendingMatch.Groups[4].Value, CultureInfo.InvariantCulture);
 
-            pass = EvaluateComparison(value, lowerOperator, lower) &&
-                EvaluateComparison(value, upperOperator, upper);
+            pass = EvaluateComparison(value, upperOperatorFromLeft, upperBound) &&
+                EvaluateComparison(value, lowerOperatorFromRight, lowerBound);
             return true;
         }
 
