@@ -25,7 +25,7 @@ Do not rework the viewer flow unless a later request explicitly asks for it.
 - The reference-corner, measurement-distance, and multi-image-confirm work items each show only their matching workspace tabs.
 - The measurement-distance workflow supports editing an existing line segment by reselecting two points after choosing parallel or perpendicular mode.
 - Deleting a measurement line segment shows a warning because it affects downstream calculations and saved measurement results.
-- The project target framework is .NET Framework 4.7.2.
+- The project target framework is `.NET Framework 4.7.2`.
 - The left sidebar also includes:
   - inner settings
   - judgement criteria
@@ -183,8 +183,26 @@ Do not rework the viewer flow unless a later request explicitly asks for it.
 
 - A dedicated judgement-criteria work item exists in the left sidebar.
 - Selecting it shows a dedicated judgement-criteria tabpage.
-- The tabpage is intentionally empty for now and acts as a reserved workspace for future conditions UI.
-- The judgement-criteria tabpage is designer-managed so future controls can be added and repositioned visually.
+- The tabpage is designer-managed and contains:
+  - rule name
+  - A rule calculation
+  - A rule specification
+  - B rule calculation
+  - B rule specification
+  - add / reset buttons
+  - a result table
+  - a save button
+- The input controls and table are built in the WinForms designer so future UI edits can be done by dragging controls rather than runtime generation.
+- The `add` flow supports creating a new rule or updating an existing rule.
+- The table row context menu supports:
+  - `修改`
+  - `刪除`
+- `修改` loads the row back into the inputs and switches the buttons to:
+  - `更新`
+  - `取消`
+- `刪除` prompts for confirmation before removing the row.
+- The `儲存判斷條件` button saves the current product’s judgement criteria once, and duplicate click binding has been removed.
+- The page currently stores optional B-rule fields as part of the same record.
 
 ## Files Touched
 

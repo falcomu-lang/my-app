@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Data;
 using System.Windows.Forms;
 using Cv2 = OpenCvSharp.Cv2;
 using CvMat = OpenCvSharp.Mat;
@@ -89,6 +90,7 @@ namespace AoiMeasureTool
             _buttonMultiImageLineSequence = buttonMultiImageLineSequence;
             _comboBoxMultiImageLineDisplayMode = comboBoxMultiImageLineDisplayMode;
             _dataGridViewMultiImageInfo = dataGridViewMultiImageInfo;
+            _dataGridViewMultiImageJudgementResult = InitializeMultiImageJudgementResultGrid();
             groupBoxMultiImagePreviewSource = groupBoxMultiImagePreviewSource ?? this.groupBoxMultiImagePreviewSource;
             comboBoxMultiImagePreviewSource = comboBoxMultiImagePreviewSource ?? this.comboBoxMultiImagePreviewSource;
             buttonLoadMultiImagePreprocess = buttonLoadMultiImagePreprocess ?? this.buttonLoadMultiImagePreprocess;
@@ -235,6 +237,38 @@ namespace AoiMeasureTool
             UpdateMeasureSourceAvailability();
             UpdateMeasureDirectionButtons();
             UpdateMultiImageInfoTable();
+            RefreshMultiImageJudgementResultTable();
+        }
+
+        private DataGridView InitializeMultiImageJudgementResultGrid()
+        {
+            if (tabPageMultiImageJudgementResult == null)
+            {
+                return null;
+            }
+
+            var grid = new DataGridView();
+            grid.Dock = DockStyle.Fill;
+            grid.ReadOnly = true;
+            grid.AllowUserToAddRows = false;
+            grid.AllowUserToDeleteRows = false;
+            grid.AllowUserToResizeColumns = false;
+            grid.AllowUserToResizeRows = false;
+            grid.RowHeadersVisible = false;
+            grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            grid.BackgroundColor = Color.FromArgb(239, 241, 243);
+            grid.BorderStyle = BorderStyle.None;
+            if (grid.Columns.Count == 0)
+            {
+                grid.Columns.Add("colName", "規則名稱");
+                grid.Columns.Add("colCalc", "計算值");
+                grid.Columns.Add("colJudge", "判定");
+            }
+
+            tabPageMultiImageJudgementResult.Controls.Clear();
+            tabPageMultiImageJudgementResult.Controls.Add(grid);
+            return grid;
         }
 
         private void InitializeMultiImageInfoGrid()
@@ -361,6 +395,7 @@ namespace AoiMeasureTool
             UpdateMultiImageNavigationButtons();
             UpdateMultiImageStatusLabel();
             UpdateMultiImageInfoTable();
+            RefreshMultiImageJudgementResultTable();
         }
 
         private string ResolveMultiImageConfirmProductKey(string folderPath, string selectedImagePath)
@@ -386,6 +421,7 @@ namespace AoiMeasureTool
             }
             UpdateMultiImageStatusLabel();
             UpdateMultiImageInfoTable();
+            RefreshMultiImageJudgementResultTable();
         }
 
         private void UpdateMultiImageNavigationButtons()
@@ -457,6 +493,245 @@ namespace AoiMeasureTool
                     ? string.Format("{0:0.##} mm ({1:0.##} px)", measurement.MillimeterDistance, measurement.Distance)
                     : "不可判斷");
             }
+        }
+
+        private void RefreshMultiImageJudgementResultTable()
+        {
+            if (_dataGridViewMultiImageJudgementResult == null)
+            {
+                return;
+            }
+
+            _dataGridViewMultiImageJudgementResult.Rows.Clear();
+            var results = BuildMultiImageJudgementResults();
+            for (var i = 0; i < results.Count; i++)
+            {
+                var result = results[i];
+                _dataGridViewMultiImageJudgementResult.Rows.Add(
+                    result.Name ?? string.Empty,
+                    result.CalculationValueText ?? string.Empty,
+                    result.JudgementText ?? string.Empty);
+            }
+        }
+
+        private List<MultiImageJudgementResultRow> BuildMultiImageJudgementResults()
+        {
+            var rows = new List<MultiImageJudgementResultRow>();
+            if (_judgementCriteriaRules == null || _judgementCriteriaRules.Count == 0)
+            {
+                return rows;
+            }
+
+            var lineMeasurements = BuildMultiImageConfirmLineMeasurements(GetMultiImageConfirmReferenceCandidate());
+            if (lineMeasurements.Count == 0)
+            {
+                for (var i = 0; i < _judgementCriteriaRules.Count; i++)
+                {
+                    rows.Add(new MultiImageJudgementResultRow
+                    {
+                        Name = _judgementCriteriaRules[i]?.Name ?? string.Empty,
+                        CalculationValueText = string.Empty,
+                        JudgementText = "不可判斷"
+                    });
+                }
+
+                return rows;
+            }
+
+            var values = new Dictionary<int, double>();
+            for (var i = 0; i < lineMeasurements.Count; i++)
+            {
+                if (lineMeasurements[i] != null && lineMeasurements[i].IsValid)
+                {
+                    values[i + 1] = lineMeasurements[i].MillimeterDistance;
+                }
+            }
+
+            foreach (var rule in _judgementCriteriaRules)
+            {
+                rows.Add(EvaluateJudgementRule(rule, values));
+            }
+
+            return rows;
+        }
+
+        private MultiImageJudgementResultRow EvaluateJudgementRule(JudgementCriterionRule rule, IReadOnlyDictionary<int, double> lineValues)
+        {
+            var row = new MultiImageJudgementResultRow
+            {
+                Name = rule?.Name ?? string.Empty
+            };
+
+            var calcValueA = EvaluateJudgementCalculation(
+                rule == null ? null : rule.CalculationExpression,
+                lineValues,
+                out var calcTextA);
+            var judgementA = EvaluateJudgementSpec(calcValueA, rule == null ? null : rule.SpecExpression);
+            if (judgementA == JudgementSpecResult.Pass)
+            {
+                row.CalculationValueText = calcTextA;
+                row.JudgementText = "A規";
+                return row;
+            }
+
+            var hasBRule = !string.IsNullOrWhiteSpace(rule == null ? null : rule.CalculationExpressionB) ||
+                !string.IsNullOrWhiteSpace(rule == null ? null : rule.SpecExpressionB);
+            if (!hasBRule)
+            {
+                row.CalculationValueText = calcTextA;
+                row.JudgementText = judgementA == JudgementSpecResult.Invalid ? "不可判斷" : "C規";
+                return row;
+            }
+
+            var calcValueB = EvaluateJudgementCalculation(
+                rule == null ? null : rule.CalculationExpressionB,
+                lineValues,
+                out var calcTextB);
+            var judgementB = EvaluateJudgementSpec(calcValueB, rule == null ? null : rule.SpecExpressionB);
+            row.CalculationValueText = string.Format("A:{0} / B:{1}", calcTextA, calcTextB);
+            if (judgementB == JudgementSpecResult.Pass)
+            {
+                row.JudgementText = "B規";
+                return row;
+            }
+
+            row.JudgementText =
+                judgementA == JudgementSpecResult.Invalid || judgementB == JudgementSpecResult.Invalid
+                    ? "不可判斷"
+                    : "C規";
+            return row;
+        }
+
+        private static double? EvaluateJudgementCalculation(string expression, IReadOnlyDictionary<int, double> lineValues, out string text)
+        {
+            text = string.Empty;
+            if (string.IsNullOrWhiteSpace(expression))
+            {
+                return null;
+            }
+
+            var missingValue = false;
+            var resolved = Regex.Replace(expression, @"\((\d+)\)", match =>
+            {
+                var index = int.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+                double value;
+                if (lineValues != null && lineValues.TryGetValue(index, out value))
+                {
+                    return value.ToString(CultureInfo.InvariantCulture);
+                }
+
+                missingValue = true;
+                return match.Value;
+            });
+
+            if (missingValue)
+            {
+                text = resolved;
+                return null;
+            }
+
+            try
+            {
+                var table = new DataTable();
+                var result = table.Compute(resolved, string.Empty);
+                var numeric = Convert.ToDouble(result, CultureInfo.InvariantCulture);
+                text = numeric.ToString("0.##", CultureInfo.InvariantCulture);
+                return numeric;
+            }
+            catch
+            {
+                text = resolved;
+                return null;
+            }
+        }
+
+        private static JudgementSpecResult EvaluateJudgementSpec(double? value, string specExpression)
+        {
+            if (!value.HasValue)
+            {
+                return JudgementSpecResult.Invalid;
+            }
+
+            if (string.IsNullOrWhiteSpace(specExpression))
+            {
+                return JudgementSpecResult.Invalid;
+            }
+
+            var normalized = specExpression.Replace(" ", string.Empty);
+            double lower;
+            double upper;
+            if (TryParseRangeSpec(normalized, out lower, out upper))
+            {
+                return value.Value > lower && value.Value < upper
+                    ? JudgementSpecResult.Pass
+                    : JudgementSpecResult.Fail;
+            }
+
+            if (TryParseComparisonSpec(normalized, value.Value, out var pass))
+            {
+                return pass ? JudgementSpecResult.Pass : JudgementSpecResult.Fail;
+            }
+
+            return JudgementSpecResult.Invalid;
+        }
+
+        private static bool TryParseRangeSpec(string spec, out double lower, out double upper)
+        {
+            lower = 0;
+            upper = 0;
+            var match = Regex.Match(spec, @"^(-?\d+(?:\.\d+)?)<x<(-?\d+(?:\.\d+)?)$");
+            if (!match.Success)
+            {
+                return false;
+            }
+
+            lower = double.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+            upper = double.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
+            return true;
+        }
+
+        private static bool TryParseComparisonSpec(string spec, double value, out bool pass)
+        {
+            pass = false;
+            var match = Regex.Match(spec, @"^x(<=|>=|<|>)(-?\d+(?:\.\d+)?)$");
+            if (!match.Success)
+            {
+                return false;
+            }
+
+            var op = match.Groups[1].Value;
+            var target = double.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
+            switch (op)
+            {
+                case "<":
+                    pass = value < target;
+                    break;
+                case "<=":
+                    pass = value <= target;
+                    break;
+                case ">":
+                    pass = value > target;
+                    break;
+                case ">=":
+                    pass = value >= target;
+                    break;
+            }
+
+            return true;
+        }
+
+        private sealed class MultiImageJudgementResultRow
+        {
+            public string Name { get; set; }
+            public string CalculationValueText { get; set; }
+            public string JudgementText { get; set; }
+        }
+
+        private enum JudgementSpecResult
+        {
+            Invalid = 0,
+            Pass = 1,
+            Fail = 2
         }
 
         private void AddMultiImageInfoRow(string item, string value)

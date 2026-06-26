@@ -88,6 +88,7 @@ namespace AoiMeasureTool
             }
 
             RefreshJudgementCriteriaView();
+            RefreshMultiImageJudgementResultTable();
             ClearJudgementCriteriaInputs();
             UpdateJudgementControlsForEditMode(false);
         }
@@ -107,6 +108,7 @@ namespace AoiMeasureTool
         {
             PersistActiveProductProfile();
             SaveCurrentAppSettings();
+            RefreshMultiImageJudgementResultTable();
             MessageBox.Show(this, "判斷條件已儲存。", "良品判斷條件", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -129,6 +131,8 @@ namespace AoiMeasureTool
                     rule.CalculationExpressionB ?? string.Empty,
                     rule.SpecExpressionB ?? string.Empty);
             }
+
+            RefreshMultiImageJudgementResultTable();
         }
 
         private void ClearJudgementCriteriaInputs()
