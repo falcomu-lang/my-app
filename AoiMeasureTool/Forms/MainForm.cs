@@ -173,6 +173,7 @@ namespace AoiMeasureTool
         {
             SetControlDoubleBuffered(_panelMultiImageConfirmViewport, true);
             SetControlDoubleBuffered(panelMultiImageInfo, true);
+            SetControlDoubleBuffered(tabControlMultiImageInfo, true);
             SetControlDoubleBuffered(_tabPageMultiImageConfirm, true);
         }
 

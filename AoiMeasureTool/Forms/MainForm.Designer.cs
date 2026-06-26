@@ -91,6 +91,9 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Button buttonMultiImageLineSequence;
         private System.Windows.Forms.ComboBox comboBoxMultiImageLineDisplayMode;
         private System.Windows.Forms.Panel panelMultiImageInfo;
+        private System.Windows.Forms.TabControl tabControlMultiImageInfo;
+        private System.Windows.Forms.TabPage tabPageMultiImageRawData;
+        private System.Windows.Forms.TabPage tabPageMultiImageJudgementResult;
         private System.Windows.Forms.DataGridView dataGridViewMultiImageInfo;
         private System.Windows.Forms.Panel panelImageViewport;
         private System.Windows.Forms.PictureBox pictureBoxImage;
@@ -345,6 +348,9 @@ namespace AoiMeasureTool
             this.buttonMultiImageLineSequence = new System.Windows.Forms.Button();
             this.comboBoxMultiImageLineDisplayMode = new System.Windows.Forms.ComboBox();
             this.panelMultiImageInfo = new System.Windows.Forms.Panel();
+            this.tabControlMultiImageInfo = new System.Windows.Forms.TabControl();
+            this.tabPageMultiImageRawData = new System.Windows.Forms.TabPage();
+            this.tabPageMultiImageJudgementResult = new System.Windows.Forms.TabPage();
             this.dataGridViewMultiImageInfo = new System.Windows.Forms.DataGridView();
             this.panelMultiImageConfirmViewport = new System.Windows.Forms.Panel();
             this.pictureBoxMultiImageConfirm = new System.Windows.Forms.PictureBox();
@@ -408,6 +414,9 @@ namespace AoiMeasureTool
             this.tabPageMultiImageConfirm.SuspendLayout();
             this.groupBoxMultiImagePreviewSource.SuspendLayout();
             this.panelMultiImageInfo.SuspendLayout();
+            this.tabControlMultiImageInfo.SuspendLayout();
+            this.tabPageMultiImageRawData.SuspendLayout();
+            this.tabPageMultiImageJudgementResult.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMultiImageInfo)).BeginInit();
             this.panelMultiImageConfirmViewport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMultiImageConfirm)).BeginInit();
@@ -2299,11 +2308,43 @@ namespace AoiMeasureTool
             // 
             this.panelMultiImageInfo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(241)))), ((int)(((byte)(243)))));
             this.panelMultiImageInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelMultiImageInfo.Controls.Add(this.dataGridViewMultiImageInfo);
+            this.panelMultiImageInfo.Controls.Add(this.tabControlMultiImageInfo);
             this.panelMultiImageInfo.Location = new System.Drawing.Point(690, 20);
             this.panelMultiImageInfo.Name = "panelMultiImageInfo";
             this.panelMultiImageInfo.Size = new System.Drawing.Size(326, 400);
             this.panelMultiImageInfo.TabIndex = 9;
+            //
+            // tabControlMultiImageInfo
+            //
+            this.tabControlMultiImageInfo.Controls.Add(this.tabPageMultiImageRawData);
+            this.tabControlMultiImageInfo.Controls.Add(this.tabPageMultiImageJudgementResult);
+            this.tabControlMultiImageInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlMultiImageInfo.Location = new System.Drawing.Point(0, 0);
+            this.tabControlMultiImageInfo.Name = "tabControlMultiImageInfo";
+            this.tabControlMultiImageInfo.SelectedIndex = 0;
+            this.tabControlMultiImageInfo.Size = new System.Drawing.Size(324, 398);
+            this.tabControlMultiImageInfo.TabIndex = 0;
+            //
+            // tabPageMultiImageRawData
+            //
+            this.tabPageMultiImageRawData.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(241)))), ((int)(((byte)(243)))));
+            this.tabPageMultiImageRawData.Controls.Add(this.dataGridViewMultiImageInfo);
+            this.tabPageMultiImageRawData.Location = new System.Drawing.Point(4, 26);
+            this.tabPageMultiImageRawData.Name = "tabPageMultiImageRawData";
+            this.tabPageMultiImageRawData.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageMultiImageRawData.Size = new System.Drawing.Size(316, 368);
+            this.tabPageMultiImageRawData.TabIndex = 0;
+            this.tabPageMultiImageRawData.Text = "原始資料";
+            //
+            // tabPageMultiImageJudgementResult
+            //
+            this.tabPageMultiImageJudgementResult.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(241)))), ((int)(((byte)(243)))));
+            this.tabPageMultiImageJudgementResult.Location = new System.Drawing.Point(4, 26);
+            this.tabPageMultiImageJudgementResult.Name = "tabPageMultiImageJudgementResult";
+            this.tabPageMultiImageJudgementResult.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageMultiImageJudgementResult.Size = new System.Drawing.Size(316, 368);
+            this.tabPageMultiImageJudgementResult.TabIndex = 1;
+            this.tabPageMultiImageJudgementResult.Text = "判定結果";
             // 
             // dataGridViewMultiImageInfo
             // 
@@ -2314,14 +2355,14 @@ namespace AoiMeasureTool
             this.dataGridViewMultiImageInfo.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(241)))), ((int)(((byte)(243)))));
             this.dataGridViewMultiImageInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridViewMultiImageInfo.ColumnHeadersVisible = false;
-            this.dataGridViewMultiImageInfo.Location = new System.Drawing.Point(12, 12);
+            this.dataGridViewMultiImageInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewMultiImageInfo.MultiSelect = false;
             this.dataGridViewMultiImageInfo.Name = "dataGridViewMultiImageInfo";
             this.dataGridViewMultiImageInfo.ReadOnly = true;
             this.dataGridViewMultiImageInfo.RowHeadersVisible = false;
             this.dataGridViewMultiImageInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dataGridViewMultiImageInfo.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewMultiImageInfo.Size = new System.Drawing.Size(300, 366);
+            this.dataGridViewMultiImageInfo.Size = new System.Drawing.Size(310, 362);
             this.dataGridViewMultiImageInfo.TabIndex = 0;
             // 
             // panelMultiImageConfirmViewport
@@ -2439,7 +2480,13 @@ namespace AoiMeasureTool
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxReferencePreview)).EndInit();
             this.tabPageMultiImageConfirm.ResumeLayout(false);
             this.groupBoxMultiImagePreviewSource.ResumeLayout(false);
+            this.tabControlMultiImageInfo.ResumeLayout(false);
+            this.tabPageMultiImageRawData.ResumeLayout(false);
+            this.tabPageMultiImageJudgementResult.ResumeLayout(false);
             this.panelMultiImageInfo.ResumeLayout(false);
+            this.tabControlMultiImageInfo.ResumeLayout(false);
+            this.tabPageMultiImageRawData.ResumeLayout(false);
+            this.tabPageMultiImageJudgementResult.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMultiImageInfo)).EndInit();
             this.panelMultiImageConfirmViewport.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMultiImageConfirm)).EndInit();
