@@ -33,7 +33,7 @@ namespace AoiMeasureTool
                 Dock = DockStyle.Top,
                 AutoSize = true,
                 ColumnCount = 4,
-                RowCount = 5,
+                RowCount = 6,
                 Margin = new Padding(0, 0, 0, 12)
             };
             inputPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 120f));
@@ -78,7 +78,7 @@ namespace AoiMeasureTool
             actionPanel.Controls.Add(_buttonJudgementAdd);
             actionPanel.Controls.Add(_buttonJudgementReset);
 
-            inputPanel.Controls.Add(actionPanel, 1, 2);
+            inputPanel.Controls.Add(actionPanel, 1, 4);
             inputPanel.SetColumnSpan(actionPanel, 3);
 
             _dataGridViewJudgementCriteria = new DataGridView
@@ -152,7 +152,11 @@ namespace AoiMeasureTool
             var calcB = _textJudgementCalculationB == null ? string.Empty : _textJudgementCalculationB.Text.Trim();
             var specB = _textJudgementSpecB == null ? string.Empty : _textJudgementSpecB.Text.Trim();
 
-            if (string.IsNullOrWhiteSpace(name) && string.IsNullOrWhiteSpace(calc) && string.IsNullOrWhiteSpace(spec))
+            if (string.IsNullOrWhiteSpace(name) &&
+                string.IsNullOrWhiteSpace(calc) &&
+                string.IsNullOrWhiteSpace(spec) &&
+                string.IsNullOrWhiteSpace(calcB) &&
+                string.IsNullOrWhiteSpace(specB))
             {
                 return;
             }
@@ -205,31 +209,11 @@ namespace AoiMeasureTool
 
         private void ClearJudgementCriteriaInputs()
         {
-            if (_textJudgementName != null)
-            {
-                _textJudgementName.Clear();
-            }
-
-            if (_textJudgementCalculation != null)
-            {
-                _textJudgementCalculation.Clear();
-            }
-
-            if (_textJudgementSpec != null)
-            {
-                _textJudgementSpec.Clear();
-            }
-
-            if (_textJudgementCalculationB != null)
-            {
-                _textJudgementCalculationB.Clear();
-            }
-
-            if (_textJudgementSpecB != null)
-            {
-                _textJudgementSpecB.Clear();
-            }
-
+            _textJudgementName?.Clear();
+            _textJudgementCalculation?.Clear();
+            _textJudgementSpec?.Clear();
+            _textJudgementCalculationB?.Clear();
+            _textJudgementSpecB?.Clear();
             _textJudgementName?.Focus();
         }
     }
