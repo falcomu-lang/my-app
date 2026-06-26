@@ -34,6 +34,9 @@ Do not rework the viewer flow unless a later request explicitly asks for it.
 - Inner settings are stored in `innerSetting.ini` beside the executable and do not change when the active product changes.
 - Inner settings currently expose CCD X precision and CCD Y precision with a dedicated save button.
 - The multi-image confirm info table shows each valid line measurement as millimeters first, with pixel distance in parentheses.
+- The multi-image confirm right-side info area is now a tabbed panel with:
+  - `原始資料`
+  - `判定結果`
 
 ## Multi-Image Confirm Behavior
 
@@ -47,7 +50,9 @@ Do not rework the viewer flow unless a later request explicitly asks for it.
     - a dropdown for preprocess image 1-4
     - a load-preprocess-image button
     - an original-image button
-  - a right-side info table
+  - a right-side tabbed info area
+    - an `原始資料` tab with the existing info table
+    - a `判定結果` tab with a judgement-result table
   - a line-sequence button
   - a line-display-mode selector
 - Folder loading reads image files from the selected folder and builds an ordered image list.
@@ -159,6 +164,58 @@ Do not rework the viewer flow unless a later request explicitly asks for it.
   - calculate Euclidean distance in millimeters
 - The line-sequence overlay must follow the configured measurement line order from the distance setup, not a screen-position sort.
 
+## Multi-Image Judgement Result Rules
+
+- The `判定結果` tab shows a table with:
+  - rule name
+  - calculation value
+  - judgement
+- The source rules come from the current product's `良品判斷條件` records.
+- Judgement-result evaluation uses the current multi-image confirm line measurements in millimeters.
+- Calculation expressions currently support arithmetic expressions written with half-width operators and parentheses.
+- Measured line references in a calculation expression use the form:
+  - `(1)`
+  - `(2)`
+  - `(3)`
+- Example supported calculation expressions include:
+  - `(1)-(2)`
+  - `((1)+(2))/2`
+- If a referenced line measurement is unavailable, the calculation result is treated as invalid and the judgement result becomes `不可判斷`.
+- A single judgement rule record currently supports:
+  - A-rule calculation
+  - A-rule spec
+  - optional B-rule calculation
+  - optional B-rule spec
+- The judgement flow is:
+  - if A-rule passes, the displayed judgement is `A規`
+  - otherwise, if B-rule exists and passes, the displayed judgement is `B規`
+  - otherwise, if A and B were both evaluated and both failed, the displayed judgement is `C規`
+  - if the rule could not be evaluated, the displayed judgement is `不可判斷`
+- If no B-rule is configured for a row:
+  - A pass still shows `A規`
+  - an A failure currently falls through to `C規`
+- Spec expressions currently support:
+  - `x<6`
+  - `x<=5`
+  - `x>6`
+  - `x>=7`
+  - `5<x<6`
+  - `5<=x<=6`
+  - `5<=x<6`
+  - `5<x<=6`
+  - `6>x>5`
+  - `6>=x>=5`
+  - `6>x>=5`
+  - `6>=x>5`
+- Reverse single-sided comparison syntax is also supported, for example:
+  - `5>=x`
+  - `5<=x`
+  - `5>x`
+  - `5<x`
+- The current implementation parses spec expressions from free text.
+- The current implementation uses line order numbers in expressions rather than a stable line ID.
+- The current implementation evaluates judgement rules inside the WinForms flow rather than in a separate service layer.
+
 ## Measurement Editing Rules
 
 - Existing measurement line segments can be edited from the record table.
@@ -222,6 +279,7 @@ Do not rework the viewer flow unless a later request explicitly asks for it.
 - `AoiMeasureTool/Repositories/InnerSettingsRepository.cs`
 - `AoiMeasureTool/Models/ProfileModels.cs`
 - `AoiMeasureTool/AoiMeasureTool.csproj`
+- `PROJECT_HANDOFF.md`
 
 ## Important Notes
 
@@ -242,6 +300,9 @@ Do not rework the viewer flow unless a later request explicitly asks for it.
 - Keep inner settings separate from `setting.ini` product-profile persistence.
 - Keep startup workspace behavior such that inner-settings and judgement-criteria tabs are hidden until explicitly opened from the sidebar.
 - If future changes extend inner settings or judgement criteria, prefer continuing to manage their controls in the WinForms designer rather than reverting to runtime-generated controls.
+- Keep calculation expressions in half-width form for now; full-width parentheses are not part of the current supported input contract.
+- The current judgement-result table is intended for rule-by-rule output; there is not yet a finalized overall `OK / NG / 無法判定` summary layer for the entire image.
+- If future work formalizes final `OK / NG`, prefer adding a dedicated aggregation rule rather than overloading the current per-rule `A規 / B規 / C規` display.
 
 ## Suggested Next Step
 
