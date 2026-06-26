@@ -1901,7 +1901,7 @@ namespace AoiMeasureTool
             // labelJudgementName
             // 
             this.labelJudgementName.AutoSize = true;
-            this.labelJudgementName.Location = new System.Drawing.Point(24, 22);
+            this.labelJudgementName.Location = new System.Drawing.Point(24, 20);
             this.labelJudgementName.Name = "labelJudgementName";
             this.labelJudgementName.Size = new System.Drawing.Size(56, 18);
             this.labelJudgementName.TabIndex = 0;
@@ -1909,7 +1909,7 @@ namespace AoiMeasureTool
             // 
             // textBoxJudgementName
             // 
-            this.textBoxJudgementName.Location = new System.Drawing.Point(160, 18);
+            this.textBoxJudgementName.Location = new System.Drawing.Point(160, 16);
             this.textBoxJudgementName.Name = "textBoxJudgementName";
             this.textBoxJudgementName.Size = new System.Drawing.Size(260, 25);
             this.textBoxJudgementName.TabIndex = 1;
@@ -1917,7 +1917,7 @@ namespace AoiMeasureTool
             // labelJudgementCalculation
             // 
             this.labelJudgementCalculation.AutoSize = true;
-            this.labelJudgementCalculation.Location = new System.Drawing.Point(24, 64);
+            this.labelJudgementCalculation.Location = new System.Drawing.Point(24, 58);
             this.labelJudgementCalculation.Name = "labelJudgementCalculation";
             this.labelJudgementCalculation.Size = new System.Drawing.Size(76, 18);
             this.labelJudgementCalculation.TabIndex = 2;
@@ -1925,15 +1925,15 @@ namespace AoiMeasureTool
             // 
             // textBoxJudgementCalculation
             // 
-            this.textBoxJudgementCalculation.Location = new System.Drawing.Point(160, 60);
+            this.textBoxJudgementCalculation.Location = new System.Drawing.Point(160, 54);
             this.textBoxJudgementCalculation.Name = "textBoxJudgementCalculation";
-            this.textBoxJudgementCalculation.Size = new System.Drawing.Size(760, 25);
+            this.textBoxJudgementCalculation.Size = new System.Drawing.Size(260, 25);
             this.textBoxJudgementCalculation.TabIndex = 3;
             // 
             // labelJudgementSpec
             // 
             this.labelJudgementSpec.AutoSize = true;
-            this.labelJudgementSpec.Location = new System.Drawing.Point(24, 106);
+            this.labelJudgementSpec.Location = new System.Drawing.Point(24, 96);
             this.labelJudgementSpec.Name = "labelJudgementSpec";
             this.labelJudgementSpec.Size = new System.Drawing.Size(62, 18);
             this.labelJudgementSpec.TabIndex = 4;
@@ -1941,15 +1941,15 @@ namespace AoiMeasureTool
             // 
             // textBoxJudgementSpec
             // 
-            this.textBoxJudgementSpec.Location = new System.Drawing.Point(160, 102);
+            this.textBoxJudgementSpec.Location = new System.Drawing.Point(160, 92);
             this.textBoxJudgementSpec.Name = "textBoxJudgementSpec";
-            this.textBoxJudgementSpec.Size = new System.Drawing.Size(760, 25);
+            this.textBoxJudgementSpec.Size = new System.Drawing.Size(260, 25);
             this.textBoxJudgementSpec.TabIndex = 5;
             // 
             // labelJudgementCalculationB
             // 
             this.labelJudgementCalculationB.AutoSize = true;
-            this.labelJudgementCalculationB.Location = new System.Drawing.Point(24, 148);
+            this.labelJudgementCalculationB.Location = new System.Drawing.Point(24, 134);
             this.labelJudgementCalculationB.Name = "labelJudgementCalculationB";
             this.labelJudgementCalculationB.Size = new System.Drawing.Size(76, 18);
             this.labelJudgementCalculationB.TabIndex = 6;
@@ -1957,15 +1957,15 @@ namespace AoiMeasureTool
             // 
             // textBoxJudgementCalculationB
             // 
-            this.textBoxJudgementCalculationB.Location = new System.Drawing.Point(160, 144);
+            this.textBoxJudgementCalculationB.Location = new System.Drawing.Point(160, 130);
             this.textBoxJudgementCalculationB.Name = "textBoxJudgementCalculationB";
-            this.textBoxJudgementCalculationB.Size = new System.Drawing.Size(760, 25);
+            this.textBoxJudgementCalculationB.Size = new System.Drawing.Size(260, 25);
             this.textBoxJudgementCalculationB.TabIndex = 7;
             // 
             // labelJudgementSpecB
             // 
             this.labelJudgementSpecB.AutoSize = true;
-            this.labelJudgementSpecB.Location = new System.Drawing.Point(24, 190);
+            this.labelJudgementSpecB.Location = new System.Drawing.Point(24, 172);
             this.labelJudgementSpecB.Name = "labelJudgementSpecB";
             this.labelJudgementSpecB.Size = new System.Drawing.Size(62, 18);
             this.labelJudgementSpecB.TabIndex = 8;
@@ -1973,9 +1973,9 @@ namespace AoiMeasureTool
             // 
             // textBoxJudgementSpecB
             // 
-            this.textBoxJudgementSpecB.Location = new System.Drawing.Point(160, 186);
+            this.textBoxJudgementSpecB.Location = new System.Drawing.Point(160, 168);
             this.textBoxJudgementSpecB.Name = "textBoxJudgementSpecB";
-            this.textBoxJudgementSpecB.Size = new System.Drawing.Size(760, 25);
+            this.textBoxJudgementSpecB.Size = new System.Drawing.Size(260, 25);
             this.textBoxJudgementSpecB.TabIndex = 9;
             // 
             // buttonJudgementAdd
@@ -1983,7 +1983,7 @@ namespace AoiMeasureTool
             this.buttonJudgementAdd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
             this.buttonJudgementAdd.FlatAppearance.BorderSize = 0;
             this.buttonJudgementAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonJudgementAdd.Location = new System.Drawing.Point(160, 226);
+            this.buttonJudgementAdd.Location = new System.Drawing.Point(160, 208);
             this.buttonJudgementAdd.Name = "buttonJudgementAdd";
             this.buttonJudgementAdd.Size = new System.Drawing.Size(100, 36);
             this.buttonJudgementAdd.TabIndex = 10;
@@ -1996,7 +1996,7 @@ namespace AoiMeasureTool
             this.buttonJudgementReset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
             this.buttonJudgementReset.FlatAppearance.BorderSize = 0;
             this.buttonJudgementReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonJudgementReset.Location = new System.Drawing.Point(272, 226);
+            this.buttonJudgementReset.Location = new System.Drawing.Point(272, 208);
             this.buttonJudgementReset.Name = "buttonJudgementReset";
             this.buttonJudgementReset.Size = new System.Drawing.Size(100, 36);
             this.buttonJudgementReset.TabIndex = 11;
@@ -2009,7 +2009,7 @@ namespace AoiMeasureTool
             this.buttonJudgementSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
             this.buttonJudgementSave.FlatAppearance.BorderSize = 0;
             this.buttonJudgementSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonJudgementSave.Location = new System.Drawing.Point(800, 502);
+            this.buttonJudgementSave.Location = new System.Drawing.Point(160, 460);
             this.buttonJudgementSave.Name = "buttonJudgementSave";
             this.buttonJudgementSave.Size = new System.Drawing.Size(140, 36);
             this.buttonJudgementSave.TabIndex = 12;
@@ -2024,7 +2024,7 @@ namespace AoiMeasureTool
             this.dataGridViewJudgementCriteria.AllowUserToResizeRows = false;
             this.dataGridViewJudgementCriteria.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewJudgementCriteria.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewJudgementCriteria.Location = new System.Drawing.Point(24, 278);
+            this.dataGridViewJudgementCriteria.Location = new System.Drawing.Point(24, 256);
             this.dataGridViewJudgementCriteria.Name = "dataGridViewJudgementCriteria";
             this.dataGridViewJudgementCriteria.ReadOnly = true;
             this.dataGridViewJudgementCriteria.RowHeadersVisible = false;
