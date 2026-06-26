@@ -2009,7 +2009,7 @@ namespace AoiMeasureTool
             this.buttonJudgementSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
             this.buttonJudgementSave.FlatAppearance.BorderSize = 0;
             this.buttonJudgementSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonJudgementSave.Location = new System.Drawing.Point(160, 460);
+            this.buttonJudgementSave.Location = new System.Drawing.Point(800, 470);
             this.buttonJudgementSave.Name = "buttonJudgementSave";
             this.buttonJudgementSave.Size = new System.Drawing.Size(140, 36);
             this.buttonJudgementSave.TabIndex = 12;
