@@ -41,11 +41,11 @@ namespace AoiMeasureTool
             inputPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 120f));
             inputPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
 
-            inputPanel.Controls.Add(CreateLabel("Rule Name"), 0, 0);
-            inputPanel.Controls.Add(CreateLabel("A Calculation"), 2, 0);
-            inputPanel.Controls.Add(CreateLabel("A Specification"), 0, 1);
-            inputPanel.Controls.Add(CreateLabel("B Calculation"), 2, 2);
-            inputPanel.Controls.Add(CreateLabel("B Specification"), 0, 3);
+            inputPanel.Controls.Add(CreateLabel("規則名稱"), 0, 0);
+            inputPanel.Controls.Add(CreateLabel("A 規計算式"), 2, 0);
+            inputPanel.Controls.Add(CreateLabel("A 規規格"), 0, 1);
+            inputPanel.Controls.Add(CreateLabel("B 規計算式"), 2, 2);
+            inputPanel.Controls.Add(CreateLabel("B 規規格"), 0, 3);
 
             _textJudgementName = new TextBox { Dock = DockStyle.Fill };
             _textJudgementCalculation = new TextBox { Dock = DockStyle.Fill };
@@ -70,8 +70,8 @@ namespace AoiMeasureTool
                 Margin = new Padding(0, 12, 0, 0)
             };
 
-            _buttonJudgementAdd = new Button { Text = "Add", Width = 100, Height = 36 };
-            _buttonJudgementReset = new Button { Text = "Reset", Width = 100, Height = 36 };
+            _buttonJudgementAdd = new Button { Text = "新增", Width = 100, Height = 36 };
+            _buttonJudgementReset = new Button { Text = "重新輸入", Width = 100, Height = 36 };
             _buttonJudgementAdd.Click += JudgementAddButton_Click;
             _buttonJudgementReset.Click += JudgementResetButton_Click;
 
@@ -94,16 +94,16 @@ namespace AoiMeasureTool
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 BackgroundColor = Color.White
             };
-            _dataGridViewJudgementCriteria.Columns.Add("colOrder", "Order");
-            _dataGridViewJudgementCriteria.Columns.Add("colName", "Rule Name");
-            _dataGridViewJudgementCriteria.Columns.Add("colCalc", "A Calculation");
-            _dataGridViewJudgementCriteria.Columns.Add("colSpec", "A Specification");
-            _dataGridViewJudgementCriteria.Columns.Add("colCalcB", "B Calculation");
-            _dataGridViewJudgementCriteria.Columns.Add("colSpecB", "B Specification");
+            _dataGridViewJudgementCriteria.Columns.Add("colOrder", "順序");
+            _dataGridViewJudgementCriteria.Columns.Add("colName", "規則名稱");
+            _dataGridViewJudgementCriteria.Columns.Add("colCalc", "A 規計算式");
+            _dataGridViewJudgementCriteria.Columns.Add("colSpec", "A 規規格");
+            _dataGridViewJudgementCriteria.Columns.Add("colCalcB", "B 規計算式");
+            _dataGridViewJudgementCriteria.Columns.Add("colSpecB", "B 規規格");
 
             _buttonJudgementSave = new Button
             {
-                Text = "Save Conditions",
+                Text = "儲存判斷條件",
                 Width = 160,
                 Height = 38,
                 Anchor = AnchorStyles.Top | AnchorStyles.Right
@@ -179,7 +179,7 @@ namespace AoiMeasureTool
         {
             PersistActiveProductProfile();
             SaveCurrentAppSettings();
-            MessageBox.Show(this, "Judgement conditions saved.", "Judgement Conditions", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(this, "判斷條件已儲存。", "良品判斷條件", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void RefreshJudgementCriteriaView()
