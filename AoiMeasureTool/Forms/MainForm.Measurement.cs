@@ -721,7 +721,11 @@ namespace AoiMeasureTool
             }
 
             var firstPoint = samplePoints[bestRunStart];
-            var lastPoint = samplePoints[bestRunStart + bestRunLength - 1];
+            var lastWhitePoint = samplePoints[bestRunStart + bestRunLength - 1];
+            var endPointIndex = bestRunStart + bestRunLength;
+            var lastPoint = endPointIndex < samplePoints.Count
+                ? samplePoints[endPointIndex]
+                : lastWhitePoint;
             var deltaX = lastPoint.X - firstPoint.X;
             var deltaY = lastPoint.Y - firstPoint.Y;
             var distance = Math.Sqrt(
