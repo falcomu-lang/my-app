@@ -74,6 +74,12 @@ namespace AoiMeasureTool
                 if (name.StartsWith("Measure", StringComparison.OrdinalIgnoreCase))
                 {
                     ApplyMeasureSetting(data, currentSection, name, value);
+                    continue;
+                }
+
+                if (name.StartsWith("JudgementCriterion", StringComparison.OrdinalIgnoreCase))
+                {
+                    ApplyJudgementCriterionSetting(data, currentSection, name, value);
                 }
             }
 
@@ -186,6 +192,20 @@ namespace AoiMeasureTool
                         writer.WriteLine("Measure" + (i + 1) + "Distance=" + record.Distance.ToString(CultureInfo.InvariantCulture));
                         writer.WriteLine("Measure" + (i + 1) + "Source=" + (record.SourceName ?? string.Empty));
                         writer.WriteLine("Measure" + (i + 1) + "Direction=" + (record.DirectionName ?? string.Empty));
+                    }
+
+                    List<JudgementCriterionRule> judgementCriteriaRules;
+                    if (!data.JudgementCriteriaProfiles.TryGetValue(sectionKey, out judgementCriteriaRules))
+                    {
+                        judgementCriteriaRules = new List<JudgementCriterionRule>();
+                    }
+
+                    for (var i = 0; i < judgementCriteriaRules.Count; i++)
+                    {
+                        var rule = judgementCriteriaRules[i];
+                        writer.WriteLine("JudgementCriterion" + (i + 1) + "Name=" + (rule?.Name ?? string.Empty));
+                        writer.WriteLine("JudgementCriterion" + (i + 1) + "Calc=" + (rule?.CalculationExpression ?? string.Empty));
+                        writer.WriteLine("JudgementCriterion" + (i + 1) + "Spec=" + (rule?.SpecExpression ?? string.Empty));
                     }
 
                     writer.WriteLine(string.Empty);
@@ -396,6 +416,57 @@ namespace AoiMeasureTool
             else if (propertyName.Equals("LocalY2", StringComparison.OrdinalIgnoreCase))
             {
                 record.LocalEndPoint = new PointF(record.LocalEndPoint.X, float.Parse(value, CultureInfo.InvariantCulture));
+            }
+        }
+
+        private static void ApplyJudgementCriterionSetting(AppSettingsData data, string section, string name, string value)
+        {
+            List<JudgementCriterionRule> rules;
+            if (!data.JudgementCriteriaProfiles.TryGetValue(section, out rules))
+            {
+                rules = new List<JudgementCriterionRule>();
+                data.JudgementCriteriaProfiles[section] = rules;
+            }
+
+            var suffix = name.Substring("JudgementCriterion".Length);
+            var digitEnd = 0;
+            while (digitEnd < suffix.Length && char.IsDigit(suffix[digitEnd]))
+            {
+                digitEnd++;
+            }
+
+            var numberText = digitEnd > 0 ? suffix.Substring(0, digitEnd) : null;
+            var propertyName = digitEnd < suffix.Length ? suffix.Substring(digitEnd) : string.Empty;
+            int ruleIndex;
+            if (!int.TryParse(numberText, out ruleIndex))
+            {
+                return;
+            }
+
+            ruleIndex -= 1;
+            while (rules.Count <= ruleIndex)
+            {
+                rules.Add(new JudgementCriterionRule());
+            }
+
+            var rule = rules[ruleIndex];
+            if (rule == null)
+            {
+                rule = new JudgementCriterionRule();
+                rules[ruleIndex] = rule;
+            }
+
+            if (propertyName.Equals("Name", StringComparison.OrdinalIgnoreCase))
+            {
+                rule.Name = value;
+            }
+            else if (propertyName.Equals("Calc", StringComparison.OrdinalIgnoreCase))
+            {
+                rule.CalculationExpression = value;
+            }
+            else if (propertyName.Equals("Spec", StringComparison.OrdinalIgnoreCase))
+            {
+                rule.SpecExpression = value;
             }
         }
     }

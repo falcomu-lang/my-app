@@ -1,29 +1,41 @@
 # PROJECT HANDOFF
 
-## Current State
+## Current Baseline
 
-The multi-image confirm workflow is implemented and currently stable at the current stage.
-The current UI / interaction behavior is the approved baseline for handoff.
-The multi-image confirm viewport overlay now tracks the displayed image correctly during zoom and pan, so ROI / baseline / measurement overlays stay aligned with the image.
-The multi-image confirm preprocess preview and overlay behavior has been verified by the user as correct.
-The multi-image confirm right-side info table is now part of the approved baseline.
-The multi-image confirm supports showing the configured source lines, the detected measured line segments, or hiding line overlays entirely.
-The detected-line overlay path is now cached so zooming and panning do not re-run line analysis on every paint.
-Switching between preprocess preview and original image now preserves the current zoom ratio and viewport position instead of resetting to fit.
-The left sidebar work items now control which tabpages are shown.
-The image viewer work item only shows the image viewer and binarization tabpages.
-The reference-corner, measurement-distance, and multi-image-confirm work items each show their matching workspace tabs when selected.
-The measurement-distance workflow now supports editing an existing line segment by reselecting two points after choosing parallel or perpendicular mode.
-When deleting a measurement line segment, the UI shows a warning that the deletion will affect downstream calculations and saved measurement results.
-The project target framework is now .NET Framework 4.7.2.
-The left sidebar now also includes `inner settings` and `judgement criteria` work items.
-The inner-settings and judgement-criteria tabs are real designer-managed tabpages and controls, so future UI edits can be made directly in the WinForms designer.
-The inner-settings and judgement-criteria tabs do not appear in the main tab strip on startup; they are only shown when their matching left-sidebar work item is selected.
-The inner settings are stored in `innerSetting.ini` beside the executable and do not change when the active product changes.
-The inner settings currently expose CCD X precision and CCD Y precision with a dedicated save button.
-The multi-image confirm right-side info table now shows each valid line measurement as millimeters first with pixel distance in parentheses.
+The multi-image confirm workflow is implemented and stable at the current stage.
+The current UI and interaction behavior is the approved handoff baseline.
+Do not rework the viewer flow unless a later request explicitly asks for it.
 
-## Implemented Behavior
+## What Is Working
+
+- The multi-image confirm viewport overlay tracks the displayed image correctly during zoom and pan.
+- ROI, baseline, and measurement overlays stay aligned with the image during interaction.
+- The multi-image confirm preprocess preview and overlay behavior has been verified by the user as correct.
+- The right-side info table in multi-image confirm is part of the approved baseline.
+- Multi-image confirm can show:
+  - configured source lines
+  - detected measured line segments
+  - no line overlays
+- The detected-line overlay path is cached, so zoom and pan do not re-run line analysis on every paint.
+- Switching between preprocess preview and original image preserves the current zoom ratio and viewport position when possible.
+- The left sidebar work items control which tabpages are shown.
+- The image viewer work item shows only:
+  - image viewer
+  - binarization
+- The reference-corner, measurement-distance, and multi-image-confirm work items each show only their matching workspace tabs.
+- The measurement-distance workflow supports editing an existing line segment by reselecting two points after choosing parallel or perpendicular mode.
+- Deleting a measurement line segment shows a warning because it affects downstream calculations and saved measurement results.
+- The project target framework is .NET Framework 4.7.2.
+- The left sidebar also includes:
+  - inner settings
+  - judgement criteria
+- The inner-settings and judgement-criteria tabs are designer-managed tabpages and controls.
+- Those tabs are hidden on startup and only appear when their matching sidebar item is selected.
+- Inner settings are stored in `innerSetting.ini` beside the executable and do not change when the active product changes.
+- Inner settings currently expose CCD X precision and CCD Y precision with a dedicated save button.
+- The multi-image confirm info table shows each valid line measurement as millimeters first, with pixel distance in parentheses.
+
+## Multi-Image Confirm Behavior
 
 - A dedicated multi-image confirm tab exists in the main WinForms UI.
 - The tab contains:
@@ -47,13 +59,11 @@ The multi-image confirm right-side info table now shows each valid line measurem
   - zoom in / zoom out
   - right-click drag panning after zoom
 - Rendering uses a custom paint-based approach to avoid flicker and layout issues.
-- Double buffering is enabled for the relevant tab / viewport to reduce redraw flicker.
-- The multi-image confirm overlay is drawn using the current image scale and offset, so the boxes and baseline follow the image during zooming and panning.
+- Double buffering is enabled for the relevant tab and viewport to reduce redraw flicker.
 - Multi-image confirm overlays are mapped against the original source image coordinate size even when the displayed bitmap is a preprocess preview.
-- The preprocess preview bitmap is display-only; measurement lines, ROI, and reference baseline continue to use source-image coordinates.
-- The main workspace only shows the image viewer and binarization tabpages when entering the image viewer work item.
+- The preprocess preview bitmap is display-only; measurement lines, ROI, and the reference baseline continue to use source-image coordinates.
 
-## Sidebar Workspace Behavior
+## Workspace and Sidebar Rules
 
 - The left sidebar work items are ordered as:
   - image viewer
@@ -63,9 +73,7 @@ The multi-image confirm right-side info table now shows each valid line measurem
   - inner settings
   - judgement criteria
 - Selecting a work item shows only the corresponding tabpages for that workspace.
-- The image viewer workspace shows only:
-  - image viewer
-  - binarization
+- The image viewer workspace shows only the image viewer and binarization tabs.
 - The reference-corner workspace shows only the reference-corner tab.
 - The measurement-distance workspace shows only the measurement-distance tab.
 - The multi-image-confirm workspace shows only the multi-image-confirm tab.
@@ -73,7 +81,7 @@ The multi-image confirm right-side info table now shows each valid line measurem
 - The judgement-criteria workspace shows only the judgement-criteria tab.
 - The inner-settings and judgement-criteria tabpages are part of the form designer, but they remain hidden from the startup tab strip until their sidebar item is selected.
 
-## Multi-Image Preprocess Preview Behavior
+## Multi-Image Preview Source Rules
 
 - Multi-image confirm has a preview source group below the folder-load controls.
 - The dropdown contains:
@@ -85,12 +93,13 @@ The multi-image confirm right-side info table now shows each valid line measurem
 - The original-image button returns the viewport to the original image.
 - The selected preprocess preview mode persists while navigating previous / next images.
 - Preprocess preview generation uses the current product's preprocess parameters.
-- Multi-image confirm uses the current product context as the product key. Confirm-result folder names should not replace the active product profile.
+- Multi-image confirm uses the current product context as the product key.
+- Confirm-result folder names should not replace the active product profile.
 - If current unsaved product parameters exist in the UI, they are used for preview so the result reflects the current working state.
 - Switching between original image and preprocess preview preserves the current zoom ratio and current viewport center when possible.
 - The image toggle should not force a refit unless there was no valid previous view state.
 
-## Reference Corner / ROI Behavior
+## Reference Corner and ROI Rules
 
 - The reference corner workflow uses a selected preprocess source as the baseline for detection.
 - Multi-image confirm reuses the same preprocess parameters selected for the reference source.
@@ -105,14 +114,11 @@ The multi-image confirm right-side info table now shows each valid line measurem
 - The reference ROI is drawn on the multi-image confirm viewport as a green overlay.
 - The detected reference baseline is also drawn on the multi-image confirm viewport.
 - The reference baseline is derived from the detected candidate and is displayed together with the ROI so the relative relationship can be inspected visually.
-- The current candidate selection rule is:
-  - choose a white object fully inside the ROI
-  - prefer the largest object by area
 - The top baseline endpoints are derived from the detected rotated rectangle corners to reduce drift caused by contour irregularities.
 - Reference detection in multi-image confirm is always computed from the original image file, then the product profile preprocess source is applied for detection.
 - Do not run reference detection from the already displayed preprocess preview bitmap, or the reference candidate can drift.
 
-## Measurement Overlay Behavior
+## Measurement Overlay Rules
 
 - Multi-image confirm measurement lines use the current product's measurement records.
 - If the current product has live in-memory measurement records, those are preferred so unsaved current UI changes are reflected.
@@ -120,14 +126,15 @@ The multi-image confirm right-side info table now shows each valid line measurem
 - As a fallback, currently loaded measurement records may be used so existing lines continue to render.
 - Measurement line reprojection uses the reference candidate detected from the current confirm image.
 - Measurement, ROI, and reference baseline overlays must all use the same source-image coordinate mapping.
-- A line-display-mode selector now controls whether the viewport shows:
+- A line-display-mode selector controls whether the viewport shows:
   - the configured source lines
   - the detected measured line segments
   - no line overlays
-- Changing the line-display mode should only trigger a redraw. It must not reset zoom or pan.
+- Changing the line-display mode should only trigger a redraw.
+- It must not reset zoom or pan.
 - The line-sequence button temporarily labels line start points with the 1-based line sequence defined in the measurement distance setup for about three seconds.
 
-## Multi-Image Line Measurement Behavior
+## Multi-Image Line Measurement Rules
 
 - The right-side info table includes a top-level judgement row and per-line measurement results.
 - The `whether it can be judged` row is `can judge` only when:
@@ -144,29 +151,15 @@ The multi-image confirm right-side info table now shows each valid line measurem
   - report the resulting distance in pixels
   - convert the detected segment to millimeters using inner-settings CCD X precision and CCD Y precision
 - When the detected-line display mode is active, the viewport draws the detected longest-white-run segment instead of the configured source line.
-- The detected-line analysis path is cached per image / line / mode so pan and zoom do not re-run preprocess analysis during paint.
+- The detected-line analysis path is cached per image, line, and mode so pan and zoom do not re-run preprocess analysis during paint.
 - The current result table displays each valid line as `{mm} mm ({px} px)`.
-- Millimeter conversion uses anisotropic scaling: multiply X delta by CCD X precision, multiply Y delta by CCD Y precision, then calculate Euclidean distance in millimeters.
+- Millimeter conversion uses anisotropic scaling:
+  - multiply X delta by CCD X precision
+  - multiply Y delta by CCD Y precision
+  - calculate Euclidean distance in millimeters
 - The line-sequence overlay must follow the configured measurement line order from the distance setup, not a screen-position sort.
 
-## Inner Settings Behavior
-
-- Inner settings are not product-specific.
-- The file path is `innerSetting.ini` in the executable directory.
-- The current fields are:
-  - CCD X precision
-  - CCD Y precision
-- Inner settings use an explicit save button; they are not intended to be treated as product profile state.
-- The inner-settings UI is now designer-managed so the controls can be repositioned or extended visually in the WinForms designer.
-
-## Judgement Criteria Workspace Behavior
-
-- A dedicated judgement-criteria work item exists in the left sidebar.
-- Selecting it shows a dedicated judgement-criteria tabpage.
-- The tabpage is intentionally empty for now and acts as a reserved workspace for future conditions UI.
-- The judgement-criteria tabpage is designer-managed so future controls can be added and repositioned visually.
-
-## Measurement Editing Behavior
+## Measurement Editing Rules
 
 - Existing measurement line segments can be edited from the record table.
 - Editing requires choosing parallel or perpendicular mode first.
@@ -174,6 +167,24 @@ The multi-image confirm right-side info table now shows each valid line measurem
 - Confirmation writes the updated line back to the selected record.
 - Cancel leaves the original record unchanged.
 - Deleting a measurement line segment prompts a warning because it affects later calculations and saved results.
+
+## Inner Settings Rules
+
+- Inner settings are not product-specific.
+- The file path is `innerSetting.ini` in the executable directory.
+- The current fields are:
+  - CCD X precision
+  - CCD Y precision
+- Inner settings use an explicit save button.
+- They are not intended to be treated as product profile state.
+- The inner-settings UI is designer-managed so the controls can be repositioned or extended visually in the WinForms designer.
+
+## Judgement Criteria Rules
+
+- A dedicated judgement-criteria work item exists in the left sidebar.
+- Selecting it shows a dedicated judgement-criteria tabpage.
+- The tabpage is intentionally empty for now and acts as a reserved workspace for future conditions UI.
+- The judgement-criteria tabpage is designer-managed so future controls can be added and repositioned visually.
 
 ## Files Touched
 
@@ -197,9 +208,8 @@ The multi-image confirm right-side info table now shows each valid line measurem
 ## Important Notes
 
 - The current state is considered correct by the user unless a later request changes behavior explicitly.
-- Do not rework the viewer interaction unless the user requests it.
 - The image navigation list is sorted with numeric-aware filename ordering.
-- The middle status area is used to show the current image index / total count.
+- The middle status area is used to show the current image index and total count.
 - The reference corner and multi-image confirm flows should stay aligned on the same preprocess source.
 - The multi-image confirm overlay should continue to use the same image-space to display-space mapping as the image transform itself.
 - Do not infer the product profile from the confirm-result folder name unless product selection behavior is explicitly redesigned.
@@ -209,7 +219,8 @@ The multi-image confirm right-side info table now shows each valid line measurem
 - If future changes affect preprocess preview, verify that measurement lines still fit the displayed image in both original-image and preprocess-preview modes.
 - If future changes affect detected-line measurement, preserve the rule that each line uses its own associated preprocess source rather than the currently selected preview source.
 - The current association to a preprocess source is text-derived from `SourceName`; if this area is refactored later, prefer storing an explicit preprocess index on the measure record.
-- Keep detected-line measurement work out of the paint path. Recompute only when the image, source, or relevant measurement inputs change.
+- Keep detected-line measurement work out of the paint path.
+- Recompute only when the image, source, or relevant measurement inputs change.
 - Keep inner settings separate from `setting.ini` product-profile persistence.
 - Keep startup workspace behavior such that inner-settings and judgement-criteria tabs are hidden until explicitly opened from the sidebar.
 - If future changes extend inner settings or judgement criteria, prefer continuing to manage their controls in the WinForms designer rather than reverting to runtime-generated controls.

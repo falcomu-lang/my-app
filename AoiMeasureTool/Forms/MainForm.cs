@@ -35,6 +35,8 @@ namespace AoiMeasureTool
             new System.Collections.Generic.Dictionary<string, ReferenceCornerSnapshot>(System.StringComparer.OrdinalIgnoreCase);
         private readonly System.Collections.Generic.Dictionary<string, List<MeasureRecord>> _measureProfiles =
             new System.Collections.Generic.Dictionary<string, List<MeasureRecord>>(System.StringComparer.OrdinalIgnoreCase);
+        private readonly System.Collections.Generic.Dictionary<string, List<JudgementCriterionRule>> _judgementCriteriaProfiles =
+            new System.Collections.Generic.Dictionary<string, List<JudgementCriterionRule>>(System.StringComparer.OrdinalIgnoreCase);
         private readonly ProductProfileService _productProfileService;
         private PictureBox[] _preprocessPictureBoxes;
         private CheckBox[] _preprocessEnabledChecks;
@@ -107,6 +109,13 @@ namespace AoiMeasureTool
         private Button _buttonClearMeasurePoint;
         private Button _buttonSaveMeasureRecords;
         private Button _buttonSaveInnerSettings;
+        private TextBox _textJudgementName;
+        private TextBox _textJudgementCalculation;
+        private TextBox _textJudgementSpec;
+        private Button _buttonJudgementAdd;
+        private Button _buttonJudgementReset;
+        private Button _buttonJudgementSave;
+        private DataGridView _dataGridViewJudgementCriteria;
         private Button _buttonParallelMeasure;
         private Button _buttonPerpendicularMeasure;
         private ComboBox _comboBoxMeasureSource;
@@ -126,6 +135,7 @@ namespace AoiMeasureTool
         private bool _isMeasureSelecting;
         private readonly List<Point> _measurePoints = new List<Point>(2);
         private readonly List<MeasureRecord> _measureRecords = new List<MeasureRecord>();
+        private List<JudgementCriterionRule> _judgementCriteriaRules = new List<JudgementCriterionRule>();
         private MeasureRecord _editingMeasureRecord;
         private DataGridViewRow _editingMeasureRow;
         private bool _isEditingMeasureRecord;
@@ -140,7 +150,7 @@ namespace AoiMeasureTool
 
         public MainForm()
         {
-            _productProfileService = new ProductProfileService(_productProfiles, _referenceCornerProfiles, _measureProfiles);
+            _productProfileService = new ProductProfileService(_productProfiles, _referenceCornerProfiles, _measureProfiles, _judgementCriteriaProfiles);
             InitializeComponent();
             ShowMainWorkspaceTabs();
             InitializePreprocessControls();
@@ -320,6 +330,7 @@ namespace AoiMeasureTool
             tabControlMain.TabPages.Clear();
             tabControlMain.TabPages.Add(_tabPageJudgementCriteria);
             tabControlMain.SelectedTab = _tabPageJudgementCriteria;
+            RefreshJudgementCriteriaView();
         }
 
         private void ApplySnapshots(PreprocessSnapshot[] snapshots)
@@ -400,7 +411,8 @@ namespace AoiMeasureTool
                 GetCurrentProductKeyOrDefault(),
                 CaptureCurrentSnapshots(),
                 CaptureCurrentReferenceCornerSnapshot(),
-                _measureRecords);
+                _measureRecords,
+                CloneJudgementCriteriaRules(_judgementCriteriaRules));
         }
 
         private string GetCurrentProductKeyOrDefault()
@@ -457,6 +469,7 @@ namespace AoiMeasureTool
             ApplyProductProfile(state.PreprocessSnapshots);
             ApplyReferenceCornerProfile(state.ReferenceCornerSnapshot);
             ApplyMeasureProfile(state.MeasureRecords);
+            ApplyJudgementCriteriaProfile(state.JudgementCriteriaRules);
         }
 
         private void ApplyProductProfile(PreprocessSnapshot[] snapshots)
@@ -472,6 +485,12 @@ namespace AoiMeasureTool
         private void ApplyMeasureProfile(List<MeasureRecord> records)
         {
             ApplyMeasureRecords(CloneMeasureRecords(records));
+        }
+
+        private void ApplyJudgementCriteriaProfile(List<JudgementCriterionRule> rules)
+        {
+            _judgementCriteriaRules = CloneJudgementCriteriaRules(rules);
+            RefreshJudgementCriteriaView();
         }
 
         private void LoadSavedAppSettings()
@@ -559,6 +578,11 @@ namespace AoiMeasureTool
             {
                 _numericInnerCcdYPrecision.Value = ClampNumericUpDown(_numericInnerCcdYPrecision, (decimal)data.CcdYPrecision);
             }
+        }
+
+        private static List<JudgementCriterionRule> CloneJudgementCriteriaRules(List<JudgementCriterionRule> rules)
+        {
+            return ProfileDataCloner.CloneJudgementCriteria(rules);
         }
 
         private void SaveInnerSettings()

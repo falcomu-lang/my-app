@@ -114,5 +114,31 @@ namespace AoiMeasureTool
 
             return cloned;
         }
+
+        public static List<JudgementCriterionRule> CloneJudgementCriteria(List<JudgementCriterionRule> rules)
+        {
+            var cloned = new List<JudgementCriterionRule>();
+            if (rules == null)
+            {
+                return cloned;
+            }
+
+            foreach (var rule in rules)
+            {
+                if (rule == null)
+                {
+                    continue;
+                }
+
+                cloned.Add(new JudgementCriterionRule
+                {
+                    Name = rule.Name,
+                    CalculationExpression = rule.CalculationExpression,
+                    SpecExpression = rule.SpecExpression
+                });
+            }
+
+            return cloned;
+        }
     }
 }

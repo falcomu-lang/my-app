@@ -26,6 +26,13 @@ namespace AoiMeasureTool
         public string DirectionName { get; set; }
     }
 
+    internal sealed class JudgementCriterionRule
+    {
+        public string Name { get; set; }
+        public string CalculationExpression { get; set; }
+        public string SpecExpression { get; set; }
+    }
+
     internal enum MeasureDirectionMode
     {
         None = 0,
@@ -77,6 +84,7 @@ namespace AoiMeasureTool
             PreprocessProfiles = new Dictionary<string, PreprocessSnapshot[]>(System.StringComparer.OrdinalIgnoreCase);
             ReferenceCornerProfiles = new Dictionary<string, ReferenceCornerSnapshot>(System.StringComparer.OrdinalIgnoreCase);
             MeasureProfiles = new Dictionary<string, List<MeasureRecord>>(System.StringComparer.OrdinalIgnoreCase);
+            JudgementCriteriaProfiles = new Dictionary<string, List<JudgementCriterionRule>>(System.StringComparer.OrdinalIgnoreCase);
         }
 
         public string LastImagePath { get; set; }
@@ -84,6 +92,7 @@ namespace AoiMeasureTool
         public Dictionary<string, PreprocessSnapshot[]> PreprocessProfiles { get; }
         public Dictionary<string, ReferenceCornerSnapshot> ReferenceCornerProfiles { get; }
         public Dictionary<string, List<MeasureRecord>> MeasureProfiles { get; }
+        public Dictionary<string, List<JudgementCriterionRule>> JudgementCriteriaProfiles { get; }
     }
 
     internal sealed class InnerSettingsData
