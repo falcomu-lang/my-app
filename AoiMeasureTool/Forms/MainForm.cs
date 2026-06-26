@@ -118,6 +118,10 @@ namespace AoiMeasureTool
         private Button _buttonJudgementReset;
         private Button _buttonJudgementSave;
         private DataGridView _dataGridViewJudgementCriteria;
+        private ContextMenuStrip _judgementCriteriaMenu;
+        private ToolStripMenuItem _judgementCriteriaEditMenuItem;
+        private ToolStripMenuItem _judgementCriteriaDeleteMenuItem;
+        private int _judgementCriteriaEditingIndex = -1;
         private Button _buttonParallelMeasure;
         private Button _buttonPerpendicularMeasure;
         private ComboBox _comboBoxMeasureSource;
