@@ -658,13 +658,9 @@ namespace AoiMeasureTool
             }
 
             var normalized = specExpression.Replace(" ", string.Empty);
-            double lower;
-            double upper;
-            if (TryParseRangeSpec(normalized, out lower, out upper))
+            if (TryParseRangeSpec(normalized, value.Value, out var inRange))
             {
-                return value.Value > lower && value.Value < upper
-                    ? JudgementSpecResult.Pass
-                    : JudgementSpecResult.Fail;
+                return inRange ? JudgementSpecResult.Pass : JudgementSpecResult.Fail;
             }
 
             if (TryParseComparisonSpec(normalized, value.Value, out var pass))
@@ -675,18 +671,24 @@ namespace AoiMeasureTool
             return JudgementSpecResult.Invalid;
         }
 
-        private static bool TryParseRangeSpec(string spec, out double lower, out double upper)
+        private static bool TryParseRangeSpec(string spec, double value, out bool pass)
         {
-            lower = 0;
-            upper = 0;
-            var match = Regex.Match(spec, @"^(-?\d+(?:\.\d+)?)<x<(-?\d+(?:\.\d+)?)$");
+            pass = false;
+            var match = Regex.Match(
+                spec,
+                @"^(-?\d+(?:\.\d+)?)(<=|<)x(<=|<)(-?\d+(?:\.\d+)?)$");
             if (!match.Success)
             {
                 return false;
             }
 
-            lower = double.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
-            upper = double.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
+            var lower = double.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+            var lowerOperator = match.Groups[2].Value == "<" ? ">" : ">=";
+            var upperOperator = match.Groups[3].Value;
+            var upper = double.Parse(match.Groups[4].Value, CultureInfo.InvariantCulture);
+
+            pass = EvaluateComparison(value, lowerOperator, lower) &&
+                EvaluateComparison(value, upperOperator, upper);
             return true;
         }
 
