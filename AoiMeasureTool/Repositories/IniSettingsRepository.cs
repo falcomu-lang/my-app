@@ -206,6 +206,8 @@ namespace AoiMeasureTool
                         writer.WriteLine("JudgementCriterion" + (i + 1) + "Name=" + (rule?.Name ?? string.Empty));
                         writer.WriteLine("JudgementCriterion" + (i + 1) + "Calc=" + (rule?.CalculationExpression ?? string.Empty));
                         writer.WriteLine("JudgementCriterion" + (i + 1) + "Spec=" + (rule?.SpecExpression ?? string.Empty));
+                        writer.WriteLine("JudgementCriterion" + (i + 1) + "CalcB=" + (rule?.CalculationExpressionB ?? string.Empty));
+                        writer.WriteLine("JudgementCriterion" + (i + 1) + "SpecB=" + (rule?.SpecExpressionB ?? string.Empty));
                     }
 
                     writer.WriteLine(string.Empty);
@@ -467,6 +469,14 @@ namespace AoiMeasureTool
             else if (propertyName.Equals("Spec", StringComparison.OrdinalIgnoreCase))
             {
                 rule.SpecExpression = value;
+            }
+            else if (propertyName.Equals("CalcB", StringComparison.OrdinalIgnoreCase))
+            {
+                rule.CalculationExpressionB = value;
+            }
+            else if (propertyName.Equals("SpecB", StringComparison.OrdinalIgnoreCase))
+            {
+                rule.SpecExpressionB = value;
             }
         }
     }

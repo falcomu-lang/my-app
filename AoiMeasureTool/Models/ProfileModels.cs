@@ -31,6 +31,8 @@ namespace AoiMeasureTool
         public string Name { get; set; }
         public string CalculationExpression { get; set; }
         public string SpecExpression { get; set; }
+        public string CalculationExpressionB { get; set; }
+        public string SpecExpressionB { get; set; }
     }
 
     internal enum MeasureDirectionMode

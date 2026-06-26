@@ -33,7 +33,7 @@ namespace AoiMeasureTool
                 Dock = DockStyle.Top,
                 AutoSize = true,
                 ColumnCount = 4,
-                RowCount = 3,
+                RowCount = 5,
                 Margin = new Padding(0, 0, 0, 12)
             };
             inputPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 120f));
@@ -42,17 +42,24 @@ namespace AoiMeasureTool
             inputPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
 
             inputPanel.Controls.Add(CreateLabel("Rule Name"), 0, 0);
-            inputPanel.Controls.Add(CreateLabel("Calculation"), 2, 0);
-            inputPanel.Controls.Add(CreateLabel("Specification"), 0, 1);
+            inputPanel.Controls.Add(CreateLabel("A Calculation"), 2, 0);
+            inputPanel.Controls.Add(CreateLabel("A Specification"), 0, 1);
+            inputPanel.Controls.Add(CreateLabel("B Calculation"), 2, 2);
+            inputPanel.Controls.Add(CreateLabel("B Specification"), 0, 3);
 
             _textJudgementName = new TextBox { Dock = DockStyle.Fill };
             _textJudgementCalculation = new TextBox { Dock = DockStyle.Fill };
             _textJudgementSpec = new TextBox { Dock = DockStyle.Fill };
+            _textJudgementCalculationB = new TextBox { Dock = DockStyle.Fill };
+            _textJudgementSpecB = new TextBox { Dock = DockStyle.Fill };
 
             inputPanel.Controls.Add(_textJudgementName, 1, 0);
             inputPanel.Controls.Add(_textJudgementCalculation, 3, 0);
             inputPanel.Controls.Add(_textJudgementSpec, 1, 1);
             inputPanel.SetColumnSpan(_textJudgementSpec, 3);
+            inputPanel.Controls.Add(_textJudgementCalculationB, 3, 2);
+            inputPanel.Controls.Add(_textJudgementSpecB, 1, 3);
+            inputPanel.SetColumnSpan(_textJudgementSpecB, 3);
 
             var actionPanel = new FlowLayoutPanel
             {
@@ -89,8 +96,10 @@ namespace AoiMeasureTool
             };
             _dataGridViewJudgementCriteria.Columns.Add("colOrder", "Order");
             _dataGridViewJudgementCriteria.Columns.Add("colName", "Rule Name");
-            _dataGridViewJudgementCriteria.Columns.Add("colCalc", "Calculation");
-            _dataGridViewJudgementCriteria.Columns.Add("colSpec", "Specification");
+            _dataGridViewJudgementCriteria.Columns.Add("colCalc", "A Calculation");
+            _dataGridViewJudgementCriteria.Columns.Add("colSpec", "A Specification");
+            _dataGridViewJudgementCriteria.Columns.Add("colCalcB", "B Calculation");
+            _dataGridViewJudgementCriteria.Columns.Add("colSpecB", "B Specification");
 
             _buttonJudgementSave = new Button
             {
@@ -140,6 +149,8 @@ namespace AoiMeasureTool
             var name = _textJudgementName == null ? string.Empty : _textJudgementName.Text.Trim();
             var calc = _textJudgementCalculation == null ? string.Empty : _textJudgementCalculation.Text.Trim();
             var spec = _textJudgementSpec == null ? string.Empty : _textJudgementSpec.Text.Trim();
+            var calcB = _textJudgementCalculationB == null ? string.Empty : _textJudgementCalculationB.Text.Trim();
+            var specB = _textJudgementSpecB == null ? string.Empty : _textJudgementSpecB.Text.Trim();
 
             if (string.IsNullOrWhiteSpace(name) && string.IsNullOrWhiteSpace(calc) && string.IsNullOrWhiteSpace(spec))
             {
@@ -150,7 +161,9 @@ namespace AoiMeasureTool
             {
                 Name = name,
                 CalculationExpression = calc,
-                SpecExpression = spec
+                SpecExpression = spec,
+                CalculationExpressionB = calcB,
+                SpecExpressionB = specB
             });
 
             RefreshJudgementCriteriaView();
@@ -184,7 +197,9 @@ namespace AoiMeasureTool
                     i + 1,
                     rule.Name ?? string.Empty,
                     rule.CalculationExpression ?? string.Empty,
-                    rule.SpecExpression ?? string.Empty);
+                    rule.SpecExpression ?? string.Empty,
+                    rule.CalculationExpressionB ?? string.Empty,
+                    rule.SpecExpressionB ?? string.Empty);
             }
         }
 
@@ -203,6 +218,16 @@ namespace AoiMeasureTool
             if (_textJudgementSpec != null)
             {
                 _textJudgementSpec.Clear();
+            }
+
+            if (_textJudgementCalculationB != null)
+            {
+                _textJudgementCalculationB.Clear();
+            }
+
+            if (_textJudgementSpecB != null)
+            {
+                _textJudgementSpecB.Clear();
             }
 
             _textJudgementName?.Focus();

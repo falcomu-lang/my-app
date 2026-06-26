@@ -134,7 +134,9 @@ namespace AoiMeasureTool
                 {
                     Name = rule.Name,
                     CalculationExpression = rule.CalculationExpression,
-                    SpecExpression = rule.SpecExpression
+                    SpecExpression = rule.SpecExpression,
+                    CalculationExpressionB = rule.CalculationExpressionB,
+                    SpecExpressionB = rule.SpecExpressionB
                 });
             }
 

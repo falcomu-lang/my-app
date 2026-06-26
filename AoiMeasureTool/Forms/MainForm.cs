@@ -112,6 +112,8 @@ namespace AoiMeasureTool
         private TextBox _textJudgementName;
         private TextBox _textJudgementCalculation;
         private TextBox _textJudgementSpec;
+        private TextBox _textJudgementCalculationB;
+        private TextBox _textJudgementSpecB;
         private Button _buttonJudgementAdd;
         private Button _buttonJudgementReset;
         private Button _buttonJudgementSave;
