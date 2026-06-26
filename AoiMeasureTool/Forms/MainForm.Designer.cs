@@ -42,6 +42,22 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Label labelInnerCcdYPrecision;
         private System.Windows.Forms.NumericUpDown numericInnerCcdYPrecision;
         private System.Windows.Forms.Button buttonSaveInnerSettings;
+        private System.Windows.Forms.Label labelJudgementCriteriaTitle;
+        private System.Windows.Forms.Panel panelJudgementCriteria;
+        private System.Windows.Forms.Label labelJudgementName;
+        private System.Windows.Forms.TextBox textBoxJudgementName;
+        private System.Windows.Forms.Label labelJudgementCalculation;
+        private System.Windows.Forms.TextBox textBoxJudgementCalculation;
+        private System.Windows.Forms.Label labelJudgementSpec;
+        private System.Windows.Forms.TextBox textBoxJudgementSpec;
+        private System.Windows.Forms.Label labelJudgementCalculationB;
+        private System.Windows.Forms.TextBox textBoxJudgementCalculationB;
+        private System.Windows.Forms.Label labelJudgementSpecB;
+        private System.Windows.Forms.TextBox textBoxJudgementSpecB;
+        private System.Windows.Forms.Button buttonJudgementAdd;
+        private System.Windows.Forms.Button buttonJudgementReset;
+        private System.Windows.Forms.Button buttonJudgementSave;
+        private System.Windows.Forms.DataGridView dataGridViewJudgementCriteria;
         private System.Windows.Forms.Panel panelMeasureSource;
         private System.Windows.Forms.Label labelMeasureSource;
         private System.Windows.Forms.ComboBox comboBoxMeasureSource;
@@ -289,6 +305,22 @@ namespace AoiMeasureTool
             this.numericInnerCcdYPrecision = new System.Windows.Forms.NumericUpDown();
             this.buttonSaveInnerSettings = new System.Windows.Forms.Button();
             this.tabPageJudgementCriteria = new System.Windows.Forms.TabPage();
+            this.labelJudgementCriteriaTitle = new System.Windows.Forms.Label();
+            this.panelJudgementCriteria = new System.Windows.Forms.Panel();
+            this.labelJudgementName = new System.Windows.Forms.Label();
+            this.textBoxJudgementName = new System.Windows.Forms.TextBox();
+            this.labelJudgementCalculation = new System.Windows.Forms.Label();
+            this.textBoxJudgementCalculation = new System.Windows.Forms.TextBox();
+            this.labelJudgementSpec = new System.Windows.Forms.Label();
+            this.textBoxJudgementSpec = new System.Windows.Forms.TextBox();
+            this.labelJudgementCalculationB = new System.Windows.Forms.Label();
+            this.textBoxJudgementCalculationB = new System.Windows.Forms.TextBox();
+            this.labelJudgementSpecB = new System.Windows.Forms.Label();
+            this.textBoxJudgementSpecB = new System.Windows.Forms.TextBox();
+            this.buttonJudgementAdd = new System.Windows.Forms.Button();
+            this.buttonJudgementReset = new System.Windows.Forms.Button();
+            this.buttonJudgementSave = new System.Windows.Forms.Button();
+            this.dataGridViewJudgementCriteria = new System.Windows.Forms.DataGridView();
             this.panelMeasureSource = new System.Windows.Forms.Panel();
             this.labelMeasureSource = new System.Windows.Forms.Label();
             this.comboBoxMeasureSource = new System.Windows.Forms.ComboBox();
@@ -1824,12 +1856,181 @@ namespace AoiMeasureTool
             // tabPageJudgementCriteria
             // 
             this.tabPageJudgementCriteria.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
+            this.tabPageJudgementCriteria.Controls.Add(this.labelJudgementCriteriaTitle);
+            this.tabPageJudgementCriteria.Controls.Add(this.panelJudgementCriteria);
             this.tabPageJudgementCriteria.Location = new System.Drawing.Point(4, 26);
             this.tabPageJudgementCriteria.Name = "tabPageJudgementCriteria";
             this.tabPageJudgementCriteria.Padding = new System.Windows.Forms.Padding(3);
             this.tabPageJudgementCriteria.Size = new System.Drawing.Size(1032, 656);
             this.tabPageJudgementCriteria.TabIndex = 5;
             this.tabPageJudgementCriteria.Text = "良品判斷條件";
+            // 
+            // labelJudgementCriteriaTitle
+            // 
+            this.labelJudgementCriteriaTitle.AutoSize = true;
+            this.labelJudgementCriteriaTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(130)))), ((int)(((byte)(134)))), ((int)(((byte)(138)))));
+            this.labelJudgementCriteriaTitle.Location = new System.Drawing.Point(31, 21);
+            this.labelJudgementCriteriaTitle.Name = "labelJudgementCriteriaTitle";
+            this.labelJudgementCriteriaTitle.Size = new System.Drawing.Size(96, 18);
+            this.labelJudgementCriteriaTitle.TabIndex = 0;
+            this.labelJudgementCriteriaTitle.Text = "良品判斷條件";
+            // 
+            // panelJudgementCriteria
+            // 
+            this.panelJudgementCriteria.BackColor = System.Drawing.Color.White;
+            this.panelJudgementCriteria.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelJudgementCriteria.Controls.Add(this.labelJudgementName);
+            this.panelJudgementCriteria.Controls.Add(this.textBoxJudgementName);
+            this.panelJudgementCriteria.Controls.Add(this.labelJudgementCalculation);
+            this.panelJudgementCriteria.Controls.Add(this.textBoxJudgementCalculation);
+            this.panelJudgementCriteria.Controls.Add(this.labelJudgementSpec);
+            this.panelJudgementCriteria.Controls.Add(this.textBoxJudgementSpec);
+            this.panelJudgementCriteria.Controls.Add(this.labelJudgementCalculationB);
+            this.panelJudgementCriteria.Controls.Add(this.textBoxJudgementCalculationB);
+            this.panelJudgementCriteria.Controls.Add(this.labelJudgementSpecB);
+            this.panelJudgementCriteria.Controls.Add(this.textBoxJudgementSpecB);
+            this.panelJudgementCriteria.Controls.Add(this.buttonJudgementAdd);
+            this.panelJudgementCriteria.Controls.Add(this.buttonJudgementReset);
+            this.panelJudgementCriteria.Controls.Add(this.buttonJudgementSave);
+            this.panelJudgementCriteria.Controls.Add(this.dataGridViewJudgementCriteria);
+            this.panelJudgementCriteria.Location = new System.Drawing.Point(28, 46);
+            this.panelJudgementCriteria.Name = "panelJudgementCriteria";
+            this.panelJudgementCriteria.Size = new System.Drawing.Size(976, 560);
+            this.panelJudgementCriteria.TabIndex = 1;
+            // 
+            // labelJudgementName
+            // 
+            this.labelJudgementName.AutoSize = true;
+            this.labelJudgementName.Location = new System.Drawing.Point(24, 22);
+            this.labelJudgementName.Name = "labelJudgementName";
+            this.labelJudgementName.Size = new System.Drawing.Size(56, 18);
+            this.labelJudgementName.TabIndex = 0;
+            this.labelJudgementName.Text = "規則名稱";
+            // 
+            // textBoxJudgementName
+            // 
+            this.textBoxJudgementName.Location = new System.Drawing.Point(160, 18);
+            this.textBoxJudgementName.Name = "textBoxJudgementName";
+            this.textBoxJudgementName.Size = new System.Drawing.Size(260, 25);
+            this.textBoxJudgementName.TabIndex = 1;
+            // 
+            // labelJudgementCalculation
+            // 
+            this.labelJudgementCalculation.AutoSize = true;
+            this.labelJudgementCalculation.Location = new System.Drawing.Point(24, 64);
+            this.labelJudgementCalculation.Name = "labelJudgementCalculation";
+            this.labelJudgementCalculation.Size = new System.Drawing.Size(76, 18);
+            this.labelJudgementCalculation.TabIndex = 2;
+            this.labelJudgementCalculation.Text = "A 規計算式";
+            // 
+            // textBoxJudgementCalculation
+            // 
+            this.textBoxJudgementCalculation.Location = new System.Drawing.Point(160, 60);
+            this.textBoxJudgementCalculation.Name = "textBoxJudgementCalculation";
+            this.textBoxJudgementCalculation.Size = new System.Drawing.Size(760, 25);
+            this.textBoxJudgementCalculation.TabIndex = 3;
+            // 
+            // labelJudgementSpec
+            // 
+            this.labelJudgementSpec.AutoSize = true;
+            this.labelJudgementSpec.Location = new System.Drawing.Point(24, 106);
+            this.labelJudgementSpec.Name = "labelJudgementSpec";
+            this.labelJudgementSpec.Size = new System.Drawing.Size(62, 18);
+            this.labelJudgementSpec.TabIndex = 4;
+            this.labelJudgementSpec.Text = "A 規規格";
+            // 
+            // textBoxJudgementSpec
+            // 
+            this.textBoxJudgementSpec.Location = new System.Drawing.Point(160, 102);
+            this.textBoxJudgementSpec.Name = "textBoxJudgementSpec";
+            this.textBoxJudgementSpec.Size = new System.Drawing.Size(760, 25);
+            this.textBoxJudgementSpec.TabIndex = 5;
+            // 
+            // labelJudgementCalculationB
+            // 
+            this.labelJudgementCalculationB.AutoSize = true;
+            this.labelJudgementCalculationB.Location = new System.Drawing.Point(24, 148);
+            this.labelJudgementCalculationB.Name = "labelJudgementCalculationB";
+            this.labelJudgementCalculationB.Size = new System.Drawing.Size(76, 18);
+            this.labelJudgementCalculationB.TabIndex = 6;
+            this.labelJudgementCalculationB.Text = "B 規計算式";
+            // 
+            // textBoxJudgementCalculationB
+            // 
+            this.textBoxJudgementCalculationB.Location = new System.Drawing.Point(160, 144);
+            this.textBoxJudgementCalculationB.Name = "textBoxJudgementCalculationB";
+            this.textBoxJudgementCalculationB.Size = new System.Drawing.Size(760, 25);
+            this.textBoxJudgementCalculationB.TabIndex = 7;
+            // 
+            // labelJudgementSpecB
+            // 
+            this.labelJudgementSpecB.AutoSize = true;
+            this.labelJudgementSpecB.Location = new System.Drawing.Point(24, 190);
+            this.labelJudgementSpecB.Name = "labelJudgementSpecB";
+            this.labelJudgementSpecB.Size = new System.Drawing.Size(62, 18);
+            this.labelJudgementSpecB.TabIndex = 8;
+            this.labelJudgementSpecB.Text = "B 規規格";
+            // 
+            // textBoxJudgementSpecB
+            // 
+            this.textBoxJudgementSpecB.Location = new System.Drawing.Point(160, 186);
+            this.textBoxJudgementSpecB.Name = "textBoxJudgementSpecB";
+            this.textBoxJudgementSpecB.Size = new System.Drawing.Size(760, 25);
+            this.textBoxJudgementSpecB.TabIndex = 9;
+            // 
+            // buttonJudgementAdd
+            // 
+            this.buttonJudgementAdd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonJudgementAdd.FlatAppearance.BorderSize = 0;
+            this.buttonJudgementAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonJudgementAdd.Location = new System.Drawing.Point(160, 226);
+            this.buttonJudgementAdd.Name = "buttonJudgementAdd";
+            this.buttonJudgementAdd.Size = new System.Drawing.Size(100, 36);
+            this.buttonJudgementAdd.TabIndex = 10;
+            this.buttonJudgementAdd.Text = "新增";
+            this.buttonJudgementAdd.UseVisualStyleBackColor = false;
+            this.buttonJudgementAdd.Click += new System.EventHandler(this.JudgementAddButton_Click);
+            // 
+            // buttonJudgementReset
+            // 
+            this.buttonJudgementReset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonJudgementReset.FlatAppearance.BorderSize = 0;
+            this.buttonJudgementReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonJudgementReset.Location = new System.Drawing.Point(272, 226);
+            this.buttonJudgementReset.Name = "buttonJudgementReset";
+            this.buttonJudgementReset.Size = new System.Drawing.Size(100, 36);
+            this.buttonJudgementReset.TabIndex = 11;
+            this.buttonJudgementReset.Text = "重新輸入";
+            this.buttonJudgementReset.UseVisualStyleBackColor = false;
+            this.buttonJudgementReset.Click += new System.EventHandler(this.JudgementResetButton_Click);
+            // 
+            // buttonJudgementSave
+            // 
+            this.buttonJudgementSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonJudgementSave.FlatAppearance.BorderSize = 0;
+            this.buttonJudgementSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonJudgementSave.Location = new System.Drawing.Point(800, 502);
+            this.buttonJudgementSave.Name = "buttonJudgementSave";
+            this.buttonJudgementSave.Size = new System.Drawing.Size(140, 36);
+            this.buttonJudgementSave.TabIndex = 12;
+            this.buttonJudgementSave.Text = "儲存判斷條件";
+            this.buttonJudgementSave.UseVisualStyleBackColor = false;
+            this.buttonJudgementSave.Click += new System.EventHandler(this.JudgementSaveButton_Click);
+            // 
+            // dataGridViewJudgementCriteria
+            // 
+            this.dataGridViewJudgementCriteria.AllowUserToAddRows = false;
+            this.dataGridViewJudgementCriteria.AllowUserToDeleteRows = false;
+            this.dataGridViewJudgementCriteria.AllowUserToResizeRows = false;
+            this.dataGridViewJudgementCriteria.BackgroundColor = System.Drawing.Color.White;
+            this.dataGridViewJudgementCriteria.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewJudgementCriteria.Location = new System.Drawing.Point(24, 278);
+            this.dataGridViewJudgementCriteria.Name = "dataGridViewJudgementCriteria";
+            this.dataGridViewJudgementCriteria.ReadOnly = true;
+            this.dataGridViewJudgementCriteria.RowHeadersVisible = false;
+            this.dataGridViewJudgementCriteria.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewJudgementCriteria.Size = new System.Drawing.Size(916, 214);
+            this.dataGridViewJudgementCriteria.TabIndex = 13;
             // 
             // tabPageMeasureDistance
             // 
