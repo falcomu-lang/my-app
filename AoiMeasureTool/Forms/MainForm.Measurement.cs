@@ -693,31 +693,59 @@ namespace AoiMeasureTool
         private static bool TryParseComparisonSpec(string spec, double value, out bool pass)
         {
             pass = false;
-            var match = Regex.Match(spec, @"^x(<=|>=|<|>)(-?\d+(?:\.\d+)?)$");
-            if (!match.Success)
+            var directMatch = Regex.Match(spec, @"^x(<=|>=|<|>)(-?\d+(?:\.\d+)?)$");
+            if (directMatch.Success)
+            {
+                var directOperator = directMatch.Groups[1].Value;
+                var directTarget = double.Parse(directMatch.Groups[2].Value, CultureInfo.InvariantCulture);
+                pass = EvaluateComparison(value, directOperator, directTarget);
+                return true;
+            }
+
+            var reverseMatch = Regex.Match(spec, @"^(-?\d+(?:\.\d+)?)(<=|>=|<|>)x$");
+            if (!reverseMatch.Success)
             {
                 return false;
             }
 
-            var op = match.Groups[1].Value;
-            var target = double.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
+            var reverseTarget = double.Parse(reverseMatch.Groups[1].Value, CultureInfo.InvariantCulture);
+            var reverseOperator = ReverseComparisonOperator(reverseMatch.Groups[2].Value);
+            pass = EvaluateComparison(value, reverseOperator, reverseTarget);
+            return true;
+        }
+
+        private static bool EvaluateComparison(double value, string op, double target)
+        {
             switch (op)
             {
                 case "<":
-                    pass = value < target;
-                    break;
+                    return value < target;
                 case "<=":
-                    pass = value <= target;
-                    break;
+                    return value <= target;
                 case ">":
-                    pass = value > target;
-                    break;
+                    return value > target;
                 case ">=":
-                    pass = value >= target;
-                    break;
+                    return value >= target;
+                default:
+                    return false;
             }
+        }
 
-            return true;
+        private static string ReverseComparisonOperator(string op)
+        {
+            switch (op)
+            {
+                case "<":
+                    return ">";
+                case "<=":
+                    return ">=";
+                case ">":
+                    return "<";
+                case ">=":
+                    return "<=";
+                default:
+                    return op;
+            }
         }
 
         private sealed class MultiImageJudgementResultRow
