@@ -18,21 +18,6 @@ namespace AoiMeasureTool
             _buttonJudgementSave = buttonJudgementSave;
             _dataGridViewJudgementCriteria = dataGridViewJudgementCriteria;
 
-            if (_buttonJudgementAdd != null)
-            {
-                _buttonJudgementAdd.Click += JudgementAddButton_Click;
-            }
-
-            if (_buttonJudgementReset != null)
-            {
-                _buttonJudgementReset.Click += JudgementResetButton_Click;
-            }
-
-            if (_buttonJudgementSave != null)
-            {
-                _buttonJudgementSave.Click += JudgementSaveButton_Click;
-            }
-
             if (_dataGridViewJudgementCriteria != null && _dataGridViewJudgementCriteria.Columns.Count == 0)
             {
                 _dataGridViewJudgementCriteria.Columns.Add("colOrder", "順序");
