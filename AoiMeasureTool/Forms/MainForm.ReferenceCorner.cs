@@ -33,6 +33,7 @@ namespace AoiMeasureTool
             return ReferenceCornerSelectionService.CaptureSnapshot(
                 _referenceCornerEnabled,
                 _referenceSourceIndex,
+                _referencePointMode,
                 _referenceRoiRectangle,
                 _referenceRoiSaved,
                 _referenceCornerFound);
@@ -54,6 +55,7 @@ namespace AoiMeasureTool
                 _referenceCornerCandidate = null;
                 _referenceCornerEnabled = snapshot.Enabled;
                 _referenceSourceIndex = Math.Max(0, Math.Min(GetReferenceSourceCount() - 1, snapshot.SourceIndex));
+                _referencePointMode = snapshot.PointMode;
                 _referenceRoiRectangle = ReferenceCornerSelectionService.NormalizeRectangle(snapshot.Roi);
                 _referenceRoiSaved = snapshot.RoiSaved && _referenceRoiRectangle.Width > 0 && _referenceRoiRectangle.Height > 0;
                 _referenceCornerFound = snapshot.CornerFound && _referenceRoiSaved;
@@ -76,6 +78,7 @@ namespace AoiMeasureTool
 
         private void InitializeReferenceCornerControls()
         {
+            EnsureReferenceCornerPointModeControls();
             comboBoxReferenceSource.Items.Clear();
             comboBoxReferenceSource.Items.Add("前處理影像 1");
             comboBoxReferenceSource.Items.Add("前處理影像 2");
@@ -83,9 +86,48 @@ namespace AoiMeasureTool
             comboBoxReferenceSource.Items.Add("前處理影像 4");
             comboBoxReferenceSource.Items.Add("雙門檻影像");
             comboBoxReferenceSource.SelectedIndex = 0;
+            _comboBoxReferencePointMode.Items.Clear();
+            _comboBoxReferencePointMode.Items.Add("輪廓近似角點");
+            _comboBoxReferencePointMode.Items.Add("外框左上/右上");
+            _comboBoxReferencePointMode.SelectedIndex = 0;
             _referenceSourceIndex = 0;
+            _referencePointMode = ReferenceCornerPointMode.ContourNearest;
             _referenceCornerEnabled = false;
             ApplyReferenceCornerUiState();
+        }
+
+        private void EnsureReferenceCornerPointModeControls()
+        {
+            if (panelReferenceCornerControls == null)
+            {
+                return;
+            }
+
+            if (_labelReferencePointMode == null)
+            {
+                _labelReferencePointMode = new Label
+                {
+                    AutoSize = true,
+                    Location = new Point(16, 112),
+                    Text = "基準點模式"
+                };
+                panelReferenceCornerControls.Controls.Add(_labelReferencePointMode);
+            }
+
+            if (_comboBoxReferencePointMode == null)
+            {
+                _comboBoxReferencePointMode = new ComboBox
+                {
+                    DropDownStyle = ComboBoxStyle.DropDownList,
+                    Location = new Point(16, 134),
+                    Size = new Size(280, 25)
+                };
+                _comboBoxReferencePointMode.SelectedIndexChanged += ReferencePointMode_SelectedIndexChanged;
+                panelReferenceCornerControls.Controls.Add(_comboBoxReferencePointMode);
+                _comboBoxReferencePointMode.BringToFront();
+            }
+
+            buttonSaveReferenceRoi.Location = new Point(16, 174);
         }
 
         private void ApplyReferenceCornerUiState()
@@ -104,6 +146,12 @@ namespace AoiMeasureTool
             {
                 comboBoxReferenceSource.SelectedIndex = Math.Max(0, Math.Min(comboBoxReferenceSource.Items.Count - 1, _referenceSourceIndex));
                 comboBoxReferenceSource.Enabled = _referenceCornerEnabled;
+            }
+
+            if (_comboBoxReferencePointMode != null && _comboBoxReferencePointMode.Items.Count > 0)
+            {
+                _comboBoxReferencePointMode.SelectedIndex = (int)_referencePointMode;
+                _comboBoxReferencePointMode.Enabled = _referenceCornerEnabled;
             }
 
             if (_referenceRoiSaved)
@@ -146,6 +194,23 @@ namespace AoiMeasureTool
             PersistReferenceCornerState();
             UpdateReferenceCornerPreview();
             UpdateReferenceRoiSaveButtonState();
+        }
+
+        private void ReferencePointMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_isApplyingReferenceCornerState || _comboBoxReferencePointMode == null || _comboBoxReferencePointMode.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            _referencePointMode = (ReferenceCornerPointMode)_comboBoxReferencePointMode.SelectedIndex;
+            if (_referenceRoiSaved)
+            {
+                RefreshReferenceCornerCandidate();
+            }
+
+            PersistReferenceCornerState();
+            UpdateReferenceCornerPreview();
         }
 
         private void UpdateReferenceCornerPreview()
@@ -249,7 +314,7 @@ namespace AoiMeasureTool
                     _referenceRoiRectangle.Left + _referenceRoiRectangle.Width / 2,
                     _referenceRoiRectangle.Top + _referenceRoiRectangle.Height / 2);
 
-                var bestCandidate = ReferenceCornerDetectionService.FindCandidate(binaryMat, _referenceRoiRectangle, roiCenter);
+                var bestCandidate = ReferenceCornerDetectionService.FindCandidate(binaryMat, _referenceRoiRectangle, roiCenter, _referencePointMode);
                 _referenceCornerCandidate = bestCandidate;
                 UpdateReferenceCornerFoundState(bestCandidate != null, _referenceCornerFound);
             }
@@ -286,7 +351,7 @@ namespace AoiMeasureTool
                     _referenceRoiRectangle.Left + _referenceRoiRectangle.Width / 2,
                     _referenceRoiRectangle.Top + _referenceRoiRectangle.Height / 2);
 
-                var bestCandidate = ReferenceCornerDetectionService.FindCandidate(binaryMat, _referenceRoiRectangle, roiCenter);
+                var bestCandidate = ReferenceCornerDetectionService.FindCandidate(binaryMat, _referenceRoiRectangle, roiCenter, _referencePointMode);
                 _referenceCornerCandidate = bestCandidate;
                 UpdateReferenceCornerFoundState(bestCandidate != null, previousFound);
             }

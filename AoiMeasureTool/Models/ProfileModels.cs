@@ -58,9 +58,16 @@ namespace AoiMeasureTool
     {
         public bool Enabled { get; set; }
         public int SourceIndex { get; set; }
+        public ReferenceCornerPointMode PointMode { get; set; }
         public Rectangle Roi { get; set; }
         public bool RoiSaved { get; set; }
         public bool CornerFound { get; set; }
+    }
+
+    internal enum ReferenceCornerPointMode
+    {
+        ContourNearest = 0,
+        RoiTopEdge = 1
     }
 
     internal sealed class ReferenceCornerCandidate

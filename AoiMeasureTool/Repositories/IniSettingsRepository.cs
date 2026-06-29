@@ -169,6 +169,7 @@ namespace AoiMeasureTool
 
                     writer.WriteLine("ReferenceCornerEnabled=" + referenceSnapshot.Enabled);
                     writer.WriteLine("ReferenceSourceIndex=" + referenceSnapshot.SourceIndex);
+                    writer.WriteLine("ReferencePointMode=" + (int)referenceSnapshot.PointMode);
                     writer.WriteLine("ReferenceRoiX=" + referenceSnapshot.Roi.X);
                     writer.WriteLine("ReferenceRoiY=" + referenceSnapshot.Roi.Y);
                     writer.WriteLine("ReferenceRoiWidth=" + referenceSnapshot.Roi.Width);
@@ -317,6 +318,10 @@ namespace AoiMeasureTool
             else if (name.Equals("ReferenceSourceIndex", StringComparison.OrdinalIgnoreCase))
             {
                 snapshot.SourceIndex = int.Parse(value);
+            }
+            else if (name.Equals("ReferencePointMode", StringComparison.OrdinalIgnoreCase))
+            {
+                snapshot.PointMode = (ReferenceCornerPointMode)int.Parse(value);
             }
             else if (name.Equals("ReferenceRoiX", StringComparison.OrdinalIgnoreCase))
             {

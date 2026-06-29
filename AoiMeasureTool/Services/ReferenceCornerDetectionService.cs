@@ -6,7 +6,7 @@ namespace AoiMeasureTool
 {
     internal static class ReferenceCornerDetectionService
     {
-        public static ReferenceCornerCandidate FindCandidate(Mat binaryMat, Rectangle roi, System.Drawing.Point roiCenter)
+        public static ReferenceCornerCandidate FindCandidate(Mat binaryMat, Rectangle roi, System.Drawing.Point roiCenter, ReferenceCornerPointMode pointMode)
         {
             if (binaryMat == null || binaryMat.Empty())
             {
@@ -40,7 +40,7 @@ namespace AoiMeasureTool
                         continue;
                     }
 
-                    var candidate = CreateCandidate(labels, i, rect);
+                    var candidate = CreateCandidate(labels, i, rect, pointMode);
                     if (candidate == null)
                     {
                         continue;
@@ -54,7 +54,7 @@ namespace AoiMeasureTool
             }
         }
 
-        private static ReferenceCornerCandidate CreateCandidate(Mat labels, int labelIndex, Rectangle boundingRect)
+        private static ReferenceCornerCandidate CreateCandidate(Mat labels, int labelIndex, Rectangle boundingRect, ReferenceCornerPointMode pointMode)
         {
             if (labels == null || labels.Empty() || boundingRect.Width <= 0 || boundingRect.Height <= 0)
             {
@@ -86,8 +86,7 @@ namespace AoiMeasureTool
                 }
 
                 var rotatedRect = Cv2.MinAreaRect(bestContour);
-                var rectTopPoints = GetTopEdgePoints(rotatedRect.Points());
-                var topPoints = GetNearestContourTopPoints(bestContour, rectTopPoints.Item1, rectTopPoints.Item2);
+                var topPoints = GetTopPoints(bestContour, boundingRect, pointMode);
                 var topLeft = topPoints.Item1;
                 var topRight = topPoints.Item2;
                 return new ReferenceCornerCandidate(
@@ -99,42 +98,21 @@ namespace AoiMeasureTool
             }
         }
 
-        private static Tuple<System.Drawing.Point, System.Drawing.Point> GetTopEdgePoints(Point2f[] vertices)
+        private static Tuple<System.Drawing.Point, System.Drawing.Point> GetTopPoints(
+            OpenCvSharp.Point[] contour,
+            Rectangle boundingRect,
+            ReferenceCornerPointMode pointMode)
         {
-            if (vertices == null || vertices.Length == 0)
-            {
-                return Tuple.Create(System.Drawing.Point.Empty, System.Drawing.Point.Empty);
-            }
-
-            var top1 = vertices[0];
-            var top2 = vertices.Length > 1 ? vertices[1] : vertices[0];
-
-            for (var i = 1; i < vertices.Length; i++)
-            {
-                var candidate = vertices[i];
-                if (candidate.Y < top1.Y || (Math.Abs(candidate.Y - top1.Y) < 0.5f && candidate.X < top1.X))
-                {
-                    top2 = top1;
-                    top1 = candidate;
-                    continue;
-                }
-
-                if (candidate.Y < top2.Y || (Math.Abs(candidate.Y - top2.Y) < 0.5f && candidate.X < top2.X))
-                {
-                    top2 = candidate;
-                }
-            }
-
-            if (top1.X <= top2.X)
+            if (pointMode == ReferenceCornerPointMode.RoiTopEdge)
             {
                 return Tuple.Create(
-                    new System.Drawing.Point((int)Math.Round(top1.X), (int)Math.Round(top1.Y)),
-                    new System.Drawing.Point((int)Math.Round(top2.X), (int)Math.Round(top2.Y)));
+                    new System.Drawing.Point(boundingRect.Left, boundingRect.Top),
+                    new System.Drawing.Point(boundingRect.Right, boundingRect.Top));
             }
 
-            return Tuple.Create(
-                new System.Drawing.Point((int)Math.Round(top2.X), (int)Math.Round(top2.Y)),
-                new System.Drawing.Point((int)Math.Round(top1.X), (int)Math.Round(top1.Y)));
+            var rectTopLeft = new System.Drawing.Point(boundingRect.Left, boundingRect.Top);
+            var rectTopRight = new System.Drawing.Point(boundingRect.Right, boundingRect.Top);
+            return GetNearestContourTopPoints(contour, rectTopLeft, rectTopRight);
         }
 
         private static Tuple<System.Drawing.Point, System.Drawing.Point> GetNearestContourTopPoints(

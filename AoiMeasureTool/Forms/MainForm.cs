@@ -52,6 +52,7 @@ namespace AoiMeasureTool
         private int _selectedPreprocessIndex;
         private bool _referenceCornerEnabled;
         private int _referenceSourceIndex;
+        private ReferenceCornerPointMode _referencePointMode = ReferenceCornerPointMode.ContourNearest;
         private bool _referenceRoiSaved;
         private bool _referenceCornerFound;
         private bool _isSelectingReferenceRoi;
@@ -62,6 +63,8 @@ namespace AoiMeasureTool
         private float _referenceImageScale = 1f;
         private float _referenceFitScale = 1f;
         private Point _lastReferenceMousePosition;
+        private ComboBox _comboBoxReferencePointMode;
+        private Label _labelReferencePointMode;
         private float _activeImageScale = 1f;
         private float _activeFitScale = 1f;
         private bool _isDraggingActiveImage;

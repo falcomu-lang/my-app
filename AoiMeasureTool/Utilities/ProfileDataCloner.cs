@@ -31,6 +31,7 @@ namespace AoiMeasureTool
             {
                 Enabled = false,
                 SourceIndex = 0,
+                PointMode = ReferenceCornerPointMode.ContourNearest,
                 Roi = System.Drawing.Rectangle.Empty,
                 RoiSaved = false,
                 CornerFound = false
@@ -79,6 +80,7 @@ namespace AoiMeasureTool
             {
                 Enabled = snapshot.Enabled,
                 SourceIndex = snapshot.SourceIndex,
+                PointMode = snapshot.PointMode,
                 Roi = snapshot.Roi,
                 RoiSaved = snapshot.RoiSaved,
                 CornerFound = snapshot.CornerFound
