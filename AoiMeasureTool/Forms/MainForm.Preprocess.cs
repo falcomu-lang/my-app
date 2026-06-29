@@ -48,11 +48,11 @@ namespace AoiMeasureTool
                 Padding = new Padding(3)
             };
 
-            var panelOriginal = CreateDualThresholdImagePanel("原圖", out _pictureBoxDualThresholdOriginal);
+            var panelOriginal = CreateDualThresholdImagePanel("原圖", false, out _pictureBoxDualThresholdOriginal, out _panelDualThresholdOriginalViewport);
             panelOriginal.Location = new Point(20, 20);
             _tabPageBinarization2.Controls.Add(panelOriginal);
 
-            var panelPreview = CreateDualThresholdImagePanel("雙門檻結果", out _pictureBoxDualThresholdPreview);
+            var panelPreview = CreateDualThresholdImagePanel("雙門檻結果", true, out _pictureBoxDualThresholdPreview, out _panelDualThresholdPreviewViewport);
             panelPreview.Location = new Point(366, 20);
             _tabPageBinarization2.Controls.Add(panelPreview);
 
@@ -64,7 +64,7 @@ namespace AoiMeasureTool
             UpdateDualThresholdPreview();
         }
 
-        private Panel CreateDualThresholdImagePanel(string title, out PictureBox pictureBox)
+        private Panel CreateDualThresholdImagePanel(string title, bool isPreview, out PictureBox pictureBox, out Panel viewport)
         {
             var panel = new Panel
             {
@@ -81,17 +81,47 @@ namespace AoiMeasureTool
                 Text = title
             };
 
-            pictureBox = new PictureBox
+            viewport = new Panel
             {
                 BackColor = Color.FromArgb(232, 234, 236),
                 Location = new Point(10, 34),
-                Name = title.Replace(" ", string.Empty) + "PictureBox",
                 Size = new Size(278, 234),
+                TabStop = true
+            };
+
+            pictureBox = new PictureBox
+            {
+                BackColor = Color.FromArgb(232, 234, 236),
+                Name = title.Replace(" ", string.Empty) + "PictureBox",
                 SizeMode = PictureBoxSizeMode.Zoom
             };
 
+            pictureBox.Location = Point.Empty;
+            pictureBox.Size = viewport.ClientSize;
+            viewport.Controls.Add(pictureBox);
+            if (isPreview)
+            {
+                viewport.MouseEnter += DualThresholdPreviewViewport_MouseEnter;
+                viewport.MouseWheel += DualThresholdPreviewViewport_MouseWheel;
+                pictureBox.MouseEnter += DualThresholdPreviewViewport_MouseEnter;
+                pictureBox.MouseWheel += DualThresholdPreviewViewport_MouseWheel;
+                pictureBox.MouseDown += DualThresholdPreview_MouseDown;
+                pictureBox.MouseMove += DualThresholdPreview_MouseMove;
+                pictureBox.MouseUp += DualThresholdPreview_MouseUp;
+            }
+            else
+            {
+                viewport.MouseEnter += DualThresholdOriginalViewport_MouseEnter;
+                viewport.MouseWheel += DualThresholdOriginalViewport_MouseWheel;
+                pictureBox.MouseEnter += DualThresholdOriginalViewport_MouseEnter;
+                pictureBox.MouseWheel += DualThresholdOriginalViewport_MouseWheel;
+                pictureBox.MouseDown += DualThresholdOriginal_MouseDown;
+                pictureBox.MouseMove += DualThresholdOriginal_MouseMove;
+                pictureBox.MouseUp += DualThresholdOriginal_MouseUp;
+            }
+
             panel.Controls.Add(label);
-            panel.Controls.Add(pictureBox);
+            panel.Controls.Add(viewport);
             return panel;
         }
 
@@ -568,6 +598,11 @@ namespace AoiMeasureTool
             }
 
             SetPictureBoxImage(_pictureBoxDualThresholdOriginal, new Bitmap(pictureBoxBinaryOriginal.Image));
+            PreprocessPreviewService.FitToViewport(
+                _pictureBoxDualThresholdOriginal,
+                _panelDualThresholdOriginalViewport,
+                ref _dualThresholdOriginalImageScale,
+                ref _dualThresholdOriginalFitScale);
         }
 
         private void UpdateDualThresholdPreview()
@@ -586,6 +621,11 @@ namespace AoiMeasureTool
             using (var binary = PreprocessPipelineService.Build(_grayImage, CreateDualThresholdParam()))
             {
                 SetPictureBoxImage(_pictureBoxDualThresholdPreview, BitmapConverter.ToBitmap(binary));
+                PreprocessPreviewService.FitToViewport(
+                    _pictureBoxDualThresholdPreview,
+                    _panelDualThresholdPreviewViewport,
+                    ref _dualThresholdPreviewImageScale,
+                    ref _dualThresholdPreviewFitScale);
             }
         }
 
@@ -636,6 +676,130 @@ namespace AoiMeasureTool
         private void DualThresholdControl_ValueChanged(object sender, EventArgs e)
         {
             UpdateDualThresholdPreview();
+        }
+
+        private void DualThresholdOriginalViewport_MouseEnter(object sender, EventArgs e)
+        {
+            _pictureBoxDualThresholdOriginal.Focus();
+        }
+
+        private void DualThresholdOriginalViewport_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (_pictureBoxDualThresholdOriginal.Image == null)
+            {
+                return;
+            }
+
+            var sourceControl = (Control)sender;
+            var mousePosition = _panelDualThresholdOriginalViewport.PointToClient(sourceControl.PointToScreen(e.Location));
+            PreprocessPreviewService.ZoomAt(
+                _pictureBoxDualThresholdOriginal,
+                _panelDualThresholdOriginalViewport,
+                mousePosition,
+                e.Delta,
+                ref _dualThresholdOriginalImageScale,
+                _dualThresholdOriginalFitScale);
+        }
+
+        private void DualThresholdOriginal_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left || _pictureBoxDualThresholdOriginal.Image == null)
+            {
+                return;
+            }
+
+            _dualThresholdOriginalDragging = true;
+            _dualThresholdOriginalLastMousePosition = _panelDualThresholdOriginalViewport.PointToClient(_pictureBoxDualThresholdOriginal.PointToScreen(e.Location));
+            _pictureBoxDualThresholdOriginal.Cursor = Cursors.SizeAll;
+            _pictureBoxDualThresholdOriginal.Capture = true;
+        }
+
+        private void DualThresholdOriginal_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!_dualThresholdOriginalDragging)
+            {
+                return;
+            }
+
+            var currentPosition = _panelDualThresholdOriginalViewport.PointToClient(_pictureBoxDualThresholdOriginal.PointToScreen(e.Location));
+            _pictureBoxDualThresholdOriginal.Left += currentPosition.X - _dualThresholdOriginalLastMousePosition.X;
+            _pictureBoxDualThresholdOriginal.Top += currentPosition.Y - _dualThresholdOriginalLastMousePosition.Y;
+            _dualThresholdOriginalLastMousePosition = currentPosition;
+            PreprocessPreviewService.ConstrainPosition(_pictureBoxDualThresholdOriginal, _panelDualThresholdOriginalViewport);
+        }
+
+        private void DualThresholdOriginal_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left)
+            {
+                return;
+            }
+
+            _dualThresholdOriginalDragging = false;
+            _pictureBoxDualThresholdOriginal.Cursor = Cursors.Default;
+            _pictureBoxDualThresholdOriginal.Capture = false;
+        }
+
+        private void DualThresholdPreviewViewport_MouseEnter(object sender, EventArgs e)
+        {
+            _pictureBoxDualThresholdPreview.Focus();
+        }
+
+        private void DualThresholdPreviewViewport_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (_pictureBoxDualThresholdPreview.Image == null)
+            {
+                return;
+            }
+
+            var sourceControl = (Control)sender;
+            var mousePosition = _panelDualThresholdPreviewViewport.PointToClient(sourceControl.PointToScreen(e.Location));
+            PreprocessPreviewService.ZoomAt(
+                _pictureBoxDualThresholdPreview,
+                _panelDualThresholdPreviewViewport,
+                mousePosition,
+                e.Delta,
+                ref _dualThresholdPreviewImageScale,
+                _dualThresholdPreviewFitScale);
+        }
+
+        private void DualThresholdPreview_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left || _pictureBoxDualThresholdPreview.Image == null)
+            {
+                return;
+            }
+
+            _dualThresholdPreviewDragging = true;
+            _dualThresholdPreviewLastMousePosition = _panelDualThresholdPreviewViewport.PointToClient(_pictureBoxDualThresholdPreview.PointToScreen(e.Location));
+            _pictureBoxDualThresholdPreview.Cursor = Cursors.SizeAll;
+            _pictureBoxDualThresholdPreview.Capture = true;
+        }
+
+        private void DualThresholdPreview_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!_dualThresholdPreviewDragging)
+            {
+                return;
+            }
+
+            var currentPosition = _panelDualThresholdPreviewViewport.PointToClient(_pictureBoxDualThresholdPreview.PointToScreen(e.Location));
+            _pictureBoxDualThresholdPreview.Left += currentPosition.X - _dualThresholdPreviewLastMousePosition.X;
+            _pictureBoxDualThresholdPreview.Top += currentPosition.Y - _dualThresholdPreviewLastMousePosition.Y;
+            _dualThresholdPreviewLastMousePosition = currentPosition;
+            PreprocessPreviewService.ConstrainPosition(_pictureBoxDualThresholdPreview, _panelDualThresholdPreviewViewport);
+        }
+
+        private void DualThresholdPreview_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left)
+            {
+                return;
+            }
+
+            _dualThresholdPreviewDragging = false;
+            _pictureBoxDualThresholdPreview.Cursor = Cursors.Default;
+            _pictureBoxDualThresholdPreview.Capture = false;
         }
     }
 }
