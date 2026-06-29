@@ -98,7 +98,7 @@ namespace AoiMeasureTool
             if (_comboBoxMeasureSource != null)
             {
                 _comboBoxMeasureSource.Items.Clear();
-                _comboBoxMeasureSource.Items.AddRange(new object[] { "前處理 1", "前處理 2", "前處理 3", "前處理 4" });
+                _comboBoxMeasureSource.Items.AddRange(new object[] { "前處理 1", "前處理 2", "前處理 3", "前處理 4", "雙門檻" });
                 _comboBoxMeasureSource.SelectedIndex = 0;
                 _comboBoxMeasureSource.SelectedIndexChanged += MeasureSource_SelectedIndexChanged;
             }
@@ -954,6 +954,11 @@ namespace AoiMeasureTool
                 return -1;
             }
 
+            if (sourceName.IndexOf("雙門檻", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return 4;
+            }
+
             var match = Regex.Match(sourceName, @"\d+");
             int index;
             if (match.Success && int.TryParse(match.Value, out index))
@@ -1179,6 +1184,24 @@ namespace AoiMeasureTool
         private bool TryGetMultiImageConfirmPreprocessParam(int preprocessIndex, out PreprocessParam preprocessParam)
         {
             preprocessParam = null;
+            if (preprocessIndex == 4)
+            {
+                var snapshot = CaptureDualThresholdSnapshot();
+                preprocessParam = new PreprocessParam
+                {
+                    Enabled = snapshot.Enabled,
+                    WhiteObject = true,
+                    Threshold = snapshot.LowerThreshold,
+                    UpperThreshold = snapshot.UpperThreshold,
+                    UseDualThreshold = true,
+                    ErodeIterations = snapshot.ErodeIterations,
+                    DilateIterations = snapshot.DilateIterations,
+                    OpenIterations = snapshot.OpenIterations,
+                    CloseIterations = snapshot.CloseIterations
+                };
+                return true;
+            }
+
             if (preprocessIndex < 0 || preprocessIndex > 3)
             {
                 return false;
@@ -2034,12 +2057,22 @@ namespace AoiMeasureTool
 
         private Bitmap GetMeasureSourceBitmap()
         {
-            if (_comboBoxMeasureSource == null || _preprocessPictureBoxes == null)
+            if (_comboBoxMeasureSource == null)
             {
                 return pictureBoxImage.Image == null ? null : new Bitmap(pictureBoxImage.Image);
             }
 
             var index = _comboBoxMeasureSource.SelectedIndex;
+            if (index == 4 && _pictureBoxDualThresholdPreview != null && _pictureBoxDualThresholdPreview.Image != null)
+            {
+                return new Bitmap(_pictureBoxDualThresholdPreview.Image);
+            }
+
+            if (_preprocessPictureBoxes == null)
+            {
+                return pictureBoxImage.Image == null ? null : new Bitmap(pictureBoxImage.Image);
+            }
+
             if (index >= 0 && index < _preprocessPictureBoxes.Length && _preprocessPictureBoxes[index].Image != null)
             {
                 return new Bitmap(_preprocessPictureBoxes[index].Image);
@@ -2050,12 +2083,22 @@ namespace AoiMeasureTool
 
         private bool IsSelectedMeasureSourceAvailable()
         {
-            if (_comboBoxMeasureSource == null || _preprocessPictureBoxes == null)
+            if (_comboBoxMeasureSource == null)
             {
                 return false;
             }
 
             var index = _comboBoxMeasureSource.SelectedIndex;
+            if (index == 4)
+            {
+                return _pictureBoxDualThresholdPreview != null && _pictureBoxDualThresholdPreview.Image != null;
+            }
+
+            if (_preprocessPictureBoxes == null)
+            {
+                return false;
+            }
+
             return index >= 0
                 && index < _preprocessPictureBoxes.Length
                 && _preprocessPictureBoxes[index].Image != null;
@@ -2635,6 +2678,11 @@ namespace AoiMeasureTool
             if (_comboBoxMeasureSource == null || _comboBoxMeasureSource.SelectedIndex < 0)
             {
                 return string.Empty;
+            }
+
+            if (_comboBoxMeasureSource.SelectedIndex == 4)
+            {
+                return "雙門檻";
             }
 
             return string.Format("前處理 {0}", _comboBoxMeasureSource.SelectedIndex + 1);

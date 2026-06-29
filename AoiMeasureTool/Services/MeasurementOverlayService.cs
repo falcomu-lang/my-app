@@ -12,6 +12,11 @@ namespace AoiMeasureTool
                 return Color.Red;
             }
 
+            if (sourceName.IndexOf("雙門檻", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return Color.Orange;
+            }
+
             if (sourceName.IndexOf("1", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 return Color.Red;
@@ -30,6 +35,11 @@ namespace AoiMeasureTool
             if (sourceName.IndexOf("4", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 return Color.LightSkyBlue;
+            }
+
+            if (sourceName.IndexOf("5", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return Color.Orange;
             }
 
             return Color.Red;
