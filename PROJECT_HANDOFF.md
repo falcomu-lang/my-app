@@ -2,308 +2,173 @@
 
 ## Current Baseline
 
-The multi-image confirm workflow is implemented and stable at the current stage.
-The current UI and interaction behavior is the approved handoff baseline.
-Do not rework the viewer flow unless a later request explicitly asks for it.
+The current WinForms workflow is the approved baseline.
+Do not redesign the viewer flow, workspace switching rules, or multi-image confirm interaction unless a later request explicitly asks for it.
+
+The project target framework is `.NET Framework 4.7.2`.
+
+## Workspace Rules
+
+- The left sidebar controls which workspace tabpages are shown.
+- Startup image-viewer workspace shows only:
+  - image viewer
+  - binarization
+  - binarization-2
+- Reference-corner workspace shows only the reference-corner tab.
+- Measurement-distance workspace shows only the measurement-distance tab.
+- Multi-image-confirm workspace shows only the multi-image-confirm tab.
+- Inner-settings workspace shows only the inner-settings tab.
+- Judgement-criteria workspace shows only the judgement-criteria tab.
 
 ## What Is Working
 
-- The multi-image confirm viewport overlay tracks the displayed image correctly during zoom and pan.
-- ROI, baseline, and measurement overlays stay aligned with the image during interaction.
-- The multi-image confirm preprocess preview and overlay behavior has been verified by the user as correct.
-- The right-side info table in multi-image confirm is part of the approved baseline.
-- Multi-image confirm can show:
+- Image viewer supports load, zoom, and pan.
+- Original binarization workflow remains in place.
+- Reference corner workflow remains connected to product-specific preprocess settings.
+- Measurement-distance workflow supports line creation, edit, delete, and downstream reuse.
+- Multi-image confirm supports original-image preview, preprocess preview, navigation, overlays, and right-side info tabs.
+- Inner settings and judgement criteria are designer-managed tabs.
+
+## Dual-Threshold Page
+
+- A second binarization tab exists: `二值化處理-2`.
+- This page uses dual-threshold preprocessing.
+- The original image is shown on the left.
+- The dual-threshold binary result is shown in the center.
+- The result preview supports:
+  - mouse-wheel zoom
+  - left-drag pan
+  - right-click hold to temporarily show the original image
+- The original-image preview on this page also supports zoom and pan.
+- The page includes:
+  - enable checkbox
+  - lower threshold
+  - upper threshold
+  - erode
+  - dilate
+  - open
+  - close
+  - `讀取設定`
+  - `儲存目前設定`
+- Dual-threshold settings are persisted in `setting.ini`.
+- `二值化處理-2` is now a designer-backed tabpage.
+- Its child controls are now also designer-managed so future maintenance can reposition controls directly in the WinForms designer.
+- Runtime logic now binds to those designer controls instead of relying only on runtime-generated UI.
+
+## Measurement-Distance Rules
+
+- Measurement source dropdown now supports five sources:
+  - `前處理 1`
+  - `前處理 2`
+  - `前處理 3`
+  - `前處理 4`
+  - `雙門檻`
+- When `雙門檻` is selected, the measurement preview uses the dual-threshold binary image.
+- Measurement overlays drawn on the dual-threshold source use orange lines and points.
+- Measurement records still store the selected source name and are reused by downstream workflows.
+- Existing measurement edit flow remains:
+  - choose parallel or perpendicular mode
+  - reselect two points
+  - confirm write-back
+- Deleting a measurement line still warns because it affects downstream calculations.
+
+## Multi-Image Confirm Rules
+
+- A dedicated multi-image confirm tab exists in the main UI.
+- The tab contains:
+  - a large image viewport
+  - folder loading
+  - previous / next navigation
+  - status label
+  - preview source group
+  - original-image button
+  - preprocess-preview button
+  - right-side tabbed info area
+  - line-sequence button
+  - line-display-mode selector
+- Preview-source dropdown now supports:
+  - `前處理影像 1`
+  - `前處理影像 2`
+  - `前處理影像 3`
+  - `前處理影像 4`
+  - `雙門檻`
+- When preview source is `雙門檻`, multi-image confirm builds preview output from the current dual-threshold settings.
+- Switching between original image and preprocess preview preserves zoom and viewport position when possible.
+- The selected preprocess preview mode persists while navigating images.
+- Rendering uses the existing custom paint-based viewport flow.
+- Double buffering remains enabled for the relevant confirm controls.
+
+## Multi-Image Overlay and Analysis Rules
+
+- ROI, baseline, and measurement overlays stay aligned during zoom and pan.
+- Overlay mapping uses source-image coordinates, not display-bitmap coordinates.
+- Multi-image confirm detected-line analysis remains cached outside the paint path.
+- Line-display mode still supports:
   - configured source lines
   - detected measured line segments
   - no line overlays
-- The detected-line overlay path is cached, so zoom and pan do not re-run line analysis on every paint.
-- Switching between preprocess preview and original image preserves the current zoom ratio and viewport position when possible.
-- The left sidebar work items control which tabpages are shown.
-- The image viewer work item shows only:
-  - image viewer
-  - binarization
-- The reference-corner, measurement-distance, and multi-image-confirm work items each show only their matching workspace tabs.
-- The measurement-distance workflow supports editing an existing line segment by reselecting two points after choosing parallel or perpendicular mode.
-- Deleting a measurement line segment shows a warning because it affects downstream calculations and saved measurement results.
-- The project target framework is `.NET Framework 4.7.2`.
-- The left sidebar also includes:
-  - inner settings
-  - judgement criteria
-- The inner-settings and judgement-criteria tabs are designer-managed tabpages and controls.
-- Those tabs are hidden on startup and only appear when their matching sidebar item is selected.
-- Inner settings are stored in `innerSetting.ini` beside the executable and do not change when the active product changes.
-- Inner settings currently expose CCD X precision and CCD Y precision with a dedicated save button.
-- The multi-image confirm info table shows each valid line measurement as millimeters first, with pixel distance in parentheses.
-- The multi-image confirm right-side info area is now a tabbed panel with:
-  - `原始資料`
-  - `判定結果`
+- Each saved measurement line still uses its own associated source when downstream measurement is recalculated.
+- Source association is still inferred from saved `SourceName`.
+- That source parsing now also recognizes `雙門檻`.
 
-## Multi-Image Confirm Behavior
+## Persistence Rules
 
-- A dedicated multi-image confirm tab exists in the main WinForms UI.
-- The tab contains:
-  - a large image viewport
-  - folder loading for confirm-result images
-  - previous / next navigation buttons
-  - a centered status label area for image index display
-  - a preprocess preview source group with:
-    - a dropdown for preprocess image 1-4
-    - a load-preprocess-image button
-    - an original-image button
-  - a right-side tabbed info area
-    - an `原始資料` tab with the existing info table
-    - a `判定結果` tab with a judgement-result table
-  - a line-sequence button
-  - a line-display-mode selector
-- Folder loading reads image files from the selected folder and builds an ordered image list.
-- The navigation buttons switch between images in sequence.
-- When preprocess preview mode is enabled, previous / next navigation keeps showing preprocess output for each image until original-image mode is selected.
-- The preprocess preview dropdown selects which preprocess profile output to display.
-- The viewer supports:
-  - initial full-image display after loading
-  - zoom in / zoom out
-  - right-click drag panning after zoom
-- Rendering uses a custom paint-based approach to avoid flicker and layout issues.
-- Double buffering is enabled for the relevant tab and viewport to reduce redraw flicker.
-- Multi-image confirm overlays are mapped against the original source image coordinate size even when the displayed bitmap is a preprocess preview.
-- The preprocess preview bitmap is display-only; measurement lines, ROI, and the reference baseline continue to use source-image coordinates.
-
-## Workspace and Sidebar Rules
-
-- The left sidebar work items are ordered as:
-  - image viewer
-  - reference corner
-  - measurement distance
-  - multi-image confirm
-  - inner settings
-  - judgement criteria
-- Selecting a work item shows only the corresponding tabpages for that workspace.
-- The image viewer workspace shows only the image viewer and binarization tabs.
-- The reference-corner workspace shows only the reference-corner tab.
-- The measurement-distance workspace shows only the measurement-distance tab.
-- The multi-image-confirm workspace shows only the multi-image-confirm tab.
-- The inner-settings workspace shows only the inner-settings tab.
-- The judgement-criteria workspace shows only the judgement-criteria tab.
-- The inner-settings and judgement-criteria tabpages are part of the form designer, but they remain hidden from the startup tab strip until their sidebar item is selected.
-
-## Multi-Image Preview Source Rules
-
-- Multi-image confirm has a preview source group below the folder-load controls.
-- The dropdown contains:
-  - preprocess image 1
-  - preprocess image 2
-  - preprocess image 3
-  - preprocess image 4
-- The load-preprocess-image button displays the selected preprocess output for the currently displayed confirm image.
-- The original-image button returns the viewport to the original image.
-- The selected preprocess preview mode persists while navigating previous / next images.
-- Preprocess preview generation uses the current product's preprocess parameters.
-- Multi-image confirm uses the current product context as the product key.
-- Confirm-result folder names should not replace the active product profile.
-- If current unsaved product parameters exist in the UI, they are used for preview so the result reflects the current working state.
-- Switching between original image and preprocess preview preserves the current zoom ratio and current viewport center when possible.
-- The image toggle should not force a refit unless there was no valid previous view state.
-
-## Reference Corner and ROI Rules
-
-- The reference corner workflow uses a selected preprocess source as the baseline for detection.
-- Multi-image confirm reuses the same preprocess parameters selected for the reference source.
-- Multi-image confirm reference detection uses the current product's reference corner profile:
-  - enabled state
-  - source preprocess index
-  - saved ROI
-- The current logic does not fall back to Otsu for reference detection in multi-image confirm.
-- Multi-image confirm uses the same reference candidate selection rule as reference corner detection:
-  - choose a white object fully inside the ROI
-  - prefer the largest object by area
-- The reference ROI is drawn on the multi-image confirm viewport as a green overlay.
-- The detected reference baseline is also drawn on the multi-image confirm viewport.
-- The reference baseline is derived from the detected candidate and is displayed together with the ROI so the relative relationship can be inspected visually.
-- The top baseline endpoints are derived from the detected rotated rectangle corners to reduce drift caused by contour irregularities.
-- Reference detection in multi-image confirm is always computed from the original image file, then the product profile preprocess source is applied for detection.
-- Do not run reference detection from the already displayed preprocess preview bitmap, or the reference candidate can drift.
-
-## Measurement Overlay Rules
-
-- Multi-image confirm measurement lines use the current product's measurement records.
-- If the current product has live in-memory measurement records, those are preferred so unsaved current UI changes are reflected.
-- If live records are not available, the saved product measurement profile is used.
-- As a fallback, currently loaded measurement records may be used so existing lines continue to render.
-- Measurement line reprojection uses the reference candidate detected from the current confirm image.
-- Measurement, ROI, and reference baseline overlays must all use the same source-image coordinate mapping.
-- A line-display-mode selector controls whether the viewport shows:
-  - the configured source lines
-  - the detected measured line segments
-  - no line overlays
-- Changing the line-display mode should only trigger a redraw.
-- It must not reset zoom or pan.
-- The line-sequence button temporarily labels line start points with the 1-based line sequence defined in the measurement distance setup for about three seconds.
-
-## Multi-Image Line Measurement Rules
-
-- The right-side info table includes a top-level judgement row and per-line measurement results.
-- The `whether it can be judged` row is `can judge` only when:
-  - all relevant points are inside the saved ROI
-  - a reference corner / baseline candidate was found
-- For each line segment, the measurement logic uses the preprocess source that was originally associated with that line segment.
-- The implementation currently infers the preprocess source from the saved `SourceName` text such as `preprocess 1` through `preprocess 4`.
-- For each line segment:
-  - build the corresponding binary preprocess image for the current confirm image
-  - sample points along the segment path
-  - find white runs along that path
-  - keep only the longest continuous white run
-  - use the two ends of that longest white run as the detected measured line
-  - report the resulting distance in pixels
-  - convert the detected segment to millimeters using inner-settings CCD X precision and CCD Y precision
-- When the detected-line display mode is active, the viewport draws the detected longest-white-run segment instead of the configured source line.
-- The detected-line analysis path is cached per image, line, and mode so pan and zoom do not re-run preprocess analysis during paint.
-- The current result table displays each valid line as `{mm} mm ({px} px)`.
-- Millimeter conversion uses anisotropic scaling:
-  - multiply X delta by CCD X precision
-  - multiply Y delta by CCD Y precision
-  - calculate Euclidean distance in millimeters
-- The line-sequence overlay must follow the configured measurement line order from the distance setup, not a screen-position sort.
-
-## Multi-Image Judgement Result Rules
-
-- The `判定結果` tab shows a table with:
-  - rule name
-  - calculation value
-  - judgement
-- The source rules come from the current product's `良品判斷條件` records.
-- Judgement-result evaluation uses the current multi-image confirm line measurements in millimeters.
-- Calculation expressions currently support arithmetic expressions written with half-width operators and parentheses.
-- Measured line references in a calculation expression use the form:
-  - `(1)`
-  - `(2)`
-  - `(3)`
-- Example supported calculation expressions include:
-  - `(1)-(2)`
-  - `((1)+(2))/2`
-- If a referenced line measurement is unavailable, the calculation result is treated as invalid and the judgement result becomes `不可判斷`.
-- A single judgement rule record currently supports:
-  - A-rule calculation
-  - A-rule spec
-  - optional B-rule calculation
-  - optional B-rule spec
-- The judgement flow is:
-  - if A-rule passes, the displayed judgement is `A規`
-  - otherwise, if B-rule exists and passes, the displayed judgement is `B規`
-  - otherwise, if A and B were both evaluated and both failed, the displayed judgement is `C規`
-  - if the rule could not be evaluated, the displayed judgement is `不可判斷`
-- If no B-rule is configured for a row:
-  - A pass still shows `A規`
-  - an A failure currently falls through to `C規`
-- Spec expressions currently support:
-  - `x<6`
-  - `x<=5`
-  - `x>6`
-  - `x>=7`
-  - `5<x<6`
-  - `5<=x<=6`
-  - `5<=x<6`
-  - `5<x<=6`
-  - `6>x>5`
-  - `6>=x>=5`
-  - `6>x>=5`
-  - `6>=x>5`
-- Reverse single-sided comparison syntax is also supported, for example:
-  - `5>=x`
-  - `5<=x`
-  - `5>x`
-  - `5<x`
-- The current implementation parses spec expressions from free text.
-- The current implementation uses line order numbers in expressions rather than a stable line ID.
-- The current implementation evaluates judgement rules inside the WinForms flow rather than in a separate service layer.
-
-## Measurement Editing Rules
-
-- Existing measurement line segments can be edited from the record table.
-- Editing requires choosing parallel or perpendicular mode first.
-- After choosing the mode, the user reselects two points on the image.
-- Confirmation writes the updated line back to the selected record.
-- Cancel leaves the original record unchanged.
-- Deleting a measurement line segment prompts a warning because it affects later calculations and saved results.
-
-## Inner Settings Rules
-
+- Product-related settings remain stored in `setting.ini`.
+- Dual-threshold settings are stored in the same app settings payload.
+- Inner settings remain stored separately in `innerSetting.ini`.
 - Inner settings are not product-specific.
-- The file path is `innerSetting.ini` in the executable directory.
-- The current fields are:
-  - CCD X precision
-  - CCD Y precision
-- Inner settings use an explicit save button.
-- They are not intended to be treated as product profile state.
-- The inner-settings UI is designer-managed so the controls can be repositioned or extended visually in the WinForms designer.
 
-## Judgement Criteria Rules
+## Designer-Managed Areas
 
-- A dedicated judgement-criteria work item exists in the left sidebar.
-- Selecting it shows a dedicated judgement-criteria tabpage.
-- The tabpage is designer-managed and contains:
-  - rule name
-  - A rule calculation
-  - A rule specification
-  - B rule calculation
-  - B rule specification
-  - add / reset buttons
-  - a result table
-  - a save button
-- The input controls and table are built in the WinForms designer so future UI edits can be done by dragging controls rather than runtime generation.
-- The `add` flow supports creating a new rule or updating an existing rule.
-- The table row context menu supports:
-  - `修改`
-  - `刪除`
-- `修改` loads the row back into the inputs and switches the buttons to:
-  - `更新`
-  - `取消`
-- `刪除` prompts for confirmation before removing the row.
-- The `儲存判斷條件` button saves the current product’s judgement criteria once, and duplicate click binding has been removed.
-- The page currently stores optional B-rule fields as part of the same record.
+The following UI areas are intended to remain designer-managed for future maintenance:
 
-## Files Touched
+- inner settings
+- judgement criteria
+- `二值化處理-2`
+
+Do not move these back to runtime-generated controls unless explicitly requested.
+
+## Files Touched In This Phase
 
 - `AoiMeasureTool/Forms/MainForm.Designer.cs`
 - `AoiMeasureTool/Forms/MainForm.cs`
 - `AoiMeasureTool/Forms/MainForm.Measurement.cs`
-- `AoiMeasureTool/Forms/MainForm.InnerSettings.cs`
-- `AoiMeasureTool/Forms/MainForm.JudgementCriteria.cs`
-- `AoiMeasureTool/Forms/MeasureDirectionDialog.cs`
 - `AoiMeasureTool/Forms/MainForm.Preprocess.cs`
-- `AoiMeasureTool/Forms/MainForm.ReferenceCorner.cs`
-- `AoiMeasureTool/Services/ReferenceCornerDetectionService.cs`
-- `AoiMeasureTool/Services/MeasurementOverlayService.cs`
-- `AoiMeasureTool/Services/MeasurementRecordService.cs`
-- `AoiMeasureTool/Services/PreprocessPipelineService.cs`
-- `AoiMeasureTool/Utilities/ImageProcessor.cs`
-- `AoiMeasureTool/Repositories/InnerSettingsRepository.cs`
+- `AoiMeasureTool/Models/PreprocessParam.cs`
 - `AoiMeasureTool/Models/ProfileModels.cs`
-- `AoiMeasureTool/AoiMeasureTool.csproj`
+- `AoiMeasureTool/Repositories/IniSettingsRepository.cs`
+- `AoiMeasureTool/Services/MeasurementOverlayService.cs`
+- `AoiMeasureTool/Services/PreprocessProfileApplier.cs`
+- `AoiMeasureTool/Utilities/ImageProcessor.cs`
+- `AoiMeasureTool/Utilities/ProfileDataCloner.cs`
 - `PROJECT_HANDOFF.md`
+
+## Recent Git History
+
+- `1ffac39` `Move dual-threshold tab controls into designer`
+- `de76754` `Add dual-threshold multi-image preview source`
+- `652f0f1` `Fix dual-threshold snapshot naming conflict`
+- `a1917b4` `Add dual-threshold measurement source overlay`
+- `f716ba9` `Make dual-threshold tab designer-visible`
 
 ## Important Notes
 
-- The current state is considered correct by the user unless a later request changes behavior explicitly.
-- The image navigation list is sorted with numeric-aware filename ordering.
-- The middle status area is used to show the current image index and total count.
-- The reference corner and multi-image confirm flows should stay aligned on the same preprocess source.
-- The multi-image confirm overlay should continue to use the same image-space to display-space mapping as the image transform itself.
-- Do not infer the product profile from the confirm-result folder name unless product selection behavior is explicitly redesigned.
-- Keep source-image coordinate mapping separate from the displayed preprocess preview bitmap.
-- Keep workspace tab visibility aligned with the left sidebar item that launched the workspace.
-- Preserve the reselect-two-points editing flow for measurement records unless the user requests a redesign.
-- If future changes affect preprocess preview, verify that measurement lines still fit the displayed image in both original-image and preprocess-preview modes.
-- If future changes affect detected-line measurement, preserve the rule that each line uses its own associated preprocess source rather than the currently selected preview source.
-- The current association to a preprocess source is text-derived from `SourceName`; if this area is refactored later, prefer storing an explicit preprocess index on the measure record.
-- Keep detected-line measurement work out of the paint path.
-- Recompute only when the image, source, or relevant measurement inputs change.
-- Keep inner settings separate from `setting.ini` product-profile persistence.
-- Keep startup workspace behavior such that inner-settings and judgement-criteria tabs are hidden until explicitly opened from the sidebar.
-- If future changes extend inner settings or judgement criteria, prefer continuing to manage their controls in the WinForms designer rather than reverting to runtime-generated controls.
-- Keep calculation expressions in half-width form for now; full-width parentheses are not part of the current supported input contract.
-- The current judgement-result table is intended for rule-by-rule output; there is not yet a finalized overall `OK / NG / 無法判定` summary layer for the entire image.
-- If future work formalizes final `OK / NG`, prefer adding a dedicated aggregation rule rather than overloading the current per-rule `A規 / B規 / C規` display.
+- There is an existing local MSBuild environment issue on this machine, so full rebuild verification was not reliable during this phase.
+- The dual-threshold page now has both functional logic and designer-managed layout support.
+- If future work changes source-selection logic, be careful not to break:
+  - measurement-distance source mapping
+  - multi-image confirm preview-source mapping
+  - downstream line analysis source mapping
+- If future work changes dual-threshold settings structure, update:
+  - UI binding
+  - `setting.ini` persistence
+  - multi-image confirm preview generation
+  - measurement source handling
 
 ## Suggested Next Step
 
-If more work is needed later, verify the existing behavior first, then extend from this baseline rather than replacing the viewer flow.
+Before further feature work, verify these three areas together in the UI:
+
+- `二值化處理-2`
+- `框選量測的距離`
+- `多影像確認結果`
