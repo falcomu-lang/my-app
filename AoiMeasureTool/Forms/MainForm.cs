@@ -90,7 +90,6 @@ namespace AoiMeasureTool
         private TabPage _tabPageMultiImageConfirm;
         private TabPage _tabPageInnerSettings;
         private TabPage _tabPageJudgementCriteria;
-        private TabPage _tabPageBinarization2;
         private Panel _panelMeasurePreview;
         private Panel _panelMultiImageConfirmViewport;
         private PictureBox _pictureBoxMultiImageConfirm;
@@ -342,10 +341,7 @@ namespace AoiMeasureTool
             tabControlMain.TabPages.Clear();
             tabControlMain.TabPages.Add(tabPageImageViewer);
             tabControlMain.TabPages.Add(tabPageBinarization);
-            if (_tabPageBinarization2 != null)
-            {
-                tabControlMain.TabPages.Add(_tabPageBinarization2);
-            }
+            tabControlMain.TabPages.Add(tabPageBinarization2);
 
             tabControlMain.SelectedTab = tabPageImageViewer;
         }

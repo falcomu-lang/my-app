@@ -29,6 +29,7 @@ namespace AoiMeasureTool
         private System.Windows.Forms.TabControl tabControlMain;
         private System.Windows.Forms.TabPage tabPageImageViewer;
         private System.Windows.Forms.TabPage tabPageBinarization;
+        private System.Windows.Forms.TabPage tabPageBinarization2;
         private System.Windows.Forms.TabPage tabPageReferenceCorner;
         private System.Windows.Forms.TabPage tabPageMeasureDistance;
         private System.Windows.Forms.TabPage tabPageMultiImageConfirm;
@@ -214,6 +215,7 @@ namespace AoiMeasureTool
             this.panelImageViewport = new System.Windows.Forms.Panel();
             this.pictureBoxImage = new System.Windows.Forms.PictureBox();
             this.tabPageBinarization = new System.Windows.Forms.TabPage();
+            this.tabPageBinarization2 = new System.Windows.Forms.TabPage();
             this.panelBinaryOriginal = new System.Windows.Forms.Panel();
             this.labelBinaryOriginal = new System.Windows.Forms.Label();
             this.pictureBoxBinaryOriginal = new System.Windows.Forms.PictureBox();
@@ -364,6 +366,7 @@ namespace AoiMeasureTool
             this.panelImageViewport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxImage)).BeginInit();
             this.tabPageBinarization.SuspendLayout();
+            this.tabPageBinarization2.SuspendLayout();
             this.panelBinaryOriginal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBinaryOriginal)).BeginInit();
             this.panelActivePreprocess.SuspendLayout();
@@ -686,6 +689,7 @@ namespace AoiMeasureTool
             // 
             this.tabControlMain.Controls.Add(this.tabPageImageViewer);
             this.tabControlMain.Controls.Add(this.tabPageBinarization);
+            this.tabControlMain.Controls.Add(this.tabPageBinarization2);
             this.tabControlMain.Controls.Add(this.tabPageReferenceCorner);
             this.tabControlMain.Controls.Add(this.tabPageMeasureDistance);
             this.tabControlMain.Controls.Add(this.tabPageMultiImageConfirm);
@@ -765,6 +769,16 @@ namespace AoiMeasureTool
             this.tabPageBinarization.Size = new System.Drawing.Size(1032, 656);
             this.tabPageBinarization.TabIndex = 1;
             this.tabPageBinarization.Text = "二值化處理";
+            // 
+            // tabPageBinarization2
+            // 
+            this.tabPageBinarization2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
+            this.tabPageBinarization2.Location = new System.Drawing.Point(4, 26);
+            this.tabPageBinarization2.Name = "tabPageBinarization2";
+            this.tabPageBinarization2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageBinarization2.Size = new System.Drawing.Size(1032, 656);
+            this.tabPageBinarization2.TabIndex = 6;
+            this.tabPageBinarization2.Text = "二值化處理-2";
             // 
             // panelBinaryOriginal
             // 
@@ -2419,6 +2433,7 @@ namespace AoiMeasureTool
             this.panelImageViewport.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxImage)).EndInit();
             this.tabPageBinarization.ResumeLayout(false);
+            this.tabPageBinarization2.ResumeLayout(false);
             this.panelBinaryOriginal.ResumeLayout(false);
             this.panelBinaryOriginal.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBinaryOriginal)).EndInit();

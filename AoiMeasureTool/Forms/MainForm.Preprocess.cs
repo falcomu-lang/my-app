@@ -40,13 +40,15 @@ namespace AoiMeasureTool
 
         private void InitializeDualThresholdControls()
         {
-            _tabPageBinarization2 = new TabPage
+            if (tabPageBinarization2 == null)
             {
-                Name = "tabPageBinarization2",
-                Text = "二值化處理-2",
-                BackColor = tabPageBinarization.BackColor,
-                Padding = new Padding(3)
-            };
+                return;
+            }
+
+            tabPageBinarization2.SuspendLayout();
+            tabPageBinarization2.Controls.Clear();
+            tabPageBinarization2.BackColor = tabPageBinarization.BackColor;
+            tabPageBinarization2.Text = "二值化處理-2";
 
             var panelOriginal = CreateDualThresholdImagePanel(
                 "原始影像",
@@ -54,7 +56,7 @@ namespace AoiMeasureTool
                 out _pictureBoxDualThresholdOriginal,
                 out _panelDualThresholdOriginalViewport);
             panelOriginal.Location = new Point(20, 20);
-            _tabPageBinarization2.Controls.Add(panelOriginal);
+            tabPageBinarization2.Controls.Add(panelOriginal);
 
             var panelPreview = CreateDualThresholdImagePanel(
                 "雙門檻結果｜滾輪縮放、左鍵拖曳、右鍵看原圖",
@@ -62,16 +64,17 @@ namespace AoiMeasureTool
                 out _pictureBoxDualThresholdPreview,
                 out _panelDualThresholdPreviewViewport);
             panelPreview.Location = new Point(366, 20);
-            _tabPageBinarization2.Controls.Add(panelPreview);
+            tabPageBinarization2.Controls.Add(panelPreview);
 
             var panelControls = CreateDualThresholdControlPanel();
             panelControls.Location = new Point(712, 20);
-            _tabPageBinarization2.Controls.Add(panelControls);
+            tabPageBinarization2.Controls.Add(panelControls);
 
             var panelActions = CreateDualThresholdActionPanel();
             panelActions.Location = new Point(20, 574);
-            _tabPageBinarization2.Controls.Add(panelActions);
+            tabPageBinarization2.Controls.Add(panelActions);
 
+            tabPageBinarization2.ResumeLayout(false);
             UpdateDualThresholdOriginalImage();
             UpdateDualThresholdPreview();
         }
