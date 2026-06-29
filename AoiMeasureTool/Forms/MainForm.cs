@@ -99,6 +99,8 @@ namespace AoiMeasureTool
         private PictureBox _pictureBoxDualThresholdPreview;
         private Panel _panelDualThresholdOriginalViewport;
         private Panel _panelDualThresholdPreviewViewport;
+        private Button _buttonDualThresholdLoadOriginal;
+        private Button _buttonDualThresholdLoadBinary;
         private NumericUpDown _numericDualThresholdLower;
         private NumericUpDown _numericDualThresholdUpper;
         private TrackBar _trackBarDualThresholdLower;
@@ -177,6 +179,9 @@ namespace AoiMeasureTool
         private float _dualThresholdOriginalFitScale = 1f;
         private float _dualThresholdPreviewImageScale = 1f;
         private float _dualThresholdPreviewFitScale = 1f;
+        private float _dualThresholdSavedPreviewImageScale = 1f;
+        private int _dualThresholdSavedPreviewLeft;
+        private int _dualThresholdSavedPreviewTop;
 
         public MainForm()
         {
