@@ -1186,18 +1186,18 @@ namespace AoiMeasureTool
             preprocessParam = null;
             if (preprocessIndex == 4)
             {
-                var snapshot = CaptureDualThresholdSnapshot();
+                var dualSnapshot = CaptureDualThresholdSnapshot();
                 preprocessParam = new PreprocessParam
                 {
-                    Enabled = snapshot.Enabled,
+                    Enabled = dualSnapshot.Enabled,
                     WhiteObject = true,
-                    Threshold = snapshot.LowerThreshold,
-                    UpperThreshold = snapshot.UpperThreshold,
+                    Threshold = dualSnapshot.LowerThreshold,
+                    UpperThreshold = dualSnapshot.UpperThreshold,
                     UseDualThreshold = true,
-                    ErodeIterations = snapshot.ErodeIterations,
-                    DilateIterations = snapshot.DilateIterations,
-                    OpenIterations = snapshot.OpenIterations,
-                    CloseIterations = snapshot.CloseIterations
+                    ErodeIterations = dualSnapshot.ErodeIterations,
+                    DilateIterations = dualSnapshot.DilateIterations,
+                    OpenIterations = dualSnapshot.OpenIterations,
+                    CloseIterations = dualSnapshot.CloseIterations
                 };
                 return true;
             }
