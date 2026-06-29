@@ -468,6 +468,7 @@ namespace AoiMeasureTool
                 return;
             }
 
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
             _dataGridViewMultiImageInfo.Rows.Clear();
 
             var referenceCandidate = GetMultiImageConfirmReferenceCandidate();
@@ -483,6 +484,8 @@ namespace AoiMeasureTool
             if (lineMeasurements.Count == 0)
             {
                 AddMultiImageInfoRow("線段量測", "無可用結果");
+                stopwatch.Stop();
+                AddMultiImageInfoRow("處理時間", stopwatch.Elapsed.TotalSeconds.ToString("0.###", CultureInfo.InvariantCulture) + " 秒");
                 return;
             }
 
@@ -495,6 +498,9 @@ namespace AoiMeasureTool
                     ? string.Format("{0:0.##} mm ({1:0.##} px)", measurement.MillimeterDistance, measurement.Distance)
                     : "不可判斷");
             }
+
+            stopwatch.Stop();
+            AddMultiImageInfoRow("處理時間", stopwatch.Elapsed.TotalSeconds.ToString("0.###", CultureInfo.InvariantCulture) + " 秒");
         }
 
         private void RefreshMultiImageJudgementResultTable()
