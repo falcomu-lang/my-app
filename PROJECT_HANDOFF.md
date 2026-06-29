@@ -35,11 +35,11 @@ The project target framework is `.NET Framework 4.7.2`.
 - This page uses dual-threshold preprocessing.
 - The original image is shown on the left.
 - The dual-threshold binary result is shown in the center.
-- The result preview supports:
+- Both previews support:
   - mouse-wheel zoom
   - left-drag pan
+- The binary-result preview additionally supports:
   - right-click hold to temporarily show the original image
-- The original-image preview on this page also supports zoom and pan.
 - The page includes:
   - enable checkbox
   - lower threshold
@@ -51,6 +51,7 @@ The project target framework is `.NET Framework 4.7.2`.
   - `讀取設定`
   - `儲存目前設定`
 - Dual-threshold settings are persisted in `setting.ini`.
+- Dual-threshold settings are now product-specific and follow the active recipe / product key.
 - `二值化處理-2` is now a designer-backed tabpage.
 - Its child controls are now also designer-managed so future maintenance can reposition controls directly in the WinForms designer.
 - Runtime logic now binds to those designer controls instead of relying only on runtime-generated UI.
@@ -58,10 +59,10 @@ The project target framework is `.NET Framework 4.7.2`.
 ## Measurement-Distance Rules
 
 - Measurement source dropdown now supports five sources:
-  - `前處理 1`
-  - `前處理 2`
-  - `前處理 3`
-  - `前處理 4`
+  - `前處理1`
+  - `前處理2`
+  - `前處理3`
+  - `前處理4`
   - `雙門檻`
 - When `雙門檻` is selected, the measurement preview uses the dual-threshold binary image.
 - Measurement overlays drawn on the dual-threshold source use orange lines and points.
@@ -87,12 +88,12 @@ The project target framework is `.NET Framework 4.7.2`.
   - line-sequence button
   - line-display-mode selector
 - Preview-source dropdown now supports:
-  - `前處理影像 1`
-  - `前處理影像 2`
-  - `前處理影像 3`
-  - `前處理影像 4`
+  - `前處理預覽 1`
+  - `前處理預覽 2`
+  - `前處理預覽 3`
+  - `前處理預覽 4`
   - `雙門檻`
-- When preview source is `雙門檻`, multi-image confirm builds preview output from the current dual-threshold settings.
+- When preview source is `雙門檻`, multi-image confirm builds preview output from the current dual-threshold settings of the active recipe / product.
 - Switching between original image and preprocess preview preserves zoom and viewport position when possible.
 - The selected preprocess preview mode persists while navigating images.
 - Rendering uses the existing custom paint-based viewport flow.
@@ -115,6 +116,7 @@ The project target framework is `.NET Framework 4.7.2`.
 
 - Product-related settings remain stored in `setting.ini`.
 - Dual-threshold settings are stored in the same app settings payload.
+- Dual-threshold settings are now stored per product section, not just as a single global value.
 - Inner settings remain stored separately in `innerSetting.ini`.
 - Inner settings are not product-specific.
 
@@ -137,6 +139,7 @@ Do not move these back to runtime-generated controls unless explicitly requested
 - `AoiMeasureTool/Models/PreprocessParam.cs`
 - `AoiMeasureTool/Models/ProfileModels.cs`
 - `AoiMeasureTool/Repositories/IniSettingsRepository.cs`
+- `AoiMeasureTool/Services/ProductProfileService.cs`
 - `AoiMeasureTool/Services/MeasurementOverlayService.cs`
 - `AoiMeasureTool/Services/PreprocessProfileApplier.cs`
 - `AoiMeasureTool/Utilities/ImageProcessor.cs`
@@ -150,11 +153,18 @@ Do not move these back to runtime-generated controls unless explicitly requested
 - `652f0f1` `Fix dual-threshold snapshot naming conflict`
 - `a1917b4` `Add dual-threshold measurement source overlay`
 - `f716ba9` `Make dual-threshold tab designer-visible`
+- `6145d9e` `Refresh project handoff for dual-threshold flow`
 
 ## Important Notes
 
-- There is an existing local MSBuild environment issue on this machine, so full rebuild verification was not reliable during this phase.
+- `AoiMeasureTool.sln /t:Rebuild /p:Configuration=Release` currently builds successfully on this machine.
 - The dual-threshold page now has both functional logic and designer-managed layout support.
+- Product profile persistence now includes:
+  - preprocess snapshots
+  - reference corner settings
+  - measurement records
+  - judgement criteria
+  - dual-threshold settings
 - If future work changes source-selection logic, be careful not to break:
   - measurement-distance source mapping
   - multi-image confirm preview-source mapping
@@ -162,6 +172,7 @@ Do not move these back to runtime-generated controls unless explicitly requested
 - If future work changes dual-threshold settings structure, update:
   - UI binding
   - `setting.ini` persistence
+  - product-profile export / import
   - multi-image confirm preview generation
   - measurement source handling
 
@@ -170,5 +181,5 @@ Do not move these back to runtime-generated controls unless explicitly requested
 Before further feature work, verify these three areas together in the UI:
 
 - `二值化處理-2`
-- `框選量測的距離`
+- `框選量測距離`
 - `多影像確認結果`

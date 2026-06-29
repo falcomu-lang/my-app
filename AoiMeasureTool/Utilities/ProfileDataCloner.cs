@@ -85,6 +85,39 @@ namespace AoiMeasureTool
             };
         }
 
+        public static DualThresholdSnapshot CreateDefaultDualThresholdSnapshot()
+        {
+            return new DualThresholdSnapshot
+            {
+                Enabled = true,
+                LowerThreshold = 80,
+                UpperThreshold = 180,
+                ErodeIterations = 0,
+                DilateIterations = 0,
+                OpenIterations = 0,
+                CloseIterations = 0
+            };
+        }
+
+        public static DualThresholdSnapshot CloneDualThresholdSnapshot(DualThresholdSnapshot snapshot)
+        {
+            if (snapshot == null)
+            {
+                return null;
+            }
+
+            return new DualThresholdSnapshot
+            {
+                Enabled = snapshot.Enabled,
+                LowerThreshold = snapshot.LowerThreshold,
+                UpperThreshold = snapshot.UpperThreshold,
+                ErodeIterations = snapshot.ErodeIterations,
+                DilateIterations = snapshot.DilateIterations,
+                OpenIterations = snapshot.OpenIterations,
+                CloseIterations = snapshot.CloseIterations
+            };
+        }
+
         public static List<MeasureRecord> CloneMeasureRecords(List<MeasureRecord> records)
         {
             var cloned = new List<MeasureRecord>();

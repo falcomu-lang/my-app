@@ -9,17 +9,20 @@ namespace AoiMeasureTool
         private readonly Dictionary<string, ReferenceCornerSnapshot> _referenceCornerProfiles;
         private readonly Dictionary<string, List<MeasureRecord>> _measureProfiles;
         private readonly Dictionary<string, List<JudgementCriterionRule>> _judgementCriteriaProfiles;
+        private readonly Dictionary<string, DualThresholdSnapshot> _dualThresholdProfiles;
 
         public ProductProfileService(
             Dictionary<string, PreprocessSnapshot[]> preprocessProfiles,
             Dictionary<string, ReferenceCornerSnapshot> referenceCornerProfiles,
             Dictionary<string, List<MeasureRecord>> measureProfiles,
-            Dictionary<string, List<JudgementCriterionRule>> judgementCriteriaProfiles)
+            Dictionary<string, List<JudgementCriterionRule>> judgementCriteriaProfiles,
+            Dictionary<string, DualThresholdSnapshot> dualThresholdProfiles)
         {
             _preprocessProfiles = preprocessProfiles;
             _referenceCornerProfiles = referenceCornerProfiles;
             _measureProfiles = measureProfiles;
             _judgementCriteriaProfiles = judgementCriteriaProfiles;
+            _dualThresholdProfiles = dualThresholdProfiles;
         }
 
         public void PersistProduct(
@@ -27,13 +30,15 @@ namespace AoiMeasureTool
             PreprocessSnapshot[] preprocessSnapshots,
             ReferenceCornerSnapshot referenceCornerSnapshot,
             List<MeasureRecord> measureRecords,
-            List<JudgementCriterionRule> judgementCriteriaRules)
+            List<JudgementCriterionRule> judgementCriteriaRules,
+            DualThresholdSnapshot dualThresholdSnapshot)
         {
             var normalizedProductKey = NormalizeProductKey(productKey);
             _preprocessProfiles[normalizedProductKey] = ProfileDataCloner.CloneSnapshots(preprocessSnapshots);
             _referenceCornerProfiles[normalizedProductKey] = ProfileDataCloner.CloneReferenceCornerSnapshot(referenceCornerSnapshot);
             _measureProfiles[normalizedProductKey] = ProfileDataCloner.CloneMeasureRecords(measureRecords);
             _judgementCriteriaProfiles[normalizedProductKey] = ProfileDataCloner.CloneJudgementCriteria(judgementCriteriaRules);
+            _dualThresholdProfiles[normalizedProductKey] = ProfileDataCloner.CloneDualThresholdSnapshot(dualThresholdSnapshot);
         }
 
         public ProductProfileState GetOrCreateState(string productKey)
@@ -68,12 +73,20 @@ namespace AoiMeasureTool
                 _judgementCriteriaProfiles[normalizedProductKey] = ProfileDataCloner.CloneJudgementCriteria(judgementCriteriaRules);
             }
 
+            DualThresholdSnapshot dualThresholdSnapshot;
+            if (!_dualThresholdProfiles.TryGetValue(normalizedProductKey, out dualThresholdSnapshot))
+            {
+                dualThresholdSnapshot = ProfileDataCloner.CreateDefaultDualThresholdSnapshot();
+                _dualThresholdProfiles[normalizedProductKey] = ProfileDataCloner.CloneDualThresholdSnapshot(dualThresholdSnapshot);
+            }
+
             return new ProductProfileState(
                 normalizedProductKey,
                 ProfileDataCloner.CloneSnapshots(preprocessSnapshots),
                 ProfileDataCloner.CloneReferenceCornerSnapshot(referenceCornerSnapshot),
                 ProfileDataCloner.CloneMeasureRecords(measureRecords),
-                ProfileDataCloner.CloneJudgementCriteria(judgementCriteriaRules));
+                ProfileDataCloner.CloneJudgementCriteria(judgementCriteriaRules),
+                ProfileDataCloner.CloneDualThresholdSnapshot(dualThresholdSnapshot));
         }
 
         public void ReplaceAll(AppSettingsData data)
@@ -101,6 +114,12 @@ namespace AoiMeasureTool
             {
                 _judgementCriteriaProfiles[entry.Key] = ProfileDataCloner.CloneJudgementCriteria(entry.Value);
             }
+
+            _dualThresholdProfiles.Clear();
+            foreach (var entry in data.DualThresholdProfiles)
+            {
+                _dualThresholdProfiles[entry.Key] = ProfileDataCloner.CloneDualThresholdSnapshot(entry.Value);
+            }
         }
 
         public void ExportTo(AppSettingsData data)
@@ -124,6 +143,11 @@ namespace AoiMeasureTool
             {
                 data.JudgementCriteriaProfiles[entry.Key] = ProfileDataCloner.CloneJudgementCriteria(entry.Value);
             }
+
+            foreach (var entry in _dualThresholdProfiles)
+            {
+                data.DualThresholdProfiles[entry.Key] = ProfileDataCloner.CloneDualThresholdSnapshot(entry.Value);
+            }
         }
 
         private static string NormalizeProductKey(string productKey)
@@ -139,13 +163,15 @@ namespace AoiMeasureTool
             PreprocessSnapshot[] preprocessSnapshots,
             ReferenceCornerSnapshot referenceCornerSnapshot,
             List<MeasureRecord> measureRecords,
-            List<JudgementCriterionRule> judgementCriteriaRules)
+            List<JudgementCriterionRule> judgementCriteriaRules,
+            DualThresholdSnapshot dualThresholdSnapshot)
         {
             ProductKey = productKey;
             PreprocessSnapshots = preprocessSnapshots;
             ReferenceCornerSnapshot = referenceCornerSnapshot;
             MeasureRecords = measureRecords;
             JudgementCriteriaRules = judgementCriteriaRules;
+            DualThresholdSnapshot = dualThresholdSnapshot;
         }
 
         public string ProductKey { get; }
@@ -153,5 +179,6 @@ namespace AoiMeasureTool
         public ReferenceCornerSnapshot ReferenceCornerSnapshot { get; }
         public List<MeasureRecord> MeasureRecords { get; }
         public List<JudgementCriterionRule> JudgementCriteriaRules { get; }
+        public DualThresholdSnapshot DualThresholdSnapshot { get; }
     }
 }

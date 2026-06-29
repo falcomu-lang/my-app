@@ -37,6 +37,8 @@ namespace AoiMeasureTool
             new System.Collections.Generic.Dictionary<string, List<MeasureRecord>>(System.StringComparer.OrdinalIgnoreCase);
         private readonly System.Collections.Generic.Dictionary<string, List<JudgementCriterionRule>> _judgementCriteriaProfiles =
             new System.Collections.Generic.Dictionary<string, List<JudgementCriterionRule>>(System.StringComparer.OrdinalIgnoreCase);
+        private readonly System.Collections.Generic.Dictionary<string, DualThresholdSnapshot> _dualThresholdProfiles =
+            new System.Collections.Generic.Dictionary<string, DualThresholdSnapshot>(System.StringComparer.OrdinalIgnoreCase);
         private readonly ProductProfileService _productProfileService;
         private PictureBox[] _preprocessPictureBoxes;
         private CheckBox[] _preprocessEnabledChecks;
@@ -184,7 +186,7 @@ namespace AoiMeasureTool
 
         public MainForm()
         {
-            _productProfileService = new ProductProfileService(_productProfiles, _referenceCornerProfiles, _measureProfiles, _judgementCriteriaProfiles);
+            _productProfileService = new ProductProfileService(_productProfiles, _referenceCornerProfiles, _measureProfiles, _judgementCriteriaProfiles, _dualThresholdProfiles);
             InitializeComponent();
             ShowMainWorkspaceTabs();
             InitializePreprocessControls();
@@ -443,6 +445,18 @@ namespace AoiMeasureTool
             return _productProfileService.GetOrCreateState(productKey).ReferenceCornerSnapshot;
         }
 
+        private DualThresholdSnapshot GetDualThresholdSnapshotForProduct(string productKey)
+        {
+            productKey = string.IsNullOrWhiteSpace(productKey) ? "DEFAULT" : productKey;
+
+            if (string.Equals(GetCurrentProductKeyOrDefault(), productKey, System.StringComparison.OrdinalIgnoreCase))
+            {
+                return CaptureDualThresholdSnapshot();
+            }
+
+            return _productProfileService.GetOrCreateState(productKey).DualThresholdSnapshot;
+        }
+
         private void PersistActiveProductProfile()
         {
             _productProfileService.PersistProduct(
@@ -450,7 +464,8 @@ namespace AoiMeasureTool
                 CaptureCurrentSnapshots(),
                 CaptureCurrentReferenceCornerSnapshot(),
                 _measureRecords,
-                CloneJudgementCriteriaRules(_judgementCriteriaRules));
+                CloneJudgementCriteriaRules(_judgementCriteriaRules),
+                CaptureDualThresholdSnapshot());
         }
 
         private string GetCurrentProductKeyOrDefault()
@@ -508,6 +523,7 @@ namespace AoiMeasureTool
             ApplyReferenceCornerProfile(state.ReferenceCornerSnapshot);
             ApplyMeasureProfile(state.MeasureRecords);
             ApplyJudgementCriteriaProfile(state.JudgementCriteriaRules);
+            ApplyDualThresholdSnapshot(state.DualThresholdSnapshot);
         }
 
         private void ApplyProductProfile(PreprocessSnapshot[] snapshots)
@@ -566,7 +582,6 @@ namespace AoiMeasureTool
                 }
 
                 ApplyProductState(_productProfileService.GetOrCreateState(GetCurrentProductKeyOrDefault()));
-                ApplyDualThresholdSnapshot(loadedData.DualThresholdSettings);
                 ApplyInnerSettings(_innerSettings);
             }
             catch

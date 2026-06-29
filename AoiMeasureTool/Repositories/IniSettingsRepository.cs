@@ -85,7 +85,7 @@ namespace AoiMeasureTool
 
                 if (name.StartsWith("DualThreshold", StringComparison.OrdinalIgnoreCase))
                 {
-                    ApplyDualThresholdSetting(data, name, value);
+                    ApplyDualThresholdSetting(data, currentSection, name, value);
                 }
             }
 
@@ -122,6 +122,10 @@ namespace AoiMeasureTool
                     sectionKeys.Add(key);
                 }
                 foreach (var key in data.MeasureProfiles.Keys)
+                {
+                    sectionKeys.Add(key);
+                }
+                foreach (var key in data.DualThresholdProfiles.Keys)
                 {
                     sectionKeys.Add(key);
                 }
@@ -216,18 +220,23 @@ namespace AoiMeasureTool
                     writer.WriteLine("JudgementCriterion" + (i + 1) + "SpecB=" + (rule?.SpecExpressionB ?? string.Empty));
                 }
 
-                var dual = data.DualThresholdSettings ?? new DualThresholdSnapshot();
-                writer.WriteLine("DualThresholdEnabled=" + dual.Enabled);
-                writer.WriteLine("DualThresholdLower=" + dual.LowerThreshold);
-                writer.WriteLine("DualThresholdUpper=" + dual.UpperThreshold);
-                writer.WriteLine("DualThresholdErode=" + dual.ErodeIterations);
-                writer.WriteLine("DualThresholdDilate=" + dual.DilateIterations);
-                writer.WriteLine("DualThresholdOpen=" + dual.OpenIterations);
-                writer.WriteLine("DualThresholdClose=" + dual.CloseIterations);
+                    DualThresholdSnapshot dual;
+                    if (!data.DualThresholdProfiles.TryGetValue(sectionKey, out dual))
+                    {
+                        dual = data.DualThresholdSettings ?? ProfileDataCloner.CreateDefaultDualThresholdSnapshot();
+                    }
 
-                writer.WriteLine(string.Empty);
+                    writer.WriteLine("DualThresholdEnabled=" + dual.Enabled);
+                    writer.WriteLine("DualThresholdLower=" + dual.LowerThreshold);
+                    writer.WriteLine("DualThresholdUpper=" + dual.UpperThreshold);
+                    writer.WriteLine("DualThresholdErode=" + dual.ErodeIterations);
+                    writer.WriteLine("DualThresholdDilate=" + dual.DilateIterations);
+                    writer.WriteLine("DualThresholdOpen=" + dual.OpenIterations);
+                    writer.WriteLine("DualThresholdClose=" + dual.CloseIterations);
+
+                    writer.WriteLine(string.Empty);
+                }
             }
-        }
         }
 
         private static void ApplyPreprocessSetting(AppSettingsData data, string section, string name, string value)
@@ -495,9 +504,16 @@ namespace AoiMeasureTool
             }
         }
 
-        private static void ApplyDualThresholdSetting(AppSettingsData data, string name, string value)
+        private static void ApplyDualThresholdSetting(AppSettingsData data, string section, string name, string value)
         {
-            var snapshot = data.DualThresholdSettings ?? (data.DualThresholdSettings = new DualThresholdSnapshot());
+            section = string.IsNullOrWhiteSpace(section) ? "DEFAULT" : section;
+
+            DualThresholdSnapshot snapshot;
+            if (!data.DualThresholdProfiles.TryGetValue(section, out snapshot))
+            {
+                snapshot = ProfileDataCloner.CreateDefaultDualThresholdSnapshot();
+                data.DualThresholdProfiles[section] = snapshot;
+            }
 
             if (name.Equals("DualThresholdEnabled", StringComparison.OrdinalIgnoreCase))
             {
@@ -527,6 +543,8 @@ namespace AoiMeasureTool
             {
                 snapshot.CloseIterations = int.Parse(value);
             }
+
+            data.DualThresholdSettings = ProfileDataCloner.CloneDualThresholdSnapshot(snapshot);
         }
     }
 }

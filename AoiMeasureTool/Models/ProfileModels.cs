@@ -89,6 +89,7 @@ namespace AoiMeasureTool
             ReferenceCornerProfiles = new Dictionary<string, ReferenceCornerSnapshot>(System.StringComparer.OrdinalIgnoreCase);
             MeasureProfiles = new Dictionary<string, List<MeasureRecord>>(System.StringComparer.OrdinalIgnoreCase);
             JudgementCriteriaProfiles = new Dictionary<string, List<JudgementCriterionRule>>(System.StringComparer.OrdinalIgnoreCase);
+            DualThresholdProfiles = new Dictionary<string, DualThresholdSnapshot>(System.StringComparer.OrdinalIgnoreCase);
             DualThresholdSettings = new DualThresholdSnapshot();
         }
 
@@ -98,6 +99,7 @@ namespace AoiMeasureTool
         public Dictionary<string, ReferenceCornerSnapshot> ReferenceCornerProfiles { get; }
         public Dictionary<string, List<MeasureRecord>> MeasureProfiles { get; }
         public Dictionary<string, List<JudgementCriterionRule>> JudgementCriteriaProfiles { get; }
+        public Dictionary<string, DualThresholdSnapshot> DualThresholdProfiles { get; }
         public DualThresholdSnapshot DualThresholdSettings { get; set; }
     }
 
