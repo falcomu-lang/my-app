@@ -1853,6 +1853,15 @@ namespace AoiMeasureTool
                     OpenCvSharp.Cv2.CvtColor(sourceMat, grayMat, OpenCvSharp.ColorConversionCodes.BGR2GRAY);
                 }
 
+                var productKey = string.IsNullOrWhiteSpace(_multiImageConfirmProductKey)
+                    ? GetCurrentProductKeyOrDefault()
+                    : _multiImageConfirmProductKey;
+                var referenceSnapshot = GetReferenceCornerSnapshotForProduct(productKey);
+                if (referenceSnapshot == null)
+                {
+                    return null;
+                }
+
                 var roi = GetMultiImageConfirmReferenceRoi(grayMat.Size());
                 if (roi.Width <= 0 || roi.Height <= 0)
                 {
