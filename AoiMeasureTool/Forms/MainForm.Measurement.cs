@@ -1926,6 +1926,34 @@ namespace AoiMeasureTool
 
         private OpenCvSharp.Mat BuildMultiImageConfirmReferenceBinary(OpenCvSharp.Mat grayMat, string productKey, int referenceSourceIndex)
         {
+            if (grayMat == null || grayMat.Empty())
+            {
+                return null;
+            }
+
+            if (referenceSourceIndex == 4)
+            {
+                var dualSnapshot = GetDualThresholdSnapshotForProduct(productKey);
+                if (dualSnapshot == null || !dualSnapshot.Enabled)
+                {
+                    return null;
+                }
+
+                var dualParam = new PreprocessParam
+                {
+                    Enabled = dualSnapshot.Enabled,
+                    WhiteObject = true,
+                    Threshold = dualSnapshot.LowerThreshold,
+                    UpperThreshold = dualSnapshot.UpperThreshold,
+                    UseDualThreshold = true,
+                    ErodeIterations = dualSnapshot.ErodeIterations,
+                    DilateIterations = dualSnapshot.DilateIterations,
+                    OpenIterations = dualSnapshot.OpenIterations,
+                    CloseIterations = dualSnapshot.CloseIterations
+                };
+                return PreprocessPipelineService.Build(grayMat, dualParam);
+            }
+
             var snapshots = GetPreprocessSnapshotsForProduct(productKey);
             if (snapshots == null || referenceSourceIndex < 0 || referenceSourceIndex >= snapshots.Length)
             {
