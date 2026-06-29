@@ -65,6 +65,7 @@ namespace AoiMeasureTool
             comboBoxMultiImagePreviewSource.Items.Add("前處理影像 2");
             comboBoxMultiImagePreviewSource.Items.Add("前處理影像 3");
             comboBoxMultiImagePreviewSource.Items.Add("前處理影像 4");
+            comboBoxMultiImagePreviewSource.Items.Add("雙門檻");
             comboBoxMultiImagePreviewSource.SelectedIndex = 0;
         }
 
@@ -197,7 +198,8 @@ namespace AoiMeasureTool
                     "前處理影像 1",
                     "前處理影像 2",
                     "前處理影像 3",
-                    "前處理影像 4"
+                    "前處理影像 4",
+                    "雙門檻"
                 });
                 comboBoxMultiImagePreviewSource.SelectedIndex = 0;
             }
@@ -1242,7 +1244,7 @@ namespace AoiMeasureTool
                 return;
             }
 
-            if (preprocessIndex < 0 || preprocessIndex > 3)
+            if (preprocessIndex < 0 || preprocessIndex > 4)
             {
                 preprocessIndex = 0;
             }
