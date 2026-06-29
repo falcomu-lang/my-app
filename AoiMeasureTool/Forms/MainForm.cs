@@ -90,10 +90,22 @@ namespace AoiMeasureTool
         private TabPage _tabPageMultiImageConfirm;
         private TabPage _tabPageInnerSettings;
         private TabPage _tabPageJudgementCriteria;
+        private TabPage _tabPageBinarization2;
         private Panel _panelMeasurePreview;
         private Panel _panelMultiImageConfirmViewport;
         private PictureBox _pictureBoxMultiImageConfirm;
         private PictureBox _pictureBoxMeasurePreview;
+        private PictureBox _pictureBoxDualThresholdOriginal;
+        private PictureBox _pictureBoxDualThresholdPreview;
+        private NumericUpDown _numericDualThresholdLower;
+        private NumericUpDown _numericDualThresholdUpper;
+        private TrackBar _trackBarDualThresholdLower;
+        private TrackBar _trackBarDualThresholdUpper;
+        private CheckBox _checkBoxDualThresholdEnabled;
+        private NumericUpDown _numericDualThresholdErode;
+        private NumericUpDown _numericDualThresholdDilate;
+        private NumericUpDown _numericDualThresholdOpen;
+        private NumericUpDown _numericDualThresholdClose;
         private Button _buttonLoadMultiImageFolder;
         private Button _buttonMultiImagePrev;
         private Button _buttonMultiImageNext;
@@ -154,6 +166,7 @@ namespace AoiMeasureTool
         private Size _multiImageConfirmSourceImageSize = Size.Empty;
         private bool _multiImageConfirmShowingPreprocess;
         private string _multiImageConfirmProductKey;
+        private bool _synchronizingDualThreshold;
 
         public MainForm()
         {
@@ -161,6 +174,7 @@ namespace AoiMeasureTool
             InitializeComponent();
             ShowMainWorkspaceTabs();
             InitializePreprocessControls();
+            InitializeDualThresholdControls();
             InitializeReferenceCornerControls();
             InitializeMeasureDistanceControls();
             InitializeInnerSettingsControls();
@@ -312,6 +326,10 @@ namespace AoiMeasureTool
             tabControlMain.TabPages.Clear();
             tabControlMain.TabPages.Add(tabPageImageViewer);
             tabControlMain.TabPages.Add(tabPageBinarization);
+            if (_tabPageBinarization2 != null)
+            {
+                tabControlMain.TabPages.Add(_tabPageBinarization2);
+            }
 
             tabControlMain.SelectedTab = tabPageImageViewer;
         }
@@ -536,6 +554,7 @@ namespace AoiMeasureTool
                 }
 
                 ApplyProductState(_productProfileService.GetOrCreateState(GetCurrentProductKeyOrDefault()));
+                ApplyDualThresholdSnapshot(loadedData.DualThresholdSettings);
                 ApplyInnerSettings(_innerSettings);
             }
             catch
@@ -554,6 +573,7 @@ namespace AoiMeasureTool
                     LastImagePath = _lastImagePath,
                     ActiveProductKey = _activeProductKey
                 };
+                settingsData.DualThresholdSettings = CaptureDualThresholdSnapshot();
                 _productProfileService.ExportTo(settingsData);
                 _settingsRepository.Save(_settingsPath, settingsData, GetCurrentProductKeyOrDefault());
             }
@@ -810,6 +830,8 @@ namespace AoiMeasureTool
             pictureBoxImage.Image = null;
             SetPictureBoxImage(pictureBoxBinaryOriginal, null);
             SetPictureBoxImage(pictureBoxActivePreprocess, null);
+            SetPictureBoxImage(_pictureBoxDualThresholdOriginal, null);
+            SetPictureBoxImage(_pictureBoxDualThresholdPreview, null);
             _sourceImage?.Dispose();
             _sourceImage = null;
             _grayImage?.Dispose();
@@ -823,6 +845,62 @@ namespace AoiMeasureTool
                     SetPictureBoxImage(_preprocessPictureBoxes[i], null);
                 }
             }
+        }
+
+        private void ApplyDualThresholdSnapshot(DualThresholdSnapshot snapshot)
+        {
+            if (snapshot == null)
+            {
+                snapshot = new DualThresholdSnapshot
+                {
+                    Enabled = true,
+                    LowerThreshold = 80,
+                    UpperThreshold = 180
+                };
+            }
+
+            if (_checkBoxDualThresholdEnabled != null)
+            {
+                _checkBoxDualThresholdEnabled.Checked = snapshot.Enabled;
+            }
+
+            if (_numericDualThresholdLower != null)
+            {
+                _numericDualThresholdLower.Value = ClampNumericUpDown(_numericDualThresholdLower, snapshot.LowerThreshold);
+                _trackBarDualThresholdLower.Value = (int)_numericDualThresholdLower.Value;
+            }
+
+            if (_numericDualThresholdUpper != null)
+            {
+                _numericDualThresholdUpper.Value = ClampNumericUpDown(_numericDualThresholdUpper, snapshot.UpperThreshold);
+                _trackBarDualThresholdUpper.Value = (int)_numericDualThresholdUpper.Value;
+            }
+
+            if (_numericDualThresholdErode != null) _numericDualThresholdErode.Value = ClampNumericUpDown(_numericDualThresholdErode, snapshot.ErodeIterations);
+            if (_numericDualThresholdDilate != null) _numericDualThresholdDilate.Value = ClampNumericUpDown(_numericDualThresholdDilate, snapshot.DilateIterations);
+            if (_numericDualThresholdOpen != null) _numericDualThresholdOpen.Value = ClampNumericUpDown(_numericDualThresholdOpen, snapshot.OpenIterations);
+            if (_numericDualThresholdClose != null) _numericDualThresholdClose.Value = ClampNumericUpDown(_numericDualThresholdClose, snapshot.CloseIterations);
+
+            UpdateDualThresholdPreview();
+        }
+
+        private DualThresholdSnapshot CaptureDualThresholdSnapshot()
+        {
+            if (_checkBoxDualThresholdEnabled == null || _numericDualThresholdLower == null || _numericDualThresholdUpper == null)
+            {
+                return new DualThresholdSnapshot();
+            }
+
+            return new DualThresholdSnapshot
+            {
+                Enabled = _checkBoxDualThresholdEnabled.Checked,
+                LowerThreshold = (int)_numericDualThresholdLower.Value,
+                UpperThreshold = (int)_numericDualThresholdUpper.Value,
+                ErodeIterations = _numericDualThresholdErode == null ? 0 : (int)_numericDualThresholdErode.Value,
+                DilateIterations = _numericDualThresholdDilate == null ? 0 : (int)_numericDualThresholdDilate.Value,
+                OpenIterations = _numericDualThresholdOpen == null ? 0 : (int)_numericDualThresholdOpen.Value,
+                CloseIterations = _numericDualThresholdClose == null ? 0 : (int)_numericDualThresholdClose.Value
+            };
         }
     }
 }

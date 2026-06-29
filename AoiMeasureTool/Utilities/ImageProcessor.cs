@@ -18,11 +18,20 @@ namespace AoiMeasureTool
             }
 
             var binary = new Mat();
-            var thresholdType = param.WhiteObject
-                ? ThresholdTypes.Binary
-                : ThresholdTypes.BinaryInv;
+            if (param.UseDualThreshold)
+            {
+                var lower = Math.Min(param.Threshold, param.UpperThreshold);
+                var upper = Math.Max(param.Threshold, param.UpperThreshold);
+                Cv2.InRange(grayImage, new Scalar(lower), new Scalar(upper), binary);
+            }
+            else
+            {
+                var thresholdType = param.WhiteObject
+                    ? ThresholdTypes.Binary
+                    : ThresholdTypes.BinaryInv;
 
-            Cv2.Threshold(grayImage, binary, param.Threshold, 255, thresholdType);
+                Cv2.Threshold(grayImage, binary, param.Threshold, 255, thresholdType);
+            }
 
             using (var kernel = Cv2.GetStructuringElement(MorphShapes.Rect, new Size(3, 3)))
             {

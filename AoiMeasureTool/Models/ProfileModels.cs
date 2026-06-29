@@ -46,6 +46,8 @@ namespace AoiMeasureTool
     {
         public bool Enabled { get; set; }
         public int Threshold { get; set; }
+        public int UpperThreshold { get; set; }
+        public bool UseDualThreshold { get; set; }
         public int ErodeIterations { get; set; }
         public int DilateIterations { get; set; }
         public int OpenIterations { get; set; }
@@ -87,6 +89,7 @@ namespace AoiMeasureTool
             ReferenceCornerProfiles = new Dictionary<string, ReferenceCornerSnapshot>(System.StringComparer.OrdinalIgnoreCase);
             MeasureProfiles = new Dictionary<string, List<MeasureRecord>>(System.StringComparer.OrdinalIgnoreCase);
             JudgementCriteriaProfiles = new Dictionary<string, List<JudgementCriterionRule>>(System.StringComparer.OrdinalIgnoreCase);
+            DualThresholdSettings = new DualThresholdSnapshot();
         }
 
         public string LastImagePath { get; set; }
@@ -95,6 +98,18 @@ namespace AoiMeasureTool
         public Dictionary<string, ReferenceCornerSnapshot> ReferenceCornerProfiles { get; }
         public Dictionary<string, List<MeasureRecord>> MeasureProfiles { get; }
         public Dictionary<string, List<JudgementCriterionRule>> JudgementCriteriaProfiles { get; }
+        public DualThresholdSnapshot DualThresholdSettings { get; set; }
+    }
+
+    internal sealed class DualThresholdSnapshot
+    {
+        public bool Enabled { get; set; }
+        public int LowerThreshold { get; set; }
+        public int UpperThreshold { get; set; }
+        public int ErodeIterations { get; set; }
+        public int DilateIterations { get; set; }
+        public int OpenIterations { get; set; }
+        public int CloseIterations { get; set; }
     }
 
     internal sealed class InnerSettingsData

@@ -13,6 +13,8 @@ namespace AoiMeasureTool
                 {
                     Enabled = false,
                     Threshold = 128,
+                    UpperThreshold = 128,
+                    UseDualThreshold = false,
                     ErodeIterations = 0,
                     DilateIterations = 0,
                     OpenIterations = 0,
@@ -54,6 +56,8 @@ namespace AoiMeasureTool
                 {
                     Enabled = snapshots[i].Enabled,
                     Threshold = snapshots[i].Threshold,
+                    UpperThreshold = snapshots[i].UpperThreshold,
+                    UseDualThreshold = snapshots[i].UseDualThreshold,
                     ErodeIterations = snapshots[i].ErodeIterations,
                     DilateIterations = snapshots[i].DilateIterations,
                     OpenIterations = snapshots[i].OpenIterations,

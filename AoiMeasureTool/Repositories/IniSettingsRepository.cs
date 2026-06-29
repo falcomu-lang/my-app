@@ -80,6 +80,12 @@ namespace AoiMeasureTool
                 if (name.StartsWith("JudgementCriterion", StringComparison.OrdinalIgnoreCase))
                 {
                     ApplyJudgementCriterionSetting(data, currentSection, name, value);
+                    continue;
+                }
+
+                if (name.StartsWith("DualThreshold", StringComparison.OrdinalIgnoreCase))
+                {
+                    ApplyDualThresholdSetting(data, name, value);
                 }
             }
 
@@ -206,13 +212,22 @@ namespace AoiMeasureTool
                         writer.WriteLine("JudgementCriterion" + (i + 1) + "Name=" + (rule?.Name ?? string.Empty));
                         writer.WriteLine("JudgementCriterion" + (i + 1) + "Calc=" + (rule?.CalculationExpression ?? string.Empty));
                         writer.WriteLine("JudgementCriterion" + (i + 1) + "Spec=" + (rule?.SpecExpression ?? string.Empty));
-                        writer.WriteLine("JudgementCriterion" + (i + 1) + "CalcB=" + (rule?.CalculationExpressionB ?? string.Empty));
-                        writer.WriteLine("JudgementCriterion" + (i + 1) + "SpecB=" + (rule?.SpecExpressionB ?? string.Empty));
-                    }
-
-                    writer.WriteLine(string.Empty);
+                    writer.WriteLine("JudgementCriterion" + (i + 1) + "CalcB=" + (rule?.CalculationExpressionB ?? string.Empty));
+                    writer.WriteLine("JudgementCriterion" + (i + 1) + "SpecB=" + (rule?.SpecExpressionB ?? string.Empty));
                 }
+
+                var dual = data.DualThresholdSettings ?? new DualThresholdSnapshot();
+                writer.WriteLine("DualThresholdEnabled=" + dual.Enabled);
+                writer.WriteLine("DualThresholdLower=" + dual.LowerThreshold);
+                writer.WriteLine("DualThresholdUpper=" + dual.UpperThreshold);
+                writer.WriteLine("DualThresholdErode=" + dual.ErodeIterations);
+                writer.WriteLine("DualThresholdDilate=" + dual.DilateIterations);
+                writer.WriteLine("DualThresholdOpen=" + dual.OpenIterations);
+                writer.WriteLine("DualThresholdClose=" + dual.CloseIterations);
+
+                writer.WriteLine(string.Empty);
             }
+        }
         }
 
         private static void ApplyPreprocessSetting(AppSettingsData data, string section, string name, string value)
@@ -477,6 +492,40 @@ namespace AoiMeasureTool
             else if (propertyName.Equals("SpecB", StringComparison.OrdinalIgnoreCase))
             {
                 rule.SpecExpressionB = value;
+            }
+        }
+
+        private static void ApplyDualThresholdSetting(AppSettingsData data, string name, string value)
+        {
+            var snapshot = data.DualThresholdSettings ?? (data.DualThresholdSettings = new DualThresholdSnapshot());
+
+            if (name.Equals("DualThresholdEnabled", StringComparison.OrdinalIgnoreCase))
+            {
+                snapshot.Enabled = bool.Parse(value);
+            }
+            else if (name.Equals("DualThresholdLower", StringComparison.OrdinalIgnoreCase))
+            {
+                snapshot.LowerThreshold = int.Parse(value);
+            }
+            else if (name.Equals("DualThresholdUpper", StringComparison.OrdinalIgnoreCase))
+            {
+                snapshot.UpperThreshold = int.Parse(value);
+            }
+            else if (name.Equals("DualThresholdErode", StringComparison.OrdinalIgnoreCase))
+            {
+                snapshot.ErodeIterations = int.Parse(value);
+            }
+            else if (name.Equals("DualThresholdDilate", StringComparison.OrdinalIgnoreCase))
+            {
+                snapshot.DilateIterations = int.Parse(value);
+            }
+            else if (name.Equals("DualThresholdOpen", StringComparison.OrdinalIgnoreCase))
+            {
+                snapshot.OpenIterations = int.Parse(value);
+            }
+            else if (name.Equals("DualThresholdClose", StringComparison.OrdinalIgnoreCase))
+            {
+                snapshot.CloseIterations = int.Parse(value);
             }
         }
     }

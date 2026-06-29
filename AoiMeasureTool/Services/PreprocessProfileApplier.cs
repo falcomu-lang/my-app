@@ -76,6 +76,8 @@ namespace AoiMeasureTool
                 Enabled = enabledChecks[index].Checked,
                 WhiteObject = index < 2,
                 Threshold = (int)thresholdInputs[index].Value,
+                UpperThreshold = (int)thresholdInputs[index].Value,
+                UseDualThreshold = false,
                 ErodeIterations = (int)erodeInputs[index].Value,
                 DilateIterations = (int)dilateInputs[index].Value,
                 OpenIterations = (int)openInputs[index].Value,

@@ -5,6 +5,8 @@ namespace AoiMeasureTool
         public bool Enabled { get; set; }
         public bool WhiteObject { get; set; }
         public int Threshold { get; set; }
+        public int UpperThreshold { get; set; }
+        public bool UseDualThreshold { get; set; }
         public int ErodeIterations { get; set; }
         public int DilateIterations { get; set; }
         public int OpenIterations { get; set; }

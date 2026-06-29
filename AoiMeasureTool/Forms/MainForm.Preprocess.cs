@@ -38,6 +38,175 @@ namespace AoiMeasureTool
             }
         }
 
+        private void InitializeDualThresholdControls()
+        {
+            _tabPageBinarization2 = new TabPage
+            {
+                Name = "tabPageBinarization2",
+                Text = "二值化處理-2",
+                BackColor = tabPageBinarization.BackColor,
+                Padding = new Padding(3)
+            };
+
+            var panelOriginal = CreateDualThresholdImagePanel("原圖", out _pictureBoxDualThresholdOriginal);
+            panelOriginal.Location = new Point(20, 20);
+            _tabPageBinarization2.Controls.Add(panelOriginal);
+
+            var panelPreview = CreateDualThresholdImagePanel("雙門檻結果", out _pictureBoxDualThresholdPreview);
+            panelPreview.Location = new Point(366, 20);
+            _tabPageBinarization2.Controls.Add(panelPreview);
+
+            var panelControls = CreateDualThresholdControlPanel();
+            panelControls.Location = new Point(712, 20);
+            _tabPageBinarization2.Controls.Add(panelControls);
+
+            UpdateDualThresholdOriginalImage();
+            UpdateDualThresholdPreview();
+        }
+
+        private Panel CreateDualThresholdImagePanel(string title, out PictureBox pictureBox)
+        {
+            var panel = new Panel
+            {
+                BackColor = Color.White,
+                BorderStyle = BorderStyle.FixedSingle,
+                Size = new Size(300, 280)
+            };
+
+            var label = new Label
+            {
+                AutoSize = true,
+                Font = new Font("Microsoft JhengHei UI", 10F, FontStyle.Bold),
+                Location = new Point(10, 8),
+                Text = title
+            };
+
+            pictureBox = new PictureBox
+            {
+                BackColor = Color.FromArgb(232, 234, 236),
+                Location = new Point(10, 34),
+                Name = title.Replace(" ", string.Empty) + "PictureBox",
+                Size = new Size(278, 234),
+                SizeMode = PictureBoxSizeMode.Zoom
+            };
+
+            panel.Controls.Add(label);
+            panel.Controls.Add(pictureBox);
+            return panel;
+        }
+
+        private Panel CreateDualThresholdControlPanel()
+        {
+            var panel = new Panel
+            {
+                BackColor = Color.White,
+                BorderStyle = BorderStyle.FixedSingle,
+                Size = new Size(300, 280)
+            };
+
+            var labelTitle = new Label
+            {
+                AutoSize = true,
+                Font = new Font("Microsoft JhengHei UI", 10F, FontStyle.Bold),
+                Location = new Point(12, 10),
+                Text = "雙門檻設定"
+            };
+
+            _checkBoxDualThresholdEnabled = new CheckBox
+            {
+                AutoSize = true,
+                Checked = true,
+                Location = new Point(16, 40),
+                Text = "啟用"
+            };
+            _checkBoxDualThresholdEnabled.CheckedChanged += DualThresholdControl_ValueChanged;
+
+            var labelLower = new Label { AutoSize = true, Location = new Point(16, 74), Text = "下門檻" };
+            _trackBarDualThresholdLower = new TrackBar
+            {
+                AutoSize = false,
+                Location = new Point(86, 68),
+                Size = new Size(140, 30),
+                Minimum = 0,
+                Maximum = 255,
+                TickFrequency = 5,
+                Value = 80
+            };
+            _trackBarDualThresholdLower.Scroll += DualThresholdTrackBar_Scroll;
+            _numericDualThresholdLower = new NumericUpDown
+            {
+                Location = new Point(232, 70),
+                Size = new Size(52, 25),
+                Minimum = 0,
+                Maximum = 255,
+                Value = 80
+            };
+            _numericDualThresholdLower.ValueChanged += DualThresholdNumeric_ValueChanged;
+
+            var labelUpper = new Label { AutoSize = true, Location = new Point(16, 114), Text = "上門檻" };
+            _trackBarDualThresholdUpper = new TrackBar
+            {
+                AutoSize = false,
+                Location = new Point(86, 108),
+                Size = new Size(140, 30),
+                Minimum = 0,
+                Maximum = 255,
+                TickFrequency = 5,
+                Value = 180
+            };
+            _trackBarDualThresholdUpper.Scroll += DualThresholdTrackBar_Scroll;
+            _numericDualThresholdUpper = new NumericUpDown
+            {
+                Location = new Point(232, 110),
+                Size = new Size(52, 25),
+                Minimum = 0,
+                Maximum = 255,
+                Value = 180
+            };
+            _numericDualThresholdUpper.ValueChanged += DualThresholdNumeric_ValueChanged;
+
+            var labelErode = new Label { AutoSize = true, Location = new Point(16, 160), Text = "侵蝕" };
+            _numericDualThresholdErode = CreateMorphologyNumeric(new Point(86, 156));
+            var labelDilate = new Label { AutoSize = true, Location = new Point(156, 160), Text = "膨脹" };
+            _numericDualThresholdDilate = CreateMorphologyNumeric(new Point(226, 156));
+            var labelOpen = new Label { AutoSize = true, Location = new Point(16, 200), Text = "開運算" };
+            _numericDualThresholdOpen = CreateMorphologyNumeric(new Point(86, 196));
+            var labelClose = new Label { AutoSize = true, Location = new Point(156, 200), Text = "閉運算" };
+            _numericDualThresholdClose = CreateMorphologyNumeric(new Point(226, 196));
+
+            panel.Controls.Add(labelTitle);
+            panel.Controls.Add(_checkBoxDualThresholdEnabled);
+            panel.Controls.Add(labelLower);
+            panel.Controls.Add(_trackBarDualThresholdLower);
+            panel.Controls.Add(_numericDualThresholdLower);
+            panel.Controls.Add(labelUpper);
+            panel.Controls.Add(_trackBarDualThresholdUpper);
+            panel.Controls.Add(_numericDualThresholdUpper);
+            panel.Controls.Add(labelErode);
+            panel.Controls.Add(_numericDualThresholdErode);
+            panel.Controls.Add(labelDilate);
+            panel.Controls.Add(_numericDualThresholdDilate);
+            panel.Controls.Add(labelOpen);
+            panel.Controls.Add(_numericDualThresholdOpen);
+            panel.Controls.Add(labelClose);
+            panel.Controls.Add(_numericDualThresholdClose);
+
+            return panel;
+        }
+
+        private NumericUpDown CreateMorphologyNumeric(Point location)
+        {
+            var numeric = new NumericUpDown
+            {
+                Location = location,
+                Size = new Size(52, 25),
+                Minimum = 0,
+                Maximum = 20
+            };
+            numeric.ValueChanged += DualThresholdControl_ValueChanged;
+            return numeric;
+        }
+
         private PreprocessParam CreatePreprocessParam(int index)
         {
             return PreprocessProfileApplier.CreateParam(
@@ -85,6 +254,8 @@ namespace AoiMeasureTool
                 UpdatePreprocessImage(i);
             }
 
+            UpdateDualThresholdOriginalImage();
+            UpdateDualThresholdPreview();
             UpdateReferenceCornerPreview();
         }
 
@@ -381,6 +552,90 @@ namespace AoiMeasureTool
             {
                 UpdatePreprocessImage(index, true);
             }
+        }
+
+        private void UpdateDualThresholdOriginalImage()
+        {
+            if (_pictureBoxDualThresholdOriginal == null)
+            {
+                return;
+            }
+
+            if (pictureBoxBinaryOriginal.Image == null)
+            {
+                SetPictureBoxImage(_pictureBoxDualThresholdOriginal, null);
+                return;
+            }
+
+            SetPictureBoxImage(_pictureBoxDualThresholdOriginal, new Bitmap(pictureBoxBinaryOriginal.Image));
+        }
+
+        private void UpdateDualThresholdPreview()
+        {
+            if (_pictureBoxDualThresholdPreview == null)
+            {
+                return;
+            }
+
+            if (_grayImage == null || _grayImage.Empty() || _checkBoxDualThresholdEnabled == null || !_checkBoxDualThresholdEnabled.Checked)
+            {
+                SetPictureBoxImage(_pictureBoxDualThresholdPreview, null);
+                return;
+            }
+
+            using (var binary = PreprocessPipelineService.Build(_grayImage, CreateDualThresholdParam()))
+            {
+                SetPictureBoxImage(_pictureBoxDualThresholdPreview, BitmapConverter.ToBitmap(binary));
+            }
+        }
+
+        private PreprocessParam CreateDualThresholdParam()
+        {
+            return new PreprocessParam
+            {
+                Enabled = _checkBoxDualThresholdEnabled.Checked,
+                WhiteObject = true,
+                Threshold = (int)_numericDualThresholdLower.Value,
+                UpperThreshold = (int)_numericDualThresholdUpper.Value,
+                UseDualThreshold = true,
+                ErodeIterations = (int)_numericDualThresholdErode.Value,
+                DilateIterations = (int)_numericDualThresholdDilate.Value,
+                OpenIterations = (int)_numericDualThresholdOpen.Value,
+                CloseIterations = (int)_numericDualThresholdClose.Value
+            };
+        }
+
+        private void DualThresholdTrackBar_Scroll(object sender, EventArgs e)
+        {
+            if (_synchronizingDualThreshold)
+            {
+                return;
+            }
+
+            _synchronizingDualThreshold = true;
+            _numericDualThresholdLower.Value = _trackBarDualThresholdLower.Value;
+            _numericDualThresholdUpper.Value = _trackBarDualThresholdUpper.Value;
+            _synchronizingDualThreshold = false;
+            UpdateDualThresholdPreview();
+        }
+
+        private void DualThresholdNumeric_ValueChanged(object sender, EventArgs e)
+        {
+            if (_synchronizingDualThreshold)
+            {
+                return;
+            }
+
+            _synchronizingDualThreshold = true;
+            _trackBarDualThresholdLower.Value = (int)_numericDualThresholdLower.Value;
+            _trackBarDualThresholdUpper.Value = (int)_numericDualThresholdUpper.Value;
+            _synchronizingDualThreshold = false;
+            UpdateDualThresholdPreview();
+        }
+
+        private void DualThresholdControl_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateDualThresholdPreview();
         }
     }
 }
