@@ -53,7 +53,7 @@ namespace AoiMeasureTool
                 _referenceCornerFound = false;
                 _referenceCornerCandidate = null;
                 _referenceCornerEnabled = snapshot.Enabled;
-                _referenceSourceIndex = Math.Max(0, Math.Min(3, snapshot.SourceIndex));
+                _referenceSourceIndex = Math.Max(0, Math.Min(GetReferenceSourceCount() - 1, snapshot.SourceIndex));
                 _referenceRoiRectangle = ReferenceCornerSelectionService.NormalizeRectangle(snapshot.Roi);
                 _referenceRoiSaved = snapshot.RoiSaved && _referenceRoiRectangle.Width > 0 && _referenceRoiRectangle.Height > 0;
                 _referenceCornerFound = snapshot.CornerFound && _referenceRoiSaved;
@@ -81,6 +81,7 @@ namespace AoiMeasureTool
             comboBoxReferenceSource.Items.Add("前處理影像 2");
             comboBoxReferenceSource.Items.Add("前處理影像 3");
             comboBoxReferenceSource.Items.Add("前處理影像 4");
+            comboBoxReferenceSource.Items.Add("雙門檻影像");
             comboBoxReferenceSource.SelectedIndex = 0;
             _referenceSourceIndex = 0;
             _referenceCornerEnabled = false;
@@ -200,6 +201,19 @@ namespace AoiMeasureTool
 
         private Bitmap GetSelectedReferencePreviewBitmap()
         {
+            if (IsDualThresholdReferenceSource())
+            {
+                if (_pictureBoxDualThresholdPreview == null || _pictureBoxDualThresholdPreview.Image == null)
+                {
+                    return null;
+                }
+
+                var dualPreview = new Bitmap(_pictureBoxDualThresholdPreview.Image);
+                var annotatedDualPreview = TryAnnotateReferenceCornerPreview(dualPreview);
+                dualPreview.Dispose();
+                return annotatedDualPreview;
+            }
+
             if (_preprocessPictureBoxes == null || _referenceSourceIndex < 0 || _referenceSourceIndex >= _preprocessPictureBoxes.Length)
             {
                 return null;
@@ -248,14 +262,13 @@ namespace AoiMeasureTool
             _referenceCornerCandidate = null;
             var previousFound = _referenceCornerFound;
 
-            if (_preprocessPictureBoxes == null || _referenceSourceIndex < 0 || _referenceSourceIndex >= _preprocessPictureBoxes.Length)
+            if (!HasReferencePreviewSource())
             {
                 UpdateReferenceCornerFoundState(false, previousFound);
                 return;
             }
 
-            var source = _preprocessPictureBoxes[_referenceSourceIndex].Image;
-            if (source == null || _referenceRoiRectangle.Width <= 0 || _referenceRoiRectangle.Height <= 0)
+            if (_referenceRoiRectangle.Width <= 0 || _referenceRoiRectangle.Height <= 0)
             {
                 UpdateReferenceCornerFoundState(false, previousFound);
                 return;
@@ -281,6 +294,18 @@ namespace AoiMeasureTool
 
         private CvMat GetReferenceCornerDetectionBinary()
         {
+            if (IsDualThresholdReferenceSource())
+            {
+                var dualBinary = BuildDualThresholdBinary();
+                if (dualBinary == null || dualBinary.Empty())
+                {
+                    dualBinary?.Dispose();
+                    return null;
+                }
+
+                return dualBinary;
+            }
+
             if (_preprocessImages == null || _referenceSourceIndex < 0 || _referenceSourceIndex >= _preprocessImages.Length)
             {
                 return null;
@@ -293,6 +318,29 @@ namespace AoiMeasureTool
             }
 
             return source.Clone();
+        }
+
+        private bool HasReferencePreviewSource()
+        {
+            if (IsDualThresholdReferenceSource())
+            {
+                return _pictureBoxDualThresholdPreview != null && _pictureBoxDualThresholdPreview.Image != null;
+            }
+
+            return _preprocessPictureBoxes != null
+                && _referenceSourceIndex >= 0
+                && _referenceSourceIndex < _preprocessPictureBoxes.Length
+                && _preprocessPictureBoxes[_referenceSourceIndex].Image != null;
+        }
+
+        private bool IsDualThresholdReferenceSource()
+        {
+            return _referenceSourceIndex == GetReferenceSourceCount() - 1;
+        }
+
+        private int GetReferenceSourceCount()
+        {
+            return (_preprocessPictureBoxes?.Length ?? 4) + 1;
         }
 
         private Point GetReferenceDisplayPoint(Point imagePoint)

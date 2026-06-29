@@ -736,8 +736,14 @@ namespace AoiMeasureTool
                 _dualThresholdSavedPreviewTop = _pictureBoxDualThresholdPreview.Top;
             }
 
-            using (var binary = PreprocessPipelineService.Build(_grayImage, CreateDualThresholdParam()))
+            using (var binary = BuildDualThresholdBinary())
             {
+                if (binary == null || binary.Empty())
+                {
+                    SetPictureBoxImage(_pictureBoxDualThresholdPreview, null);
+                    return;
+                }
+
                 SetPictureBoxImage(_pictureBoxDualThresholdPreview, BitmapConverter.ToBitmap(binary));
             }
 
@@ -758,6 +764,16 @@ namespace AoiMeasureTool
                 _panelDualThresholdPreviewViewport,
                 ref _dualThresholdPreviewImageScale,
                 ref _dualThresholdPreviewFitScale);
+        }
+
+        private CvMat BuildDualThresholdBinary()
+        {
+            if (_grayImage == null || _grayImage.Empty() || _checkBoxDualThresholdEnabled == null || !_checkBoxDualThresholdEnabled.Checked)
+            {
+                return null;
+            }
+
+            return PreprocessPipelineService.Build(_grayImage, CreateDualThresholdParam());
         }
 
         private PreprocessParam CreateDualThresholdParam()
