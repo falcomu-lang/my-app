@@ -43,13 +43,13 @@ namespace AoiMeasureTool
             _tabPageBinarization2 = new TabPage
             {
                 Name = "tabPageBinarization2",
-                Text = "Dual Threshold",
+                Text = "二值化處理-2",
                 BackColor = tabPageBinarization.BackColor,
                 Padding = new Padding(3)
             };
 
             var panelOriginal = CreateDualThresholdImagePanel(
-                "Original",
+                "原始影像",
                 false,
                 out _pictureBoxDualThresholdOriginal,
                 out _panelDualThresholdOriginalViewport);
@@ -57,7 +57,7 @@ namespace AoiMeasureTool
             _tabPageBinarization2.Controls.Add(panelOriginal);
 
             var panelPreview = CreateDualThresholdImagePanel(
-                "Binary Result | Wheel zoom, left drag, right view original",
+                "雙門檻結果｜滾輪縮放、左鍵拖曳、右鍵看原圖",
                 true,
                 out _pictureBoxDualThresholdPreview,
                 out _panelDualThresholdPreviewViewport);
@@ -152,7 +152,7 @@ namespace AoiMeasureTool
                 AutoSize = true,
                 Font = new Font("Microsoft JhengHei UI", 10F, FontStyle.Bold),
                 Location = new Point(12, 10),
-                Text = "Dual Threshold Settings"
+                Text = "雙門檻設定"
             };
 
             _checkBoxDualThresholdEnabled = new CheckBox
@@ -160,11 +160,11 @@ namespace AoiMeasureTool
                 AutoSize = true,
                 Checked = true,
                 Location = new Point(16, 40),
-                Text = "Enabled"
+                Text = "啟用"
             };
             _checkBoxDualThresholdEnabled.CheckedChanged += DualThresholdControl_ValueChanged;
 
-            var labelLower = new Label { AutoSize = true, Location = new Point(16, 74), Text = "Lower" };
+            var labelLower = new Label { AutoSize = true, Location = new Point(16, 74), Text = "下門檻" };
             _trackBarDualThresholdLower = new TrackBar
             {
                 AutoSize = false,
@@ -187,7 +187,7 @@ namespace AoiMeasureTool
             };
             _numericDualThresholdLower.ValueChanged += DualThresholdNumeric_ValueChanged;
 
-            var labelUpper = new Label { AutoSize = true, Location = new Point(16, 114), Text = "Upper" };
+            var labelUpper = new Label { AutoSize = true, Location = new Point(16, 114), Text = "上門檻" };
             _trackBarDualThresholdUpper = new TrackBar
             {
                 AutoSize = false,
@@ -210,13 +210,13 @@ namespace AoiMeasureTool
             };
             _numericDualThresholdUpper.ValueChanged += DualThresholdNumeric_ValueChanged;
 
-            var labelErode = new Label { AutoSize = true, Location = new Point(16, 160), Text = "Erode" };
+            var labelErode = new Label { AutoSize = true, Location = new Point(16, 160), Text = "侵蝕" };
             _numericDualThresholdErode = CreateMorphologyNumeric(new Point(86, 156));
-            var labelDilate = new Label { AutoSize = true, Location = new Point(156, 160), Text = "Dilate" };
+            var labelDilate = new Label { AutoSize = true, Location = new Point(156, 160), Text = "膨脹" };
             _numericDualThresholdDilate = CreateMorphologyNumeric(new Point(226, 156));
-            var labelOpen = new Label { AutoSize = true, Location = new Point(16, 200), Text = "Open" };
+            var labelOpen = new Label { AutoSize = true, Location = new Point(16, 200), Text = "開運算" };
             _numericDualThresholdOpen = CreateMorphologyNumeric(new Point(86, 196));
-            var labelClose = new Label { AutoSize = true, Location = new Point(156, 200), Text = "Close" };
+            var labelClose = new Label { AutoSize = true, Location = new Point(156, 200), Text = "閉運算" };
             _numericDualThresholdClose = CreateMorphologyNumeric(new Point(226, 196));
 
             panel.Controls.Add(labelTitle);
@@ -254,10 +254,10 @@ namespace AoiMeasureTool
                 FlatStyle = FlatStyle.Flat,
                 Location = new Point(12, 9),
                 Size = new Size(168, 40),
-                Text = "Original Image",
+                Text = "讀取設定",
                 UseVisualStyleBackColor = false
             };
-            _buttonDualThresholdLoadOriginal.Click += DualThresholdLoadOriginal_Click;
+            _buttonDualThresholdLoadOriginal.Click += ButtonLoadSavedSettings_Click;
 
             _buttonDualThresholdLoadBinary = new Button
             {
@@ -266,10 +266,10 @@ namespace AoiMeasureTool
                 FlatStyle = FlatStyle.Flat,
                 Location = new Point(190, 9),
                 Size = new Size(168, 40),
-                Text = "Binary Result",
+                Text = "儲存目前設定",
                 UseVisualStyleBackColor = false
             };
-            _buttonDualThresholdLoadBinary.Click += DualThresholdLoadBinary_Click;
+            _buttonDualThresholdLoadBinary.Click += ButtonSaveCurrentSettings_Click;
 
             panel.Controls.Add(_buttonDualThresholdLoadOriginal);
             panel.Controls.Add(_buttonDualThresholdLoadBinary);
@@ -643,13 +643,13 @@ namespace AoiMeasureTool
                 return;
             }
 
-            if (pictureBoxBinaryOriginal.Image == null)
+            if (pictureBoxImage.Image == null)
             {
                 SetPictureBoxImage(_pictureBoxDualThresholdOriginal, null);
                 return;
             }
 
-            SetPictureBoxImage(_pictureBoxDualThresholdOriginal, new Bitmap(pictureBoxBinaryOriginal.Image));
+            SetPictureBoxImage(_pictureBoxDualThresholdOriginal, new Bitmap(pictureBoxImage.Image));
             PreprocessPreviewService.FitToViewport(
                 _pictureBoxDualThresholdOriginal,
                 _panelDualThresholdOriginalViewport,
@@ -752,7 +752,7 @@ namespace AoiMeasureTool
 
         private void DualThresholdLoadOriginal_Click(object sender, EventArgs e)
         {
-            if (_pictureBoxDualThresholdPreview == null || pictureBoxBinaryOriginal.Image == null)
+            if (_pictureBoxDualThresholdPreview == null || pictureBoxImage.Image == null)
             {
                 return;
             }
@@ -760,7 +760,7 @@ namespace AoiMeasureTool
             _dualThresholdSavedPreviewImageScale = _dualThresholdPreviewImageScale;
             _dualThresholdSavedPreviewLeft = _pictureBoxDualThresholdPreview.Left;
             _dualThresholdSavedPreviewTop = _pictureBoxDualThresholdPreview.Top;
-            SetPictureBoxImage(_pictureBoxDualThresholdPreview, new Bitmap(pictureBoxBinaryOriginal.Image));
+            SetPictureBoxImage(_pictureBoxDualThresholdPreview, new Bitmap(pictureBoxImage.Image));
             _dualThresholdPreviewImageScale = _dualThresholdSavedPreviewImageScale;
             _pictureBoxDualThresholdPreview.Size = new Size(
                 Math.Max(1, (int)Math.Round(_pictureBoxDualThresholdPreview.Image.Width * _dualThresholdPreviewImageScale)),

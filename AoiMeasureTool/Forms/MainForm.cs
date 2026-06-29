@@ -261,6 +261,7 @@ namespace AoiMeasureTool
                     displayImage = null;
                     oldImage?.Dispose();
                     SetPictureBoxImage(pictureBoxBinaryOriginal, binaryOriginalImage);
+                    UpdateDualThresholdOriginalImage();
                     FitImageToViewport();
 
                     _sourceImage?.Dispose();
@@ -698,6 +699,7 @@ namespace AoiMeasureTool
                 RefreshMeasureDistancePreview();
 
                 SetPictureBoxImage(pictureBoxBinaryOriginal, new Bitmap(bitmap));
+                UpdateDualThresholdOriginalImage();
                 labelImageInfo.Text = string.Format(
                     "{0}    {1} x {2} px",
                     Path.GetFileName(_lastImagePath),
