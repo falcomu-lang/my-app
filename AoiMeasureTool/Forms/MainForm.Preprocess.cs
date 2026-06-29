@@ -45,6 +45,62 @@ namespace AoiMeasureTool
                 return;
             }
 
+            if (pictureBoxDualThresholdOriginal != null &&
+                pictureBoxDualThresholdPreview != null &&
+                panelDualThresholdOriginalViewport != null &&
+                panelDualThresholdPreviewViewport != null &&
+                buttonDualThresholdLoadSettings != null &&
+                buttonDualThresholdSaveSettings != null)
+            {
+                _pictureBoxDualThresholdOriginal = pictureBoxDualThresholdOriginal;
+                _pictureBoxDualThresholdPreview = pictureBoxDualThresholdPreview;
+                _panelDualThresholdOriginalViewport = panelDualThresholdOriginalViewport;
+                _panelDualThresholdPreviewViewport = panelDualThresholdPreviewViewport;
+                _buttonDualThresholdLoadOriginal = buttonDualThresholdLoadSettings;
+                _buttonDualThresholdLoadBinary = buttonDualThresholdSaveSettings;
+                _numericDualThresholdLower = numericDualThresholdLower;
+                _numericDualThresholdUpper = numericDualThresholdUpper;
+                _trackBarDualThresholdLower = trackBarDualThresholdLower;
+                _trackBarDualThresholdUpper = trackBarDualThresholdUpper;
+                _checkBoxDualThresholdEnabled = checkBoxDualThresholdEnabled;
+                _numericDualThresholdErode = numericDualThresholdErode;
+                _numericDualThresholdDilate = numericDualThresholdDilate;
+                _numericDualThresholdOpen = numericDualThresholdOpen;
+                _numericDualThresholdClose = numericDualThresholdClose;
+
+                _panelDualThresholdOriginalViewport.MouseEnter += DualThresholdOriginalViewport_MouseEnter;
+                _panelDualThresholdOriginalViewport.MouseWheel += DualThresholdOriginalViewport_MouseWheel;
+                _pictureBoxDualThresholdOriginal.MouseEnter += DualThresholdOriginalViewport_MouseEnter;
+                _pictureBoxDualThresholdOriginal.MouseWheel += DualThresholdOriginalViewport_MouseWheel;
+                _pictureBoxDualThresholdOriginal.MouseDown += DualThresholdOriginal_MouseDown;
+                _pictureBoxDualThresholdOriginal.MouseMove += DualThresholdOriginal_MouseMove;
+                _pictureBoxDualThresholdOriginal.MouseUp += DualThresholdOriginal_MouseUp;
+
+                _panelDualThresholdPreviewViewport.MouseEnter += DualThresholdPreviewViewport_MouseEnter;
+                _panelDualThresholdPreviewViewport.MouseWheel += DualThresholdPreviewViewport_MouseWheel;
+                _pictureBoxDualThresholdPreview.MouseEnter += DualThresholdPreviewViewport_MouseEnter;
+                _pictureBoxDualThresholdPreview.MouseWheel += DualThresholdPreviewViewport_MouseWheel;
+                _pictureBoxDualThresholdPreview.MouseDown += DualThresholdPreview_MouseDown;
+                _pictureBoxDualThresholdPreview.MouseMove += DualThresholdPreview_MouseMove;
+                _pictureBoxDualThresholdPreview.MouseUp += DualThresholdPreview_MouseUp;
+
+                _buttonDualThresholdLoadOriginal.Click += ButtonLoadSavedSettings_Click;
+                _buttonDualThresholdLoadBinary.Click += ButtonSaveCurrentSettings_Click;
+                _checkBoxDualThresholdEnabled.CheckedChanged += DualThresholdControl_ValueChanged;
+                _trackBarDualThresholdLower.Scroll += DualThresholdTrackBar_Scroll;
+                _trackBarDualThresholdUpper.Scroll += DualThresholdTrackBar_Scroll;
+                _numericDualThresholdLower.ValueChanged += DualThresholdNumeric_ValueChanged;
+                _numericDualThresholdUpper.ValueChanged += DualThresholdNumeric_ValueChanged;
+                _numericDualThresholdErode.ValueChanged += DualThresholdControl_ValueChanged;
+                _numericDualThresholdDilate.ValueChanged += DualThresholdControl_ValueChanged;
+                _numericDualThresholdOpen.ValueChanged += DualThresholdControl_ValueChanged;
+                _numericDualThresholdClose.ValueChanged += DualThresholdControl_ValueChanged;
+
+                UpdateDualThresholdOriginalImage();
+                UpdateDualThresholdPreview();
+                return;
+            }
+
             tabPageBinarization2.SuspendLayout();
             tabPageBinarization2.Controls.Clear();
             tabPageBinarization2.BackColor = tabPageBinarization.BackColor;

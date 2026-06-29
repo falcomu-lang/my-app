@@ -173,6 +173,34 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Panel panelPreprocessActions;
         private System.Windows.Forms.Button buttonLoadSavedSettings;
         private System.Windows.Forms.Button buttonSaveCurrentSettings;
+        private System.Windows.Forms.Panel panelDualThresholdOriginal;
+        private System.Windows.Forms.Label labelDualThresholdOriginal;
+        private System.Windows.Forms.Panel panelDualThresholdOriginalViewport;
+        private System.Windows.Forms.PictureBox pictureBoxDualThresholdOriginal;
+        private System.Windows.Forms.Panel panelDualThresholdPreview;
+        private System.Windows.Forms.Label labelDualThresholdPreview;
+        private System.Windows.Forms.Panel panelDualThresholdPreviewViewport;
+        private System.Windows.Forms.PictureBox pictureBoxDualThresholdPreview;
+        private System.Windows.Forms.Panel panelDualThresholdControls;
+        private System.Windows.Forms.Label labelDualThresholdSettings;
+        private System.Windows.Forms.CheckBox checkBoxDualThresholdEnabled;
+        private System.Windows.Forms.Label labelDualThresholdLower;
+        private System.Windows.Forms.TrackBar trackBarDualThresholdLower;
+        private System.Windows.Forms.NumericUpDown numericDualThresholdLower;
+        private System.Windows.Forms.Label labelDualThresholdUpper;
+        private System.Windows.Forms.TrackBar trackBarDualThresholdUpper;
+        private System.Windows.Forms.NumericUpDown numericDualThresholdUpper;
+        private System.Windows.Forms.Label labelDualThresholdErode;
+        private System.Windows.Forms.NumericUpDown numericDualThresholdErode;
+        private System.Windows.Forms.Label labelDualThresholdDilate;
+        private System.Windows.Forms.NumericUpDown numericDualThresholdDilate;
+        private System.Windows.Forms.Label labelDualThresholdOpen;
+        private System.Windows.Forms.NumericUpDown numericDualThresholdOpen;
+        private System.Windows.Forms.Label labelDualThresholdClose;
+        private System.Windows.Forms.NumericUpDown numericDualThresholdClose;
+        private System.Windows.Forms.Panel panelDualThresholdActions;
+        private System.Windows.Forms.Button buttonDualThresholdLoadSettings;
+        private System.Windows.Forms.Button buttonDualThresholdSaveSettings;
         private System.Windows.Forms.OpenFileDialog openFileDialogImage;
 
         protected override void Dispose(bool disposing)
@@ -216,6 +244,34 @@ namespace AoiMeasureTool
             this.pictureBoxImage = new System.Windows.Forms.PictureBox();
             this.tabPageBinarization = new System.Windows.Forms.TabPage();
             this.tabPageBinarization2 = new System.Windows.Forms.TabPage();
+            this.panelDualThresholdOriginal = new System.Windows.Forms.Panel();
+            this.labelDualThresholdOriginal = new System.Windows.Forms.Label();
+            this.panelDualThresholdOriginalViewport = new System.Windows.Forms.Panel();
+            this.pictureBoxDualThresholdOriginal = new System.Windows.Forms.PictureBox();
+            this.panelDualThresholdPreview = new System.Windows.Forms.Panel();
+            this.labelDualThresholdPreview = new System.Windows.Forms.Label();
+            this.panelDualThresholdPreviewViewport = new System.Windows.Forms.Panel();
+            this.pictureBoxDualThresholdPreview = new System.Windows.Forms.PictureBox();
+            this.panelDualThresholdControls = new System.Windows.Forms.Panel();
+            this.labelDualThresholdSettings = new System.Windows.Forms.Label();
+            this.checkBoxDualThresholdEnabled = new System.Windows.Forms.CheckBox();
+            this.labelDualThresholdLower = new System.Windows.Forms.Label();
+            this.trackBarDualThresholdLower = new System.Windows.Forms.TrackBar();
+            this.numericDualThresholdLower = new System.Windows.Forms.NumericUpDown();
+            this.labelDualThresholdUpper = new System.Windows.Forms.Label();
+            this.trackBarDualThresholdUpper = new System.Windows.Forms.TrackBar();
+            this.numericDualThresholdUpper = new System.Windows.Forms.NumericUpDown();
+            this.labelDualThresholdErode = new System.Windows.Forms.Label();
+            this.numericDualThresholdErode = new System.Windows.Forms.NumericUpDown();
+            this.labelDualThresholdDilate = new System.Windows.Forms.Label();
+            this.numericDualThresholdDilate = new System.Windows.Forms.NumericUpDown();
+            this.labelDualThresholdOpen = new System.Windows.Forms.Label();
+            this.numericDualThresholdOpen = new System.Windows.Forms.NumericUpDown();
+            this.labelDualThresholdClose = new System.Windows.Forms.Label();
+            this.numericDualThresholdClose = new System.Windows.Forms.NumericUpDown();
+            this.panelDualThresholdActions = new System.Windows.Forms.Panel();
+            this.buttonDualThresholdLoadSettings = new System.Windows.Forms.Button();
+            this.buttonDualThresholdSaveSettings = new System.Windows.Forms.Button();
             this.panelBinaryOriginal = new System.Windows.Forms.Panel();
             this.labelBinaryOriginal = new System.Windows.Forms.Label();
             this.pictureBoxBinaryOriginal = new System.Windows.Forms.PictureBox();
@@ -367,6 +423,22 @@ namespace AoiMeasureTool
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxImage)).BeginInit();
             this.tabPageBinarization.SuspendLayout();
             this.tabPageBinarization2.SuspendLayout();
+            this.panelDualThresholdOriginal.SuspendLayout();
+            this.panelDualThresholdOriginalViewport.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDualThresholdOriginal)).BeginInit();
+            this.panelDualThresholdPreview.SuspendLayout();
+            this.panelDualThresholdPreviewViewport.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDualThresholdPreview)).BeginInit();
+            this.panelDualThresholdControls.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarDualThresholdLower)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDualThresholdLower)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarDualThresholdUpper)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDualThresholdUpper)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDualThresholdErode)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDualThresholdDilate)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDualThresholdOpen)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDualThresholdClose)).BeginInit();
+            this.panelDualThresholdActions.SuspendLayout();
             this.panelBinaryOriginal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBinaryOriginal)).BeginInit();
             this.panelActivePreprocess.SuspendLayout();
@@ -773,12 +845,337 @@ namespace AoiMeasureTool
             // tabPageBinarization2
             // 
             this.tabPageBinarization2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
+            this.tabPageBinarization2.Controls.Add(this.panelDualThresholdOriginal);
+            this.tabPageBinarization2.Controls.Add(this.panelDualThresholdPreview);
+            this.tabPageBinarization2.Controls.Add(this.panelDualThresholdControls);
+            this.tabPageBinarization2.Controls.Add(this.panelDualThresholdActions);
             this.tabPageBinarization2.Location = new System.Drawing.Point(4, 26);
             this.tabPageBinarization2.Name = "tabPageBinarization2";
             this.tabPageBinarization2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPageBinarization2.Size = new System.Drawing.Size(1032, 656);
             this.tabPageBinarization2.TabIndex = 6;
             this.tabPageBinarization2.Text = "二值化處理-2";
+            // 
+            // panelDualThresholdOriginal
+            // 
+            this.panelDualThresholdOriginal.BackColor = System.Drawing.Color.White;
+            this.panelDualThresholdOriginal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelDualThresholdOriginal.Controls.Add(this.labelDualThresholdOriginal);
+            this.panelDualThresholdOriginal.Controls.Add(this.panelDualThresholdOriginalViewport);
+            this.panelDualThresholdOriginal.Location = new System.Drawing.Point(20, 20);
+            this.panelDualThresholdOriginal.Name = "panelDualThresholdOriginal";
+            this.panelDualThresholdOriginal.Size = new System.Drawing.Size(300, 280);
+            this.panelDualThresholdOriginal.TabIndex = 0;
+            // 
+            // labelDualThresholdOriginal
+            // 
+            this.labelDualThresholdOriginal.AutoSize = true;
+            this.labelDualThresholdOriginal.Font = new System.Drawing.Font("Microsoft JhengHei UI", 10F, System.Drawing.FontStyle.Bold);
+            this.labelDualThresholdOriginal.Location = new System.Drawing.Point(10, 8);
+            this.labelDualThresholdOriginal.Name = "labelDualThresholdOriginal";
+            this.labelDualThresholdOriginal.Size = new System.Drawing.Size(64, 18);
+            this.labelDualThresholdOriginal.TabIndex = 0;
+            this.labelDualThresholdOriginal.Text = "原始影像";
+            // 
+            // panelDualThresholdOriginalViewport
+            // 
+            this.panelDualThresholdOriginalViewport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(234)))), ((int)(((byte)(236)))));
+            this.panelDualThresholdOriginalViewport.Controls.Add(this.pictureBoxDualThresholdOriginal);
+            this.panelDualThresholdOriginalViewport.Location = new System.Drawing.Point(10, 34);
+            this.panelDualThresholdOriginalViewport.Name = "panelDualThresholdOriginalViewport";
+            this.panelDualThresholdOriginalViewport.Size = new System.Drawing.Size(278, 234);
+            this.panelDualThresholdOriginalViewport.TabIndex = 1;
+            this.panelDualThresholdOriginalViewport.TabStop = true;
+            // 
+            // pictureBoxDualThresholdOriginal
+            // 
+            this.pictureBoxDualThresholdOriginal.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(234)))), ((int)(((byte)(236)))));
+            this.pictureBoxDualThresholdOriginal.Location = new System.Drawing.Point(0, 0);
+            this.pictureBoxDualThresholdOriginal.Name = "pictureBoxDualThresholdOriginal";
+            this.pictureBoxDualThresholdOriginal.Size = new System.Drawing.Size(278, 234);
+            this.pictureBoxDualThresholdOriginal.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxDualThresholdOriginal.TabIndex = 0;
+            this.pictureBoxDualThresholdOriginal.TabStop = false;
+            // 
+            // panelDualThresholdPreview
+            // 
+            this.panelDualThresholdPreview.BackColor = System.Drawing.Color.White;
+            this.panelDualThresholdPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelDualThresholdPreview.Controls.Add(this.labelDualThresholdPreview);
+            this.panelDualThresholdPreview.Controls.Add(this.panelDualThresholdPreviewViewport);
+            this.panelDualThresholdPreview.Location = new System.Drawing.Point(366, 20);
+            this.panelDualThresholdPreview.Name = "panelDualThresholdPreview";
+            this.panelDualThresholdPreview.Size = new System.Drawing.Size(300, 280);
+            this.panelDualThresholdPreview.TabIndex = 1;
+            // 
+            // labelDualThresholdPreview
+            // 
+            this.labelDualThresholdPreview.AutoSize = true;
+            this.labelDualThresholdPreview.Font = new System.Drawing.Font("Microsoft JhengHei UI", 10F, System.Drawing.FontStyle.Bold);
+            this.labelDualThresholdPreview.Location = new System.Drawing.Point(10, 8);
+            this.labelDualThresholdPreview.Name = "labelDualThresholdPreview";
+            this.labelDualThresholdPreview.Size = new System.Drawing.Size(286, 18);
+            this.labelDualThresholdPreview.TabIndex = 0;
+            this.labelDualThresholdPreview.Text = "雙門檻結果｜滾輪縮放、左鍵拖曳、右鍵看原圖";
+            // 
+            // panelDualThresholdPreviewViewport
+            // 
+            this.panelDualThresholdPreviewViewport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(234)))), ((int)(((byte)(236)))));
+            this.panelDualThresholdPreviewViewport.Controls.Add(this.pictureBoxDualThresholdPreview);
+            this.panelDualThresholdPreviewViewport.Location = new System.Drawing.Point(10, 34);
+            this.panelDualThresholdPreviewViewport.Name = "panelDualThresholdPreviewViewport";
+            this.panelDualThresholdPreviewViewport.Size = new System.Drawing.Size(278, 234);
+            this.panelDualThresholdPreviewViewport.TabIndex = 1;
+            this.panelDualThresholdPreviewViewport.TabStop = true;
+            // 
+            // pictureBoxDualThresholdPreview
+            // 
+            this.pictureBoxDualThresholdPreview.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(234)))), ((int)(((byte)(236)))));
+            this.pictureBoxDualThresholdPreview.Location = new System.Drawing.Point(0, 0);
+            this.pictureBoxDualThresholdPreview.Name = "pictureBoxDualThresholdPreview";
+            this.pictureBoxDualThresholdPreview.Size = new System.Drawing.Size(278, 234);
+            this.pictureBoxDualThresholdPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxDualThresholdPreview.TabIndex = 0;
+            this.pictureBoxDualThresholdPreview.TabStop = false;
+            // 
+            // panelDualThresholdControls
+            // 
+            this.panelDualThresholdControls.BackColor = System.Drawing.Color.White;
+            this.panelDualThresholdControls.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelDualThresholdControls.Controls.Add(this.labelDualThresholdSettings);
+            this.panelDualThresholdControls.Controls.Add(this.checkBoxDualThresholdEnabled);
+            this.panelDualThresholdControls.Controls.Add(this.labelDualThresholdLower);
+            this.panelDualThresholdControls.Controls.Add(this.trackBarDualThresholdLower);
+            this.panelDualThresholdControls.Controls.Add(this.numericDualThresholdLower);
+            this.panelDualThresholdControls.Controls.Add(this.labelDualThresholdUpper);
+            this.panelDualThresholdControls.Controls.Add(this.trackBarDualThresholdUpper);
+            this.panelDualThresholdControls.Controls.Add(this.numericDualThresholdUpper);
+            this.panelDualThresholdControls.Controls.Add(this.labelDualThresholdErode);
+            this.panelDualThresholdControls.Controls.Add(this.numericDualThresholdErode);
+            this.panelDualThresholdControls.Controls.Add(this.labelDualThresholdDilate);
+            this.panelDualThresholdControls.Controls.Add(this.numericDualThresholdDilate);
+            this.panelDualThresholdControls.Controls.Add(this.labelDualThresholdOpen);
+            this.panelDualThresholdControls.Controls.Add(this.numericDualThresholdOpen);
+            this.panelDualThresholdControls.Controls.Add(this.labelDualThresholdClose);
+            this.panelDualThresholdControls.Controls.Add(this.numericDualThresholdClose);
+            this.panelDualThresholdControls.Location = new System.Drawing.Point(712, 20);
+            this.panelDualThresholdControls.Name = "panelDualThresholdControls";
+            this.panelDualThresholdControls.Size = new System.Drawing.Size(300, 280);
+            this.panelDualThresholdControls.TabIndex = 2;
+            // 
+            // labelDualThresholdSettings
+            // 
+            this.labelDualThresholdSettings.AutoSize = true;
+            this.labelDualThresholdSettings.Font = new System.Drawing.Font("Microsoft JhengHei UI", 10F, System.Drawing.FontStyle.Bold);
+            this.labelDualThresholdSettings.Location = new System.Drawing.Point(12, 10);
+            this.labelDualThresholdSettings.Name = "labelDualThresholdSettings";
+            this.labelDualThresholdSettings.Size = new System.Drawing.Size(78, 18);
+            this.labelDualThresholdSettings.TabIndex = 0;
+            this.labelDualThresholdSettings.Text = "雙門檻設定";
+            // 
+            // checkBoxDualThresholdEnabled
+            // 
+            this.checkBoxDualThresholdEnabled.AutoSize = true;
+            this.checkBoxDualThresholdEnabled.Checked = true;
+            this.checkBoxDualThresholdEnabled.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxDualThresholdEnabled.Location = new System.Drawing.Point(16, 40);
+            this.checkBoxDualThresholdEnabled.Name = "checkBoxDualThresholdEnabled";
+            this.checkBoxDualThresholdEnabled.Size = new System.Drawing.Size(54, 22);
+            this.checkBoxDualThresholdEnabled.TabIndex = 1;
+            this.checkBoxDualThresholdEnabled.Text = "啟用";
+            this.checkBoxDualThresholdEnabled.UseVisualStyleBackColor = true;
+            // 
+            // labelDualThresholdLower
+            // 
+            this.labelDualThresholdLower.AutoSize = true;
+            this.labelDualThresholdLower.Location = new System.Drawing.Point(16, 74);
+            this.labelDualThresholdLower.Name = "labelDualThresholdLower";
+            this.labelDualThresholdLower.Size = new System.Drawing.Size(50, 18);
+            this.labelDualThresholdLower.TabIndex = 2;
+            this.labelDualThresholdLower.Text = "下門檻";
+            // 
+            // trackBarDualThresholdLower
+            // 
+            this.trackBarDualThresholdLower.AutoSize = false;
+            this.trackBarDualThresholdLower.Location = new System.Drawing.Point(86, 68);
+            this.trackBarDualThresholdLower.Maximum = 255;
+            this.trackBarDualThresholdLower.Name = "trackBarDualThresholdLower";
+            this.trackBarDualThresholdLower.Size = new System.Drawing.Size(140, 30);
+            this.trackBarDualThresholdLower.TabIndex = 3;
+            this.trackBarDualThresholdLower.TickFrequency = 5;
+            this.trackBarDualThresholdLower.Value = 80;
+            // 
+            // numericDualThresholdLower
+            // 
+            this.numericDualThresholdLower.Location = new System.Drawing.Point(232, 70);
+            this.numericDualThresholdLower.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericDualThresholdLower.Name = "numericDualThresholdLower";
+            this.numericDualThresholdLower.Size = new System.Drawing.Size(52, 25);
+            this.numericDualThresholdLower.TabIndex = 4;
+            this.numericDualThresholdLower.Value = new decimal(new int[] {
+            80,
+            0,
+            0,
+            0});
+            // 
+            // labelDualThresholdUpper
+            // 
+            this.labelDualThresholdUpper.AutoSize = true;
+            this.labelDualThresholdUpper.Location = new System.Drawing.Point(16, 114);
+            this.labelDualThresholdUpper.Name = "labelDualThresholdUpper";
+            this.labelDualThresholdUpper.Size = new System.Drawing.Size(50, 18);
+            this.labelDualThresholdUpper.TabIndex = 5;
+            this.labelDualThresholdUpper.Text = "上門檻";
+            // 
+            // trackBarDualThresholdUpper
+            // 
+            this.trackBarDualThresholdUpper.AutoSize = false;
+            this.trackBarDualThresholdUpper.Location = new System.Drawing.Point(86, 108);
+            this.trackBarDualThresholdUpper.Maximum = 255;
+            this.trackBarDualThresholdUpper.Name = "trackBarDualThresholdUpper";
+            this.trackBarDualThresholdUpper.Size = new System.Drawing.Size(140, 30);
+            this.trackBarDualThresholdUpper.TabIndex = 6;
+            this.trackBarDualThresholdUpper.TickFrequency = 5;
+            this.trackBarDualThresholdUpper.Value = 180;
+            // 
+            // numericDualThresholdUpper
+            // 
+            this.numericDualThresholdUpper.Location = new System.Drawing.Point(232, 110);
+            this.numericDualThresholdUpper.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericDualThresholdUpper.Name = "numericDualThresholdUpper";
+            this.numericDualThresholdUpper.Size = new System.Drawing.Size(52, 25);
+            this.numericDualThresholdUpper.TabIndex = 7;
+            this.numericDualThresholdUpper.Value = new decimal(new int[] {
+            180,
+            0,
+            0,
+            0});
+            // 
+            // labelDualThresholdErode
+            // 
+            this.labelDualThresholdErode.AutoSize = true;
+            this.labelDualThresholdErode.Location = new System.Drawing.Point(16, 160);
+            this.labelDualThresholdErode.Name = "labelDualThresholdErode";
+            this.labelDualThresholdErode.Size = new System.Drawing.Size(36, 18);
+            this.labelDualThresholdErode.TabIndex = 8;
+            this.labelDualThresholdErode.Text = "侵蝕";
+            // 
+            // numericDualThresholdErode
+            // 
+            this.numericDualThresholdErode.Location = new System.Drawing.Point(86, 156);
+            this.numericDualThresholdErode.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.numericDualThresholdErode.Name = "numericDualThresholdErode";
+            this.numericDualThresholdErode.Size = new System.Drawing.Size(52, 25);
+            this.numericDualThresholdErode.TabIndex = 9;
+            // 
+            // labelDualThresholdDilate
+            // 
+            this.labelDualThresholdDilate.AutoSize = true;
+            this.labelDualThresholdDilate.Location = new System.Drawing.Point(156, 160);
+            this.labelDualThresholdDilate.Name = "labelDualThresholdDilate";
+            this.labelDualThresholdDilate.Size = new System.Drawing.Size(36, 18);
+            this.labelDualThresholdDilate.TabIndex = 10;
+            this.labelDualThresholdDilate.Text = "膨脹";
+            // 
+            // numericDualThresholdDilate
+            // 
+            this.numericDualThresholdDilate.Location = new System.Drawing.Point(226, 156);
+            this.numericDualThresholdDilate.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.numericDualThresholdDilate.Name = "numericDualThresholdDilate";
+            this.numericDualThresholdDilate.Size = new System.Drawing.Size(52, 25);
+            this.numericDualThresholdDilate.TabIndex = 11;
+            // 
+            // labelDualThresholdOpen
+            // 
+            this.labelDualThresholdOpen.AutoSize = true;
+            this.labelDualThresholdOpen.Location = new System.Drawing.Point(16, 200);
+            this.labelDualThresholdOpen.Name = "labelDualThresholdOpen";
+            this.labelDualThresholdOpen.Size = new System.Drawing.Size(50, 18);
+            this.labelDualThresholdOpen.TabIndex = 12;
+            this.labelDualThresholdOpen.Text = "開運算";
+            // 
+            // numericDualThresholdOpen
+            // 
+            this.numericDualThresholdOpen.Location = new System.Drawing.Point(86, 196);
+            this.numericDualThresholdOpen.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.numericDualThresholdOpen.Name = "numericDualThresholdOpen";
+            this.numericDualThresholdOpen.Size = new System.Drawing.Size(52, 25);
+            this.numericDualThresholdOpen.TabIndex = 13;
+            // 
+            // labelDualThresholdClose
+            // 
+            this.labelDualThresholdClose.AutoSize = true;
+            this.labelDualThresholdClose.Location = new System.Drawing.Point(156, 200);
+            this.labelDualThresholdClose.Name = "labelDualThresholdClose";
+            this.labelDualThresholdClose.Size = new System.Drawing.Size(50, 18);
+            this.labelDualThresholdClose.TabIndex = 14;
+            this.labelDualThresholdClose.Text = "閉運算";
+            // 
+            // numericDualThresholdClose
+            // 
+            this.numericDualThresholdClose.Location = new System.Drawing.Point(226, 196);
+            this.numericDualThresholdClose.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.numericDualThresholdClose.Name = "numericDualThresholdClose";
+            this.numericDualThresholdClose.Size = new System.Drawing.Size(52, 25);
+            this.numericDualThresholdClose.TabIndex = 15;
+            // 
+            // panelDualThresholdActions
+            // 
+            this.panelDualThresholdActions.BackColor = System.Drawing.Color.Transparent;
+            this.panelDualThresholdActions.Controls.Add(this.buttonDualThresholdLoadSettings);
+            this.panelDualThresholdActions.Controls.Add(this.buttonDualThresholdSaveSettings);
+            this.panelDualThresholdActions.Location = new System.Drawing.Point(20, 574);
+            this.panelDualThresholdActions.Name = "panelDualThresholdActions";
+            this.panelDualThresholdActions.Size = new System.Drawing.Size(370, 58);
+            this.panelDualThresholdActions.TabIndex = 3;
+            // 
+            // buttonDualThresholdLoadSettings
+            // 
+            this.buttonDualThresholdLoadSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonDualThresholdLoadSettings.FlatAppearance.BorderSize = 0;
+            this.buttonDualThresholdLoadSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonDualThresholdLoadSettings.Location = new System.Drawing.Point(12, 9);
+            this.buttonDualThresholdLoadSettings.Name = "buttonDualThresholdLoadSettings";
+            this.buttonDualThresholdLoadSettings.Size = new System.Drawing.Size(168, 40);
+            this.buttonDualThresholdLoadSettings.TabIndex = 0;
+            this.buttonDualThresholdLoadSettings.Text = "讀取設定";
+            this.buttonDualThresholdLoadSettings.UseVisualStyleBackColor = false;
+            // 
+            // buttonDualThresholdSaveSettings
+            // 
+            this.buttonDualThresholdSaveSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonDualThresholdSaveSettings.FlatAppearance.BorderSize = 0;
+            this.buttonDualThresholdSaveSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonDualThresholdSaveSettings.Location = new System.Drawing.Point(190, 9);
+            this.buttonDualThresholdSaveSettings.Name = "buttonDualThresholdSaveSettings";
+            this.buttonDualThresholdSaveSettings.Size = new System.Drawing.Size(168, 40);
+            this.buttonDualThresholdSaveSettings.TabIndex = 1;
+            this.buttonDualThresholdSaveSettings.Text = "儲存目前設定";
+            this.buttonDualThresholdSaveSettings.UseVisualStyleBackColor = false;
             // 
             // panelBinaryOriginal
             // 
@@ -2434,6 +2831,25 @@ namespace AoiMeasureTool
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxImage)).EndInit();
             this.tabPageBinarization.ResumeLayout(false);
             this.tabPageBinarization2.ResumeLayout(false);
+            this.panelDualThresholdOriginal.ResumeLayout(false);
+            this.panelDualThresholdOriginal.PerformLayout();
+            this.panelDualThresholdOriginalViewport.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDualThresholdOriginal)).EndInit();
+            this.panelDualThresholdPreview.ResumeLayout(false);
+            this.panelDualThresholdPreview.PerformLayout();
+            this.panelDualThresholdPreviewViewport.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDualThresholdPreview)).EndInit();
+            this.panelDualThresholdControls.ResumeLayout(false);
+            this.panelDualThresholdControls.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarDualThresholdLower)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDualThresholdLower)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarDualThresholdUpper)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDualThresholdUpper)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDualThresholdErode)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDualThresholdDilate)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDualThresholdOpen)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericDualThresholdClose)).EndInit();
+            this.panelDualThresholdActions.ResumeLayout(false);
             this.panelBinaryOriginal.ResumeLayout(false);
             this.panelBinaryOriginal.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBinaryOriginal)).EndInit();
