@@ -523,10 +523,10 @@ namespace AoiMeasureTool
             }
 
             ApplyProductProfile(state.PreprocessSnapshots);
+            ApplyDualThresholdSnapshot(state.DualThresholdSnapshot);
             ApplyReferenceCornerProfile(state.ReferenceCornerSnapshot);
             ApplyMeasureProfile(state.MeasureRecords);
             ApplyJudgementCriteriaProfile(state.JudgementCriteriaRules);
-            ApplyDualThresholdSnapshot(state.DualThresholdSnapshot);
         }
 
         private void ApplyProductProfile(PreprocessSnapshot[] snapshots)
