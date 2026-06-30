@@ -37,9 +37,10 @@ namespace AoiMeasureTool
         private System.Windows.Forms.TabPage tabPageInnerSettings;
         private System.Windows.Forms.TabPage tabPageJudgementCriteria;
         private System.Windows.Forms.TabPage tabPageDetectionParameterSummary;
-        private System.Windows.Forms.Label labelDetectionParameterSummaryTitle;
         private System.Windows.Forms.Panel panelDetectionParameterSummary;
-        private System.Windows.Forms.Label labelDetectionParameterSummaryHint;
+        private System.Windows.Forms.GroupBox groupBoxDetectionParameterCreate;
+        private System.Windows.Forms.TextBox textBoxDetectionMainParameterName;
+        private System.Windows.Forms.Button buttonDetectionMainParameterConfirm;
         private System.Windows.Forms.Label labelWorkspace;
         private System.Windows.Forms.Label labelInnerSettingsTitle;
         private System.Windows.Forms.Panel panelInnerSettings;
@@ -375,9 +376,10 @@ namespace AoiMeasureTool
             this.buttonSaveInnerSettings = new System.Windows.Forms.Button();
             this.tabPageJudgementCriteria = new System.Windows.Forms.TabPage();
             this.tabPageDetectionParameterSummary = new System.Windows.Forms.TabPage();
-            this.labelDetectionParameterSummaryTitle = new System.Windows.Forms.Label();
             this.panelDetectionParameterSummary = new System.Windows.Forms.Panel();
-            this.labelDetectionParameterSummaryHint = new System.Windows.Forms.Label();
+            this.groupBoxDetectionParameterCreate = new System.Windows.Forms.GroupBox();
+            this.buttonDetectionMainParameterConfirm = new System.Windows.Forms.Button();
+            this.textBoxDetectionMainParameterName = new System.Windows.Forms.TextBox();
             this.labelJudgementCriteriaTitle = new System.Windows.Forms.Label();
             this.panelJudgementCriteria = new System.Windows.Forms.Panel();
             this.labelJudgementName = new System.Windows.Forms.Label();
@@ -2320,7 +2322,6 @@ namespace AoiMeasureTool
             // tabPageDetectionParameterSummary
             // 
             this.tabPageDetectionParameterSummary.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
-            this.tabPageDetectionParameterSummary.Controls.Add(this.labelDetectionParameterSummaryTitle);
             this.tabPageDetectionParameterSummary.Controls.Add(this.panelDetectionParameterSummary);
             this.tabPageDetectionParameterSummary.Location = new System.Drawing.Point(4, 26);
             this.tabPageDetectionParameterSummary.Name = "tabPageDetectionParameterSummary";
@@ -2329,37 +2330,46 @@ namespace AoiMeasureTool
             this.tabPageDetectionParameterSummary.TabIndex = 6;
             this.tabPageDetectionParameterSummary.Text = "檢測參數整理";
             // 
-            // labelDetectionParameterSummaryTitle
-            // 
-            this.labelDetectionParameterSummaryTitle.AutoSize = true;
-            this.labelDetectionParameterSummaryTitle.Font = new System.Drawing.Font("Microsoft JhengHei UI", 18F, System.Drawing.FontStyle.Bold);
-            this.labelDetectionParameterSummaryTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(52)))), ((int)(((byte)(54)))));
-            this.labelDetectionParameterSummaryTitle.Location = new System.Drawing.Point(28, 24);
-            this.labelDetectionParameterSummaryTitle.Name = "labelDetectionParameterSummaryTitle";
-            this.labelDetectionParameterSummaryTitle.Size = new System.Drawing.Size(183, 38);
-            this.labelDetectionParameterSummaryTitle.TabIndex = 0;
-            this.labelDetectionParameterSummaryTitle.Text = "檢測參數整理";
-            // 
             // panelDetectionParameterSummary
             // 
-            this.panelDetectionParameterSummary.BackColor = System.Drawing.Color.White;
-            this.panelDetectionParameterSummary.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelDetectionParameterSummary.Controls.Add(this.labelDetectionParameterSummaryHint);
-            this.panelDetectionParameterSummary.Location = new System.Drawing.Point(35, 78);
+            this.panelDetectionParameterSummary.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
+            this.panelDetectionParameterSummary.Controls.Add(this.groupBoxDetectionParameterCreate);
+            this.panelDetectionParameterSummary.Location = new System.Drawing.Point(0, 0);
             this.panelDetectionParameterSummary.Name = "panelDetectionParameterSummary";
-            this.panelDetectionParameterSummary.Size = new System.Drawing.Size(962, 543);
-            this.panelDetectionParameterSummary.TabIndex = 1;
+            this.panelDetectionParameterSummary.Size = new System.Drawing.Size(1026, 650);
+            this.panelDetectionParameterSummary.TabIndex = 0;
             // 
-            // labelDetectionParameterSummaryHint
+            // groupBoxDetectionParameterCreate
             // 
-            this.labelDetectionParameterSummaryHint.AutoSize = true;
-            this.labelDetectionParameterSummaryHint.Font = new System.Drawing.Font("Microsoft JhengHei UI", 12F);
-            this.labelDetectionParameterSummaryHint.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(99)))), ((int)(((byte)(110)))), ((int)(((byte)(114)))));
-            this.labelDetectionParameterSummaryHint.Location = new System.Drawing.Point(24, 24);
-            this.labelDetectionParameterSummaryHint.Name = "labelDetectionParameterSummaryHint";
-            this.labelDetectionParameterSummaryHint.Size = new System.Drawing.Size(492, 25);
-            this.labelDetectionParameterSummaryHint.TabIndex = 0;
-            this.labelDetectionParameterSummaryHint.Text = "此頁面預留為檢測參數整理與維護區，後續可直接在 Designer 擴充。";
+            this.groupBoxDetectionParameterCreate.Controls.Add(this.buttonDetectionMainParameterConfirm);
+            this.groupBoxDetectionParameterCreate.Controls.Add(this.textBoxDetectionMainParameterName);
+            this.groupBoxDetectionParameterCreate.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
+            this.groupBoxDetectionParameterCreate.Location = new System.Drawing.Point(24, 24);
+            this.groupBoxDetectionParameterCreate.Name = "groupBoxDetectionParameterCreate";
+            this.groupBoxDetectionParameterCreate.Size = new System.Drawing.Size(360, 280);
+            this.groupBoxDetectionParameterCreate.TabIndex = 0;
+            this.groupBoxDetectionParameterCreate.TabStop = false;
+            this.groupBoxDetectionParameterCreate.Text = "建立主參數";
+            // 
+            // buttonDetectionMainParameterConfirm
+            // 
+            this.buttonDetectionMainParameterConfirm.BackColor = System.Drawing.Color.White;
+            this.buttonDetectionMainParameterConfirm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonDetectionMainParameterConfirm.Font = new System.Drawing.Font("Microsoft JhengHei UI", 14F);
+            this.buttonDetectionMainParameterConfirm.Location = new System.Drawing.Point(92, 172);
+            this.buttonDetectionMainParameterConfirm.Name = "buttonDetectionMainParameterConfirm";
+            this.buttonDetectionMainParameterConfirm.Size = new System.Drawing.Size(168, 54);
+            this.buttonDetectionMainParameterConfirm.TabIndex = 1;
+            this.buttonDetectionMainParameterConfirm.Text = "確認";
+            this.buttonDetectionMainParameterConfirm.UseVisualStyleBackColor = false;
+            // 
+            // textBoxDetectionMainParameterName
+            // 
+            this.textBoxDetectionMainParameterName.Font = new System.Drawing.Font("Microsoft JhengHei UI", 14F);
+            this.textBoxDetectionMainParameterName.Location = new System.Drawing.Point(33, 86);
+            this.textBoxDetectionMainParameterName.Name = "textBoxDetectionMainParameterName";
+            this.textBoxDetectionMainParameterName.Size = new System.Drawing.Size(286, 37);
+            this.textBoxDetectionMainParameterName.TabIndex = 0;
             // 
             // labelJudgementCriteriaTitle
             // 
