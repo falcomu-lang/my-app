@@ -2343,10 +2343,10 @@ namespace AoiMeasureTool
             // 
             this.groupBoxDetectionParameterCreate.Controls.Add(this.buttonDetectionMainParameterConfirm);
             this.groupBoxDetectionParameterCreate.Controls.Add(this.textBoxDetectionMainParameterName);
-            this.groupBoxDetectionParameterCreate.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
+            this.groupBoxDetectionParameterCreate.Font = new System.Drawing.Font("Microsoft JhengHei UI", 12F);
             this.groupBoxDetectionParameterCreate.Location = new System.Drawing.Point(24, 24);
             this.groupBoxDetectionParameterCreate.Name = "groupBoxDetectionParameterCreate";
-            this.groupBoxDetectionParameterCreate.Size = new System.Drawing.Size(360, 280);
+            this.groupBoxDetectionParameterCreate.Size = new System.Drawing.Size(180, 140);
             this.groupBoxDetectionParameterCreate.TabIndex = 0;
             this.groupBoxDetectionParameterCreate.TabStop = false;
             this.groupBoxDetectionParameterCreate.Text = "建立主參數";
@@ -2355,20 +2355,20 @@ namespace AoiMeasureTool
             // 
             this.buttonDetectionMainParameterConfirm.BackColor = System.Drawing.Color.White;
             this.buttonDetectionMainParameterConfirm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonDetectionMainParameterConfirm.Font = new System.Drawing.Font("Microsoft JhengHei UI", 14F);
-            this.buttonDetectionMainParameterConfirm.Location = new System.Drawing.Point(92, 172);
+            this.buttonDetectionMainParameterConfirm.Font = new System.Drawing.Font("Microsoft JhengHei UI", 10F);
+            this.buttonDetectionMainParameterConfirm.Location = new System.Drawing.Point(47, 86);
             this.buttonDetectionMainParameterConfirm.Name = "buttonDetectionMainParameterConfirm";
-            this.buttonDetectionMainParameterConfirm.Size = new System.Drawing.Size(168, 54);
+            this.buttonDetectionMainParameterConfirm.Size = new System.Drawing.Size(86, 30);
             this.buttonDetectionMainParameterConfirm.TabIndex = 1;
             this.buttonDetectionMainParameterConfirm.Text = "確認";
             this.buttonDetectionMainParameterConfirm.UseVisualStyleBackColor = false;
             // 
             // textBoxDetectionMainParameterName
             // 
-            this.textBoxDetectionMainParameterName.Font = new System.Drawing.Font("Microsoft JhengHei UI", 14F);
-            this.textBoxDetectionMainParameterName.Location = new System.Drawing.Point(33, 86);
+            this.textBoxDetectionMainParameterName.Font = new System.Drawing.Font("Microsoft JhengHei UI", 10F);
+            this.textBoxDetectionMainParameterName.Location = new System.Drawing.Point(20, 38);
             this.textBoxDetectionMainParameterName.Name = "textBoxDetectionMainParameterName";
-            this.textBoxDetectionMainParameterName.Size = new System.Drawing.Size(286, 37);
+            this.textBoxDetectionMainParameterName.Size = new System.Drawing.Size(138, 29);
             this.textBoxDetectionMainParameterName.TabIndex = 0;
             // 
             // labelJudgementCriteriaTitle
