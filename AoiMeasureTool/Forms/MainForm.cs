@@ -95,6 +95,7 @@ namespace AoiMeasureTool
         private TabPage _tabPageMultiImageConfirm;
         private TabPage _tabPageInnerSettings;
         private TabPage _tabPageJudgementCriteria;
+        private TabPage _tabPageDetectionParameterSummary;
         private Panel _panelMeasurePreview;
         private Panel _panelMultiImageConfirmViewport;
         private PictureBox _pictureBoxMultiImageConfirm;
@@ -200,6 +201,7 @@ namespace AoiMeasureTool
             InitializeMeasureDistanceControls();
             InitializeInnerSettingsControls();
             InitializeJudgementCriteriaControls();
+            InitializeDetectionParameterSummaryControls();
             EnableDoubleBuffering();
             LoadSavedAppSettings();
             LoadLastImageIfAvailable();
@@ -338,6 +340,11 @@ namespace AoiMeasureTool
             ShowJudgementCriteriaWorkspace();
         }
 
+        private void DetectionParameterSummaryButton_Click(object sender, EventArgs e)
+        {
+            ShowDetectionParameterSummaryWorkspace();
+        }
+
         private void ShowMainWorkspaceTabs()
         {
             if (tabControlMain == null)
@@ -376,6 +383,18 @@ namespace AoiMeasureTool
             tabControlMain.TabPages.Add(_tabPageJudgementCriteria);
             tabControlMain.SelectedTab = _tabPageJudgementCriteria;
             RefreshJudgementCriteriaView();
+        }
+
+        private void ShowDetectionParameterSummaryWorkspace()
+        {
+            if (tabControlMain == null)
+            {
+                return;
+            }
+
+            tabControlMain.TabPages.Clear();
+            tabControlMain.TabPages.Add(_tabPageDetectionParameterSummary);
+            tabControlMain.SelectedTab = _tabPageDetectionParameterSummary;
         }
 
         private void ApplySnapshots(PreprocessSnapshot[] snapshots)

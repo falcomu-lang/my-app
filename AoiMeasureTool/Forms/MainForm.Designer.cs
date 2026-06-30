@@ -21,6 +21,7 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Button buttonMultiImageConfirm;
         private System.Windows.Forms.Button buttonInnerSettings;
         private System.Windows.Forms.Button buttonJudgementCriteria;
+        private System.Windows.Forms.Button buttonDetectionParameterSummary;
         private System.Windows.Forms.Label labelOpenCvStatus;
         private System.Windows.Forms.Panel panelMain;
         private System.Windows.Forms.Panel panelHeader;
@@ -35,6 +36,10 @@ namespace AoiMeasureTool
         private System.Windows.Forms.TabPage tabPageMultiImageConfirm;
         private System.Windows.Forms.TabPage tabPageInnerSettings;
         private System.Windows.Forms.TabPage tabPageJudgementCriteria;
+        private System.Windows.Forms.TabPage tabPageDetectionParameterSummary;
+        private System.Windows.Forms.Label labelDetectionParameterSummaryTitle;
+        private System.Windows.Forms.Panel panelDetectionParameterSummary;
+        private System.Windows.Forms.Label labelDetectionParameterSummaryHint;
         private System.Windows.Forms.Label labelWorkspace;
         private System.Windows.Forms.Label labelInnerSettingsTitle;
         private System.Windows.Forms.Panel panelInnerSettings;
@@ -233,6 +238,7 @@ namespace AoiMeasureTool
             this.buttonMultiImageConfirm = new System.Windows.Forms.Button();
             this.buttonInnerSettings = new System.Windows.Forms.Button();
             this.buttonJudgementCriteria = new System.Windows.Forms.Button();
+            this.buttonDetectionParameterSummary = new System.Windows.Forms.Button();
             this.labelOpenCvStatus = new System.Windows.Forms.Label();
             this.buttonLoadImageInViewer = new System.Windows.Forms.Button();
             this.panelMain = new System.Windows.Forms.Panel();
@@ -368,6 +374,10 @@ namespace AoiMeasureTool
             this.numericInnerCcdYPrecision = new System.Windows.Forms.NumericUpDown();
             this.buttonSaveInnerSettings = new System.Windows.Forms.Button();
             this.tabPageJudgementCriteria = new System.Windows.Forms.TabPage();
+            this.tabPageDetectionParameterSummary = new System.Windows.Forms.TabPage();
+            this.labelDetectionParameterSummaryTitle = new System.Windows.Forms.Label();
+            this.panelDetectionParameterSummary = new System.Windows.Forms.Panel();
+            this.labelDetectionParameterSummaryHint = new System.Windows.Forms.Label();
             this.labelJudgementCriteriaTitle = new System.Windows.Forms.Label();
             this.panelJudgementCriteria = new System.Windows.Forms.Panel();
             this.labelJudgementName = new System.Windows.Forms.Label();
@@ -575,6 +585,7 @@ namespace AoiMeasureTool
             this.panelSidebar.Controls.Add(this.buttonMultiImageConfirm);
             this.panelSidebar.Controls.Add(this.buttonInnerSettings);
             this.panelSidebar.Controls.Add(this.buttonJudgementCriteria);
+            this.panelSidebar.Controls.Add(this.buttonDetectionParameterSummary);
             this.panelSidebar.Controls.Add(this.labelOpenCvStatus);
             this.panelSidebar.Location = new System.Drawing.Point(0, 42);
             this.panelSidebar.Name = "panelSidebar";
@@ -697,6 +708,22 @@ namespace AoiMeasureTool
             this.buttonJudgementCriteria.UseVisualStyleBackColor = false;
             this.buttonJudgementCriteria.Click += new System.EventHandler(this.JudgementCriteriaButton_Click);
             // 
+            // buttonDetectionParameterSummary
+            // 
+            this.buttonDetectionParameterSummary.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonDetectionParameterSummary.FlatAppearance.BorderSize = 0;
+            this.buttonDetectionParameterSummary.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonDetectionParameterSummary.Font = new System.Drawing.Font("Microsoft JhengHei UI", 12F);
+            this.buttonDetectionParameterSummary.Location = new System.Drawing.Point(16, 452);
+            this.buttonDetectionParameterSummary.Name = "buttonDetectionParameterSummary";
+            this.buttonDetectionParameterSummary.Padding = new System.Windows.Forms.Padding(14, 0, 0, 0);
+            this.buttonDetectionParameterSummary.Size = new System.Drawing.Size(208, 48);
+            this.buttonDetectionParameterSummary.TabIndex = 8;
+            this.buttonDetectionParameterSummary.Text = "+   檢測參數整理";
+            this.buttonDetectionParameterSummary.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonDetectionParameterSummary.UseVisualStyleBackColor = false;
+            this.buttonDetectionParameterSummary.Click += new System.EventHandler(this.DetectionParameterSummaryButton_Click);
+            // 
             // labelOpenCvStatus
             // 
             this.labelOpenCvStatus.AutoSize = true;
@@ -771,6 +798,7 @@ namespace AoiMeasureTool
             this.tabControlMain.Controls.Add(this.tabPageMultiImageConfirm);
             this.tabControlMain.Controls.Add(this.tabPageInnerSettings);
             this.tabControlMain.Controls.Add(this.tabPageJudgementCriteria);
+            this.tabControlMain.Controls.Add(this.tabPageDetectionParameterSummary);
             this.tabControlMain.Font = new System.Drawing.Font("Microsoft JhengHei UI", 10F);
             this.tabControlMain.Location = new System.Drawing.Point(0, 72);
             this.tabControlMain.Name = "tabControlMain";
@@ -2289,6 +2317,50 @@ namespace AoiMeasureTool
             this.tabPageJudgementCriteria.TabIndex = 5;
             this.tabPageJudgementCriteria.Text = "良品判斷條件";
             // 
+            // tabPageDetectionParameterSummary
+            // 
+            this.tabPageDetectionParameterSummary.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
+            this.tabPageDetectionParameterSummary.Controls.Add(this.labelDetectionParameterSummaryTitle);
+            this.tabPageDetectionParameterSummary.Controls.Add(this.panelDetectionParameterSummary);
+            this.tabPageDetectionParameterSummary.Location = new System.Drawing.Point(4, 26);
+            this.tabPageDetectionParameterSummary.Name = "tabPageDetectionParameterSummary";
+            this.tabPageDetectionParameterSummary.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageDetectionParameterSummary.Size = new System.Drawing.Size(1032, 656);
+            this.tabPageDetectionParameterSummary.TabIndex = 6;
+            this.tabPageDetectionParameterSummary.Text = "檢測參數整理";
+            // 
+            // labelDetectionParameterSummaryTitle
+            // 
+            this.labelDetectionParameterSummaryTitle.AutoSize = true;
+            this.labelDetectionParameterSummaryTitle.Font = new System.Drawing.Font("Microsoft JhengHei UI", 18F, System.Drawing.FontStyle.Bold);
+            this.labelDetectionParameterSummaryTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(52)))), ((int)(((byte)(54)))));
+            this.labelDetectionParameterSummaryTitle.Location = new System.Drawing.Point(28, 24);
+            this.labelDetectionParameterSummaryTitle.Name = "labelDetectionParameterSummaryTitle";
+            this.labelDetectionParameterSummaryTitle.Size = new System.Drawing.Size(183, 38);
+            this.labelDetectionParameterSummaryTitle.TabIndex = 0;
+            this.labelDetectionParameterSummaryTitle.Text = "檢測參數整理";
+            // 
+            // panelDetectionParameterSummary
+            // 
+            this.panelDetectionParameterSummary.BackColor = System.Drawing.Color.White;
+            this.panelDetectionParameterSummary.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelDetectionParameterSummary.Controls.Add(this.labelDetectionParameterSummaryHint);
+            this.panelDetectionParameterSummary.Location = new System.Drawing.Point(35, 78);
+            this.panelDetectionParameterSummary.Name = "panelDetectionParameterSummary";
+            this.panelDetectionParameterSummary.Size = new System.Drawing.Size(962, 543);
+            this.panelDetectionParameterSummary.TabIndex = 1;
+            // 
+            // labelDetectionParameterSummaryHint
+            // 
+            this.labelDetectionParameterSummaryHint.AutoSize = true;
+            this.labelDetectionParameterSummaryHint.Font = new System.Drawing.Font("Microsoft JhengHei UI", 12F);
+            this.labelDetectionParameterSummaryHint.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(99)))), ((int)(((byte)(110)))), ((int)(((byte)(114)))));
+            this.labelDetectionParameterSummaryHint.Location = new System.Drawing.Point(24, 24);
+            this.labelDetectionParameterSummaryHint.Name = "labelDetectionParameterSummaryHint";
+            this.labelDetectionParameterSummaryHint.Size = new System.Drawing.Size(492, 25);
+            this.labelDetectionParameterSummaryHint.TabIndex = 0;
+            this.labelDetectionParameterSummaryHint.Text = "此頁面預留為檢測參數整理與維護區，後續可直接在 Designer 擴充。";
+            // 
             // labelJudgementCriteriaTitle
             // 
             this.labelJudgementCriteriaTitle.AutoSize = true;
@@ -2941,6 +3013,21 @@ namespace AoiMeasureTool
             this.panelReferenceCornerControls.PerformLayout();
             this.panelReferencePreview.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxReferencePreview)).EndInit();
+            this.tabPageInnerSettings.ResumeLayout(false);
+            this.tabPageInnerSettings.PerformLayout();
+            this.panelInnerSettings.ResumeLayout(false);
+            this.panelInnerSettings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInnerCcdXPrecision)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInnerCcdYPrecision)).EndInit();
+            this.tabPageJudgementCriteria.ResumeLayout(false);
+            this.tabPageJudgementCriteria.PerformLayout();
+            this.panelJudgementCriteria.ResumeLayout(false);
+            this.panelJudgementCriteria.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewJudgementCriteria)).EndInit();
+            this.tabPageDetectionParameterSummary.ResumeLayout(false);
+            this.tabPageDetectionParameterSummary.PerformLayout();
+            this.panelDetectionParameterSummary.ResumeLayout(false);
+            this.panelDetectionParameterSummary.PerformLayout();
             this.tabPageMultiImageConfirm.ResumeLayout(false);
             this.groupBoxMultiImagePreviewSource.ResumeLayout(false);
             this.tabControlMultiImageInfo.ResumeLayout(false);
