@@ -31,6 +31,7 @@ namespace AoiMeasureTool
                 _dataGridViewJudgementCriteria.ContextMenuStrip = BuildJudgementCriteriaContextMenu();
                 _dataGridViewJudgementCriteria.MouseDown += JudgementCriteriaGrid_MouseDown;
                 _dataGridViewJudgementCriteria.CellMouseDown += JudgementCriteriaGrid_CellMouseDown;
+                _dataGridViewJudgementCriteria.SelectionChanged += JudgementCriteriaGrid_SelectionChanged;
             }
 
             UpdateJudgementControlsForEditMode(false);
@@ -223,6 +224,11 @@ namespace AoiMeasureTool
             _dataGridViewJudgementCriteria.ClearSelection();
             _dataGridViewJudgementCriteria.Rows[e.RowIndex].Selected = true;
             _dataGridViewJudgementCriteria.CurrentCell = _dataGridViewJudgementCriteria.Rows[e.RowIndex].Cells[0];
+            UpdateJudgementMoveButtons();
+        }
+
+        private void JudgementCriteriaGrid_SelectionChanged(object sender, EventArgs e)
+        {
             UpdateJudgementMoveButtons();
         }
 
