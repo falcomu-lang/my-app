@@ -58,6 +58,8 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Button buttonJudgementAdd;
         private System.Windows.Forms.Button buttonJudgementReset;
         private System.Windows.Forms.Button buttonJudgementSave;
+        private System.Windows.Forms.Button buttonJudgementMoveUp;
+        private System.Windows.Forms.Button buttonJudgementMoveDown;
         private System.Windows.Forms.DataGridView dataGridViewJudgementCriteria;
         private System.Windows.Forms.Panel panelMeasureSource;
         private System.Windows.Forms.Label labelMeasureSource;
@@ -381,6 +383,8 @@ namespace AoiMeasureTool
             this.buttonJudgementAdd = new System.Windows.Forms.Button();
             this.buttonJudgementReset = new System.Windows.Forms.Button();
             this.buttonJudgementSave = new System.Windows.Forms.Button();
+            this.buttonJudgementMoveUp = new System.Windows.Forms.Button();
+            this.buttonJudgementMoveDown = new System.Windows.Forms.Button();
             this.dataGridViewJudgementCriteria = new System.Windows.Forms.DataGridView();
             this.panelMeasureSource = new System.Windows.Forms.Panel();
             this.labelMeasureSource = new System.Windows.Forms.Label();
@@ -2312,6 +2316,8 @@ namespace AoiMeasureTool
             this.panelJudgementCriteria.Controls.Add(this.buttonJudgementAdd);
             this.panelJudgementCriteria.Controls.Add(this.buttonJudgementReset);
             this.panelJudgementCriteria.Controls.Add(this.buttonJudgementSave);
+            this.panelJudgementCriteria.Controls.Add(this.buttonJudgementMoveUp);
+            this.panelJudgementCriteria.Controls.Add(this.buttonJudgementMoveDown);
             this.panelJudgementCriteria.Controls.Add(this.dataGridViewJudgementCriteria);
             this.panelJudgementCriteria.Location = new System.Drawing.Point(28, 46);
             this.panelJudgementCriteria.Name = "panelJudgementCriteria";
@@ -2437,6 +2443,32 @@ namespace AoiMeasureTool
             this.buttonJudgementSave.UseVisualStyleBackColor = false;
             this.buttonJudgementSave.Click += new System.EventHandler(this.JudgementSaveButton_Click);
             // 
+            // buttonJudgementMoveUp
+            // 
+            this.buttonJudgementMoveUp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonJudgementMoveUp.FlatAppearance.BorderSize = 0;
+            this.buttonJudgementMoveUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonJudgementMoveUp.Location = new System.Drawing.Point(650, 470);
+            this.buttonJudgementMoveUp.Name = "buttonJudgementMoveUp";
+            this.buttonJudgementMoveUp.Size = new System.Drawing.Size(68, 36);
+            this.buttonJudgementMoveUp.TabIndex = 13;
+            this.buttonJudgementMoveUp.Text = "↑";
+            this.buttonJudgementMoveUp.UseVisualStyleBackColor = false;
+            this.buttonJudgementMoveUp.Click += new System.EventHandler(this.JudgementMoveUpButton_Click);
+            // 
+            // buttonJudgementMoveDown
+            // 
+            this.buttonJudgementMoveDown.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonJudgementMoveDown.FlatAppearance.BorderSize = 0;
+            this.buttonJudgementMoveDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonJudgementMoveDown.Location = new System.Drawing.Point(724, 470);
+            this.buttonJudgementMoveDown.Name = "buttonJudgementMoveDown";
+            this.buttonJudgementMoveDown.Size = new System.Drawing.Size(68, 36);
+            this.buttonJudgementMoveDown.TabIndex = 14;
+            this.buttonJudgementMoveDown.Text = "↓";
+            this.buttonJudgementMoveDown.UseVisualStyleBackColor = false;
+            this.buttonJudgementMoveDown.Click += new System.EventHandler(this.JudgementMoveDownButton_Click);
+            // 
             // dataGridViewJudgementCriteria
             // 
             this.dataGridViewJudgementCriteria.AllowUserToAddRows = false;
@@ -2450,7 +2482,7 @@ namespace AoiMeasureTool
             this.dataGridViewJudgementCriteria.RowHeadersVisible = false;
             this.dataGridViewJudgementCriteria.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewJudgementCriteria.Size = new System.Drawing.Size(916, 214);
-            this.dataGridViewJudgementCriteria.TabIndex = 13;
+            this.dataGridViewJudgementCriteria.TabIndex = 15;
             // 
             // tabPageMeasureDistance
             // 

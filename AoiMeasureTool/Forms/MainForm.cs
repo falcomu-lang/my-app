@@ -138,6 +138,8 @@ namespace AoiMeasureTool
         private Button _buttonJudgementAdd;
         private Button _buttonJudgementReset;
         private Button _buttonJudgementSave;
+        private Button _buttonJudgementMoveUp;
+        private Button _buttonJudgementMoveDown;
         private DataGridView _dataGridViewJudgementCriteria;
         private ContextMenuStrip _judgementCriteriaMenu;
         private ToolStripMenuItem _judgementCriteriaEditMenuItem;

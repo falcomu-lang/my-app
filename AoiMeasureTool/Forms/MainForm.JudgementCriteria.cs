@@ -16,6 +16,8 @@ namespace AoiMeasureTool
             _buttonJudgementAdd = buttonJudgementAdd;
             _buttonJudgementReset = buttonJudgementReset;
             _buttonJudgementSave = buttonJudgementSave;
+            _buttonJudgementMoveUp = buttonJudgementMoveUp;
+            _buttonJudgementMoveDown = buttonJudgementMoveDown;
             _dataGridViewJudgementCriteria = dataGridViewJudgementCriteria;
 
             if (_dataGridViewJudgementCriteria != null && _dataGridViewJudgementCriteria.Columns.Count == 0)
@@ -32,6 +34,7 @@ namespace AoiMeasureTool
             }
 
             UpdateJudgementControlsForEditMode(false);
+            UpdateJudgementMoveButtons();
         }
 
         private ContextMenuStrip BuildJudgementCriteriaContextMenu()
@@ -112,6 +115,53 @@ namespace AoiMeasureTool
             MessageBox.Show(this, "判斷條件已儲存。", "良品判斷條件", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        private void JudgementMoveUpButton_Click(object sender, EventArgs e)
+        {
+            MoveSelectedJudgementRule(-1);
+        }
+
+        private void JudgementMoveDownButton_Click(object sender, EventArgs e)
+        {
+            MoveSelectedJudgementRule(1);
+        }
+
+        private void MoveSelectedJudgementRule(int direction)
+        {
+            if (_dataGridViewJudgementCriteria == null || _dataGridViewJudgementCriteria.SelectedRows.Count == 0)
+            {
+                return;
+            }
+
+            var currentIndex = _dataGridViewJudgementCriteria.SelectedRows[0].Index;
+            var targetIndex = currentIndex + direction;
+            if (currentIndex < 0 || currentIndex >= _judgementCriteriaRules.Count)
+            {
+                return;
+            }
+
+            if (targetIndex < 0 || targetIndex >= _judgementCriteriaRules.Count)
+            {
+                return;
+            }
+
+            var movedRule = _judgementCriteriaRules[currentIndex];
+            _judgementCriteriaRules[currentIndex] = _judgementCriteriaRules[targetIndex];
+            _judgementCriteriaRules[targetIndex] = movedRule;
+
+            if (_judgementCriteriaEditingIndex == currentIndex)
+            {
+                _judgementCriteriaEditingIndex = targetIndex;
+            }
+            else if (_judgementCriteriaEditingIndex == targetIndex)
+            {
+                _judgementCriteriaEditingIndex = currentIndex;
+            }
+
+            RefreshJudgementCriteriaView();
+            SelectJudgementCriteriaRow(targetIndex);
+            SaveCurrentAppSettings();
+        }
+
         private void RefreshJudgementCriteriaView()
         {
             if (_dataGridViewJudgementCriteria == null)
@@ -133,6 +183,7 @@ namespace AoiMeasureTool
             }
 
             RefreshMultiImageJudgementResultTable();
+            UpdateJudgementMoveButtons();
         }
 
         private void ClearJudgementCriteriaInputs()
@@ -158,6 +209,7 @@ namespace AoiMeasureTool
                 _dataGridViewJudgementCriteria.ClearSelection();
                 _dataGridViewJudgementCriteria.Rows[hit.RowIndex].Selected = true;
                 _dataGridViewJudgementCriteria.CurrentCell = _dataGridViewJudgementCriteria.Rows[hit.RowIndex].Cells[0];
+                UpdateJudgementMoveButtons();
             }
         }
 
@@ -171,6 +223,7 @@ namespace AoiMeasureTool
             _dataGridViewJudgementCriteria.ClearSelection();
             _dataGridViewJudgementCriteria.Rows[e.RowIndex].Selected = true;
             _dataGridViewJudgementCriteria.CurrentCell = _dataGridViewJudgementCriteria.Rows[e.RowIndex].Cells[0];
+            UpdateJudgementMoveButtons();
         }
 
         private void JudgementCriteriaEditMenuItem_Click(object sender, EventArgs e)
@@ -200,6 +253,7 @@ namespace AoiMeasureTool
             _textJudgementSpecB.Text = rule.SpecExpressionB ?? string.Empty;
             UpdateJudgementControlsForEditMode(true);
             _textJudgementName?.Focus();
+            UpdateJudgementMoveButtons();
         }
 
         private void JudgementCriteriaDeleteMenuItem_Click(object sender, EventArgs e)
@@ -245,6 +299,35 @@ namespace AoiMeasureTool
             if (_buttonJudgementReset != null)
             {
                 _buttonJudgementReset.Text = isEditing ? "取消" : "重新輸入";
+            }
+        }
+        private void SelectJudgementCriteriaRow(int rowIndex)
+        {
+            if (_dataGridViewJudgementCriteria == null || rowIndex < 0 || rowIndex >= _dataGridViewJudgementCriteria.Rows.Count)
+            {
+                UpdateJudgementMoveButtons();
+                return;
+            }
+
+            _dataGridViewJudgementCriteria.ClearSelection();
+            _dataGridViewJudgementCriteria.Rows[rowIndex].Selected = true;
+            _dataGridViewJudgementCriteria.CurrentCell = _dataGridViewJudgementCriteria.Rows[rowIndex].Cells[0];
+            UpdateJudgementMoveButtons();
+        }
+
+        private void UpdateJudgementMoveButtons()
+        {
+            var hasSelection = _dataGridViewJudgementCriteria != null && _dataGridViewJudgementCriteria.SelectedRows.Count > 0;
+            var selectedIndex = hasSelection ? _dataGridViewJudgementCriteria.SelectedRows[0].Index : -1;
+
+            if (_buttonJudgementMoveUp != null)
+            {
+                _buttonJudgementMoveUp.Enabled = hasSelection && selectedIndex > 0;
+            }
+
+            if (_buttonJudgementMoveDown != null)
+            {
+                _buttonJudgementMoveDown.Enabled = hasSelection && selectedIndex >= 0 && selectedIndex < _judgementCriteriaRules.Count - 1;
             }
         }
     }
