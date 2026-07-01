@@ -169,6 +169,8 @@ namespace AoiMeasureTool
         private ComboBox _comboBoxContinuousInspectionMainParameter;
         private readonly Label[] _continuousInspectionSubParameterLabels = new Label[3];
         private readonly PictureBox[] _continuousInspectionPictureBoxes = new PictureBox[3];
+        private readonly Label[] _continuousInspectionResultLabels = new Label[3];
+        private readonly string[] _continuousInspectionImagePaths = new string[3];
         private ContextMenuStrip _judgementCriteriaMenu;
         private ToolStripMenuItem _judgementCriteriaEditMenuItem;
         private ToolStripMenuItem _judgementCriteriaDeleteMenuItem;
@@ -455,7 +457,19 @@ namespace AoiMeasureTool
                 return;
             }
 
-            labelContinuousInspectionTitle.Text = "連續檢測";
+            labelContinuousInspectionTitle.Visible = false;
+            labelContinuousInspectionMainParameter.Text = "主參數";
+            labelContinuousInspectionMainParameter.Location = new Point(30, 26);
+            comboBoxContinuousInspectionMainParameter.Location = new Point(98, 22);
+            groupBoxContinuousInspection1.Text = "子參數 1";
+            groupBoxContinuousInspection2.Text = "子參數 2";
+            groupBoxContinuousInspection3.Text = "子參數 3";
+            groupBoxContinuousInspection1.Location = new Point(24, 60);
+            groupBoxContinuousInspection2.Location = new Point(344, 60);
+            groupBoxContinuousInspection3.Location = new Point(664, 60);
+            buttonContinuousInspectionLoadImage1.Text = "讀取圖";
+            buttonContinuousInspectionLoadImage2.Text = "讀取圖";
+            buttonContinuousInspectionLoadImage3.Text = "讀取圖";
             _comboBoxContinuousInspectionMainParameter = comboBoxContinuousInspectionMainParameter;
             _comboBoxContinuousInspectionMainParameter.SelectedIndexChanged += ContinuousInspectionMainParameterComboBox_SelectedIndexChanged;
             _continuousInspectionSubParameterLabels[0] = labelContinuousInspectionSubParameter1;
@@ -468,9 +482,62 @@ namespace AoiMeasureTool
             buttonContinuousInspectionLoadImage1.Tag = 0;
             buttonContinuousInspectionLoadImage2.Tag = 1;
             buttonContinuousInspectionLoadImage3.Tag = 2;
+            buttonContinuousInspectionLoadImage1.Location = new Point(16, 394);
+            buttonContinuousInspectionLoadImage2.Location = new Point(16, 394);
+            buttonContinuousInspectionLoadImage3.Location = new Point(16, 394);
             buttonContinuousInspectionLoadImage1.Click += ContinuousInspectionLoadImageButton_Click;
             buttonContinuousInspectionLoadImage2.Click += ContinuousInspectionLoadImageButton_Click;
             buttonContinuousInspectionLoadImage3.Click += ContinuousInspectionLoadImageButton_Click;
+
+            InitializeContinuousInspectionResultArea(groupBoxContinuousInspection1, 0);
+            InitializeContinuousInspectionResultArea(groupBoxContinuousInspection2, 1);
+            InitializeContinuousInspectionResultArea(groupBoxContinuousInspection3, 2);
+        }
+
+        private void InitializeContinuousInspectionResultArea(GroupBox groupBox, int index)
+        {
+            if (groupBox == null)
+            {
+                return;
+            }
+
+            var resultLabel = groupBox.Controls["labelContinuousInspectionResult" + index] as Label;
+            if (resultLabel == null)
+            {
+                resultLabel = new Label
+                {
+                    Name = "labelContinuousInspectionResult" + index,
+                    BorderStyle = BorderStyle.FixedSingle,
+                    Font = new Font("Microsoft JhengHei UI", 12F),
+                    Location = new Point(16, 340),
+                    Size = new Size(258, 40),
+                    Text = string.Empty,
+                    TextAlign = ContentAlignment.MiddleCenter
+                };
+                groupBox.Controls.Add(resultLabel);
+                resultLabel.BringToFront();
+            }
+
+            var judgeButton = groupBox.Controls["buttonContinuousInspectionJudge" + index] as Button;
+            if (judgeButton == null)
+            {
+                judgeButton = new Button
+                {
+                    Name = "buttonContinuousInspectionJudge" + index,
+                    BackColor = Color.FromArgb(224, 228, 231),
+                    FlatStyle = FlatStyle.Flat,
+                    Location = new Point(154, 394),
+                    Size = new Size(120, 40),
+                    Text = "判斷",
+                    Tag = index
+                };
+                judgeButton.FlatAppearance.BorderSize = 0;
+                judgeButton.Click += ContinuousInspectionJudgeButton_Click;
+                groupBox.Controls.Add(judgeButton);
+                judgeButton.BringToFront();
+            }
+
+            _continuousInspectionResultLabels[index] = resultLabel;
         }
 
         private void RefreshContinuousInspectionMainParameterItems()
@@ -564,11 +631,130 @@ namespace AoiMeasureTool
                 {
                     SetPictureBoxImage(_continuousInspectionPictureBoxes[index], new Bitmap(image));
                 }
+
+                _continuousInspectionImagePaths[index] = openFileDialogImage.FileName;
+                if (_continuousInspectionResultLabels[index] != null)
+                {
+                    _continuousInspectionResultLabels[index].Text = string.Empty;
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(this, "Unable to load image.\r\n\r\n" + ex.Message, "Continuous Inspection", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void ContinuousInspectionJudgeButton_Click(object sender, EventArgs e)
+        {
+            var button = sender as Button;
+            var index = button?.Tag as int? ?? -1;
+            if (index < 0 || index >= _continuousInspectionSubParameterLabels.Length || _continuousInspectionResultLabels[index] == null)
+            {
+                return;
+            }
+
+            var subParameterName = _continuousInspectionSubParameterLabels[index].Text.Trim();
+            if (string.IsNullOrWhiteSpace(subParameterName) || string.Equals(subParameterName, "未設定子參數", StringComparison.Ordinal))
+            {
+                _continuousInspectionResultLabels[index].Text = "未設定條件";
+                return;
+            }
+
+            var imagePath = _continuousInspectionImagePaths[index];
+            if (string.IsNullOrWhiteSpace(imagePath) || !File.Exists(imagePath))
+            {
+                _continuousInspectionResultLabels[index].Text = "未載入圖片";
+                return;
+            }
+
+            try
+            {
+                var rows = BuildContinuousInspectionJudgementResults(imagePath);
+                var matchedRows = rows.FindAll(row => string.Equals(row.Name, subParameterName, StringComparison.OrdinalIgnoreCase));
+                _continuousInspectionResultLabels[index].Text = SummarizeContinuousInspectionJudgement(matchedRows);
+            }
+            catch (Exception ex)
+            {
+                _continuousInspectionResultLabels[index].Text = "不可判斷";
+                MessageBox.Show(this, "無法執行判斷。\r\n\r\n" + ex.Message, "連續檢測", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private List<MultiImageJudgementResultRow> BuildContinuousInspectionJudgementResults(string imagePath)
+        {
+            var originalBitmap = _multiImageConfirmBitmap;
+            var originalSourceImageSize = _multiImageConfirmSourceImageSize;
+            var originalProductKey = _multiImageConfirmProductKey;
+            var originalImageIndex = _multiImageConfirmImageIndex;
+            var originalImagePaths = new List<string>(_multiImageConfirmImagePaths);
+
+            try
+            {
+                _multiImageConfirmBitmap = new Bitmap(imagePath);
+                _multiImageConfirmSourceImageSize = _multiImageConfirmBitmap.Size;
+                _multiImageConfirmProductKey = GetCurrentProductKeyOrDefault();
+                _multiImageConfirmImagePaths.Clear();
+                _multiImageConfirmImagePaths.Add(imagePath);
+                _multiImageConfirmImageIndex = 0;
+                return BuildMultiImageJudgementResults();
+            }
+            finally
+            {
+                _multiImageConfirmBitmap?.Dispose();
+                _multiImageConfirmBitmap = originalBitmap;
+                _multiImageConfirmSourceImageSize = originalSourceImageSize;
+                _multiImageConfirmProductKey = originalProductKey;
+                _multiImageConfirmImagePaths.Clear();
+                _multiImageConfirmImagePaths.AddRange(originalImagePaths);
+                _multiImageConfirmImageIndex = originalImageIndex;
+            }
+        }
+
+        private static string SummarizeContinuousInspectionJudgement(List<MultiImageJudgementResultRow> rows)
+        {
+            if (rows == null || rows.Count == 0)
+            {
+                return "未設定條件";
+            }
+
+            var hasA = false;
+            var hasB = false;
+            foreach (var row in rows)
+            {
+                if (row == null || string.IsNullOrWhiteSpace(row.JudgementText))
+                {
+                    continue;
+                }
+
+                if (string.Equals(row.JudgementText, "C規", StringComparison.OrdinalIgnoreCase))
+                {
+                    return "NG";
+                }
+
+                if (string.Equals(row.JudgementText, "B規", StringComparison.OrdinalIgnoreCase))
+                {
+                    hasB = true;
+                    continue;
+                }
+
+                if (string.Equals(row.JudgementText, "A規", StringComparison.OrdinalIgnoreCase))
+                {
+                    hasA = true;
+                    continue;
+                }
+            }
+
+            if (hasB)
+            {
+                return "BOK";
+            }
+
+            if (hasA)
+            {
+                return "A";
+            }
+
+            return "不可判斷";
         }
 
         private void ApplySnapshots(PreprocessSnapshot[] snapshots)
