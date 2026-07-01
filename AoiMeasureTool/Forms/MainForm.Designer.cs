@@ -42,6 +42,23 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Panel panelContinuousInspection;
         private System.Windows.Forms.Label labelContinuousInspectionTitle;
         private System.Windows.Forms.Label labelContinuousInspectionHint;
+        private System.Windows.Forms.Label labelContinuousInspectionMainParameter;
+        private System.Windows.Forms.ComboBox comboBoxContinuousInspectionMainParameter;
+        private System.Windows.Forms.GroupBox groupBoxContinuousInspection1;
+        private System.Windows.Forms.GroupBox groupBoxContinuousInspection2;
+        private System.Windows.Forms.GroupBox groupBoxContinuousInspection3;
+        private System.Windows.Forms.Label labelContinuousInspectionSubParameter1;
+        private System.Windows.Forms.Label labelContinuousInspectionSubParameter2;
+        private System.Windows.Forms.Label labelContinuousInspectionSubParameter3;
+        private System.Windows.Forms.Panel panelContinuousInspectionPreview1;
+        private System.Windows.Forms.Panel panelContinuousInspectionPreview2;
+        private System.Windows.Forms.Panel panelContinuousInspectionPreview3;
+        private System.Windows.Forms.PictureBox pictureBoxContinuousInspection1;
+        private System.Windows.Forms.PictureBox pictureBoxContinuousInspection2;
+        private System.Windows.Forms.PictureBox pictureBoxContinuousInspection3;
+        private System.Windows.Forms.Button buttonContinuousInspectionLoadImage1;
+        private System.Windows.Forms.Button buttonContinuousInspectionLoadImage2;
+        private System.Windows.Forms.Button buttonContinuousInspectionLoadImage3;
         private System.Windows.Forms.Panel panelDetectionParameterSummary;
         private System.Windows.Forms.GroupBox groupBoxDetectionParameterCreate;
         private System.Windows.Forms.TextBox textBoxDetectionMainParameterName;
@@ -408,8 +425,25 @@ namespace AoiMeasureTool
             this.tabPageDetectionParameterSummary = new System.Windows.Forms.TabPage();
             this.tabPageContinuousInspection = new System.Windows.Forms.TabPage();
             this.panelContinuousInspection = new System.Windows.Forms.Panel();
-            this.labelContinuousInspectionHint = new System.Windows.Forms.Label();
             this.labelContinuousInspectionTitle = new System.Windows.Forms.Label();
+            this.labelContinuousInspectionHint = new System.Windows.Forms.Label();
+            this.labelContinuousInspectionMainParameter = new System.Windows.Forms.Label();
+            this.comboBoxContinuousInspectionMainParameter = new System.Windows.Forms.ComboBox();
+            this.groupBoxContinuousInspection1 = new System.Windows.Forms.GroupBox();
+            this.buttonContinuousInspectionLoadImage1 = new System.Windows.Forms.Button();
+            this.panelContinuousInspectionPreview1 = new System.Windows.Forms.Panel();
+            this.pictureBoxContinuousInspection1 = new System.Windows.Forms.PictureBox();
+            this.labelContinuousInspectionSubParameter1 = new System.Windows.Forms.Label();
+            this.groupBoxContinuousInspection2 = new System.Windows.Forms.GroupBox();
+            this.buttonContinuousInspectionLoadImage2 = new System.Windows.Forms.Button();
+            this.panelContinuousInspectionPreview2 = new System.Windows.Forms.Panel();
+            this.pictureBoxContinuousInspection2 = new System.Windows.Forms.PictureBox();
+            this.labelContinuousInspectionSubParameter2 = new System.Windows.Forms.Label();
+            this.groupBoxContinuousInspection3 = new System.Windows.Forms.GroupBox();
+            this.buttonContinuousInspectionLoadImage3 = new System.Windows.Forms.Button();
+            this.panelContinuousInspectionPreview3 = new System.Windows.Forms.Panel();
+            this.pictureBoxContinuousInspection3 = new System.Windows.Forms.PictureBox();
+            this.labelContinuousInspectionSubParameter3 = new System.Windows.Forms.Label();
             this.panelDetectionParameterSummary = new System.Windows.Forms.Panel();
             this.groupBoxDetectionParameterCreate = new System.Windows.Forms.GroupBox();
             this.buttonDetectionMainParameterConfirm = new System.Windows.Forms.Button();
@@ -560,6 +594,17 @@ namespace AoiMeasureTool
             this.panelReferenceCornerControls.SuspendLayout();
             this.panelReferencePreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxReferencePreview)).BeginInit();
+            this.tabPageContinuousInspection.SuspendLayout();
+            this.panelContinuousInspection.SuspendLayout();
+            this.groupBoxContinuousInspection1.SuspendLayout();
+            this.panelContinuousInspectionPreview1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxContinuousInspection1)).BeginInit();
+            this.groupBoxContinuousInspection2.SuspendLayout();
+            this.panelContinuousInspectionPreview2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxContinuousInspection2)).BeginInit();
+            this.groupBoxContinuousInspection3.SuspendLayout();
+            this.panelContinuousInspectionPreview3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxContinuousInspection3)).BeginInit();
             this.tabPageMultiImageConfirm.SuspendLayout();
             this.groupBoxMultiImagePreviewSource.SuspendLayout();
             this.panelMultiImageInfo.SuspendLayout();
@@ -2409,6 +2454,7 @@ namespace AoiMeasureTool
             // tabPageContinuousInspection
             // 
             this.tabPageContinuousInspection.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
+            this.tabPageContinuousInspection.Controls.Add(this.panelContinuousInspection);
             this.tabPageContinuousInspection.Location = new System.Drawing.Point(4, 26);
             this.tabPageContinuousInspection.Name = "tabPageContinuousInspection";
             this.tabPageContinuousInspection.Padding = new System.Windows.Forms.Padding(3);
@@ -2418,25 +2464,18 @@ namespace AoiMeasureTool
             // 
             // panelContinuousInspection
             // 
-            this.panelContinuousInspection.BackColor = System.Drawing.Color.White;
-            this.panelContinuousInspection.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelContinuousInspection.Controls.Add(this.labelContinuousInspectionHint);
+            this.panelContinuousInspection.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
+            this.panelContinuousInspection.Controls.Add(this.groupBoxContinuousInspection3);
+            this.panelContinuousInspection.Controls.Add(this.groupBoxContinuousInspection2);
+            this.panelContinuousInspection.Controls.Add(this.groupBoxContinuousInspection1);
+            this.panelContinuousInspection.Controls.Add(this.comboBoxContinuousInspectionMainParameter);
+            this.panelContinuousInspection.Controls.Add(this.labelContinuousInspectionMainParameter);
             this.panelContinuousInspection.Controls.Add(this.labelContinuousInspectionTitle);
-            this.panelContinuousInspection.Location = new System.Drawing.Point(24, 24);
+            this.panelContinuousInspection.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelContinuousInspection.Name = "panelContinuousInspection";
-            this.panelContinuousInspection.Size = new System.Drawing.Size(984, 608);
+            this.panelContinuousInspection.Size = new System.Drawing.Size(1026, 650);
             this.panelContinuousInspection.TabIndex = 0;
-            this.panelContinuousInspection.Visible = false;
             // 
-            // labelContinuousInspectionHint
-            // 
-            this.labelContinuousInspectionHint.AutoSize = true;
-            this.labelContinuousInspectionHint.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(115)))), ((int)(((byte)(120)))));
-            this.labelContinuousInspectionHint.Location = new System.Drawing.Point(28, 74);
-            this.labelContinuousInspectionHint.Name = "labelContinuousInspectionHint";
-            this.labelContinuousInspectionHint.Size = new System.Drawing.Size(384, 18);
-            this.labelContinuousInspectionHint.TabIndex = 1;
-            this.labelContinuousInspectionHint.Text = "此頁面已預留為 UI 可見區域，後續可直接在 Designer 內維護控制項。";
             // 
             // labelContinuousInspectionTitle
             // 
@@ -2446,6 +2485,193 @@ namespace AoiMeasureTool
             this.labelContinuousInspectionTitle.Name = "labelContinuousInspectionTitle";
             this.labelContinuousInspectionTitle.Size = new System.Drawing.Size(100, 28);
             this.labelContinuousInspectionTitle.TabIndex = 0;
+            this.labelContinuousInspectionTitle.Text = "連續檢測";
+            // 
+            // labelContinuousInspectionMainParameter
+            // 
+            this.labelContinuousInspectionMainParameter.AutoSize = true;
+            this.labelContinuousInspectionMainParameter.Location = new System.Drawing.Point(30, 74);
+            this.labelContinuousInspectionMainParameter.Name = "labelContinuousInspectionMainParameter";
+            this.labelContinuousInspectionMainParameter.Size = new System.Drawing.Size(62, 18);
+            this.labelContinuousInspectionMainParameter.TabIndex = 1;
+            this.labelContinuousInspectionMainParameter.Text = "主參數";
+            // 
+            // comboBoxContinuousInspectionMainParameter
+            // 
+            this.comboBoxContinuousInspectionMainParameter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxContinuousInspectionMainParameter.FormattingEnabled = true;
+            this.comboBoxContinuousInspectionMainParameter.Location = new System.Drawing.Point(98, 70);
+            this.comboBoxContinuousInspectionMainParameter.Name = "comboBoxContinuousInspectionMainParameter";
+            this.comboBoxContinuousInspectionMainParameter.Size = new System.Drawing.Size(240, 26);
+            this.comboBoxContinuousInspectionMainParameter.TabIndex = 2;
+            // 
+            // groupBoxContinuousInspection1
+            // 
+            this.groupBoxContinuousInspection1.Controls.Add(this.buttonContinuousInspectionLoadImage1);
+            this.groupBoxContinuousInspection1.Controls.Add(this.panelContinuousInspectionPreview1);
+            this.groupBoxContinuousInspection1.Controls.Add(this.labelContinuousInspectionSubParameter1);
+            this.groupBoxContinuousInspection1.Font = new System.Drawing.Font("Microsoft JhengHei UI", 12F);
+            this.groupBoxContinuousInspection1.Location = new System.Drawing.Point(24, 118);
+            this.groupBoxContinuousInspection1.Name = "groupBoxContinuousInspection1";
+            this.groupBoxContinuousInspection1.Size = new System.Drawing.Size(292, 470);
+            this.groupBoxContinuousInspection1.TabIndex = 3;
+            this.groupBoxContinuousInspection1.TabStop = false;
+            this.groupBoxContinuousInspection1.Text = "子參數 1";
+            // 
+            // buttonContinuousInspectionLoadImage1
+            // 
+            this.buttonContinuousInspectionLoadImage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonContinuousInspectionLoadImage1.FlatAppearance.BorderSize = 0;
+            this.buttonContinuousInspectionLoadImage1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonContinuousInspectionLoadImage1.Location = new System.Drawing.Point(16, 348);
+            this.buttonContinuousInspectionLoadImage1.Name = "buttonContinuousInspectionLoadImage1";
+            this.buttonContinuousInspectionLoadImage1.Size = new System.Drawing.Size(120, 40);
+            this.buttonContinuousInspectionLoadImage1.TabIndex = 2;
+            this.buttonContinuousInspectionLoadImage1.Text = "讀取圖";
+            this.buttonContinuousInspectionLoadImage1.UseVisualStyleBackColor = false;
+            // 
+            // panelContinuousInspectionPreview1
+            // 
+            this.panelContinuousInspectionPreview1.BackColor = System.Drawing.Color.White;
+            this.panelContinuousInspectionPreview1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelContinuousInspectionPreview1.Controls.Add(this.pictureBoxContinuousInspection1);
+            this.panelContinuousInspectionPreview1.Location = new System.Drawing.Point(16, 82);
+            this.panelContinuousInspectionPreview1.Name = "panelContinuousInspectionPreview1";
+            this.panelContinuousInspectionPreview1.Size = new System.Drawing.Size(258, 250);
+            this.panelContinuousInspectionPreview1.TabIndex = 1;
+            // 
+            // pictureBoxContinuousInspection1
+            // 
+            this.pictureBoxContinuousInspection1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(234)))), ((int)(((byte)(236)))));
+            this.pictureBoxContinuousInspection1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBoxContinuousInspection1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBoxContinuousInspection1.Name = "pictureBoxContinuousInspection1";
+            this.pictureBoxContinuousInspection1.Size = new System.Drawing.Size(256, 248);
+            this.pictureBoxContinuousInspection1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxContinuousInspection1.TabIndex = 0;
+            this.pictureBoxContinuousInspection1.TabStop = false;
+            // 
+            // labelContinuousInspectionSubParameter1
+            // 
+            this.labelContinuousInspectionSubParameter1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.labelContinuousInspectionSubParameter1.Location = new System.Drawing.Point(16, 34);
+            this.labelContinuousInspectionSubParameter1.Name = "labelContinuousInspectionSubParameter1";
+            this.labelContinuousInspectionSubParameter1.Size = new System.Drawing.Size(258, 36);
+            this.labelContinuousInspectionSubParameter1.TabIndex = 0;
+            this.labelContinuousInspectionSubParameter1.Text = "未設定子參數";
+            this.labelContinuousInspectionSubParameter1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // groupBoxContinuousInspection2
+            // 
+            this.groupBoxContinuousInspection2.Controls.Add(this.buttonContinuousInspectionLoadImage2);
+            this.groupBoxContinuousInspection2.Controls.Add(this.panelContinuousInspectionPreview2);
+            this.groupBoxContinuousInspection2.Controls.Add(this.labelContinuousInspectionSubParameter2);
+            this.groupBoxContinuousInspection2.Font = new System.Drawing.Font("Microsoft JhengHei UI", 12F);
+            this.groupBoxContinuousInspection2.Location = new System.Drawing.Point(344, 118);
+            this.groupBoxContinuousInspection2.Name = "groupBoxContinuousInspection2";
+            this.groupBoxContinuousInspection2.Size = new System.Drawing.Size(292, 470);
+            this.groupBoxContinuousInspection2.TabIndex = 4;
+            this.groupBoxContinuousInspection2.TabStop = false;
+            this.groupBoxContinuousInspection2.Text = "子參數 2";
+            // 
+            // buttonContinuousInspectionLoadImage2
+            // 
+            this.buttonContinuousInspectionLoadImage2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonContinuousInspectionLoadImage2.FlatAppearance.BorderSize = 0;
+            this.buttonContinuousInspectionLoadImage2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonContinuousInspectionLoadImage2.Location = new System.Drawing.Point(16, 348);
+            this.buttonContinuousInspectionLoadImage2.Name = "buttonContinuousInspectionLoadImage2";
+            this.buttonContinuousInspectionLoadImage2.Size = new System.Drawing.Size(120, 40);
+            this.buttonContinuousInspectionLoadImage2.TabIndex = 2;
+            this.buttonContinuousInspectionLoadImage2.Text = "讀取圖";
+            this.buttonContinuousInspectionLoadImage2.UseVisualStyleBackColor = false;
+            // 
+            // panelContinuousInspectionPreview2
+            // 
+            this.panelContinuousInspectionPreview2.BackColor = System.Drawing.Color.White;
+            this.panelContinuousInspectionPreview2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelContinuousInspectionPreview2.Controls.Add(this.pictureBoxContinuousInspection2);
+            this.panelContinuousInspectionPreview2.Location = new System.Drawing.Point(16, 82);
+            this.panelContinuousInspectionPreview2.Name = "panelContinuousInspectionPreview2";
+            this.panelContinuousInspectionPreview2.Size = new System.Drawing.Size(258, 250);
+            this.panelContinuousInspectionPreview2.TabIndex = 1;
+            // 
+            // pictureBoxContinuousInspection2
+            // 
+            this.pictureBoxContinuousInspection2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(234)))), ((int)(((byte)(236)))));
+            this.pictureBoxContinuousInspection2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBoxContinuousInspection2.Location = new System.Drawing.Point(0, 0);
+            this.pictureBoxContinuousInspection2.Name = "pictureBoxContinuousInspection2";
+            this.pictureBoxContinuousInspection2.Size = new System.Drawing.Size(256, 248);
+            this.pictureBoxContinuousInspection2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxContinuousInspection2.TabIndex = 0;
+            this.pictureBoxContinuousInspection2.TabStop = false;
+            // 
+            // labelContinuousInspectionSubParameter2
+            // 
+            this.labelContinuousInspectionSubParameter2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.labelContinuousInspectionSubParameter2.Location = new System.Drawing.Point(16, 34);
+            this.labelContinuousInspectionSubParameter2.Name = "labelContinuousInspectionSubParameter2";
+            this.labelContinuousInspectionSubParameter2.Size = new System.Drawing.Size(258, 36);
+            this.labelContinuousInspectionSubParameter2.TabIndex = 0;
+            this.labelContinuousInspectionSubParameter2.Text = "未設定子參數";
+            this.labelContinuousInspectionSubParameter2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // groupBoxContinuousInspection3
+            // 
+            this.groupBoxContinuousInspection3.Controls.Add(this.buttonContinuousInspectionLoadImage3);
+            this.groupBoxContinuousInspection3.Controls.Add(this.panelContinuousInspectionPreview3);
+            this.groupBoxContinuousInspection3.Controls.Add(this.labelContinuousInspectionSubParameter3);
+            this.groupBoxContinuousInspection3.Font = new System.Drawing.Font("Microsoft JhengHei UI", 12F);
+            this.groupBoxContinuousInspection3.Location = new System.Drawing.Point(664, 118);
+            this.groupBoxContinuousInspection3.Name = "groupBoxContinuousInspection3";
+            this.groupBoxContinuousInspection3.Size = new System.Drawing.Size(292, 470);
+            this.groupBoxContinuousInspection3.TabIndex = 5;
+            this.groupBoxContinuousInspection3.TabStop = false;
+            this.groupBoxContinuousInspection3.Text = "子參數 3";
+            // 
+            // buttonContinuousInspectionLoadImage3
+            // 
+            this.buttonContinuousInspectionLoadImage3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonContinuousInspectionLoadImage3.FlatAppearance.BorderSize = 0;
+            this.buttonContinuousInspectionLoadImage3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonContinuousInspectionLoadImage3.Location = new System.Drawing.Point(16, 348);
+            this.buttonContinuousInspectionLoadImage3.Name = "buttonContinuousInspectionLoadImage3";
+            this.buttonContinuousInspectionLoadImage3.Size = new System.Drawing.Size(120, 40);
+            this.buttonContinuousInspectionLoadImage3.TabIndex = 2;
+            this.buttonContinuousInspectionLoadImage3.Text = "讀取圖";
+            this.buttonContinuousInspectionLoadImage3.UseVisualStyleBackColor = false;
+            // 
+            // panelContinuousInspectionPreview3
+            // 
+            this.panelContinuousInspectionPreview3.BackColor = System.Drawing.Color.White;
+            this.panelContinuousInspectionPreview3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelContinuousInspectionPreview3.Controls.Add(this.pictureBoxContinuousInspection3);
+            this.panelContinuousInspectionPreview3.Location = new System.Drawing.Point(16, 82);
+            this.panelContinuousInspectionPreview3.Name = "panelContinuousInspectionPreview3";
+            this.panelContinuousInspectionPreview3.Size = new System.Drawing.Size(258, 250);
+            this.panelContinuousInspectionPreview3.TabIndex = 1;
+            // 
+            // pictureBoxContinuousInspection3
+            // 
+            this.pictureBoxContinuousInspection3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(234)))), ((int)(((byte)(236)))));
+            this.pictureBoxContinuousInspection3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBoxContinuousInspection3.Location = new System.Drawing.Point(0, 0);
+            this.pictureBoxContinuousInspection3.Name = "pictureBoxContinuousInspection3";
+            this.pictureBoxContinuousInspection3.Size = new System.Drawing.Size(256, 248);
+            this.pictureBoxContinuousInspection3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxContinuousInspection3.TabIndex = 0;
+            this.pictureBoxContinuousInspection3.TabStop = false;
+            // 
+            // labelContinuousInspectionSubParameter3
+            // 
+            this.labelContinuousInspectionSubParameter3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.labelContinuousInspectionSubParameter3.Location = new System.Drawing.Point(16, 34);
+            this.labelContinuousInspectionSubParameter3.Name = "labelContinuousInspectionSubParameter3";
+            this.labelContinuousInspectionSubParameter3.Size = new System.Drawing.Size(258, 36);
+            this.labelContinuousInspectionSubParameter3.TabIndex = 0;
+            this.labelContinuousInspectionSubParameter3.Text = "未設定子參數";
+            this.labelContinuousInspectionSubParameter3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.labelContinuousInspectionTitle.Text = "連續檢測";
             // 
             // panelDetectionParameterSummary
@@ -3411,6 +3637,18 @@ namespace AoiMeasureTool
             this.panelReferenceCornerControls.PerformLayout();
             this.panelReferencePreview.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxReferencePreview)).EndInit();
+            this.tabPageContinuousInspection.ResumeLayout(false);
+            this.panelContinuousInspection.ResumeLayout(false);
+            this.panelContinuousInspection.PerformLayout();
+            this.groupBoxContinuousInspection1.ResumeLayout(false);
+            this.panelContinuousInspectionPreview1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxContinuousInspection1)).EndInit();
+            this.groupBoxContinuousInspection2.ResumeLayout(false);
+            this.panelContinuousInspectionPreview2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxContinuousInspection2)).EndInit();
+            this.groupBoxContinuousInspection3.ResumeLayout(false);
+            this.panelContinuousInspectionPreview3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxContinuousInspection3)).EndInit();
             this.tabPageInnerSettings.ResumeLayout(false);
             this.tabPageInnerSettings.PerformLayout();
             this.panelInnerSettings.ResumeLayout(false);

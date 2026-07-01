@@ -166,7 +166,6 @@ namespace AoiMeasureTool
         private ListBox _listBoxDetectionSubParameter3;
         private CheckBox _checkBoxDetectionSubParameter3Enabled;
         private Button _buttonDetectionSaveParameterReference;
-        private Control _continuousInspectionHost;
         private ComboBox _comboBoxContinuousInspectionMainParameter;
         private readonly Label[] _continuousInspectionSubParameterLabels = new Label[3];
         private readonly PictureBox[] _continuousInspectionPictureBoxes = new PictureBox[3];
@@ -451,107 +450,27 @@ namespace AoiMeasureTool
 
         private void InitializeContinuousInspectionControls()
         {
-            _continuousInspectionHost = tabPageContinuousInspection;
-            if (_continuousInspectionHost == null)
+            if (panelContinuousInspection == null)
             {
                 return;
             }
 
-            _continuousInspectionHost.SuspendLayout();
-            _continuousInspectionHost.Controls.Clear();
-            _continuousInspectionHost.BackColor = Color.FromArgb(248, 249, 250);
-
-            var labelTitle = new Label
-            {
-                AutoSize = true,
-                Font = new Font("Microsoft JhengHei UI", 14F, FontStyle.Bold),
-                Location = new Point(28, 24),
-                Text = "連續檢測"
-            };
-
-            var labelMainParameter = new Label
-            {
-                AutoSize = true,
-                Location = new Point(32, 72),
-                Text = "主參數"
-            };
-
-            _comboBoxContinuousInspectionMainParameter = new ComboBox
-            {
-                DropDownStyle = ComboBoxStyle.DropDownList,
-                Font = new Font("Microsoft JhengHei UI", 11F),
-                Location = new Point(104, 66),
-                Size = new Size(240, 27)
-            };
+            labelContinuousInspectionTitle.Text = "連續檢測";
+            _comboBoxContinuousInspectionMainParameter = comboBoxContinuousInspectionMainParameter;
             _comboBoxContinuousInspectionMainParameter.SelectedIndexChanged += ContinuousInspectionMainParameterComboBox_SelectedIndexChanged;
+            _continuousInspectionSubParameterLabels[0] = labelContinuousInspectionSubParameter1;
+            _continuousInspectionSubParameterLabels[1] = labelContinuousInspectionSubParameter2;
+            _continuousInspectionSubParameterLabels[2] = labelContinuousInspectionSubParameter3;
+            _continuousInspectionPictureBoxes[0] = pictureBoxContinuousInspection1;
+            _continuousInspectionPictureBoxes[1] = pictureBoxContinuousInspection2;
+            _continuousInspectionPictureBoxes[2] = pictureBoxContinuousInspection3;
 
-            _continuousInspectionHost.Controls.Add(labelTitle);
-            _continuousInspectionHost.Controls.Add(labelMainParameter);
-            _continuousInspectionHost.Controls.Add(_comboBoxContinuousInspectionMainParameter);
-
-            var columnWidth = 292;
-            var columnHeight = 470;
-            var columnTop = 116;
-            var lefts = new[] { 24, 344, 664 };
-
-            for (var i = 0; i < 3; i++)
-            {
-                var groupBox = new GroupBox
-                {
-                    Font = new Font("Microsoft JhengHei UI", 12F),
-                    Location = new Point(lefts[i], columnTop),
-                    Size = new Size(columnWidth, columnHeight),
-                    Text = "子參數 " + (i + 1)
-                };
-
-                var subParameterLabel = new Label
-                {
-                    BorderStyle = BorderStyle.FixedSingle,
-                    Font = new Font("Microsoft JhengHei UI", 11F),
-                    Location = new Point(16, 34),
-                    Size = new Size(258, 36),
-                    TextAlign = ContentAlignment.MiddleCenter
-                };
-
-                var previewPanel = new Panel
-                {
-                    BackColor = Color.White,
-                    BorderStyle = BorderStyle.FixedSingle,
-                    Location = new Point(16, 82),
-                    Size = new Size(258, 250)
-                };
-
-                var pictureBox = new PictureBox
-                {
-                    Dock = DockStyle.Fill,
-                    BackColor = Color.FromArgb(232, 234, 236),
-                    SizeMode = PictureBoxSizeMode.Zoom
-                };
-                previewPanel.Controls.Add(pictureBox);
-
-                var buttonLoadImage = new Button
-                {
-                    BackColor = Color.FromArgb(224, 228, 231),
-                    FlatStyle = FlatStyle.Flat,
-                    Location = new Point(16, 348),
-                    Size = new Size(120, 40),
-                    Text = "讀取圖",
-                    Tag = i
-                };
-                buttonLoadImage.FlatAppearance.BorderSize = 0;
-                buttonLoadImage.Click += ContinuousInspectionLoadImageButton_Click;
-
-                groupBox.Controls.Add(subParameterLabel);
-                groupBox.Controls.Add(previewPanel);
-                groupBox.Controls.Add(buttonLoadImage);
-
-                _continuousInspectionSubParameterLabels[i] = subParameterLabel;
-                _continuousInspectionPictureBoxes[i] = pictureBox;
-                _continuousInspectionHost.Controls.Add(groupBox);
-            }
-
-            _continuousInspectionHost.ResumeLayout(false);
-            _continuousInspectionHost.PerformLayout();
+            buttonContinuousInspectionLoadImage1.Tag = 0;
+            buttonContinuousInspectionLoadImage2.Tag = 1;
+            buttonContinuousInspectionLoadImage3.Tag = 2;
+            buttonContinuousInspectionLoadImage1.Click += ContinuousInspectionLoadImageButton_Click;
+            buttonContinuousInspectionLoadImage2.Click += ContinuousInspectionLoadImageButton_Click;
+            buttonContinuousInspectionLoadImage3.Click += ContinuousInspectionLoadImageButton_Click;
         }
 
         private void RefreshContinuousInspectionMainParameterItems()
