@@ -622,6 +622,7 @@ namespace AoiMeasureTool
 
                 ApplyProductState(_productProfileService.GetOrCreateState(GetCurrentProductKeyOrDefault()));
                 ApplyInnerSettings(_innerSettings);
+                LoadDetectionSubParameter1List();
             }
             catch
             {
