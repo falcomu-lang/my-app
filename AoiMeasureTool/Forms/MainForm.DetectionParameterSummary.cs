@@ -189,7 +189,13 @@ namespace AoiMeasureTool
         private void LoadDetectionSubParameter1List()
         {
             _detectionSubParameter1Items.Clear();
-            _detectionSubParameter1Items.AddRange(LoadSettingListSortItems());
+            var items = LoadSettingListSortItems();
+            if (items.Count == 0)
+            {
+                items = LoadSettingSectionNames();
+            }
+
+            _detectionSubParameter1Items.AddRange(items);
             RefreshDetectionSubParameter1List();
         }
 
@@ -296,6 +302,48 @@ namespace AoiMeasureTool
                 if (!string.IsNullOrWhiteSpace(value))
                 {
                     items.Add(value);
+                }
+            }
+
+            return items;
+        }
+
+        private List<string> LoadSettingSectionNames()
+        {
+            var items = new List<string>();
+            if (!File.Exists(_settingsPath))
+            {
+                return items;
+            }
+
+            foreach (var rawLine in File.ReadAllLines(_settingsPath))
+            {
+                var line = rawLine.Trim();
+                if (!line.StartsWith("[") || !line.EndsWith("]"))
+                {
+                    continue;
+                }
+
+                var section = line.Substring(1, line.Length - 2).Trim();
+                if (string.IsNullOrWhiteSpace(section) ||
+                    string.Equals(section, "listSort", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                var exists = false;
+                foreach (var item in items)
+                {
+                    if (string.Equals(item, section, StringComparison.OrdinalIgnoreCase))
+                    {
+                        exists = true;
+                        break;
+                    }
+                }
+
+                if (!exists)
+                {
+                    items.Add(section);
                 }
             }
 
