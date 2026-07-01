@@ -166,6 +166,10 @@ namespace AoiMeasureTool
         private ListBox _listBoxDetectionSubParameter3;
         private CheckBox _checkBoxDetectionSubParameter3Enabled;
         private Button _buttonDetectionSaveParameterReference;
+        private Panel _panelContinuousInspection;
+        private ComboBox _comboBoxContinuousInspectionMainParameter;
+        private readonly Label[] _continuousInspectionSubParameterLabels = new Label[3];
+        private readonly PictureBox[] _continuousInspectionPictureBoxes = new PictureBox[3];
         private ContextMenuStrip _judgementCriteriaMenu;
         private ToolStripMenuItem _judgementCriteriaEditMenuItem;
         private ToolStripMenuItem _judgementCriteriaDeleteMenuItem;
@@ -231,6 +235,7 @@ namespace AoiMeasureTool
             InitializeInnerSettingsControls();
             InitializeJudgementCriteriaControls();
             InitializeDetectionParameterSummaryControls();
+            InitializeContinuousInspectionControls();
             EnableDoubleBuffering();
             LoadSavedAppSettings();
             LoadLastImageIfAvailable();
@@ -441,6 +446,210 @@ namespace AoiMeasureTool
             tabControlMain.TabPages.Clear();
             tabControlMain.TabPages.Add(_tabPageContinuousInspection);
             tabControlMain.SelectedTab = _tabPageContinuousInspection;
+            RefreshContinuousInspectionMainParameterItems();
+        }
+
+        private void InitializeContinuousInspectionControls()
+        {
+            _panelContinuousInspection = panelContinuousInspection;
+            if (_panelContinuousInspection == null)
+            {
+                return;
+            }
+
+            _panelContinuousInspection.SuspendLayout();
+            _panelContinuousInspection.Controls.Clear();
+            _panelContinuousInspection.BackColor = Color.FromArgb(248, 249, 250);
+
+            var labelTitle = new Label
+            {
+                AutoSize = true,
+                Font = new Font("Microsoft JhengHei UI", 14F, FontStyle.Bold),
+                Location = new Point(28, 24),
+                Text = "連續檢測"
+            };
+
+            var labelMainParameter = new Label
+            {
+                AutoSize = true,
+                Location = new Point(32, 72),
+                Text = "主參數"
+            };
+
+            _comboBoxContinuousInspectionMainParameter = new ComboBox
+            {
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Font = new Font("Microsoft JhengHei UI", 11F),
+                Location = new Point(104, 66),
+                Size = new Size(240, 27)
+            };
+            _comboBoxContinuousInspectionMainParameter.SelectedIndexChanged += ContinuousInspectionMainParameterComboBox_SelectedIndexChanged;
+
+            _panelContinuousInspection.Controls.Add(labelTitle);
+            _panelContinuousInspection.Controls.Add(labelMainParameter);
+            _panelContinuousInspection.Controls.Add(_comboBoxContinuousInspectionMainParameter);
+
+            var columnWidth = 292;
+            var columnHeight = 470;
+            var columnTop = 116;
+            var lefts = new[] { 24, 344, 664 };
+
+            for (var i = 0; i < 3; i++)
+            {
+                var groupBox = new GroupBox
+                {
+                    Font = new Font("Microsoft JhengHei UI", 12F),
+                    Location = new Point(lefts[i], columnTop),
+                    Size = new Size(columnWidth, columnHeight),
+                    Text = "子參數 " + (i + 1)
+                };
+
+                var subParameterLabel = new Label
+                {
+                    BorderStyle = BorderStyle.FixedSingle,
+                    Font = new Font("Microsoft JhengHei UI", 11F),
+                    Location = new Point(16, 34),
+                    Size = new Size(258, 36),
+                    TextAlign = ContentAlignment.MiddleCenter
+                };
+
+                var previewPanel = new Panel
+                {
+                    BackColor = Color.White,
+                    BorderStyle = BorderStyle.FixedSingle,
+                    Location = new Point(16, 82),
+                    Size = new Size(258, 250)
+                };
+
+                var pictureBox = new PictureBox
+                {
+                    Dock = DockStyle.Fill,
+                    BackColor = Color.FromArgb(232, 234, 236),
+                    SizeMode = PictureBoxSizeMode.Zoom
+                };
+                previewPanel.Controls.Add(pictureBox);
+
+                var buttonLoadImage = new Button
+                {
+                    BackColor = Color.FromArgb(224, 228, 231),
+                    FlatStyle = FlatStyle.Flat,
+                    Location = new Point(16, 348),
+                    Size = new Size(120, 40),
+                    Text = "讀取圖",
+                    Tag = i
+                };
+                buttonLoadImage.FlatAppearance.BorderSize = 0;
+                buttonLoadImage.Click += ContinuousInspectionLoadImageButton_Click;
+
+                groupBox.Controls.Add(subParameterLabel);
+                groupBox.Controls.Add(previewPanel);
+                groupBox.Controls.Add(buttonLoadImage);
+
+                _continuousInspectionSubParameterLabels[i] = subParameterLabel;
+                _continuousInspectionPictureBoxes[i] = pictureBox;
+                _panelContinuousInspection.Controls.Add(groupBox);
+            }
+
+            _panelContinuousInspection.ResumeLayout(false);
+            _panelContinuousInspection.PerformLayout();
+        }
+
+        private void RefreshContinuousInspectionMainParameterItems()
+        {
+            if (_comboBoxContinuousInspectionMainParameter == null)
+            {
+                return;
+            }
+
+            var selectedName = _comboBoxContinuousInspectionMainParameter.SelectedItem as string;
+            _comboBoxContinuousInspectionMainParameter.BeginUpdate();
+            try
+            {
+                _comboBoxContinuousInspectionMainParameter.Items.Clear();
+                foreach (var parameterName in _detectionMainParameters)
+                {
+                    _comboBoxContinuousInspectionMainParameter.Items.Add(parameterName);
+                }
+            }
+            finally
+            {
+                _comboBoxContinuousInspectionMainParameter.EndUpdate();
+            }
+
+            if (!string.IsNullOrWhiteSpace(selectedName))
+            {
+                var index = _comboBoxContinuousInspectionMainParameter.FindStringExact(selectedName);
+                if (index >= 0)
+                {
+                    _comboBoxContinuousInspectionMainParameter.SelectedIndex = index;
+                    return;
+                }
+            }
+
+            if (_comboBoxContinuousInspectionMainParameter.Items.Count > 0 && _comboBoxContinuousInspectionMainParameter.SelectedIndex < 0)
+            {
+                _comboBoxContinuousInspectionMainParameter.SelectedIndex = 0;
+                return;
+            }
+
+            ApplyContinuousInspectionSubParameters();
+        }
+
+        private void ContinuousInspectionMainParameterComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ApplyContinuousInspectionSubParameters();
+        }
+
+        private void ApplyContinuousInspectionSubParameters()
+        {
+            var selectedName = _comboBoxContinuousInspectionMainParameter?.SelectedItem as string;
+            DetectionParameterReference parameterReference = null;
+            if (!string.IsNullOrWhiteSpace(selectedName))
+            {
+                _detectionParameterReferences.TryGetValue(selectedName, out parameterReference);
+            }
+
+            var values = new[]
+            {
+                parameterReference?.SubParameter1,
+                parameterReference?.SubParameter2,
+                parameterReference?.SubParameter3
+            };
+
+            for (var i = 0; i < _continuousInspectionSubParameterLabels.Length; i++)
+            {
+                if (_continuousInspectionSubParameterLabels[i] != null)
+                {
+                    _continuousInspectionSubParameterLabels[i].Text = string.IsNullOrWhiteSpace(values[i]) ? "未設定子參數" : values[i];
+                }
+            }
+        }
+
+        private void ContinuousInspectionLoadImageButton_Click(object sender, EventArgs e)
+        {
+            var button = sender as Button;
+            var index = button?.Tag as int? ?? -1;
+            if (index < 0 || index >= _continuousInspectionPictureBoxes.Length)
+            {
+                return;
+            }
+
+            if (openFileDialogImage.ShowDialog(this) != DialogResult.OK)
+            {
+                return;
+            }
+
+            try
+            {
+                using (var image = Image.FromFile(openFileDialogImage.FileName))
+                {
+                    SetPictureBoxImage(_continuousInspectionPictureBoxes[index], new Bitmap(image));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, "Unable to load image.\r\n\r\n" + ex.Message, "Continuous Inspection", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void ApplySnapshots(PreprocessSnapshot[] snapshots)
