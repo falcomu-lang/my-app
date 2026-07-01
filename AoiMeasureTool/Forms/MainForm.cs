@@ -97,6 +97,7 @@ namespace AoiMeasureTool
         private TabPage _tabPageInnerSettings;
         private TabPage _tabPageJudgementCriteria;
         private TabPage _tabPageDetectionParameterSummary;
+        private TabPage _tabPageContinuousInspection;
         private Panel _panelMeasurePreview;
         private Panel _panelMultiImageConfirmViewport;
         private PictureBox _pictureBoxMultiImageConfirm;
@@ -221,6 +222,7 @@ namespace AoiMeasureTool
         {
             _productProfileService = new ProductProfileService(_productProfiles, _referenceCornerProfiles, _measureProfiles, _judgementCriteriaProfiles, _dualThresholdProfiles);
             InitializeComponent();
+            _tabPageContinuousInspection = tabPageContinuousInspection;
             ShowMainWorkspaceTabs();
             InitializePreprocessControls();
             InitializeDualThresholdControls();
@@ -372,6 +374,11 @@ namespace AoiMeasureTool
             ShowDetectionParameterSummaryWorkspace();
         }
 
+        private void ContinuousInspectionButton_Click(object sender, EventArgs e)
+        {
+            ShowContinuousInspectionWorkspace();
+        }
+
         private void ShowMainWorkspaceTabs()
         {
             if (tabControlMain == null)
@@ -422,6 +429,18 @@ namespace AoiMeasureTool
             tabControlMain.TabPages.Clear();
             tabControlMain.TabPages.Add(_tabPageDetectionParameterSummary);
             tabControlMain.SelectedTab = _tabPageDetectionParameterSummary;
+        }
+
+        private void ShowContinuousInspectionWorkspace()
+        {
+            if (tabControlMain == null || _tabPageContinuousInspection == null)
+            {
+                return;
+            }
+
+            tabControlMain.TabPages.Clear();
+            tabControlMain.TabPages.Add(_tabPageContinuousInspection);
+            tabControlMain.SelectedTab = _tabPageContinuousInspection;
         }
 
         private void ApplySnapshots(PreprocessSnapshot[] snapshots)
@@ -649,15 +668,22 @@ namespace AoiMeasureTool
             try
             {
                 PersistActiveProductProfile();
+                var currentProductKey = GetCurrentProductKeyOrDefault();
                 var settingsData = new AppSettingsData
                 {
                     LastImagePath = _lastImagePath,
                     ActiveProductKey = _activeProductKey
                 };
                 settingsData.ListSortItems.AddRange(_detectionSubParameter1Items);
+                if (!string.IsNullOrWhiteSpace(currentProductKey) &&
+                    !settingsData.ListSortItems.Exists(item => string.Equals(item, currentProductKey, StringComparison.OrdinalIgnoreCase)))
+                {
+                    settingsData.ListSortItems.Add(currentProductKey);
+                }
+
                 settingsData.DualThresholdSettings = CaptureDualThresholdSnapshot();
                 _productProfileService.ExportTo(settingsData);
-                _settingsRepository.Save(_settingsPath, settingsData, GetCurrentProductKeyOrDefault());
+                _settingsRepository.Save(_settingsPath, settingsData, currentProductKey);
             }
             catch (Exception ex)
             {

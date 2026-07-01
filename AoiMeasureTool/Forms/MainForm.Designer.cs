@@ -22,6 +22,7 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Button buttonInnerSettings;
         private System.Windows.Forms.Button buttonJudgementCriteria;
         private System.Windows.Forms.Button buttonDetectionParameterSummary;
+        private System.Windows.Forms.Button buttonContinuousInspection;
         private System.Windows.Forms.Label labelOpenCvStatus;
         private System.Windows.Forms.Panel panelMain;
         private System.Windows.Forms.Panel panelHeader;
@@ -37,6 +38,10 @@ namespace AoiMeasureTool
         private System.Windows.Forms.TabPage tabPageInnerSettings;
         private System.Windows.Forms.TabPage tabPageJudgementCriteria;
         private System.Windows.Forms.TabPage tabPageDetectionParameterSummary;
+        private System.Windows.Forms.TabPage tabPageContinuousInspection;
+        private System.Windows.Forms.Panel panelContinuousInspection;
+        private System.Windows.Forms.Label labelContinuousInspectionTitle;
+        private System.Windows.Forms.Label labelContinuousInspectionHint;
         private System.Windows.Forms.Panel panelDetectionParameterSummary;
         private System.Windows.Forms.GroupBox groupBoxDetectionParameterCreate;
         private System.Windows.Forms.TextBox textBoxDetectionMainParameterName;
@@ -264,6 +269,7 @@ namespace AoiMeasureTool
             this.buttonInnerSettings = new System.Windows.Forms.Button();
             this.buttonJudgementCriteria = new System.Windows.Forms.Button();
             this.buttonDetectionParameterSummary = new System.Windows.Forms.Button();
+            this.buttonContinuousInspection = new System.Windows.Forms.Button();
             this.labelOpenCvStatus = new System.Windows.Forms.Label();
             this.buttonLoadImageInViewer = new System.Windows.Forms.Button();
             this.panelMain = new System.Windows.Forms.Panel();
@@ -400,6 +406,10 @@ namespace AoiMeasureTool
             this.buttonSaveInnerSettings = new System.Windows.Forms.Button();
             this.tabPageJudgementCriteria = new System.Windows.Forms.TabPage();
             this.tabPageDetectionParameterSummary = new System.Windows.Forms.TabPage();
+            this.tabPageContinuousInspection = new System.Windows.Forms.TabPage();
+            this.panelContinuousInspection = new System.Windows.Forms.Panel();
+            this.labelContinuousInspectionHint = new System.Windows.Forms.Label();
+            this.labelContinuousInspectionTitle = new System.Windows.Forms.Label();
             this.panelDetectionParameterSummary = new System.Windows.Forms.Panel();
             this.groupBoxDetectionParameterCreate = new System.Windows.Forms.GroupBox();
             this.buttonDetectionMainParameterConfirm = new System.Windows.Forms.Button();
@@ -636,6 +646,7 @@ namespace AoiMeasureTool
             this.panelSidebar.Controls.Add(this.buttonInnerSettings);
             this.panelSidebar.Controls.Add(this.buttonJudgementCriteria);
             this.panelSidebar.Controls.Add(this.buttonDetectionParameterSummary);
+            this.panelSidebar.Controls.Add(this.buttonContinuousInspection);
             this.panelSidebar.Controls.Add(this.labelOpenCvStatus);
             this.panelSidebar.Location = new System.Drawing.Point(0, 42);
             this.panelSidebar.Name = "panelSidebar";
@@ -774,6 +785,22 @@ namespace AoiMeasureTool
             this.buttonDetectionParameterSummary.UseVisualStyleBackColor = false;
             this.buttonDetectionParameterSummary.Click += new System.EventHandler(this.DetectionParameterSummaryButton_Click);
             // 
+            // buttonContinuousInspection
+            // 
+            this.buttonContinuousInspection.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonContinuousInspection.FlatAppearance.BorderSize = 0;
+            this.buttonContinuousInspection.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonContinuousInspection.Font = new System.Drawing.Font("Microsoft JhengHei UI", 12F);
+            this.buttonContinuousInspection.Location = new System.Drawing.Point(16, 508);
+            this.buttonContinuousInspection.Name = "buttonContinuousInspection";
+            this.buttonContinuousInspection.Padding = new System.Windows.Forms.Padding(14, 0, 0, 0);
+            this.buttonContinuousInspection.Size = new System.Drawing.Size(208, 48);
+            this.buttonContinuousInspection.TabIndex = 9;
+            this.buttonContinuousInspection.Text = "+   連續檢測";
+            this.buttonContinuousInspection.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonContinuousInspection.UseVisualStyleBackColor = false;
+            this.buttonContinuousInspection.Click += new System.EventHandler(this.ContinuousInspectionButton_Click);
+            // 
             // labelOpenCvStatus
             // 
             this.labelOpenCvStatus.AutoSize = true;
@@ -849,6 +876,7 @@ namespace AoiMeasureTool
             this.tabControlMain.Controls.Add(this.tabPageInnerSettings);
             this.tabControlMain.Controls.Add(this.tabPageJudgementCriteria);
             this.tabControlMain.Controls.Add(this.tabPageDetectionParameterSummary);
+            this.tabControlMain.Controls.Add(this.tabPageContinuousInspection);
             this.tabControlMain.Font = new System.Drawing.Font("Microsoft JhengHei UI", 10F);
             this.tabControlMain.Location = new System.Drawing.Point(0, 72);
             this.tabControlMain.Name = "tabControlMain";
@@ -2377,6 +2405,48 @@ namespace AoiMeasureTool
             this.tabPageDetectionParameterSummary.Size = new System.Drawing.Size(1032, 656);
             this.tabPageDetectionParameterSummary.TabIndex = 6;
             this.tabPageDetectionParameterSummary.Text = "檢測參數整理";
+            // 
+            // tabPageContinuousInspection
+            // 
+            this.tabPageContinuousInspection.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
+            this.tabPageContinuousInspection.Controls.Add(this.panelContinuousInspection);
+            this.tabPageContinuousInspection.Location = new System.Drawing.Point(4, 26);
+            this.tabPageContinuousInspection.Name = "tabPageContinuousInspection";
+            this.tabPageContinuousInspection.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageContinuousInspection.Size = new System.Drawing.Size(1032, 656);
+            this.tabPageContinuousInspection.TabIndex = 7;
+            this.tabPageContinuousInspection.Text = "連續檢測";
+            // 
+            // panelContinuousInspection
+            // 
+            this.panelContinuousInspection.BackColor = System.Drawing.Color.White;
+            this.panelContinuousInspection.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelContinuousInspection.Controls.Add(this.labelContinuousInspectionHint);
+            this.panelContinuousInspection.Controls.Add(this.labelContinuousInspectionTitle);
+            this.panelContinuousInspection.Location = new System.Drawing.Point(24, 24);
+            this.panelContinuousInspection.Name = "panelContinuousInspection";
+            this.panelContinuousInspection.Size = new System.Drawing.Size(984, 608);
+            this.panelContinuousInspection.TabIndex = 0;
+            // 
+            // labelContinuousInspectionHint
+            // 
+            this.labelContinuousInspectionHint.AutoSize = true;
+            this.labelContinuousInspectionHint.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(115)))), ((int)(((byte)(120)))));
+            this.labelContinuousInspectionHint.Location = new System.Drawing.Point(28, 74);
+            this.labelContinuousInspectionHint.Name = "labelContinuousInspectionHint";
+            this.labelContinuousInspectionHint.Size = new System.Drawing.Size(384, 18);
+            this.labelContinuousInspectionHint.TabIndex = 1;
+            this.labelContinuousInspectionHint.Text = "此頁面已預留為 UI 可見區域，後續可直接在 Designer 內維護控制項。";
+            // 
+            // labelContinuousInspectionTitle
+            // 
+            this.labelContinuousInspectionTitle.AutoSize = true;
+            this.labelContinuousInspectionTitle.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F, System.Drawing.FontStyle.Bold);
+            this.labelContinuousInspectionTitle.Location = new System.Drawing.Point(26, 28);
+            this.labelContinuousInspectionTitle.Name = "labelContinuousInspectionTitle";
+            this.labelContinuousInspectionTitle.Size = new System.Drawing.Size(100, 28);
+            this.labelContinuousInspectionTitle.TabIndex = 0;
+            this.labelContinuousInspectionTitle.Text = "連續檢測";
             // 
             // panelDetectionParameterSummary
             // 
