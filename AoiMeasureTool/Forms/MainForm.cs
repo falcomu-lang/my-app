@@ -175,6 +175,7 @@ namespace AoiMeasureTool
         private readonly float[] _continuousInspectionImageScales = new float[3];
         private readonly float[] _continuousInspectionFitScales = new float[3];
         private readonly bool[] _continuousInspectionDragging = new bool[3];
+        private readonly bool[] _continuousInspectionOverlayVisible = new bool[3];
         private readonly Point[] _continuousInspectionLastMousePositions = new Point[3];
         private readonly float[] _continuousInspectionOffsetXs = new float[3];
         private readonly float[] _continuousInspectionOffsetYs = new float[3];
@@ -642,6 +643,9 @@ namespace AoiMeasureTool
                 {
                     _continuousInspectionSubParameterLabels[i].Text = string.IsNullOrWhiteSpace(values[i]) ? "未設定子參數" : values[i];
                 }
+
+                _continuousInspectionOverlayVisible[i] = false;
+                _continuousInspectionPreviewPanels[i]?.Invalidate();
             }
         }
 
@@ -670,11 +674,13 @@ namespace AoiMeasureTool
                 }
 
                 _continuousInspectionImagePaths[index] = openFileDialogImage.FileName;
+                _continuousInspectionOverlayVisible[index] = false;
                 if (_continuousInspectionResultLabels[index] != null)
                 {
                     _continuousInspectionResultLabels[index].Text = string.Empty;
                     _continuousInspectionResultLabels[index].BackColor = Color.White;
                 }
+                _continuousInspectionPreviewPanels[index]?.Invalidate();
             }
             catch (Exception ex)
             {
@@ -714,10 +720,15 @@ namespace AoiMeasureTool
                 var resultText = SummarizeContinuousInspectionJudgement(rows);
                 _continuousInspectionResultLabels[index].Text = resultText;
                 _continuousInspectionResultLabels[index].BackColor = GetContinuousInspectionResultBackColor(resultText);
+                _continuousInspectionOverlayVisible[index] = true;
                 if (annotatedBitmap != null)
                 {
                     SetPictureBoxImage(_continuousInspectionPictureBoxes[index], annotatedBitmap);
                     ApplyContinuousInspectionImageLayout(index, false);
+                }
+                else
+                {
+                    _continuousInspectionPreviewPanels[index]?.Invalidate();
                 }
             }
             catch (Exception ex)
@@ -846,6 +857,11 @@ namespace AoiMeasureTool
                 return;
             }
 
+            if (!_continuousInspectionOverlayVisible[index])
+            {
+                return;
+            }
+
             var imagePath = _continuousInspectionImagePaths[index];
             var productKey = _continuousInspectionSubParameterLabels[index]?.Text?.Trim();
             if (string.IsNullOrWhiteSpace(imagePath) || !File.Exists(imagePath) || string.IsNullOrWhiteSpace(productKey) || string.Equals(productKey, "未設定子參數", StringComparison.Ordinal))
@@ -871,7 +887,6 @@ namespace AoiMeasureTool
                 _multiImageConfirmImagePaths.Add(imagePath);
                 _multiImageConfirmImageIndex = 0;
 
-                DrawMultiImageConfirmReferenceRoi(graphics, imageRect);
                 var referenceCandidate = GetMultiImageConfirmReferenceCandidate();
                 if (referenceCandidate != null)
                 {
