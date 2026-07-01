@@ -594,6 +594,8 @@ namespace AoiMeasureTool
 
                 _lastImagePath = loadedData.LastImagePath;
                 _activeProductKey = string.IsNullOrWhiteSpace(loadedData.ActiveProductKey) ? null : loadedData.ActiveProductKey;
+                _detectionSubParameter1Items.Clear();
+                _detectionSubParameter1Items.AddRange(loadedData.ListSortItems);
 
                 if (!_referenceCornerProfiles.ContainsKey("DEFAULT"))
                 {
@@ -637,6 +639,7 @@ namespace AoiMeasureTool
                     LastImagePath = _lastImagePath,
                     ActiveProductKey = _activeProductKey
                 };
+                settingsData.ListSortItems.AddRange(_detectionSubParameter1Items);
                 settingsData.DualThresholdSettings = CaptureDualThresholdSnapshot();
                 _productProfileService.ExportTo(settingsData);
                 _settingsRepository.Save(_settingsPath, settingsData, GetCurrentProductKeyOrDefault());

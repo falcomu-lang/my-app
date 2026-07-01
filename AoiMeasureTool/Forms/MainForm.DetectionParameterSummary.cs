@@ -188,13 +188,18 @@ namespace AoiMeasureTool
 
         private void LoadDetectionSubParameter1List()
         {
-            _detectionSubParameter1Items.Clear();
-            var items = LoadSettingListSortItems();
+            var items = new List<string>(_detectionSubParameter1Items);
+            if (items.Count == 0)
+            {
+                items = LoadSettingListSortItems();
+            }
+
             if (items.Count == 0)
             {
                 items = LoadSettingSectionNames();
             }
 
+            _detectionSubParameter1Items.Clear();
             _detectionSubParameter1Items.AddRange(items);
             RefreshDetectionSubParameter1List();
         }

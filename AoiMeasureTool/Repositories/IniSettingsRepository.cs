@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace AoiMeasureTool
 {
@@ -59,6 +60,16 @@ namespace AoiMeasureTool
                 var name = line.Substring(0, equalsIndex).Trim();
                 var value = line.Substring(equalsIndex + 1).Trim();
 
+                if (string.Equals(currentSection, "listSort", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (!string.IsNullOrWhiteSpace(value))
+                    {
+                        data.ListSortItems.Add(value);
+                    }
+
+                    continue;
+                }
+
                 if (name.StartsWith("Preprocess", StringComparison.OrdinalIgnoreCase))
                 {
                     ApplyPreprocessSetting(data, currentSection, name, value);
@@ -110,6 +121,17 @@ namespace AoiMeasureTool
                 if (!string.IsNullOrWhiteSpace(data.ActiveProductKey))
                 {
                     writer.WriteLine("ActiveProductKey=" + data.ActiveProductKey);
+                }
+
+                if (data.ListSortItems.Count > 0)
+                {
+                    writer.WriteLine("[listSort]");
+                    for (var i = 0; i < data.ListSortItems.Count; i++)
+                    {
+                        writer.WriteLine("Item" + (i + 1) + "=" + (data.ListSortItems[i] ?? string.Empty));
+                    }
+
+                    writer.WriteLine(string.Empty);
                 }
 
                 var sectionKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
