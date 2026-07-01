@@ -59,6 +59,15 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Button buttonContinuousInspectionLoadImage1;
         private System.Windows.Forms.Button buttonContinuousInspectionLoadImage2;
         private System.Windows.Forms.Button buttonContinuousInspectionLoadImage3;
+        private System.Windows.Forms.Label labelContinuousInspectionResult1;
+        private System.Windows.Forms.Label labelContinuousInspectionResult2;
+        private System.Windows.Forms.Label labelContinuousInspectionResult3;
+        private System.Windows.Forms.Button buttonContinuousInspectionJudge1;
+        private System.Windows.Forms.Button buttonContinuousInspectionJudge2;
+        private System.Windows.Forms.Button buttonContinuousInspectionJudge3;
+        private System.Windows.Forms.Label labelContinuousInspectionYield1;
+        private System.Windows.Forms.Label labelContinuousInspectionYield2;
+        private System.Windows.Forms.Label labelContinuousInspectionYield3;
         private System.Windows.Forms.Panel panelDetectionParameterSummary;
         private System.Windows.Forms.GroupBox groupBoxDetectionParameterCreate;
         private System.Windows.Forms.TextBox textBoxDetectionMainParameterName;
@@ -430,16 +439,25 @@ namespace AoiMeasureTool
             this.labelContinuousInspectionMainParameter = new System.Windows.Forms.Label();
             this.comboBoxContinuousInspectionMainParameter = new System.Windows.Forms.ComboBox();
             this.groupBoxContinuousInspection1 = new System.Windows.Forms.GroupBox();
+            this.labelContinuousInspectionYield1 = new System.Windows.Forms.Label();
+            this.buttonContinuousInspectionJudge1 = new System.Windows.Forms.Button();
+            this.labelContinuousInspectionResult1 = new System.Windows.Forms.Label();
             this.buttonContinuousInspectionLoadImage1 = new System.Windows.Forms.Button();
             this.panelContinuousInspectionPreview1 = new System.Windows.Forms.Panel();
             this.pictureBoxContinuousInspection1 = new System.Windows.Forms.PictureBox();
             this.labelContinuousInspectionSubParameter1 = new System.Windows.Forms.Label();
             this.groupBoxContinuousInspection2 = new System.Windows.Forms.GroupBox();
+            this.labelContinuousInspectionYield2 = new System.Windows.Forms.Label();
+            this.buttonContinuousInspectionJudge2 = new System.Windows.Forms.Button();
+            this.labelContinuousInspectionResult2 = new System.Windows.Forms.Label();
             this.buttonContinuousInspectionLoadImage2 = new System.Windows.Forms.Button();
             this.panelContinuousInspectionPreview2 = new System.Windows.Forms.Panel();
             this.pictureBoxContinuousInspection2 = new System.Windows.Forms.PictureBox();
             this.labelContinuousInspectionSubParameter2 = new System.Windows.Forms.Label();
             this.groupBoxContinuousInspection3 = new System.Windows.Forms.GroupBox();
+            this.labelContinuousInspectionYield3 = new System.Windows.Forms.Label();
+            this.buttonContinuousInspectionJudge3 = new System.Windows.Forms.Button();
+            this.labelContinuousInspectionResult3 = new System.Windows.Forms.Label();
             this.buttonContinuousInspectionLoadImage3 = new System.Windows.Forms.Button();
             this.panelContinuousInspectionPreview3 = new System.Windows.Forms.Panel();
             this.pictureBoxContinuousInspection3 = new System.Windows.Forms.PictureBox();
@@ -2507,25 +2525,59 @@ namespace AoiMeasureTool
             // 
             // groupBoxContinuousInspection1
             // 
+            this.groupBoxContinuousInspection1.Controls.Add(this.labelContinuousInspectionYield1);
+            this.groupBoxContinuousInspection1.Controls.Add(this.buttonContinuousInspectionJudge1);
+            this.groupBoxContinuousInspection1.Controls.Add(this.labelContinuousInspectionResult1);
             this.groupBoxContinuousInspection1.Controls.Add(this.buttonContinuousInspectionLoadImage1);
             this.groupBoxContinuousInspection1.Controls.Add(this.panelContinuousInspectionPreview1);
             this.groupBoxContinuousInspection1.Controls.Add(this.labelContinuousInspectionSubParameter1);
             this.groupBoxContinuousInspection1.Font = new System.Drawing.Font("Microsoft JhengHei UI", 12F);
             this.groupBoxContinuousInspection1.Location = new System.Drawing.Point(24, 118);
             this.groupBoxContinuousInspection1.Name = "groupBoxContinuousInspection1";
-            this.groupBoxContinuousInspection1.Size = new System.Drawing.Size(292, 470);
+            this.groupBoxContinuousInspection1.Size = new System.Drawing.Size(292, 510);
             this.groupBoxContinuousInspection1.TabIndex = 3;
             this.groupBoxContinuousInspection1.TabStop = false;
             this.groupBoxContinuousInspection1.Text = "子參數 1";
+            // 
+            // labelContinuousInspectionYield1
+            // 
+            this.labelContinuousInspectionYield1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.labelContinuousInspectionYield1.Location = new System.Drawing.Point(16, 450);
+            this.labelContinuousInspectionYield1.Name = "labelContinuousInspectionYield1";
+            this.labelContinuousInspectionYield1.Size = new System.Drawing.Size(258, 32);
+            this.labelContinuousInspectionYield1.TabIndex = 5;
+            this.labelContinuousInspectionYield1.Text = "良率 0/0(0%)";
+            this.labelContinuousInspectionYield1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // buttonContinuousInspectionJudge1
+            // 
+            this.buttonContinuousInspectionJudge1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonContinuousInspectionJudge1.FlatAppearance.BorderSize = 0;
+            this.buttonContinuousInspectionJudge1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonContinuousInspectionJudge1.Location = new System.Drawing.Point(146, 400);
+            this.buttonContinuousInspectionJudge1.Name = "buttonContinuousInspectionJudge1";
+            this.buttonContinuousInspectionJudge1.Size = new System.Drawing.Size(128, 36);
+            this.buttonContinuousInspectionJudge1.TabIndex = 4;
+            this.buttonContinuousInspectionJudge1.Text = "判斷";
+            this.buttonContinuousInspectionJudge1.UseVisualStyleBackColor = false;
+            // 
+            // labelContinuousInspectionResult1
+            // 
+            this.labelContinuousInspectionResult1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.labelContinuousInspectionResult1.Location = new System.Drawing.Point(16, 346);
+            this.labelContinuousInspectionResult1.Name = "labelContinuousInspectionResult1";
+            this.labelContinuousInspectionResult1.Size = new System.Drawing.Size(258, 40);
+            this.labelContinuousInspectionResult1.TabIndex = 3;
+            this.labelContinuousInspectionResult1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // buttonContinuousInspectionLoadImage1
             // 
             this.buttonContinuousInspectionLoadImage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
             this.buttonContinuousInspectionLoadImage1.FlatAppearance.BorderSize = 0;
             this.buttonContinuousInspectionLoadImage1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonContinuousInspectionLoadImage1.Location = new System.Drawing.Point(16, 348);
+            this.buttonContinuousInspectionLoadImage1.Location = new System.Drawing.Point(16, 400);
             this.buttonContinuousInspectionLoadImage1.Name = "buttonContinuousInspectionLoadImage1";
-            this.buttonContinuousInspectionLoadImage1.Size = new System.Drawing.Size(120, 40);
+            this.buttonContinuousInspectionLoadImage1.Size = new System.Drawing.Size(120, 36);
             this.buttonContinuousInspectionLoadImage1.TabIndex = 2;
             this.buttonContinuousInspectionLoadImage1.Text = "讀取圖";
             this.buttonContinuousInspectionLoadImage1.UseVisualStyleBackColor = false;
@@ -2563,25 +2615,59 @@ namespace AoiMeasureTool
             // 
             // groupBoxContinuousInspection2
             // 
+            this.groupBoxContinuousInspection2.Controls.Add(this.labelContinuousInspectionYield2);
+            this.groupBoxContinuousInspection2.Controls.Add(this.buttonContinuousInspectionJudge2);
+            this.groupBoxContinuousInspection2.Controls.Add(this.labelContinuousInspectionResult2);
             this.groupBoxContinuousInspection2.Controls.Add(this.buttonContinuousInspectionLoadImage2);
             this.groupBoxContinuousInspection2.Controls.Add(this.panelContinuousInspectionPreview2);
             this.groupBoxContinuousInspection2.Controls.Add(this.labelContinuousInspectionSubParameter2);
             this.groupBoxContinuousInspection2.Font = new System.Drawing.Font("Microsoft JhengHei UI", 12F);
             this.groupBoxContinuousInspection2.Location = new System.Drawing.Point(344, 118);
             this.groupBoxContinuousInspection2.Name = "groupBoxContinuousInspection2";
-            this.groupBoxContinuousInspection2.Size = new System.Drawing.Size(292, 470);
+            this.groupBoxContinuousInspection2.Size = new System.Drawing.Size(292, 510);
             this.groupBoxContinuousInspection2.TabIndex = 4;
             this.groupBoxContinuousInspection2.TabStop = false;
             this.groupBoxContinuousInspection2.Text = "子參數 2";
+            // 
+            // labelContinuousInspectionYield2
+            // 
+            this.labelContinuousInspectionYield2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.labelContinuousInspectionYield2.Location = new System.Drawing.Point(16, 450);
+            this.labelContinuousInspectionYield2.Name = "labelContinuousInspectionYield2";
+            this.labelContinuousInspectionYield2.Size = new System.Drawing.Size(258, 32);
+            this.labelContinuousInspectionYield2.TabIndex = 5;
+            this.labelContinuousInspectionYield2.Text = "良率 0/0(0%)";
+            this.labelContinuousInspectionYield2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // buttonContinuousInspectionJudge2
+            // 
+            this.buttonContinuousInspectionJudge2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonContinuousInspectionJudge2.FlatAppearance.BorderSize = 0;
+            this.buttonContinuousInspectionJudge2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonContinuousInspectionJudge2.Location = new System.Drawing.Point(146, 400);
+            this.buttonContinuousInspectionJudge2.Name = "buttonContinuousInspectionJudge2";
+            this.buttonContinuousInspectionJudge2.Size = new System.Drawing.Size(128, 36);
+            this.buttonContinuousInspectionJudge2.TabIndex = 4;
+            this.buttonContinuousInspectionJudge2.Text = "判斷";
+            this.buttonContinuousInspectionJudge2.UseVisualStyleBackColor = false;
+            // 
+            // labelContinuousInspectionResult2
+            // 
+            this.labelContinuousInspectionResult2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.labelContinuousInspectionResult2.Location = new System.Drawing.Point(16, 346);
+            this.labelContinuousInspectionResult2.Name = "labelContinuousInspectionResult2";
+            this.labelContinuousInspectionResult2.Size = new System.Drawing.Size(258, 40);
+            this.labelContinuousInspectionResult2.TabIndex = 3;
+            this.labelContinuousInspectionResult2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // buttonContinuousInspectionLoadImage2
             // 
             this.buttonContinuousInspectionLoadImage2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
             this.buttonContinuousInspectionLoadImage2.FlatAppearance.BorderSize = 0;
             this.buttonContinuousInspectionLoadImage2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonContinuousInspectionLoadImage2.Location = new System.Drawing.Point(16, 348);
+            this.buttonContinuousInspectionLoadImage2.Location = new System.Drawing.Point(16, 400);
             this.buttonContinuousInspectionLoadImage2.Name = "buttonContinuousInspectionLoadImage2";
-            this.buttonContinuousInspectionLoadImage2.Size = new System.Drawing.Size(120, 40);
+            this.buttonContinuousInspectionLoadImage2.Size = new System.Drawing.Size(120, 36);
             this.buttonContinuousInspectionLoadImage2.TabIndex = 2;
             this.buttonContinuousInspectionLoadImage2.Text = "讀取圖";
             this.buttonContinuousInspectionLoadImage2.UseVisualStyleBackColor = false;
@@ -2619,25 +2705,59 @@ namespace AoiMeasureTool
             // 
             // groupBoxContinuousInspection3
             // 
+            this.groupBoxContinuousInspection3.Controls.Add(this.labelContinuousInspectionYield3);
+            this.groupBoxContinuousInspection3.Controls.Add(this.buttonContinuousInspectionJudge3);
+            this.groupBoxContinuousInspection3.Controls.Add(this.labelContinuousInspectionResult3);
             this.groupBoxContinuousInspection3.Controls.Add(this.buttonContinuousInspectionLoadImage3);
             this.groupBoxContinuousInspection3.Controls.Add(this.panelContinuousInspectionPreview3);
             this.groupBoxContinuousInspection3.Controls.Add(this.labelContinuousInspectionSubParameter3);
             this.groupBoxContinuousInspection3.Font = new System.Drawing.Font("Microsoft JhengHei UI", 12F);
             this.groupBoxContinuousInspection3.Location = new System.Drawing.Point(664, 118);
             this.groupBoxContinuousInspection3.Name = "groupBoxContinuousInspection3";
-            this.groupBoxContinuousInspection3.Size = new System.Drawing.Size(292, 470);
+            this.groupBoxContinuousInspection3.Size = new System.Drawing.Size(292, 510);
             this.groupBoxContinuousInspection3.TabIndex = 5;
             this.groupBoxContinuousInspection3.TabStop = false;
             this.groupBoxContinuousInspection3.Text = "子參數 3";
+            // 
+            // labelContinuousInspectionYield3
+            // 
+            this.labelContinuousInspectionYield3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.labelContinuousInspectionYield3.Location = new System.Drawing.Point(16, 450);
+            this.labelContinuousInspectionYield3.Name = "labelContinuousInspectionYield3";
+            this.labelContinuousInspectionYield3.Size = new System.Drawing.Size(258, 32);
+            this.labelContinuousInspectionYield3.TabIndex = 5;
+            this.labelContinuousInspectionYield3.Text = "良率 0/0(0%)";
+            this.labelContinuousInspectionYield3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // buttonContinuousInspectionJudge3
+            // 
+            this.buttonContinuousInspectionJudge3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonContinuousInspectionJudge3.FlatAppearance.BorderSize = 0;
+            this.buttonContinuousInspectionJudge3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonContinuousInspectionJudge3.Location = new System.Drawing.Point(146, 400);
+            this.buttonContinuousInspectionJudge3.Name = "buttonContinuousInspectionJudge3";
+            this.buttonContinuousInspectionJudge3.Size = new System.Drawing.Size(128, 36);
+            this.buttonContinuousInspectionJudge3.TabIndex = 4;
+            this.buttonContinuousInspectionJudge3.Text = "判斷";
+            this.buttonContinuousInspectionJudge3.UseVisualStyleBackColor = false;
+            // 
+            // labelContinuousInspectionResult3
+            // 
+            this.labelContinuousInspectionResult3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.labelContinuousInspectionResult3.Location = new System.Drawing.Point(16, 346);
+            this.labelContinuousInspectionResult3.Name = "labelContinuousInspectionResult3";
+            this.labelContinuousInspectionResult3.Size = new System.Drawing.Size(258, 40);
+            this.labelContinuousInspectionResult3.TabIndex = 3;
+            this.labelContinuousInspectionResult3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // buttonContinuousInspectionLoadImage3
             // 
             this.buttonContinuousInspectionLoadImage3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
             this.buttonContinuousInspectionLoadImage3.FlatAppearance.BorderSize = 0;
             this.buttonContinuousInspectionLoadImage3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonContinuousInspectionLoadImage3.Location = new System.Drawing.Point(16, 348);
+            this.buttonContinuousInspectionLoadImage3.Location = new System.Drawing.Point(16, 400);
             this.buttonContinuousInspectionLoadImage3.Name = "buttonContinuousInspectionLoadImage3";
-            this.buttonContinuousInspectionLoadImage3.Size = new System.Drawing.Size(120, 40);
+            this.buttonContinuousInspectionLoadImage3.Size = new System.Drawing.Size(120, 36);
             this.buttonContinuousInspectionLoadImage3.TabIndex = 2;
             this.buttonContinuousInspectionLoadImage3.Text = "讀取圖";
             this.buttonContinuousInspectionLoadImage3.UseVisualStyleBackColor = false;

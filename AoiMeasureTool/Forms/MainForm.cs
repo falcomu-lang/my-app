@@ -172,6 +172,7 @@ namespace AoiMeasureTool
         private readonly PictureBox[] _continuousInspectionPictureBoxes = new PictureBox[3];
         private readonly Label[] _continuousInspectionResultLabels = new Label[3];
         private readonly Label[] _continuousInspectionYieldLabels = new Label[3];
+        private readonly Button[] _continuousInspectionJudgeButtons = new Button[3];
         private readonly string[] _continuousInspectionImagePaths = new string[3];
         private readonly float[] _continuousInspectionImageScales = new float[3];
         private readonly float[] _continuousInspectionFitScales = new float[3];
@@ -476,12 +477,12 @@ namespace AoiMeasureTool
             groupBoxContinuousInspection1.Text = "子參數 1";
             groupBoxContinuousInspection2.Text = "子參數 2";
             groupBoxContinuousInspection3.Text = "子參數 3";
-            groupBoxContinuousInspection1.Location = new Point(24, 44);
-            groupBoxContinuousInspection2.Location = new Point(334, 44);
-            groupBoxContinuousInspection3.Location = new Point(644, 44);
-            groupBoxContinuousInspection1.Size = new Size(286, 444);
-            groupBoxContinuousInspection2.Size = new Size(286, 444);
-            groupBoxContinuousInspection3.Size = new Size(286, 444);
+            groupBoxContinuousInspection1.Location = new Point(24, 40);
+            groupBoxContinuousInspection2.Location = new Point(334, 40);
+            groupBoxContinuousInspection3.Location = new Point(644, 40);
+            groupBoxContinuousInspection1.Size = new Size(292, 510);
+            groupBoxContinuousInspection2.Size = new Size(292, 510);
+            groupBoxContinuousInspection3.Size = new Size(292, 510);
             buttonContinuousInspectionLoadImage1.Text = "讀取圖";
             buttonContinuousInspectionLoadImage2.Text = "讀取圖";
             buttonContinuousInspectionLoadImage3.Text = "讀取圖";
@@ -496,19 +497,28 @@ namespace AoiMeasureTool
             _continuousInspectionPictureBoxes[0] = pictureBoxContinuousInspection1;
             _continuousInspectionPictureBoxes[1] = pictureBoxContinuousInspection2;
             _continuousInspectionPictureBoxes[2] = pictureBoxContinuousInspection3;
+            _continuousInspectionResultLabels[0] = labelContinuousInspectionResult1;
+            _continuousInspectionResultLabels[1] = labelContinuousInspectionResult2;
+            _continuousInspectionResultLabels[2] = labelContinuousInspectionResult3;
+            _continuousInspectionYieldLabels[0] = labelContinuousInspectionYield1;
+            _continuousInspectionYieldLabels[1] = labelContinuousInspectionYield2;
+            _continuousInspectionYieldLabels[2] = labelContinuousInspectionYield3;
+            _continuousInspectionJudgeButtons[0] = buttonContinuousInspectionJudge1;
+            _continuousInspectionJudgeButtons[1] = buttonContinuousInspectionJudge2;
+            _continuousInspectionJudgeButtons[2] = buttonContinuousInspectionJudge3;
 
             buttonContinuousInspectionLoadImage1.Tag = 0;
             buttonContinuousInspectionLoadImage2.Tag = 1;
             buttonContinuousInspectionLoadImage3.Tag = 2;
-            buttonContinuousInspectionLoadImage1.Location = new Point(16, 360);
-            buttonContinuousInspectionLoadImage2.Location = new Point(16, 360);
-            buttonContinuousInspectionLoadImage3.Location = new Point(16, 360);
-            buttonContinuousInspectionLoadImage1.Size = new Size(108, 34);
-            buttonContinuousInspectionLoadImage2.Size = new Size(108, 34);
-            buttonContinuousInspectionLoadImage3.Size = new Size(108, 34);
             buttonContinuousInspectionLoadImage1.Click += ContinuousInspectionLoadImageButton_Click;
             buttonContinuousInspectionLoadImage2.Click += ContinuousInspectionLoadImageButton_Click;
             buttonContinuousInspectionLoadImage3.Click += ContinuousInspectionLoadImageButton_Click;
+            buttonContinuousInspectionJudge1.Tag = 0;
+            buttonContinuousInspectionJudge2.Tag = 1;
+            buttonContinuousInspectionJudge3.Tag = 2;
+            buttonContinuousInspectionJudge1.Click += ContinuousInspectionJudgeButton_Click;
+            buttonContinuousInspectionJudge2.Click += ContinuousInspectionJudgeButton_Click;
+            buttonContinuousInspectionJudge3.Click += ContinuousInspectionJudgeButton_Click;
 
             for (var i = 0; i < _continuousInspectionPictureBoxes.Length; i++)
             {
@@ -532,75 +542,15 @@ namespace AoiMeasureTool
                 panel.MouseEnter += ContinuousInspectionPictureBox_MouseEnter;
                 SetControlDoubleBuffered(panel, true);
             }
-
-            InitializeContinuousInspectionResultArea(groupBoxContinuousInspection1, 0);
-            InitializeContinuousInspectionResultArea(groupBoxContinuousInspection2, 1);
-            InitializeContinuousInspectionResultArea(groupBoxContinuousInspection3, 2);
-        }
-
-        private void InitializeContinuousInspectionResultArea(GroupBox groupBox, int index)
-        {
-            if (groupBox == null)
+            for (var i = 0; i < _continuousInspectionYieldLabels.Length; i++)
             {
-                return;
-            }
-
-            var resultLabel = groupBox.Controls["labelContinuousInspectionResult" + index] as Label;
-            if (resultLabel == null)
-            {
-                resultLabel = new Label
+                if (_continuousInspectionResultLabels[i] != null)
                 {
-                    Name = "labelContinuousInspectionResult" + index,
-                    BorderStyle = BorderStyle.FixedSingle,
-                    Font = new Font("Microsoft JhengHei UI", 12F),
-                    Location = new Point(16, 308),
-                    Size = new Size(250, 40),
-                    Text = string.Empty,
-                    TextAlign = ContentAlignment.MiddleCenter
-                };
-                groupBox.Controls.Add(resultLabel);
-                resultLabel.BringToFront();
-            }
-            resultLabel.BackColor = Color.White;
+                    _continuousInspectionResultLabels[i].BackColor = Color.White;
+                }
 
-            var judgeButton = groupBox.Controls["buttonContinuousInspectionJudge" + index] as Button;
-            if (judgeButton == null)
-            {
-                judgeButton = new Button
-                {
-                    Name = "buttonContinuousInspectionJudge" + index,
-                    BackColor = Color.FromArgb(224, 228, 231),
-                    FlatStyle = FlatStyle.Flat,
-                    Location = new Point(158, 360),
-                    Size = new Size(108, 34),
-                    Text = "判斷",
-                    Tag = index
-                };
-                judgeButton.FlatAppearance.BorderSize = 0;
-                judgeButton.Click += ContinuousInspectionJudgeButton_Click;
-                groupBox.Controls.Add(judgeButton);
-                judgeButton.BringToFront();
+                UpdateContinuousInspectionYieldLabel(i);
             }
-
-            var yieldLabel = groupBox.Controls["labelContinuousInspectionYield" + index] as Label;
-            if (yieldLabel == null)
-            {
-                yieldLabel = new Label
-                {
-                    Name = "labelContinuousInspectionYield" + index,
-                    BorderStyle = BorderStyle.FixedSingle,
-                    Font = new Font("Microsoft JhengHei UI", 11F),
-                    Location = new Point(16, 404),
-                    Size = new Size(250, 36),
-                    TextAlign = ContentAlignment.MiddleCenter
-                };
-                groupBox.Controls.Add(yieldLabel);
-                yieldLabel.BringToFront();
-            }
-
-            _continuousInspectionResultLabels[index] = resultLabel;
-            _continuousInspectionYieldLabels[index] = yieldLabel;
-            UpdateContinuousInspectionYieldLabel(index);
         }
 
         private void RefreshContinuousInspectionMainParameterItems()
