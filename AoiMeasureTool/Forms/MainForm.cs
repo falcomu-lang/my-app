@@ -669,9 +669,8 @@ namespace AoiMeasureTool
 
             try
             {
-                var rows = BuildContinuousInspectionJudgementResults(imagePath);
-                var matchedRows = rows.FindAll(row => string.Equals(row.Name, subParameterName, StringComparison.OrdinalIgnoreCase));
-                _continuousInspectionResultLabels[index].Text = SummarizeContinuousInspectionJudgement(matchedRows);
+                var rows = BuildContinuousInspectionJudgementResults(imagePath, subParameterName);
+                _continuousInspectionResultLabels[index].Text = SummarizeContinuousInspectionJudgement(rows);
             }
             catch (Exception ex)
             {
@@ -680,19 +679,23 @@ namespace AoiMeasureTool
             }
         }
 
-        private List<MultiImageJudgementResultRow> BuildContinuousInspectionJudgementResults(string imagePath)
+        private List<MultiImageJudgementResultRow> BuildContinuousInspectionJudgementResults(string imagePath, string productKey)
         {
             var originalBitmap = _multiImageConfirmBitmap;
             var originalSourceImageSize = _multiImageConfirmSourceImageSize;
             var originalProductKey = _multiImageConfirmProductKey;
             var originalImageIndex = _multiImageConfirmImageIndex;
             var originalImagePaths = new List<string>(_multiImageConfirmImagePaths);
+            var originalJudgementCriteriaRules = CloneJudgementCriteriaRules(_judgementCriteriaRules);
 
             try
             {
+                productKey = string.IsNullOrWhiteSpace(productKey) ? "DEFAULT" : productKey;
+                var profileState = _productProfileService.GetOrCreateState(productKey);
+                _judgementCriteriaRules = CloneJudgementCriteriaRules(profileState.JudgementCriteriaRules);
                 _multiImageConfirmBitmap = new Bitmap(imagePath);
                 _multiImageConfirmSourceImageSize = _multiImageConfirmBitmap.Size;
-                _multiImageConfirmProductKey = GetCurrentProductKeyOrDefault();
+                _multiImageConfirmProductKey = profileState.ProductKey;
                 _multiImageConfirmImagePaths.Clear();
                 _multiImageConfirmImagePaths.Add(imagePath);
                 _multiImageConfirmImageIndex = 0;
@@ -704,6 +707,7 @@ namespace AoiMeasureTool
                 _multiImageConfirmBitmap = originalBitmap;
                 _multiImageConfirmSourceImageSize = originalSourceImageSize;
                 _multiImageConfirmProductKey = originalProductKey;
+                _judgementCriteriaRules = originalJudgementCriteriaRules;
                 _multiImageConfirmImagePaths.Clear();
                 _multiImageConfirmImagePaths.AddRange(originalImagePaths);
                 _multiImageConfirmImageIndex = originalImageIndex;
