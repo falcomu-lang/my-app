@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace AoiMeasureTool
 {
@@ -14,6 +15,9 @@ namespace AoiMeasureTool
                 return items;
             }
 
+            var sectionValues = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
+            string currentSection = null;
+
             foreach (var rawLine in File.ReadAllLines(path))
             {
                 var line = rawLine.Trim();
@@ -24,19 +28,45 @@ namespace AoiMeasureTool
 
                 if (line.StartsWith("[") && line.EndsWith("]"))
                 {
+                    currentSection = line.Substring(1, line.Length - 2).Trim();
+                    if (!sectionValues.ContainsKey(currentSection))
+                    {
+                        sectionValues[currentSection] =
+                            new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                    }
+
                     continue;
                 }
 
-                var value = line;
                 var equalsIndex = line.IndexOf('=');
-                if (equalsIndex >= 0)
+                if (equalsIndex > 0 && !string.IsNullOrWhiteSpace(currentSection))
                 {
-                    value = line.Substring(equalsIndex + 1).Trim();
+                    var key = line.Substring(0, equalsIndex).Trim();
+                    var value = line.Substring(equalsIndex + 1).Trim();
+                    sectionValues[currentSection][key] = value;
+                    continue;
                 }
 
-                if (!string.IsNullOrWhiteSpace(value))
+                if (string.IsNullOrWhiteSpace(currentSection))
                 {
-                    items.Add(value);
+                    var fallbackValue = line.Trim();
+                    if (!string.IsNullOrWhiteSpace(fallbackValue))
+                    {
+                        items.Add(fallbackValue);
+                    }
+                }
+            }
+
+            Dictionary<string, string> sortSection;
+            if (sectionValues.TryGetValue("listSort", out sortSection))
+            {
+                items.Clear();
+                foreach (var pair in sortSection.OrderBy(p => ExtractTrailingNumber(p.Key)))
+                {
+                    if (!string.IsNullOrWhiteSpace(pair.Value))
+                    {
+                        items.Add(pair.Value.Trim());
+                    }
                 }
             }
 
@@ -53,12 +83,45 @@ namespace AoiMeasureTool
 
             using (var writer = new StreamWriter(path, false))
             {
-                writer.WriteLine("[MainParameters]");
+                writer.WriteLine("[listSort]");
                 for (var i = 0; i < items.Count; i++)
                 {
-                    writer.WriteLine("Item" + (i + 1) + "=" + (items[i] ?? string.Empty));
+                    var parameterName = (items[i] ?? string.Empty).Trim();
+                    writer.WriteLine("Item" + (i + 1) + "=" + parameterName);
+                }
+
+                foreach (var item in items)
+                {
+                    var parameterName = (item ?? string.Empty).Trim();
+                    if (string.IsNullOrWhiteSpace(parameterName))
+                    {
+                        continue;
+                    }
+
+                    writer.WriteLine();
+                    writer.WriteLine("[" + parameterName + "]");
+                    writer.WriteLine("subParameter1=");
+                    writer.WriteLine("subParameter2=");
+                    writer.WriteLine("subParameter3=");
                 }
             }
+        }
+
+        private static int ExtractTrailingNumber(string key)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                return int.MaxValue;
+            }
+
+            var digitStart = key.Length;
+            while (digitStart > 0 && char.IsDigit(key[digitStart - 1]))
+            {
+                digitStart--;
+            }
+
+            int number;
+            return int.TryParse(key.Substring(digitStart), out number) ? number : int.MaxValue;
         }
     }
 }
