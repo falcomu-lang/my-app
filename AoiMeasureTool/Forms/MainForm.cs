@@ -176,6 +176,8 @@ namespace AoiMeasureTool
         private readonly float[] _continuousInspectionFitScales = new float[3];
         private readonly bool[] _continuousInspectionDragging = new bool[3];
         private readonly Point[] _continuousInspectionLastMousePositions = new Point[3];
+        private readonly float[] _continuousInspectionOffsetXs = new float[3];
+        private readonly float[] _continuousInspectionOffsetYs = new float[3];
         private ContextMenuStrip _judgementCriteriaMenu;
         private ToolStripMenuItem _judgementCriteriaEditMenuItem;
         private ToolStripMenuItem _judgementCriteriaDeleteMenuItem;
@@ -508,13 +510,16 @@ namespace AoiMeasureTool
 
                 pictureBox.Tag = i;
                 panel.Tag = i;
-                pictureBox.MouseWheel += ContinuousInspectionPictureBox_MouseWheel;
-                pictureBox.MouseDown += ContinuousInspectionPictureBox_MouseDown;
-                pictureBox.MouseMove += ContinuousInspectionPictureBox_MouseMove;
-                pictureBox.MouseUp += ContinuousInspectionPictureBox_MouseUp;
-                pictureBox.MouseEnter += ContinuousInspectionPictureBox_MouseEnter;
+                pictureBox.Dock = DockStyle.None;
+                pictureBox.SizeMode = PictureBoxSizeMode.Normal;
+                pictureBox.Visible = false;
+                panel.Paint += ContinuousInspectionPreviewPanel_Paint;
                 panel.MouseWheel += ContinuousInspectionPictureBox_MouseWheel;
+                panel.MouseDown += ContinuousInspectionPictureBox_MouseDown;
+                panel.MouseMove += ContinuousInspectionPictureBox_MouseMove;
+                panel.MouseUp += ContinuousInspectionPictureBox_MouseUp;
                 panel.MouseEnter += ContinuousInspectionPictureBox_MouseEnter;
+                SetControlDoubleBuffered(panel, true);
             }
 
             InitializeContinuousInspectionResultArea(groupBoxContinuousInspection1, 0);
@@ -804,6 +809,108 @@ namespace AoiMeasureTool
             return annotated;
         }
 
+        private void ContinuousInspectionPreviewPanel_Paint(object sender, PaintEventArgs e)
+        {
+            var panel = sender as Panel;
+            var index = GetContinuousInspectionImageIndex(panel);
+            if (index < 0)
+            {
+                return;
+            }
+
+            var pictureBox = _continuousInspectionPictureBoxes[index];
+            if (pictureBox?.Image == null)
+            {
+                return;
+            }
+
+            e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            e.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+
+            var image = pictureBox.Image;
+            var imageRect = new Rectangle(
+                (int)Math.Round(_continuousInspectionOffsetXs[index]),
+                (int)Math.Round(_continuousInspectionOffsetYs[index]),
+                Math.Max(1, (int)Math.Round(image.Width * _continuousInspectionImageScales[index])),
+                Math.Max(1, (int)Math.Round(image.Height * _continuousInspectionImageScales[index])));
+
+            e.Graphics.DrawImage(image, imageRect);
+            DrawContinuousInspectionOverlay(e.Graphics, index, imageRect);
+        }
+
+        private void DrawContinuousInspectionOverlay(Graphics graphics, int index, Rectangle imageRect)
+        {
+            if (graphics == null || imageRect.Width <= 0 || imageRect.Height <= 0)
+            {
+                return;
+            }
+
+            var imagePath = _continuousInspectionImagePaths[index];
+            var productKey = _continuousInspectionSubParameterLabels[index]?.Text?.Trim();
+            if (string.IsNullOrWhiteSpace(imagePath) || !File.Exists(imagePath) || string.IsNullOrWhiteSpace(productKey) || string.Equals(productKey, "未設定子參數", StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            var originalBitmap = _multiImageConfirmBitmap;
+            var originalSourceImageSize = _multiImageConfirmSourceImageSize;
+            var originalProductKey = _multiImageConfirmProductKey;
+            var originalImageIndex = _multiImageConfirmImageIndex;
+            var originalImagePaths = new List<string>(_multiImageConfirmImagePaths);
+            var originalJudgementCriteriaRules = CloneJudgementCriteriaRules(_judgementCriteriaRules);
+
+            try
+            {
+                var profileState = _productProfileService.GetOrCreateState(productKey);
+                _judgementCriteriaRules = CloneJudgementCriteriaRules(profileState.JudgementCriteriaRules);
+                _multiImageConfirmBitmap = new Bitmap(imagePath);
+                _multiImageConfirmSourceImageSize = _multiImageConfirmBitmap.Size;
+                _multiImageConfirmProductKey = profileState.ProductKey;
+                _multiImageConfirmImagePaths.Clear();
+                _multiImageConfirmImagePaths.Add(imagePath);
+                _multiImageConfirmImageIndex = 0;
+
+                DrawMultiImageConfirmReferenceRoi(graphics, imageRect);
+                var referenceCandidate = GetMultiImageConfirmReferenceCandidate();
+                if (referenceCandidate != null)
+                {
+                    DrawMultiImageConfirmReferenceBaseline(graphics, referenceCandidate, imageRect);
+                }
+
+                var measureRecords = GetMultiImageConfirmMeasureRecords(referenceCandidate);
+                for (var i = 0; i < measureRecords.Count; i++)
+                {
+                    var record = measureRecords[i];
+                    var color = MeasurementOverlayService.GetSourceColor(record.SourceName);
+                    using (var pen = new Pen(color, 2f))
+                    using (var brush = new SolidBrush(color))
+                    {
+                        var lineResult = GetCachedMultiImageLineMeasurement(record);
+                        if (lineResult == null || !lineResult.IsValid)
+                        {
+                            continue;
+                        }
+
+                        var startPoint = GetMultiImageConfirmDisplayPoint(lineResult.StartPoint, imageRect);
+                        var endPoint = GetMultiImageConfirmDisplayPoint(lineResult.EndPoint, imageRect);
+                        MeasurementOverlayService.DrawMeasureRecord(graphics, pen, brush, startPoint, endPoint);
+                    }
+                }
+            }
+            finally
+            {
+                _multiImageConfirmBitmap?.Dispose();
+                _multiImageConfirmBitmap = originalBitmap;
+                _multiImageConfirmSourceImageSize = originalSourceImageSize;
+                _multiImageConfirmProductKey = originalProductKey;
+                _judgementCriteriaRules = originalJudgementCriteriaRules;
+                _multiImageConfirmImagePaths.Clear();
+                _multiImageConfirmImagePaths.AddRange(originalImagePaths);
+                _multiImageConfirmImageIndex = originalImageIndex;
+            }
+        }
+
         private static Color GetContinuousInspectionResultBackColor(string resultText)
         {
             if (string.Equals(resultText, "A", StringComparison.OrdinalIgnoreCase))
@@ -841,8 +948,8 @@ namespace AoiMeasureTool
 
             var sourceControl = sender as Control;
             var mousePosition = panel.PointToClient(sourceControl.PointToScreen(e.Location));
-            var imageX = (mousePosition.X - pictureBox.Left) / _continuousInspectionImageScales[index];
-            var imageY = (mousePosition.Y - pictureBox.Top) / _continuousInspectionImageScales[index];
+            var imageX = (mousePosition.X - _continuousInspectionOffsetXs[index]) / _continuousInspectionImageScales[index];
+            var imageY = (mousePosition.Y - _continuousInspectionOffsetYs[index]) / _continuousInspectionImageScales[index];
             var zoomFactor = e.Delta > 0 ? 1.15f : 1f / 1.15f;
             var minimumScale = _continuousInspectionFitScales[index] * 0.25f;
             var maximumScale = _continuousInspectionFitScales[index] * 20f;
@@ -851,12 +958,10 @@ namespace AoiMeasureTool
                 minimumScale,
                 Math.Min(maximumScale, _continuousInspectionImageScales[index] * zoomFactor));
 
-            var newWidth = Math.Max(1, (int)Math.Round(pictureBox.Image.Width * _continuousInspectionImageScales[index]));
-            var newHeight = Math.Max(1, (int)Math.Round(pictureBox.Image.Height * _continuousInspectionImageScales[index]));
-            pictureBox.Size = new Size(newWidth, newHeight);
-            pictureBox.Left = (int)Math.Round(mousePosition.X - imageX * _continuousInspectionImageScales[index]);
-            pictureBox.Top = (int)Math.Round(mousePosition.Y - imageY * _continuousInspectionImageScales[index]);
-            MeasurementCoordinateService.ConstrainPosition(pictureBox, panel);
+            _continuousInspectionOffsetXs[index] = (float)(mousePosition.X - imageX * _continuousInspectionImageScales[index]);
+            _continuousInspectionOffsetYs[index] = (float)(mousePosition.Y - imageY * _continuousInspectionImageScales[index]);
+            ConstrainContinuousInspectionImagePosition(index);
+            panel.Invalidate();
         }
 
         private void ContinuousInspectionPictureBox_MouseDown(object sender, MouseEventArgs e)
@@ -875,9 +980,9 @@ namespace AoiMeasureTool
             }
 
             _continuousInspectionDragging[index] = true;
-            _continuousInspectionLastMousePositions[index] = panel.PointToClient(pictureBox.PointToScreen(e.Location));
-            pictureBox.Cursor = Cursors.SizeAll;
-            pictureBox.Capture = true;
+            _continuousInspectionLastMousePositions[index] = e.Location;
+            panel.Cursor = Cursors.SizeAll;
+            panel.Capture = true;
         }
 
         private void ContinuousInspectionPictureBox_MouseMove(object sender, MouseEventArgs e)
@@ -895,11 +1000,12 @@ namespace AoiMeasureTool
                 return;
             }
 
-            var currentPosition = panel.PointToClient(pictureBox.PointToScreen(e.Location));
-            pictureBox.Left += currentPosition.X - _continuousInspectionLastMousePositions[index].X;
-            pictureBox.Top += currentPosition.Y - _continuousInspectionLastMousePositions[index].Y;
+            var currentPosition = e.Location;
+            _continuousInspectionOffsetXs[index] += currentPosition.X - _continuousInspectionLastMousePositions[index].X;
+            _continuousInspectionOffsetYs[index] += currentPosition.Y - _continuousInspectionLastMousePositions[index].Y;
             _continuousInspectionLastMousePositions[index] = currentPosition;
-            MeasurementCoordinateService.ConstrainPosition(pictureBox, panel);
+            ConstrainContinuousInspectionImagePosition(index);
+            panel.Invalidate();
         }
 
         private void ContinuousInspectionPictureBox_MouseUp(object sender, MouseEventArgs e)
@@ -910,12 +1016,12 @@ namespace AoiMeasureTool
                 return;
             }
 
-            var pictureBox = _continuousInspectionPictureBoxes[index];
             _continuousInspectionDragging[index] = false;
-            if (pictureBox != null)
+            var panel = _continuousInspectionPreviewPanels[index];
+            if (panel != null)
             {
-                pictureBox.Cursor = Cursors.Default;
-                pictureBox.Capture = false;
+                panel.Cursor = Cursors.Default;
+                panel.Capture = false;
             }
         }
 
@@ -927,7 +1033,7 @@ namespace AoiMeasureTool
                 return;
             }
 
-            _continuousInspectionPictureBoxes[index]?.Focus();
+            _continuousInspectionPreviewPanels[index]?.Focus();
         }
 
         private void ApplyContinuousInspectionImageLayout(int index, bool centerImage)
@@ -956,16 +1062,42 @@ namespace AoiMeasureTool
                 _continuousInspectionImageScales[index] = _continuousInspectionFitScales[index];
             }
 
-            MeasurementCoordinateService.ApplyTransform(
-                pictureBox,
-                panel,
-                _continuousInspectionImageScales[index],
-                centerImage);
+            if (centerImage)
+            {
+                var width = pictureBox.Image.Width * _continuousInspectionImageScales[index];
+                var height = pictureBox.Image.Height * _continuousInspectionImageScales[index];
+                _continuousInspectionOffsetXs[index] = (panel.ClientSize.Width - width) / 2f;
+                _continuousInspectionOffsetYs[index] = (panel.ClientSize.Height - height) / 2f;
+            }
+
+            ConstrainContinuousInspectionImagePosition(index);
+            panel.Invalidate();
         }
 
         private static int GetContinuousInspectionImageIndex(Control control)
         {
             return control?.Tag as int? ?? -1;
+        }
+
+        private void ConstrainContinuousInspectionImagePosition(int index)
+        {
+            var pictureBox = _continuousInspectionPictureBoxes[index];
+            var panel = _continuousInspectionPreviewPanels[index];
+            if (pictureBox == null || panel == null || pictureBox.Image == null)
+            {
+                return;
+            }
+
+            var width = pictureBox.Image.Width * _continuousInspectionImageScales[index];
+            var height = pictureBox.Image.Height * _continuousInspectionImageScales[index];
+
+            _continuousInspectionOffsetXs[index] = width <= panel.ClientSize.Width
+                ? (panel.ClientSize.Width - width) / 2f
+                : Math.Max(panel.ClientSize.Width - width, Math.Min(0f, _continuousInspectionOffsetXs[index]));
+
+            _continuousInspectionOffsetYs[index] = height <= panel.ClientSize.Height
+                ? (panel.ClientSize.Height - height) / 2f
+                : Math.Max(panel.ClientSize.Height - height, Math.Min(0f, _continuousInspectionOffsetYs[index]));
         }
 
         private static string SummarizeContinuousInspectionJudgement(List<MultiImageJudgementResultRow> rows)
