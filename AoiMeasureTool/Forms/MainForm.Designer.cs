@@ -2397,7 +2397,7 @@ namespace AoiMeasureTool
             this.groupBoxDetectionMainParameterList.Font = new System.Drawing.Font("Microsoft JhengHei UI", 10F);
             this.groupBoxDetectionMainParameterList.Location = new System.Drawing.Point(236, 24);
             this.groupBoxDetectionMainParameterList.Name = "groupBoxDetectionMainParameterList";
-            this.groupBoxDetectionMainParameterList.Size = new System.Drawing.Size(180, 140);
+            this.groupBoxDetectionMainParameterList.Size = new System.Drawing.Size(180, 280);
             this.groupBoxDetectionMainParameterList.TabIndex = 1;
             this.groupBoxDetectionMainParameterList.TabStop = false;
             this.groupBoxDetectionMainParameterList.Text = "主參數";
@@ -2408,7 +2408,7 @@ namespace AoiMeasureTool
             this.listBoxDetectionMainParameter.ItemHeight = 18;
             this.listBoxDetectionMainParameter.Location = new System.Drawing.Point(12, 28);
             this.listBoxDetectionMainParameter.Name = "listBoxDetectionMainParameter";
-            this.listBoxDetectionMainParameter.Size = new System.Drawing.Size(156, 94);
+            this.listBoxDetectionMainParameter.Size = new System.Drawing.Size(156, 202);
             this.listBoxDetectionMainParameter.TabIndex = 0;
             // 
             // groupBoxDetectionSubParameter1List
@@ -2417,7 +2417,7 @@ namespace AoiMeasureTool
             this.groupBoxDetectionSubParameter1List.Font = new System.Drawing.Font("Microsoft JhengHei UI", 10F);
             this.groupBoxDetectionSubParameter1List.Location = new System.Drawing.Point(430, 24);
             this.groupBoxDetectionSubParameter1List.Name = "groupBoxDetectionSubParameter1List";
-            this.groupBoxDetectionSubParameter1List.Size = new System.Drawing.Size(180, 140);
+            this.groupBoxDetectionSubParameter1List.Size = new System.Drawing.Size(180, 280);
             this.groupBoxDetectionSubParameter1List.TabIndex = 2;
             this.groupBoxDetectionSubParameter1List.TabStop = false;
             this.groupBoxDetectionSubParameter1List.Text = "子參數1";
@@ -2428,7 +2428,7 @@ namespace AoiMeasureTool
             this.listBoxDetectionSubParameter1.ItemHeight = 18;
             this.listBoxDetectionSubParameter1.Location = new System.Drawing.Point(12, 28);
             this.listBoxDetectionSubParameter1.Name = "listBoxDetectionSubParameter1";
-            this.listBoxDetectionSubParameter1.Size = new System.Drawing.Size(156, 94);
+            this.listBoxDetectionSubParameter1.Size = new System.Drawing.Size(156, 202);
             this.listBoxDetectionSubParameter1.TabIndex = 0;
             // 
             // groupBoxDetectionSubParameter2List
@@ -2437,7 +2437,7 @@ namespace AoiMeasureTool
             this.groupBoxDetectionSubParameter2List.Font = new System.Drawing.Font("Microsoft JhengHei UI", 10F);
             this.groupBoxDetectionSubParameter2List.Location = new System.Drawing.Point(624, 24);
             this.groupBoxDetectionSubParameter2List.Name = "groupBoxDetectionSubParameter2List";
-            this.groupBoxDetectionSubParameter2List.Size = new System.Drawing.Size(180, 140);
+            this.groupBoxDetectionSubParameter2List.Size = new System.Drawing.Size(180, 280);
             this.groupBoxDetectionSubParameter2List.TabIndex = 3;
             this.groupBoxDetectionSubParameter2List.TabStop = false;
             this.groupBoxDetectionSubParameter2List.Text = "子參數2";
@@ -2448,7 +2448,7 @@ namespace AoiMeasureTool
             this.listBoxDetectionSubParameter2.ItemHeight = 18;
             this.listBoxDetectionSubParameter2.Location = new System.Drawing.Point(12, 28);
             this.listBoxDetectionSubParameter2.Name = "listBoxDetectionSubParameter2";
-            this.listBoxDetectionSubParameter2.Size = new System.Drawing.Size(156, 94);
+            this.listBoxDetectionSubParameter2.Size = new System.Drawing.Size(156, 202);
             this.listBoxDetectionSubParameter2.TabIndex = 0;
             // 
             // groupBoxDetectionSubParameter3List
@@ -2457,7 +2457,7 @@ namespace AoiMeasureTool
             this.groupBoxDetectionSubParameter3List.Font = new System.Drawing.Font("Microsoft JhengHei UI", 10F);
             this.groupBoxDetectionSubParameter3List.Location = new System.Drawing.Point(818, 24);
             this.groupBoxDetectionSubParameter3List.Name = "groupBoxDetectionSubParameter3List";
-            this.groupBoxDetectionSubParameter3List.Size = new System.Drawing.Size(180, 140);
+            this.groupBoxDetectionSubParameter3List.Size = new System.Drawing.Size(180, 280);
             this.groupBoxDetectionSubParameter3List.TabIndex = 4;
             this.groupBoxDetectionSubParameter3List.TabStop = false;
             this.groupBoxDetectionSubParameter3List.Text = "子參數3";
@@ -2468,7 +2468,7 @@ namespace AoiMeasureTool
             this.listBoxDetectionSubParameter3.ItemHeight = 18;
             this.listBoxDetectionSubParameter3.Location = new System.Drawing.Point(12, 28);
             this.listBoxDetectionSubParameter3.Name = "listBoxDetectionSubParameter3";
-            this.listBoxDetectionSubParameter3.Size = new System.Drawing.Size(156, 94);
+            this.listBoxDetectionSubParameter3.Size = new System.Drawing.Size(156, 202);
             this.listBoxDetectionSubParameter3.TabIndex = 0;
             // 
             // labelJudgementCriteriaTitle
