@@ -2409,7 +2409,6 @@ namespace AoiMeasureTool
             // tabPageContinuousInspection
             // 
             this.tabPageContinuousInspection.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
-            this.tabPageContinuousInspection.Controls.Add(this.panelContinuousInspection);
             this.tabPageContinuousInspection.Location = new System.Drawing.Point(4, 26);
             this.tabPageContinuousInspection.Name = "tabPageContinuousInspection";
             this.tabPageContinuousInspection.Padding = new System.Windows.Forms.Padding(3);
@@ -2427,6 +2426,7 @@ namespace AoiMeasureTool
             this.panelContinuousInspection.Name = "panelContinuousInspection";
             this.panelContinuousInspection.Size = new System.Drawing.Size(984, 608);
             this.panelContinuousInspection.TabIndex = 0;
+            this.panelContinuousInspection.Visible = false;
             // 
             // labelContinuousInspectionHint
             // 

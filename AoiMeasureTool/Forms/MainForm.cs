@@ -166,7 +166,7 @@ namespace AoiMeasureTool
         private ListBox _listBoxDetectionSubParameter3;
         private CheckBox _checkBoxDetectionSubParameter3Enabled;
         private Button _buttonDetectionSaveParameterReference;
-        private Panel _panelContinuousInspection;
+        private Control _continuousInspectionHost;
         private ComboBox _comboBoxContinuousInspectionMainParameter;
         private readonly Label[] _continuousInspectionSubParameterLabels = new Label[3];
         private readonly PictureBox[] _continuousInspectionPictureBoxes = new PictureBox[3];
@@ -451,15 +451,15 @@ namespace AoiMeasureTool
 
         private void InitializeContinuousInspectionControls()
         {
-            _panelContinuousInspection = panelContinuousInspection;
-            if (_panelContinuousInspection == null)
+            _continuousInspectionHost = tabPageContinuousInspection;
+            if (_continuousInspectionHost == null)
             {
                 return;
             }
 
-            _panelContinuousInspection.SuspendLayout();
-            _panelContinuousInspection.Controls.Clear();
-            _panelContinuousInspection.BackColor = Color.FromArgb(248, 249, 250);
+            _continuousInspectionHost.SuspendLayout();
+            _continuousInspectionHost.Controls.Clear();
+            _continuousInspectionHost.BackColor = Color.FromArgb(248, 249, 250);
 
             var labelTitle = new Label
             {
@@ -485,9 +485,9 @@ namespace AoiMeasureTool
             };
             _comboBoxContinuousInspectionMainParameter.SelectedIndexChanged += ContinuousInspectionMainParameterComboBox_SelectedIndexChanged;
 
-            _panelContinuousInspection.Controls.Add(labelTitle);
-            _panelContinuousInspection.Controls.Add(labelMainParameter);
-            _panelContinuousInspection.Controls.Add(_comboBoxContinuousInspectionMainParameter);
+            _continuousInspectionHost.Controls.Add(labelTitle);
+            _continuousInspectionHost.Controls.Add(labelMainParameter);
+            _continuousInspectionHost.Controls.Add(_comboBoxContinuousInspectionMainParameter);
 
             var columnWidth = 292;
             var columnHeight = 470;
@@ -547,11 +547,11 @@ namespace AoiMeasureTool
 
                 _continuousInspectionSubParameterLabels[i] = subParameterLabel;
                 _continuousInspectionPictureBoxes[i] = pictureBox;
-                _panelContinuousInspection.Controls.Add(groupBox);
+                _continuousInspectionHost.Controls.Add(groupBox);
             }
 
-            _panelContinuousInspection.ResumeLayout(false);
-            _panelContinuousInspection.PerformLayout();
+            _continuousInspectionHost.ResumeLayout(false);
+            _continuousInspectionHost.PerformLayout();
         }
 
         private void RefreshContinuousInspectionMainParameterItems()
