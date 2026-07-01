@@ -145,7 +145,14 @@ namespace AoiMeasureTool
         private DataGridView _dataGridViewJudgementCriteria;
         private TextBox _textBoxDetectionMainParameterName;
         private Button _buttonDetectionMainParameterConfirm;
+        private Button _buttonDetectionMainParameterMoveUp;
+        private Button _buttonDetectionMainParameterMoveDown;
+        private Button _buttonDetectionMainParameterSaveOrder;
         private ListBox _listBoxDetectionMainParameter;
+        private Button _buttonDetectionSubParameter1MoveUp;
+        private Button _buttonDetectionSubParameter1MoveDown;
+        private Button _buttonDetectionSubParameter1SaveOrder;
+        private ListBox _listBoxDetectionSubParameter1;
         private ContextMenuStrip _judgementCriteriaMenu;
         private ToolStripMenuItem _judgementCriteriaEditMenuItem;
         private ToolStripMenuItem _judgementCriteriaDeleteMenuItem;
@@ -171,6 +178,7 @@ namespace AoiMeasureTool
         private readonly List<MeasureRecord> _measureRecords = new List<MeasureRecord>();
         private List<JudgementCriterionRule> _judgementCriteriaRules = new List<JudgementCriterionRule>();
         private readonly List<string> _detectionMainParameters = new List<string>();
+        private readonly List<string> _detectionSubParameter1Items = new List<string>();
         private MeasureRecord _editingMeasureRecord;
         private DataGridViewRow _editingMeasureRow;
         private bool _isEditingMeasureRecord;

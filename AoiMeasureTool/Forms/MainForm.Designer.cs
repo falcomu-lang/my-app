@@ -49,6 +49,12 @@ namespace AoiMeasureTool
         private System.Windows.Forms.ListBox listBoxDetectionSubParameter1;
         private System.Windows.Forms.ListBox listBoxDetectionSubParameter2;
         private System.Windows.Forms.ListBox listBoxDetectionSubParameter3;
+        private System.Windows.Forms.Button buttonDetectionMainParameterMoveUp;
+        private System.Windows.Forms.Button buttonDetectionMainParameterMoveDown;
+        private System.Windows.Forms.Button buttonDetectionMainParameterSaveOrder;
+        private System.Windows.Forms.Button buttonDetectionSubParameter1MoveUp;
+        private System.Windows.Forms.Button buttonDetectionSubParameter1MoveDown;
+        private System.Windows.Forms.Button buttonDetectionSubParameter1SaveOrder;
         private System.Windows.Forms.Label labelWorkspace;
         private System.Windows.Forms.Label labelInnerSettingsTitle;
         private System.Windows.Forms.Panel panelInnerSettings;
@@ -390,8 +396,14 @@ namespace AoiMeasureTool
             this.textBoxDetectionMainParameterName = new System.Windows.Forms.TextBox();
             this.groupBoxDetectionMainParameterList = new System.Windows.Forms.GroupBox();
             this.listBoxDetectionMainParameter = new System.Windows.Forms.ListBox();
+            this.buttonDetectionMainParameterMoveUp = new System.Windows.Forms.Button();
+            this.buttonDetectionMainParameterMoveDown = new System.Windows.Forms.Button();
+            this.buttonDetectionMainParameterSaveOrder = new System.Windows.Forms.Button();
             this.groupBoxDetectionSubParameter1List = new System.Windows.Forms.GroupBox();
             this.listBoxDetectionSubParameter1 = new System.Windows.Forms.ListBox();
+            this.buttonDetectionSubParameter1MoveUp = new System.Windows.Forms.Button();
+            this.buttonDetectionSubParameter1MoveDown = new System.Windows.Forms.Button();
+            this.buttonDetectionSubParameter1SaveOrder = new System.Windows.Forms.Button();
             this.groupBoxDetectionSubParameter2List = new System.Windows.Forms.GroupBox();
             this.listBoxDetectionSubParameter2 = new System.Windows.Forms.ListBox();
             this.groupBoxDetectionSubParameter3List = new System.Windows.Forms.GroupBox();
@@ -2393,6 +2405,9 @@ namespace AoiMeasureTool
             // 
             // groupBoxDetectionMainParameterList
             // 
+            this.groupBoxDetectionMainParameterList.Controls.Add(this.buttonDetectionMainParameterSaveOrder);
+            this.groupBoxDetectionMainParameterList.Controls.Add(this.buttonDetectionMainParameterMoveDown);
+            this.groupBoxDetectionMainParameterList.Controls.Add(this.buttonDetectionMainParameterMoveUp);
             this.groupBoxDetectionMainParameterList.Controls.Add(this.listBoxDetectionMainParameter);
             this.groupBoxDetectionMainParameterList.Font = new System.Drawing.Font("Microsoft JhengHei UI", 10F);
             this.groupBoxDetectionMainParameterList.Location = new System.Drawing.Point(236, 24);
@@ -2411,8 +2426,44 @@ namespace AoiMeasureTool
             this.listBoxDetectionMainParameter.Size = new System.Drawing.Size(156, 202);
             this.listBoxDetectionMainParameter.TabIndex = 0;
             // 
+            // buttonDetectionMainParameterMoveUp
+            // 
+            this.buttonDetectionMainParameterMoveUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonDetectionMainParameterMoveUp.Font = new System.Drawing.Font("Microsoft JhengHei UI", 9F);
+            this.buttonDetectionMainParameterMoveUp.Location = new System.Drawing.Point(12, 238);
+            this.buttonDetectionMainParameterMoveUp.Name = "buttonDetectionMainParameterMoveUp";
+            this.buttonDetectionMainParameterMoveUp.Size = new System.Drawing.Size(34, 28);
+            this.buttonDetectionMainParameterMoveUp.TabIndex = 1;
+            this.buttonDetectionMainParameterMoveUp.Text = "↑";
+            this.buttonDetectionMainParameterMoveUp.UseVisualStyleBackColor = true;
+            // 
+            // buttonDetectionMainParameterMoveDown
+            // 
+            this.buttonDetectionMainParameterMoveDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonDetectionMainParameterMoveDown.Font = new System.Drawing.Font("Microsoft JhengHei UI", 9F);
+            this.buttonDetectionMainParameterMoveDown.Location = new System.Drawing.Point(52, 238);
+            this.buttonDetectionMainParameterMoveDown.Name = "buttonDetectionMainParameterMoveDown";
+            this.buttonDetectionMainParameterMoveDown.Size = new System.Drawing.Size(34, 28);
+            this.buttonDetectionMainParameterMoveDown.TabIndex = 2;
+            this.buttonDetectionMainParameterMoveDown.Text = "↓";
+            this.buttonDetectionMainParameterMoveDown.UseVisualStyleBackColor = true;
+            // 
+            // buttonDetectionMainParameterSaveOrder
+            // 
+            this.buttonDetectionMainParameterSaveOrder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonDetectionMainParameterSaveOrder.Font = new System.Drawing.Font("Microsoft JhengHei UI", 9F);
+            this.buttonDetectionMainParameterSaveOrder.Location = new System.Drawing.Point(92, 238);
+            this.buttonDetectionMainParameterSaveOrder.Name = "buttonDetectionMainParameterSaveOrder";
+            this.buttonDetectionMainParameterSaveOrder.Size = new System.Drawing.Size(76, 28);
+            this.buttonDetectionMainParameterSaveOrder.TabIndex = 3;
+            this.buttonDetectionMainParameterSaveOrder.Text = "保存順序";
+            this.buttonDetectionMainParameterSaveOrder.UseVisualStyleBackColor = true;
+            // 
             // groupBoxDetectionSubParameter1List
             // 
+            this.groupBoxDetectionSubParameter1List.Controls.Add(this.buttonDetectionSubParameter1SaveOrder);
+            this.groupBoxDetectionSubParameter1List.Controls.Add(this.buttonDetectionSubParameter1MoveDown);
+            this.groupBoxDetectionSubParameter1List.Controls.Add(this.buttonDetectionSubParameter1MoveUp);
             this.groupBoxDetectionSubParameter1List.Controls.Add(this.listBoxDetectionSubParameter1);
             this.groupBoxDetectionSubParameter1List.Font = new System.Drawing.Font("Microsoft JhengHei UI", 10F);
             this.groupBoxDetectionSubParameter1List.Location = new System.Drawing.Point(430, 24);
@@ -2430,6 +2481,39 @@ namespace AoiMeasureTool
             this.listBoxDetectionSubParameter1.Name = "listBoxDetectionSubParameter1";
             this.listBoxDetectionSubParameter1.Size = new System.Drawing.Size(156, 202);
             this.listBoxDetectionSubParameter1.TabIndex = 0;
+            // 
+            // buttonDetectionSubParameter1MoveUp
+            // 
+            this.buttonDetectionSubParameter1MoveUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonDetectionSubParameter1MoveUp.Font = new System.Drawing.Font("Microsoft JhengHei UI", 9F);
+            this.buttonDetectionSubParameter1MoveUp.Location = new System.Drawing.Point(12, 238);
+            this.buttonDetectionSubParameter1MoveUp.Name = "buttonDetectionSubParameter1MoveUp";
+            this.buttonDetectionSubParameter1MoveUp.Size = new System.Drawing.Size(34, 28);
+            this.buttonDetectionSubParameter1MoveUp.TabIndex = 1;
+            this.buttonDetectionSubParameter1MoveUp.Text = "↑";
+            this.buttonDetectionSubParameter1MoveUp.UseVisualStyleBackColor = true;
+            // 
+            // buttonDetectionSubParameter1MoveDown
+            // 
+            this.buttonDetectionSubParameter1MoveDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonDetectionSubParameter1MoveDown.Font = new System.Drawing.Font("Microsoft JhengHei UI", 9F);
+            this.buttonDetectionSubParameter1MoveDown.Location = new System.Drawing.Point(52, 238);
+            this.buttonDetectionSubParameter1MoveDown.Name = "buttonDetectionSubParameter1MoveDown";
+            this.buttonDetectionSubParameter1MoveDown.Size = new System.Drawing.Size(34, 28);
+            this.buttonDetectionSubParameter1MoveDown.TabIndex = 2;
+            this.buttonDetectionSubParameter1MoveDown.Text = "↓";
+            this.buttonDetectionSubParameter1MoveDown.UseVisualStyleBackColor = true;
+            // 
+            // buttonDetectionSubParameter1SaveOrder
+            // 
+            this.buttonDetectionSubParameter1SaveOrder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonDetectionSubParameter1SaveOrder.Font = new System.Drawing.Font("Microsoft JhengHei UI", 9F);
+            this.buttonDetectionSubParameter1SaveOrder.Location = new System.Drawing.Point(92, 238);
+            this.buttonDetectionSubParameter1SaveOrder.Name = "buttonDetectionSubParameter1SaveOrder";
+            this.buttonDetectionSubParameter1SaveOrder.Size = new System.Drawing.Size(76, 28);
+            this.buttonDetectionSubParameter1SaveOrder.TabIndex = 3;
+            this.buttonDetectionSubParameter1SaveOrder.Text = "保存順序";
+            this.buttonDetectionSubParameter1SaveOrder.UseVisualStyleBackColor = true;
             // 
             // groupBoxDetectionSubParameter2List
             // 
