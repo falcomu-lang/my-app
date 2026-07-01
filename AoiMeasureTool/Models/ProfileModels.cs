@@ -123,6 +123,14 @@ namespace AoiMeasureTool
         public int CloseIterations { get; set; }
     }
 
+    internal sealed class DetectionParameterReference
+    {
+        public string MainParameterName { get; set; }
+        public string SubParameter1 { get; set; }
+        public string SubParameter2 { get; set; }
+        public string SubParameter3 { get; set; }
+    }
+
     internal sealed class InnerSettingsData
     {
         public double CcdXPrecision { get; set; }

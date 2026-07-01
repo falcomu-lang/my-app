@@ -21,14 +21,18 @@ namespace AoiMeasureTool
             _buttonDetectionSubParameter1MoveDown = buttonDetectionSubParameter1MoveDown;
             _buttonDetectionSubParameter1SaveOrder = buttonDetectionSubParameter1SaveOrder;
             _listBoxDetectionSubParameter1 = listBoxDetectionSubParameter1;
+            _checkBoxDetectionSubParameter1Enabled = checkBoxDetectionSubParameter1Enabled;
             _buttonDetectionSubParameter2MoveUp = buttonDetectionSubParameter2MoveUp;
             _buttonDetectionSubParameter2MoveDown = buttonDetectionSubParameter2MoveDown;
             _buttonDetectionSubParameter2SaveOrder = buttonDetectionSubParameter2SaveOrder;
             _listBoxDetectionSubParameter2 = listBoxDetectionSubParameter2;
+            _checkBoxDetectionSubParameter2Enabled = checkBoxDetectionSubParameter2Enabled;
             _buttonDetectionSubParameter3MoveUp = buttonDetectionSubParameter3MoveUp;
             _buttonDetectionSubParameter3MoveDown = buttonDetectionSubParameter3MoveDown;
             _buttonDetectionSubParameter3SaveOrder = buttonDetectionSubParameter3SaveOrder;
             _listBoxDetectionSubParameter3 = listBoxDetectionSubParameter3;
+            _checkBoxDetectionSubParameter3Enabled = checkBoxDetectionSubParameter3Enabled;
+            _buttonDetectionSaveParameterReference = buttonDetectionSaveParameterReference;
 
             if (_buttonDetectionMainParameterConfirm != null)
             {
@@ -48,6 +52,11 @@ namespace AoiMeasureTool
             if (_buttonDetectionMainParameterSaveOrder != null)
             {
                 _buttonDetectionMainParameterSaveOrder.Click += DetectionMainParameterSaveOrderButton_Click;
+            }
+
+            if (_listBoxDetectionMainParameter != null)
+            {
+                _listBoxDetectionMainParameter.SelectedIndexChanged += DetectionMainParameterListBox_SelectedIndexChanged;
             }
 
             if (_buttonDetectionSubParameter1MoveUp != null)
@@ -93,6 +102,11 @@ namespace AoiMeasureTool
             if (_buttonDetectionSubParameter3SaveOrder != null)
             {
                 _buttonDetectionSubParameter3SaveOrder.Click += DetectionSubParameter3SaveOrderButton_Click;
+            }
+
+            if (_buttonDetectionSaveParameterReference != null)
+            {
+                _buttonDetectionSaveParameterReference.Click += DetectionSaveParameterReferenceButton_Click;
             }
 
             LoadDetectionParameterReferenceList();
@@ -143,16 +157,24 @@ namespace AoiMeasureTool
         private void LoadDetectionParameterReferenceList()
         {
             _detectionMainParameters.Clear();
+            _detectionParameterReferences.Clear();
             _detectionMainParameters.AddRange(
                 _parameterReferenceListRepository.Load(GetParameterReferenceListPath()));
+            foreach (var pair in _parameterReferenceListRepository.LoadReferences(GetParameterReferenceListPath()))
+            {
+                _detectionParameterReferences[pair.Key] = pair.Value;
+            }
+
             RefreshDetectionMainParameterList();
+            ApplyDetectionParameterReferenceSelection();
         }
 
         private void SaveDetectionParameterReferenceList()
         {
             _parameterReferenceListRepository.Save(
                 GetParameterReferenceListPath(),
-                _detectionMainParameters);
+                _detectionMainParameters,
+                _detectionParameterReferences);
         }
 
         private void RefreshDetectionMainParameterList()
@@ -193,6 +215,11 @@ namespace AoiMeasureTool
             MessageBox.Show(this, "Main parameter order saved.", "Detection Parameter Summary", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        private void DetectionMainParameterListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ApplyDetectionParameterReferenceSelection();
+        }
+
         private void MoveDetectionMainParameter(int direction)
         {
             if (_listBoxDetectionMainParameter == null)
@@ -222,6 +249,23 @@ namespace AoiMeasureTool
         private string GetParameterReferenceListPath()
         {
             return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "parameterReferenceList.ini");
+        }
+
+        private void ApplyDetectionParameterReferenceSelection()
+        {
+            var selectedMainParameter = _listBoxDetectionMainParameter == null
+                ? null
+                : _listBoxDetectionMainParameter.SelectedItem as string;
+
+            DetectionParameterReference reference = null;
+            if (!string.IsNullOrWhiteSpace(selectedMainParameter))
+            {
+                _detectionParameterReferences.TryGetValue(selectedMainParameter, out reference);
+            }
+
+            ApplyDetectionSubParameterSelection(_checkBoxDetectionSubParameter1Enabled, _listBoxDetectionSubParameter1, reference?.SubParameter1);
+            ApplyDetectionSubParameterSelection(_checkBoxDetectionSubParameter2Enabled, _listBoxDetectionSubParameter2, reference?.SubParameter2);
+            ApplyDetectionSubParameterSelection(_checkBoxDetectionSubParameter3Enabled, _listBoxDetectionSubParameter3, reference?.SubParameter3);
         }
 
         private void LoadDetectionSubParameter1List()
@@ -294,6 +338,28 @@ namespace AoiMeasureTool
             SaveDetectionSubParameterOrder();
         }
 
+        private void DetectionSaveParameterReferenceButton_Click(object sender, EventArgs e)
+        {
+            var selectedMainParameter = _listBoxDetectionMainParameter == null
+                ? null
+                : _listBoxDetectionMainParameter.SelectedItem as string;
+            if (string.IsNullOrWhiteSpace(selectedMainParameter))
+            {
+                return;
+            }
+
+            _detectionParameterReferences[selectedMainParameter] = new DetectionParameterReference
+            {
+                MainParameterName = selectedMainParameter,
+                SubParameter1 = GetDetectionSubParameterValue(_checkBoxDetectionSubParameter1Enabled, _listBoxDetectionSubParameter1),
+                SubParameter2 = GetDetectionSubParameterValue(_checkBoxDetectionSubParameter2Enabled, _listBoxDetectionSubParameter2),
+                SubParameter3 = GetDetectionSubParameterValue(_checkBoxDetectionSubParameter3Enabled, _listBoxDetectionSubParameter3)
+            };
+
+            SaveDetectionParameterReferenceList();
+            MessageBox.Show(this, "Reference saved.", "Detection Parameter Summary", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
         private void MoveDetectionSubParameter(ListBox sourceListBox, int direction)
         {
             if (sourceListBox == null)
@@ -324,6 +390,16 @@ namespace AoiMeasureTool
         {
             SaveSettingListSortItems(_detectionSubParameter1Items);
             MessageBox.Show(this, "Sub-parameter order saved.", "Detection Parameter Summary", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private static string GetDetectionSubParameterValue(CheckBox checkBox, ListBox listBox)
+        {
+            if (checkBox == null || listBox == null || !checkBox.Checked)
+            {
+                return string.Empty;
+            }
+
+            return listBox.SelectedItem as string ?? string.Empty;
         }
 
         private void RefreshDetectionSubParameterListBox(ListBox listBox)
@@ -360,6 +436,36 @@ namespace AoiMeasureTool
                     }
                 }
             }
+        }
+
+        private static void ApplyDetectionSubParameterSelection(CheckBox checkBox, ListBox listBox, string value)
+        {
+            if (checkBox != null)
+            {
+                checkBox.Checked = !string.IsNullOrWhiteSpace(value);
+            }
+
+            if (listBox == null)
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                listBox.ClearSelected();
+                return;
+            }
+
+            for (var i = 0; i < listBox.Items.Count; i++)
+            {
+                if (string.Equals(listBox.Items[i] as string, value, StringComparison.OrdinalIgnoreCase))
+                {
+                    listBox.SelectedIndex = i;
+                    return;
+                }
+            }
+
+            listBox.ClearSelected();
         }
 
         private void SelectDetectionSubParameterIndex(int selectedIndex)

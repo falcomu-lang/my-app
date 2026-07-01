@@ -153,14 +153,18 @@ namespace AoiMeasureTool
         private Button _buttonDetectionSubParameter1MoveDown;
         private Button _buttonDetectionSubParameter1SaveOrder;
         private ListBox _listBoxDetectionSubParameter1;
+        private CheckBox _checkBoxDetectionSubParameter1Enabled;
         private Button _buttonDetectionSubParameter2MoveUp;
         private Button _buttonDetectionSubParameter2MoveDown;
         private Button _buttonDetectionSubParameter2SaveOrder;
         private ListBox _listBoxDetectionSubParameter2;
+        private CheckBox _checkBoxDetectionSubParameter2Enabled;
         private Button _buttonDetectionSubParameter3MoveUp;
         private Button _buttonDetectionSubParameter3MoveDown;
         private Button _buttonDetectionSubParameter3SaveOrder;
         private ListBox _listBoxDetectionSubParameter3;
+        private CheckBox _checkBoxDetectionSubParameter3Enabled;
+        private Button _buttonDetectionSaveParameterReference;
         private ContextMenuStrip _judgementCriteriaMenu;
         private ToolStripMenuItem _judgementCriteriaEditMenuItem;
         private ToolStripMenuItem _judgementCriteriaDeleteMenuItem;
@@ -187,6 +191,8 @@ namespace AoiMeasureTool
         private List<JudgementCriterionRule> _judgementCriteriaRules = new List<JudgementCriterionRule>();
         private readonly List<string> _detectionMainParameters = new List<string>();
         private readonly List<string> _detectionSubParameter1Items = new List<string>();
+        private readonly Dictionary<string, DetectionParameterReference> _detectionParameterReferences =
+            new Dictionary<string, DetectionParameterReference>(StringComparer.OrdinalIgnoreCase);
         private MeasureRecord _editingMeasureRecord;
         private DataGridViewRow _editingMeasureRow;
         private bool _isEditingMeasureRecord;

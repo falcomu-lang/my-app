@@ -55,12 +55,16 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Button buttonDetectionSubParameter1MoveUp;
         private System.Windows.Forms.Button buttonDetectionSubParameter1MoveDown;
         private System.Windows.Forms.Button buttonDetectionSubParameter1SaveOrder;
+        private System.Windows.Forms.CheckBox checkBoxDetectionSubParameter1Enabled;
         private System.Windows.Forms.Button buttonDetectionSubParameter2MoveUp;
         private System.Windows.Forms.Button buttonDetectionSubParameter2MoveDown;
         private System.Windows.Forms.Button buttonDetectionSubParameter2SaveOrder;
+        private System.Windows.Forms.CheckBox checkBoxDetectionSubParameter2Enabled;
         private System.Windows.Forms.Button buttonDetectionSubParameter3MoveUp;
         private System.Windows.Forms.Button buttonDetectionSubParameter3MoveDown;
         private System.Windows.Forms.Button buttonDetectionSubParameter3SaveOrder;
+        private System.Windows.Forms.CheckBox checkBoxDetectionSubParameter3Enabled;
+        private System.Windows.Forms.Button buttonDetectionSaveParameterReference;
         private System.Windows.Forms.Label labelWorkspace;
         private System.Windows.Forms.Label labelInnerSettingsTitle;
         private System.Windows.Forms.Panel panelInnerSettings;
@@ -410,16 +414,20 @@ namespace AoiMeasureTool
             this.buttonDetectionSubParameter1MoveUp = new System.Windows.Forms.Button();
             this.buttonDetectionSubParameter1MoveDown = new System.Windows.Forms.Button();
             this.buttonDetectionSubParameter1SaveOrder = new System.Windows.Forms.Button();
+            this.checkBoxDetectionSubParameter1Enabled = new System.Windows.Forms.CheckBox();
             this.groupBoxDetectionSubParameter2List = new System.Windows.Forms.GroupBox();
             this.listBoxDetectionSubParameter2 = new System.Windows.Forms.ListBox();
             this.buttonDetectionSubParameter2MoveUp = new System.Windows.Forms.Button();
             this.buttonDetectionSubParameter2MoveDown = new System.Windows.Forms.Button();
             this.buttonDetectionSubParameter2SaveOrder = new System.Windows.Forms.Button();
+            this.checkBoxDetectionSubParameter2Enabled = new System.Windows.Forms.CheckBox();
             this.groupBoxDetectionSubParameter3List = new System.Windows.Forms.GroupBox();
             this.listBoxDetectionSubParameter3 = new System.Windows.Forms.ListBox();
             this.buttonDetectionSubParameter3MoveUp = new System.Windows.Forms.Button();
             this.buttonDetectionSubParameter3MoveDown = new System.Windows.Forms.Button();
             this.buttonDetectionSubParameter3SaveOrder = new System.Windows.Forms.Button();
+            this.checkBoxDetectionSubParameter3Enabled = new System.Windows.Forms.CheckBox();
+            this.buttonDetectionSaveParameterReference = new System.Windows.Forms.Button();
             this.labelJudgementCriteriaTitle = new System.Windows.Forms.Label();
             this.panelJudgementCriteria = new System.Windows.Forms.Panel();
             this.labelJudgementName = new System.Windows.Forms.Label();
@@ -2373,6 +2381,7 @@ namespace AoiMeasureTool
             // panelDetectionParameterSummary
             // 
             this.panelDetectionParameterSummary.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
+            this.panelDetectionParameterSummary.Controls.Add(this.buttonDetectionSaveParameterReference);
             this.panelDetectionParameterSummary.Controls.Add(this.groupBoxDetectionSubParameter3List);
             this.panelDetectionParameterSummary.Controls.Add(this.groupBoxDetectionSubParameter2List);
             this.panelDetectionParameterSummary.Controls.Add(this.groupBoxDetectionSubParameter1List);
@@ -2473,6 +2482,7 @@ namespace AoiMeasureTool
             // 
             // groupBoxDetectionSubParameter1List
             // 
+            this.groupBoxDetectionSubParameter1List.Controls.Add(this.checkBoxDetectionSubParameter1Enabled);
             this.groupBoxDetectionSubParameter1List.Controls.Add(this.buttonDetectionSubParameter1SaveOrder);
             this.groupBoxDetectionSubParameter1List.Controls.Add(this.buttonDetectionSubParameter1MoveDown);
             this.groupBoxDetectionSubParameter1List.Controls.Add(this.buttonDetectionSubParameter1MoveUp);
@@ -2527,8 +2537,18 @@ namespace AoiMeasureTool
             this.buttonDetectionSubParameter1SaveOrder.Text = "保存順序";
             this.buttonDetectionSubParameter1SaveOrder.UseVisualStyleBackColor = true;
             // 
+            // checkBoxDetectionSubParameter1Enabled
+            // 
+            this.checkBoxDetectionSubParameter1Enabled.AutoSize = true;
+            this.checkBoxDetectionSubParameter1Enabled.Location = new System.Drawing.Point(140, 6);
+            this.checkBoxDetectionSubParameter1Enabled.Name = "checkBoxDetectionSubParameter1Enabled";
+            this.checkBoxDetectionSubParameter1Enabled.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxDetectionSubParameter1Enabled.TabIndex = 4;
+            this.checkBoxDetectionSubParameter1Enabled.UseVisualStyleBackColor = true;
+            // 
             // groupBoxDetectionSubParameter2List
             // 
+            this.groupBoxDetectionSubParameter2List.Controls.Add(this.checkBoxDetectionSubParameter2Enabled);
             this.groupBoxDetectionSubParameter2List.Controls.Add(this.buttonDetectionSubParameter2SaveOrder);
             this.groupBoxDetectionSubParameter2List.Controls.Add(this.buttonDetectionSubParameter2MoveDown);
             this.groupBoxDetectionSubParameter2List.Controls.Add(this.buttonDetectionSubParameter2MoveUp);
@@ -2583,8 +2603,18 @@ namespace AoiMeasureTool
             this.buttonDetectionSubParameter2SaveOrder.Text = "保存順序";
             this.buttonDetectionSubParameter2SaveOrder.UseVisualStyleBackColor = true;
             // 
+            // checkBoxDetectionSubParameter2Enabled
+            // 
+            this.checkBoxDetectionSubParameter2Enabled.AutoSize = true;
+            this.checkBoxDetectionSubParameter2Enabled.Location = new System.Drawing.Point(140, 6);
+            this.checkBoxDetectionSubParameter2Enabled.Name = "checkBoxDetectionSubParameter2Enabled";
+            this.checkBoxDetectionSubParameter2Enabled.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxDetectionSubParameter2Enabled.TabIndex = 4;
+            this.checkBoxDetectionSubParameter2Enabled.UseVisualStyleBackColor = true;
+            // 
             // groupBoxDetectionSubParameter3List
             // 
+            this.groupBoxDetectionSubParameter3List.Controls.Add(this.checkBoxDetectionSubParameter3Enabled);
             this.groupBoxDetectionSubParameter3List.Controls.Add(this.buttonDetectionSubParameter3SaveOrder);
             this.groupBoxDetectionSubParameter3List.Controls.Add(this.buttonDetectionSubParameter3MoveDown);
             this.groupBoxDetectionSubParameter3List.Controls.Add(this.buttonDetectionSubParameter3MoveUp);
@@ -2638,6 +2668,26 @@ namespace AoiMeasureTool
             this.buttonDetectionSubParameter3SaveOrder.TabIndex = 3;
             this.buttonDetectionSubParameter3SaveOrder.Text = "保存順序";
             this.buttonDetectionSubParameter3SaveOrder.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxDetectionSubParameter3Enabled
+            // 
+            this.checkBoxDetectionSubParameter3Enabled.AutoSize = true;
+            this.checkBoxDetectionSubParameter3Enabled.Location = new System.Drawing.Point(140, 6);
+            this.checkBoxDetectionSubParameter3Enabled.Name = "checkBoxDetectionSubParameter3Enabled";
+            this.checkBoxDetectionSubParameter3Enabled.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxDetectionSubParameter3Enabled.TabIndex = 4;
+            this.checkBoxDetectionSubParameter3Enabled.UseVisualStyleBackColor = true;
+            // 
+            // buttonDetectionSaveParameterReference
+            // 
+            this.buttonDetectionSaveParameterReference.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonDetectionSaveParameterReference.Font = new System.Drawing.Font("Microsoft JhengHei UI", 9F);
+            this.buttonDetectionSaveParameterReference.Location = new System.Drawing.Point(854, 320);
+            this.buttonDetectionSaveParameterReference.Name = "buttonDetectionSaveParameterReference";
+            this.buttonDetectionSaveParameterReference.Size = new System.Drawing.Size(144, 32);
+            this.buttonDetectionSaveParameterReference.TabIndex = 5;
+            this.buttonDetectionSaveParameterReference.Text = "儲存關聯";
+            this.buttonDetectionSaveParameterReference.UseVisualStyleBackColor = true;
             // 
             // labelJudgementCriteriaTitle
             // 
