@@ -153,6 +153,14 @@ namespace AoiMeasureTool
         private Button _buttonDetectionSubParameter1MoveDown;
         private Button _buttonDetectionSubParameter1SaveOrder;
         private ListBox _listBoxDetectionSubParameter1;
+        private Button _buttonDetectionSubParameter2MoveUp;
+        private Button _buttonDetectionSubParameter2MoveDown;
+        private Button _buttonDetectionSubParameter2SaveOrder;
+        private ListBox _listBoxDetectionSubParameter2;
+        private Button _buttonDetectionSubParameter3MoveUp;
+        private Button _buttonDetectionSubParameter3MoveDown;
+        private Button _buttonDetectionSubParameter3SaveOrder;
+        private ListBox _listBoxDetectionSubParameter3;
         private ContextMenuStrip _judgementCriteriaMenu;
         private ToolStripMenuItem _judgementCriteriaEditMenuItem;
         private ToolStripMenuItem _judgementCriteriaDeleteMenuItem;

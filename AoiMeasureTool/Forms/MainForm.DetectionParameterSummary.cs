@@ -21,6 +21,14 @@ namespace AoiMeasureTool
             _buttonDetectionSubParameter1MoveDown = buttonDetectionSubParameter1MoveDown;
             _buttonDetectionSubParameter1SaveOrder = buttonDetectionSubParameter1SaveOrder;
             _listBoxDetectionSubParameter1 = listBoxDetectionSubParameter1;
+            _buttonDetectionSubParameter2MoveUp = buttonDetectionSubParameter2MoveUp;
+            _buttonDetectionSubParameter2MoveDown = buttonDetectionSubParameter2MoveDown;
+            _buttonDetectionSubParameter2SaveOrder = buttonDetectionSubParameter2SaveOrder;
+            _listBoxDetectionSubParameter2 = listBoxDetectionSubParameter2;
+            _buttonDetectionSubParameter3MoveUp = buttonDetectionSubParameter3MoveUp;
+            _buttonDetectionSubParameter3MoveDown = buttonDetectionSubParameter3MoveDown;
+            _buttonDetectionSubParameter3SaveOrder = buttonDetectionSubParameter3SaveOrder;
+            _listBoxDetectionSubParameter3 = listBoxDetectionSubParameter3;
 
             if (_buttonDetectionMainParameterConfirm != null)
             {
@@ -55,6 +63,36 @@ namespace AoiMeasureTool
             if (_buttonDetectionSubParameter1SaveOrder != null)
             {
                 _buttonDetectionSubParameter1SaveOrder.Click += DetectionSubParameter1SaveOrderButton_Click;
+            }
+
+            if (_buttonDetectionSubParameter2MoveUp != null)
+            {
+                _buttonDetectionSubParameter2MoveUp.Click += DetectionSubParameter2MoveUpButton_Click;
+            }
+
+            if (_buttonDetectionSubParameter2MoveDown != null)
+            {
+                _buttonDetectionSubParameter2MoveDown.Click += DetectionSubParameter2MoveDownButton_Click;
+            }
+
+            if (_buttonDetectionSubParameter2SaveOrder != null)
+            {
+                _buttonDetectionSubParameter2SaveOrder.Click += DetectionSubParameter2SaveOrderButton_Click;
+            }
+
+            if (_buttonDetectionSubParameter3MoveUp != null)
+            {
+                _buttonDetectionSubParameter3MoveUp.Click += DetectionSubParameter3MoveUpButton_Click;
+            }
+
+            if (_buttonDetectionSubParameter3MoveDown != null)
+            {
+                _buttonDetectionSubParameter3MoveDown.Click += DetectionSubParameter3MoveDownButton_Click;
+            }
+
+            if (_buttonDetectionSubParameter3SaveOrder != null)
+            {
+                _buttonDetectionSubParameter3SaveOrder.Click += DetectionSubParameter3SaveOrderButton_Click;
             }
 
             LoadDetectionParameterReferenceList();
@@ -152,7 +190,7 @@ namespace AoiMeasureTool
         private void DetectionMainParameterSaveOrderButton_Click(object sender, EventArgs e)
         {
             SaveDetectionParameterReferenceList();
-            MessageBox.Show(this, "主參數順序已保存。", "檢測參數整理", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(this, "Main parameter order saved.", "Detection Parameter Summary", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void MoveDetectionMainParameter(int direction)
@@ -206,50 +244,64 @@ namespace AoiMeasureTool
 
         private void RefreshDetectionSubParameter1List()
         {
-            if (_listBoxDetectionSubParameter1 == null)
-            {
-                return;
-            }
-
-            _listBoxDetectionSubParameter1.BeginUpdate();
-            try
-            {
-                _listBoxDetectionSubParameter1.Items.Clear();
-                foreach (var item in _detectionSubParameter1Items)
-                {
-                    _listBoxDetectionSubParameter1.Items.Add(item);
-                }
-            }
-            finally
-            {
-                _listBoxDetectionSubParameter1.EndUpdate();
-            }
+            RefreshDetectionSubParameterListBox(_listBoxDetectionSubParameter1);
+            RefreshDetectionSubParameterListBox(_listBoxDetectionSubParameter2);
+            RefreshDetectionSubParameterListBox(_listBoxDetectionSubParameter3);
         }
 
         private void DetectionSubParameter1MoveUpButton_Click(object sender, EventArgs e)
         {
-            MoveDetectionSubParameter1(-1);
+            MoveDetectionSubParameter(_listBoxDetectionSubParameter1, -1);
         }
 
         private void DetectionSubParameter1MoveDownButton_Click(object sender, EventArgs e)
         {
-            MoveDetectionSubParameter1(1);
+            MoveDetectionSubParameter(_listBoxDetectionSubParameter1, 1);
         }
 
         private void DetectionSubParameter1SaveOrderButton_Click(object sender, EventArgs e)
         {
-            SaveSettingListSortItems(_detectionSubParameter1Items);
-            MessageBox.Show(this, "子參數1順序已保存。", "檢測參數整理", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            SaveDetectionSubParameterOrder();
         }
 
-        private void MoveDetectionSubParameter1(int direction)
+        private void DetectionSubParameter2MoveUpButton_Click(object sender, EventArgs e)
         {
-            if (_listBoxDetectionSubParameter1 == null)
+            MoveDetectionSubParameter(_listBoxDetectionSubParameter2, -1);
+        }
+
+        private void DetectionSubParameter2MoveDownButton_Click(object sender, EventArgs e)
+        {
+            MoveDetectionSubParameter(_listBoxDetectionSubParameter2, 1);
+        }
+
+        private void DetectionSubParameter2SaveOrderButton_Click(object sender, EventArgs e)
+        {
+            SaveDetectionSubParameterOrder();
+        }
+
+        private void DetectionSubParameter3MoveUpButton_Click(object sender, EventArgs e)
+        {
+            MoveDetectionSubParameter(_listBoxDetectionSubParameter3, -1);
+        }
+
+        private void DetectionSubParameter3MoveDownButton_Click(object sender, EventArgs e)
+        {
+            MoveDetectionSubParameter(_listBoxDetectionSubParameter3, 1);
+        }
+
+        private void DetectionSubParameter3SaveOrderButton_Click(object sender, EventArgs e)
+        {
+            SaveDetectionSubParameterOrder();
+        }
+
+        private void MoveDetectionSubParameter(ListBox sourceListBox, int direction)
+        {
+            if (sourceListBox == null)
             {
                 return;
             }
 
-            var selectedIndex = _listBoxDetectionSubParameter1.SelectedIndex;
+            var selectedIndex = sourceListBox.SelectedIndex;
             if (selectedIndex < 0)
             {
                 return;
@@ -265,7 +317,69 @@ namespace AoiMeasureTool
             _detectionSubParameter1Items.RemoveAt(selectedIndex);
             _detectionSubParameter1Items.Insert(targetIndex, movedItem);
             RefreshDetectionSubParameter1List();
-            _listBoxDetectionSubParameter1.SelectedIndex = targetIndex;
+            SelectDetectionSubParameterIndex(targetIndex);
+        }
+
+        private void SaveDetectionSubParameterOrder()
+        {
+            SaveSettingListSortItems(_detectionSubParameter1Items);
+            MessageBox.Show(this, "Sub-parameter order saved.", "Detection Parameter Summary", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void RefreshDetectionSubParameterListBox(ListBox listBox)
+        {
+            if (listBox == null)
+            {
+                return;
+            }
+
+            var selectedItem = listBox.SelectedItem as string;
+
+            listBox.BeginUpdate();
+            try
+            {
+                listBox.Items.Clear();
+                foreach (var item in _detectionSubParameter1Items)
+                {
+                    listBox.Items.Add(item);
+                }
+            }
+            finally
+            {
+                listBox.EndUpdate();
+            }
+
+            if (!string.IsNullOrWhiteSpace(selectedItem))
+            {
+                for (var i = 0; i < listBox.Items.Count; i++)
+                {
+                    if (string.Equals(listBox.Items[i] as string, selectedItem, StringComparison.OrdinalIgnoreCase))
+                    {
+                        listBox.SelectedIndex = i;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void SelectDetectionSubParameterIndex(int selectedIndex)
+        {
+            SelectDetectionSubParameterIndex(_listBoxDetectionSubParameter1, selectedIndex);
+            SelectDetectionSubParameterIndex(_listBoxDetectionSubParameter2, selectedIndex);
+            SelectDetectionSubParameterIndex(_listBoxDetectionSubParameter3, selectedIndex);
+        }
+
+        private static void SelectDetectionSubParameterIndex(ListBox listBox, int selectedIndex)
+        {
+            if (listBox == null)
+            {
+                return;
+            }
+
+            if (selectedIndex >= 0 && selectedIndex < listBox.Items.Count)
+            {
+                listBox.SelectedIndex = selectedIndex;
+            }
         }
 
         private List<string> LoadSettingListSortItems()
