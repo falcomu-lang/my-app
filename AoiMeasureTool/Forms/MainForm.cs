@@ -168,9 +168,14 @@ namespace AoiMeasureTool
         private Button _buttonDetectionSaveParameterReference;
         private ComboBox _comboBoxContinuousInspectionMainParameter;
         private readonly Label[] _continuousInspectionSubParameterLabels = new Label[3];
+        private readonly Panel[] _continuousInspectionPreviewPanels = new Panel[3];
         private readonly PictureBox[] _continuousInspectionPictureBoxes = new PictureBox[3];
         private readonly Label[] _continuousInspectionResultLabels = new Label[3];
         private readonly string[] _continuousInspectionImagePaths = new string[3];
+        private readonly float[] _continuousInspectionImageScales = new float[3];
+        private readonly float[] _continuousInspectionFitScales = new float[3];
+        private readonly bool[] _continuousInspectionDragging = new bool[3];
+        private readonly Point[] _continuousInspectionLastMousePositions = new Point[3];
         private ContextMenuStrip _judgementCriteriaMenu;
         private ToolStripMenuItem _judgementCriteriaEditMenuItem;
         private ToolStripMenuItem _judgementCriteriaDeleteMenuItem;
@@ -475,6 +480,9 @@ namespace AoiMeasureTool
             _continuousInspectionSubParameterLabels[0] = labelContinuousInspectionSubParameter1;
             _continuousInspectionSubParameterLabels[1] = labelContinuousInspectionSubParameter2;
             _continuousInspectionSubParameterLabels[2] = labelContinuousInspectionSubParameter3;
+            _continuousInspectionPreviewPanels[0] = panelContinuousInspectionPreview1;
+            _continuousInspectionPreviewPanels[1] = panelContinuousInspectionPreview2;
+            _continuousInspectionPreviewPanels[2] = panelContinuousInspectionPreview3;
             _continuousInspectionPictureBoxes[0] = pictureBoxContinuousInspection1;
             _continuousInspectionPictureBoxes[1] = pictureBoxContinuousInspection2;
             _continuousInspectionPictureBoxes[2] = pictureBoxContinuousInspection3;
@@ -488,6 +496,26 @@ namespace AoiMeasureTool
             buttonContinuousInspectionLoadImage1.Click += ContinuousInspectionLoadImageButton_Click;
             buttonContinuousInspectionLoadImage2.Click += ContinuousInspectionLoadImageButton_Click;
             buttonContinuousInspectionLoadImage3.Click += ContinuousInspectionLoadImageButton_Click;
+
+            for (var i = 0; i < _continuousInspectionPictureBoxes.Length; i++)
+            {
+                var pictureBox = _continuousInspectionPictureBoxes[i];
+                var panel = _continuousInspectionPreviewPanels[i];
+                if (pictureBox == null || panel == null)
+                {
+                    continue;
+                }
+
+                pictureBox.Tag = i;
+                panel.Tag = i;
+                pictureBox.MouseWheel += ContinuousInspectionPictureBox_MouseWheel;
+                pictureBox.MouseDown += ContinuousInspectionPictureBox_MouseDown;
+                pictureBox.MouseMove += ContinuousInspectionPictureBox_MouseMove;
+                pictureBox.MouseUp += ContinuousInspectionPictureBox_MouseUp;
+                pictureBox.MouseEnter += ContinuousInspectionPictureBox_MouseEnter;
+                panel.MouseWheel += ContinuousInspectionPictureBox_MouseWheel;
+                panel.MouseEnter += ContinuousInspectionPictureBox_MouseEnter;
+            }
 
             InitializeContinuousInspectionResultArea(groupBoxContinuousInspection1, 0);
             InitializeContinuousInspectionResultArea(groupBoxContinuousInspection2, 1);
@@ -517,6 +545,7 @@ namespace AoiMeasureTool
                 groupBox.Controls.Add(resultLabel);
                 resultLabel.BringToFront();
             }
+            resultLabel.BackColor = Color.White;
 
             var judgeButton = groupBox.Controls["buttonContinuousInspectionJudge" + index] as Button;
             if (judgeButton == null)
@@ -629,13 +658,17 @@ namespace AoiMeasureTool
             {
                 using (var image = Image.FromFile(openFileDialogImage.FileName))
                 {
+                    var preserveTransform = _continuousInspectionPictureBoxes[index] != null &&
+                        _continuousInspectionPictureBoxes[index].Image != null;
                     SetPictureBoxImage(_continuousInspectionPictureBoxes[index], new Bitmap(image));
+                    ApplyContinuousInspectionImageLayout(index, !preserveTransform);
                 }
 
                 _continuousInspectionImagePaths[index] = openFileDialogImage.FileName;
                 if (_continuousInspectionResultLabels[index] != null)
                 {
                     _continuousInspectionResultLabels[index].Text = string.Empty;
+                    _continuousInspectionResultLabels[index].BackColor = Color.White;
                 }
             }
             catch (Exception ex)
@@ -657,6 +690,7 @@ namespace AoiMeasureTool
             if (string.IsNullOrWhiteSpace(subParameterName) || string.Equals(subParameterName, "未設定子參數", StringComparison.Ordinal))
             {
                 _continuousInspectionResultLabels[index].Text = "未設定條件";
+                _continuousInspectionResultLabels[index].BackColor = Color.White;
                 return;
             }
 
@@ -664,23 +698,34 @@ namespace AoiMeasureTool
             if (string.IsNullOrWhiteSpace(imagePath) || !File.Exists(imagePath))
             {
                 _continuousInspectionResultLabels[index].Text = "未載入圖片";
+                _continuousInspectionResultLabels[index].BackColor = Color.White;
                 return;
             }
 
             try
             {
-                var rows = BuildContinuousInspectionJudgementResults(imagePath, subParameterName);
-                _continuousInspectionResultLabels[index].Text = SummarizeContinuousInspectionJudgement(rows);
+                Bitmap annotatedBitmap;
+                var rows = BuildContinuousInspectionJudgementResults(imagePath, subParameterName, out annotatedBitmap);
+                var resultText = SummarizeContinuousInspectionJudgement(rows);
+                _continuousInspectionResultLabels[index].Text = resultText;
+                _continuousInspectionResultLabels[index].BackColor = GetContinuousInspectionResultBackColor(resultText);
+                if (annotatedBitmap != null)
+                {
+                    SetPictureBoxImage(_continuousInspectionPictureBoxes[index], annotatedBitmap);
+                    ApplyContinuousInspectionImageLayout(index, false);
+                }
             }
             catch (Exception ex)
             {
                 _continuousInspectionResultLabels[index].Text = "不可判斷";
+                _continuousInspectionResultLabels[index].BackColor = Color.White;
                 MessageBox.Show(this, "無法執行判斷。\r\n\r\n" + ex.Message, "連續檢測", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private List<MultiImageJudgementResultRow> BuildContinuousInspectionJudgementResults(string imagePath, string productKey)
+        private List<MultiImageJudgementResultRow> BuildContinuousInspectionJudgementResults(string imagePath, string productKey, out Bitmap annotatedBitmap)
         {
+            annotatedBitmap = null;
             var originalBitmap = _multiImageConfirmBitmap;
             var originalSourceImageSize = _multiImageConfirmSourceImageSize;
             var originalProductKey = _multiImageConfirmProductKey;
@@ -699,7 +744,9 @@ namespace AoiMeasureTool
                 _multiImageConfirmImagePaths.Clear();
                 _multiImageConfirmImagePaths.Add(imagePath);
                 _multiImageConfirmImageIndex = 0;
-                return BuildMultiImageJudgementResults();
+                var rows = BuildMultiImageJudgementResults();
+                annotatedBitmap = BuildContinuousInspectionAnnotatedBitmap();
+                return rows;
             }
             finally
             {
@@ -712,6 +759,213 @@ namespace AoiMeasureTool
                 _multiImageConfirmImagePaths.AddRange(originalImagePaths);
                 _multiImageConfirmImageIndex = originalImageIndex;
             }
+        }
+
+        private Bitmap BuildContinuousInspectionAnnotatedBitmap()
+        {
+            if (_multiImageConfirmBitmap == null)
+            {
+                return null;
+            }
+
+            var annotated = new Bitmap(_multiImageConfirmBitmap);
+            using (var graphics = Graphics.FromImage(annotated))
+            {
+                graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+
+                var imageRect = new Rectangle(Point.Empty, annotated.Size);
+                DrawMultiImageConfirmReferenceRoi(graphics, imageRect);
+
+                var referenceCandidate = GetMultiImageConfirmReferenceCandidate();
+                if (referenceCandidate != null)
+                {
+                    DrawMultiImageConfirmReferenceBaseline(graphics, referenceCandidate, imageRect);
+                }
+
+                var measureRecords = GetMultiImageConfirmMeasureRecords(referenceCandidate);
+                for (var i = 0; i < measureRecords.Count; i++)
+                {
+                    var record = measureRecords[i];
+                    var color = MeasurementOverlayService.GetSourceColor(record.SourceName);
+                    using (var pen = new Pen(color, 2f))
+                    using (var brush = new SolidBrush(color))
+                    {
+                        var lineResult = GetCachedMultiImageLineMeasurement(record);
+                        if (lineResult != null && lineResult.IsValid)
+                        {
+                            MeasurementOverlayService.DrawMeasureRecord(graphics, pen, brush, lineResult.StartPoint, lineResult.EndPoint);
+                        }
+                    }
+                }
+            }
+
+            return annotated;
+        }
+
+        private static Color GetContinuousInspectionResultBackColor(string resultText)
+        {
+            if (string.Equals(resultText, "A", StringComparison.OrdinalIgnoreCase))
+            {
+                return Color.FromArgb(198, 239, 206);
+            }
+
+            if (string.Equals(resultText, "B", StringComparison.OrdinalIgnoreCase))
+            {
+                return Color.FromArgb(255, 235, 156);
+            }
+
+            if (string.Equals(resultText, "NG", StringComparison.OrdinalIgnoreCase))
+            {
+                return Color.FromArgb(255, 199, 206);
+            }
+
+            return Color.White;
+        }
+
+        private void ContinuousInspectionPictureBox_MouseWheel(object sender, MouseEventArgs e)
+        {
+            var index = GetContinuousInspectionImageIndex(sender as Control);
+            if (index < 0)
+            {
+                return;
+            }
+
+            var pictureBox = _continuousInspectionPictureBoxes[index];
+            var panel = _continuousInspectionPreviewPanels[index];
+            if (pictureBox == null || panel == null || pictureBox.Image == null)
+            {
+                return;
+            }
+
+            var sourceControl = sender as Control;
+            var mousePosition = panel.PointToClient(sourceControl.PointToScreen(e.Location));
+            var imageX = (mousePosition.X - pictureBox.Left) / _continuousInspectionImageScales[index];
+            var imageY = (mousePosition.Y - pictureBox.Top) / _continuousInspectionImageScales[index];
+            var zoomFactor = e.Delta > 0 ? 1.15f : 1f / 1.15f;
+            var minimumScale = _continuousInspectionFitScales[index] * 0.25f;
+            var maximumScale = _continuousInspectionFitScales[index] * 20f;
+
+            _continuousInspectionImageScales[index] = Math.Max(
+                minimumScale,
+                Math.Min(maximumScale, _continuousInspectionImageScales[index] * zoomFactor));
+
+            var newWidth = Math.Max(1, (int)Math.Round(pictureBox.Image.Width * _continuousInspectionImageScales[index]));
+            var newHeight = Math.Max(1, (int)Math.Round(pictureBox.Image.Height * _continuousInspectionImageScales[index]));
+            pictureBox.Size = new Size(newWidth, newHeight);
+            pictureBox.Left = (int)Math.Round(mousePosition.X - imageX * _continuousInspectionImageScales[index]);
+            pictureBox.Top = (int)Math.Round(mousePosition.Y - imageY * _continuousInspectionImageScales[index]);
+            MeasurementCoordinateService.ConstrainPosition(pictureBox, panel);
+        }
+
+        private void ContinuousInspectionPictureBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            var index = GetContinuousInspectionImageIndex(sender as Control);
+            if (index < 0 || e.Button != MouseButtons.Left)
+            {
+                return;
+            }
+
+            var pictureBox = _continuousInspectionPictureBoxes[index];
+            var panel = _continuousInspectionPreviewPanels[index];
+            if (pictureBox == null || panel == null || pictureBox.Image == null)
+            {
+                return;
+            }
+
+            _continuousInspectionDragging[index] = true;
+            _continuousInspectionLastMousePositions[index] = panel.PointToClient(pictureBox.PointToScreen(e.Location));
+            pictureBox.Cursor = Cursors.SizeAll;
+            pictureBox.Capture = true;
+        }
+
+        private void ContinuousInspectionPictureBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            var index = GetContinuousInspectionImageIndex(sender as Control);
+            if (index < 0 || !_continuousInspectionDragging[index])
+            {
+                return;
+            }
+
+            var pictureBox = _continuousInspectionPictureBoxes[index];
+            var panel = _continuousInspectionPreviewPanels[index];
+            if (pictureBox == null || panel == null)
+            {
+                return;
+            }
+
+            var currentPosition = panel.PointToClient(pictureBox.PointToScreen(e.Location));
+            pictureBox.Left += currentPosition.X - _continuousInspectionLastMousePositions[index].X;
+            pictureBox.Top += currentPosition.Y - _continuousInspectionLastMousePositions[index].Y;
+            _continuousInspectionLastMousePositions[index] = currentPosition;
+            MeasurementCoordinateService.ConstrainPosition(pictureBox, panel);
+        }
+
+        private void ContinuousInspectionPictureBox_MouseUp(object sender, MouseEventArgs e)
+        {
+            var index = GetContinuousInspectionImageIndex(sender as Control);
+            if (index < 0 || e.Button != MouseButtons.Left)
+            {
+                return;
+            }
+
+            var pictureBox = _continuousInspectionPictureBoxes[index];
+            _continuousInspectionDragging[index] = false;
+            if (pictureBox != null)
+            {
+                pictureBox.Cursor = Cursors.Default;
+                pictureBox.Capture = false;
+            }
+        }
+
+        private void ContinuousInspectionPictureBox_MouseEnter(object sender, EventArgs e)
+        {
+            var index = GetContinuousInspectionImageIndex(sender as Control);
+            if (index < 0)
+            {
+                return;
+            }
+
+            _continuousInspectionPictureBoxes[index]?.Focus();
+        }
+
+        private void ApplyContinuousInspectionImageLayout(int index, bool centerImage)
+        {
+            if (index < 0 || index >= _continuousInspectionPictureBoxes.Length)
+            {
+                return;
+            }
+
+            var pictureBox = _continuousInspectionPictureBoxes[index];
+            var panel = _continuousInspectionPreviewPanels[index];
+            if (pictureBox == null || panel == null || pictureBox.Image == null)
+            {
+                return;
+            }
+
+            if (_continuousInspectionFitScales[index] <= 0f || centerImage)
+            {
+                var scaleX = panel.ClientSize.Width / (float)pictureBox.Image.Width;
+                var scaleY = panel.ClientSize.Height / (float)pictureBox.Image.Height;
+                _continuousInspectionFitScales[index] = Math.Min(scaleX, scaleY);
+            }
+
+            if (_continuousInspectionImageScales[index] <= 0f || centerImage)
+            {
+                _continuousInspectionImageScales[index] = _continuousInspectionFitScales[index];
+            }
+
+            MeasurementCoordinateService.ApplyTransform(
+                pictureBox,
+                panel,
+                _continuousInspectionImageScales[index],
+                centerImage);
+        }
+
+        private static int GetContinuousInspectionImageIndex(Control control)
+        {
+            return control?.Tag as int? ?? -1;
         }
 
         private static string SummarizeContinuousInspectionJudgement(List<MultiImageJudgementResultRow> rows)
@@ -750,7 +1004,7 @@ namespace AoiMeasureTool
 
             if (hasB)
             {
-                return "BOK";
+                return "B";
             }
 
             if (hasA)
