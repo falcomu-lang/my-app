@@ -40,6 +40,12 @@ namespace AoiMeasureTool
                     continue;
                 }
 
+                if (line.StartsWith("ContinuousInspectionMainParameter=", StringComparison.OrdinalIgnoreCase))
+                {
+                    data.ContinuousInspectionMainParameter = line.Substring("ContinuousInspectionMainParameter=".Length).Trim();
+                    continue;
+                }
+
                 if (line.StartsWith("[") && line.EndsWith("]"))
                 {
                     currentSection = line.Substring(1, line.Length - 2).Trim();
@@ -121,6 +127,11 @@ namespace AoiMeasureTool
                 if (!string.IsNullOrWhiteSpace(data.ActiveProductKey))
                 {
                     writer.WriteLine("ActiveProductKey=" + data.ActiveProductKey);
+                }
+
+                if (!string.IsNullOrWhiteSpace(data.ContinuousInspectionMainParameter))
+                {
+                    writer.WriteLine("ContinuousInspectionMainParameter=" + data.ContinuousInspectionMainParameter);
                 }
 
                 if (data.ListSortItems.Count > 0)

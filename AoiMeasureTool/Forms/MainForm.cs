@@ -171,6 +171,7 @@ namespace AoiMeasureTool
         private readonly Panel[] _continuousInspectionPreviewPanels = new Panel[3];
         private readonly PictureBox[] _continuousInspectionPictureBoxes = new PictureBox[3];
         private readonly Label[] _continuousInspectionResultLabels = new Label[3];
+        private readonly Label[] _continuousInspectionYieldLabels = new Label[3];
         private readonly string[] _continuousInspectionImagePaths = new string[3];
         private readonly float[] _continuousInspectionImageScales = new float[3];
         private readonly float[] _continuousInspectionFitScales = new float[3];
@@ -179,6 +180,9 @@ namespace AoiMeasureTool
         private readonly Point[] _continuousInspectionLastMousePositions = new Point[3];
         private readonly float[] _continuousInspectionOffsetXs = new float[3];
         private readonly float[] _continuousInspectionOffsetYs = new float[3];
+        private readonly int[] _continuousInspectionPassCounts = new int[3];
+        private readonly int[] _continuousInspectionJudgeCounts = new int[3];
+        private string _savedContinuousInspectionMainParameter;
         private ContextMenuStrip _judgementCriteriaMenu;
         private ToolStripMenuItem _judgementCriteriaEditMenuItem;
         private ToolStripMenuItem _judgementCriteriaDeleteMenuItem;
@@ -467,14 +471,17 @@ namespace AoiMeasureTool
 
             labelContinuousInspectionTitle.Visible = false;
             labelContinuousInspectionMainParameter.Text = "主參數";
-            labelContinuousInspectionMainParameter.Location = new Point(30, 26);
-            comboBoxContinuousInspectionMainParameter.Location = new Point(98, 22);
+            labelContinuousInspectionMainParameter.Location = new Point(24, 18);
+            comboBoxContinuousInspectionMainParameter.Location = new Point(92, 14);
             groupBoxContinuousInspection1.Text = "子參數 1";
             groupBoxContinuousInspection2.Text = "子參數 2";
             groupBoxContinuousInspection3.Text = "子參數 3";
-            groupBoxContinuousInspection1.Location = new Point(24, 60);
-            groupBoxContinuousInspection2.Location = new Point(344, 60);
-            groupBoxContinuousInspection3.Location = new Point(664, 60);
+            groupBoxContinuousInspection1.Location = new Point(24, 44);
+            groupBoxContinuousInspection2.Location = new Point(334, 44);
+            groupBoxContinuousInspection3.Location = new Point(644, 44);
+            groupBoxContinuousInspection1.Size = new Size(286, 444);
+            groupBoxContinuousInspection2.Size = new Size(286, 444);
+            groupBoxContinuousInspection3.Size = new Size(286, 444);
             buttonContinuousInspectionLoadImage1.Text = "讀取圖";
             buttonContinuousInspectionLoadImage2.Text = "讀取圖";
             buttonContinuousInspectionLoadImage3.Text = "讀取圖";
@@ -493,9 +500,12 @@ namespace AoiMeasureTool
             buttonContinuousInspectionLoadImage1.Tag = 0;
             buttonContinuousInspectionLoadImage2.Tag = 1;
             buttonContinuousInspectionLoadImage3.Tag = 2;
-            buttonContinuousInspectionLoadImage1.Location = new Point(16, 394);
-            buttonContinuousInspectionLoadImage2.Location = new Point(16, 394);
-            buttonContinuousInspectionLoadImage3.Location = new Point(16, 394);
+            buttonContinuousInspectionLoadImage1.Location = new Point(16, 360);
+            buttonContinuousInspectionLoadImage2.Location = new Point(16, 360);
+            buttonContinuousInspectionLoadImage3.Location = new Point(16, 360);
+            buttonContinuousInspectionLoadImage1.Size = new Size(108, 34);
+            buttonContinuousInspectionLoadImage2.Size = new Size(108, 34);
+            buttonContinuousInspectionLoadImage3.Size = new Size(108, 34);
             buttonContinuousInspectionLoadImage1.Click += ContinuousInspectionLoadImageButton_Click;
             buttonContinuousInspectionLoadImage2.Click += ContinuousInspectionLoadImageButton_Click;
             buttonContinuousInspectionLoadImage3.Click += ContinuousInspectionLoadImageButton_Click;
@@ -543,8 +553,8 @@ namespace AoiMeasureTool
                     Name = "labelContinuousInspectionResult" + index,
                     BorderStyle = BorderStyle.FixedSingle,
                     Font = new Font("Microsoft JhengHei UI", 12F),
-                    Location = new Point(16, 340),
-                    Size = new Size(258, 40),
+                    Location = new Point(16, 308),
+                    Size = new Size(250, 40),
                     Text = string.Empty,
                     TextAlign = ContentAlignment.MiddleCenter
                 };
@@ -561,8 +571,8 @@ namespace AoiMeasureTool
                     Name = "buttonContinuousInspectionJudge" + index,
                     BackColor = Color.FromArgb(224, 228, 231),
                     FlatStyle = FlatStyle.Flat,
-                    Location = new Point(154, 394),
-                    Size = new Size(120, 40),
+                    Location = new Point(158, 360),
+                    Size = new Size(108, 34),
                     Text = "判斷",
                     Tag = index
                 };
@@ -572,7 +582,25 @@ namespace AoiMeasureTool
                 judgeButton.BringToFront();
             }
 
+            var yieldLabel = groupBox.Controls["labelContinuousInspectionYield" + index] as Label;
+            if (yieldLabel == null)
+            {
+                yieldLabel = new Label
+                {
+                    Name = "labelContinuousInspectionYield" + index,
+                    BorderStyle = BorderStyle.FixedSingle,
+                    Font = new Font("Microsoft JhengHei UI", 11F),
+                    Location = new Point(16, 404),
+                    Size = new Size(250, 36),
+                    TextAlign = ContentAlignment.MiddleCenter
+                };
+                groupBox.Controls.Add(yieldLabel);
+                yieldLabel.BringToFront();
+            }
+
             _continuousInspectionResultLabels[index] = resultLabel;
+            _continuousInspectionYieldLabels[index] = yieldLabel;
+            UpdateContinuousInspectionYieldLabel(index);
         }
 
         private void RefreshContinuousInspectionMainParameterItems()
@@ -618,6 +646,7 @@ namespace AoiMeasureTool
 
         private void ContinuousInspectionMainParameterComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            _savedContinuousInspectionMainParameter = _comboBoxContinuousInspectionMainParameter?.SelectedItem as string;
             ApplyContinuousInspectionSubParameters();
         }
 
@@ -647,6 +676,24 @@ namespace AoiMeasureTool
                 _continuousInspectionOverlayVisible[i] = false;
                 _continuousInspectionPreviewPanels[i]?.Invalidate();
             }
+        }
+
+        private void UpdateContinuousInspectionYieldLabel(int index)
+        {
+            if (index < 0 || index >= _continuousInspectionYieldLabels.Length || _continuousInspectionYieldLabels[index] == null)
+            {
+                return;
+            }
+
+            var total = _continuousInspectionJudgeCounts[index];
+            var pass = _continuousInspectionPassCounts[index];
+            var percentage = total <= 0 ? 0d : pass * 100d / total;
+            _continuousInspectionYieldLabels[index].Text = string.Format(
+                CultureInfo.InvariantCulture,
+                "良率 {0}/{1}({2:0.#}%)",
+                pass,
+                total,
+                percentage);
         }
 
         private void ContinuousInspectionLoadImageButton_Click(object sender, EventArgs e)
@@ -720,6 +767,12 @@ namespace AoiMeasureTool
                 var resultText = SummarizeContinuousInspectionJudgement(rows);
                 _continuousInspectionResultLabels[index].Text = resultText;
                 _continuousInspectionResultLabels[index].BackColor = GetContinuousInspectionResultBackColor(resultText);
+                _continuousInspectionJudgeCounts[index]++;
+                if (string.Equals(resultText, "A", StringComparison.Ordinal))
+                {
+                    _continuousInspectionPassCounts[index]++;
+                }
+                UpdateContinuousInspectionYieldLabel(index);
                 _continuousInspectionOverlayVisible[index] = true;
                 if (annotatedBitmap != null)
                 {
@@ -1313,6 +1366,9 @@ namespace AoiMeasureTool
 
                 _lastImagePath = loadedData.LastImagePath;
                 _activeProductKey = string.IsNullOrWhiteSpace(loadedData.ActiveProductKey) ? null : loadedData.ActiveProductKey;
+                _savedContinuousInspectionMainParameter = string.IsNullOrWhiteSpace(loadedData.ContinuousInspectionMainParameter)
+                    ? null
+                    : loadedData.ContinuousInspectionMainParameter;
                 _detectionSubParameter1Items.Clear();
                 _detectionSubParameter1Items.AddRange(loadedData.ListSortItems);
 
@@ -1342,6 +1398,7 @@ namespace AoiMeasureTool
                 ApplyProductState(_productProfileService.GetOrCreateState(GetCurrentProductKeyOrDefault()));
                 ApplyInnerSettings(_innerSettings);
                 LoadDetectionSubParameter1List();
+                RestoreContinuousInspectionMainParameterSelection();
             }
             catch
             {
@@ -1358,7 +1415,8 @@ namespace AoiMeasureTool
                 var settingsData = new AppSettingsData
                 {
                     LastImagePath = _lastImagePath,
-                    ActiveProductKey = _activeProductKey
+                    ActiveProductKey = _activeProductKey,
+                    ContinuousInspectionMainParameter = _comboBoxContinuousInspectionMainParameter?.SelectedItem as string
                 };
                 settingsData.ListSortItems.AddRange(_detectionSubParameter1Items);
                 if (!string.IsNullOrWhiteSpace(currentProductKey) &&
@@ -1374,6 +1432,20 @@ namespace AoiMeasureTool
             catch (Exception ex)
             {
                 MessageBox.Show(this, "Unable to save settings.\r\n\r\n" + ex.Message, "Settings", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void RestoreContinuousInspectionMainParameterSelection()
+        {
+            if (_comboBoxContinuousInspectionMainParameter == null || string.IsNullOrWhiteSpace(_savedContinuousInspectionMainParameter))
+            {
+                return;
+            }
+
+            var index = _comboBoxContinuousInspectionMainParameter.FindStringExact(_savedContinuousInspectionMainParameter);
+            if (index >= 0)
+            {
+                _comboBoxContinuousInspectionMainParameter.SelectedIndex = index;
             }
         }
 
