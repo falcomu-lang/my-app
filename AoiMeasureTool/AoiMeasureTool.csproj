@@ -57,6 +57,7 @@
     <Compile Include="Utilities\ImageProcessor.cs" />
     <Compile Include="Repositories\IniSettingsRepository.cs" />
     <Compile Include="Repositories\InnerSettingsRepository.cs" />
+    <Compile Include="Repositories\ParameterReferenceListRepository.cs" />
     <Compile Include="Forms\MainForm.Measurement.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Form</SubType>

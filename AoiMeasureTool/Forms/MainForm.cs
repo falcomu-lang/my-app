@@ -27,6 +27,7 @@ namespace AoiMeasureTool
         private readonly string _settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "setting.ini");
         private readonly IniSettingsRepository _settingsRepository = new IniSettingsRepository();
         private readonly InnerSettingsRepository _innerSettingsRepository = new InnerSettingsRepository();
+        private readonly ParameterReferenceListRepository _parameterReferenceListRepository = new ParameterReferenceListRepository();
         private string _lastImagePath;
         private string _activeProductKey;
         private readonly System.Collections.Generic.Dictionary<string, PreprocessSnapshot[]> _productProfiles =
@@ -142,6 +143,9 @@ namespace AoiMeasureTool
         private Button _buttonJudgementMoveUp;
         private Button _buttonJudgementMoveDown;
         private DataGridView _dataGridViewJudgementCriteria;
+        private TextBox _textBoxDetectionMainParameterName;
+        private Button _buttonDetectionMainParameterConfirm;
+        private ListBox _listBoxDetectionMainParameter;
         private ContextMenuStrip _judgementCriteriaMenu;
         private ToolStripMenuItem _judgementCriteriaEditMenuItem;
         private ToolStripMenuItem _judgementCriteriaDeleteMenuItem;
@@ -166,6 +170,7 @@ namespace AoiMeasureTool
         private readonly List<Point> _measurePoints = new List<Point>(2);
         private readonly List<MeasureRecord> _measureRecords = new List<MeasureRecord>();
         private List<JudgementCriterionRule> _judgementCriteriaRules = new List<JudgementCriterionRule>();
+        private readonly List<string> _detectionMainParameters = new List<string>();
         private MeasureRecord _editingMeasureRecord;
         private DataGridViewRow _editingMeasureRow;
         private bool _isEditingMeasureRecord;
