@@ -784,40 +784,7 @@ namespace AoiMeasureTool
                 return null;
             }
 
-            var annotated = new Bitmap(_multiImageConfirmBitmap);
-            using (var graphics = Graphics.FromImage(annotated))
-            {
-                graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-                graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-
-                var imageRect = new Rectangle(Point.Empty, annotated.Size);
-                DrawMultiImageConfirmReferenceRoi(graphics, imageRect);
-
-                var referenceCandidate = GetMultiImageConfirmReferenceCandidate();
-                if (referenceCandidate != null)
-                {
-                    DrawMultiImageConfirmReferenceBaseline(graphics, referenceCandidate, imageRect);
-                }
-
-                var measureRecords = GetMultiImageConfirmMeasureRecords(referenceCandidate);
-                for (var i = 0; i < measureRecords.Count; i++)
-                {
-                    var record = measureRecords[i];
-                    var color = MeasurementOverlayService.GetSourceColor(record.SourceName);
-                    using (var pen = new Pen(color, 2f))
-                    using (var brush = new SolidBrush(color))
-                    {
-                        var lineResult = GetCachedMultiImageLineMeasurement(record);
-                        if (lineResult != null && lineResult.IsValid)
-                        {
-                            MeasurementOverlayService.DrawMeasureRecord(graphics, pen, brush, lineResult.StartPoint, lineResult.EndPoint);
-                        }
-                    }
-                }
-            }
-
-            return annotated;
+            return new Bitmap(_multiImageConfirmBitmap);
         }
 
         private void ContinuousInspectionPreviewPanel_Paint(object sender, PaintEventArgs e)
