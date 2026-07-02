@@ -65,6 +65,7 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Button buttonContinuousInspectionJudge1;
         private System.Windows.Forms.Button buttonContinuousInspectionJudge2;
         private System.Windows.Forms.Button buttonContinuousInspectionJudge3;
+        private System.Windows.Forms.Button buttonContinuousInspectionResetYield;
         private System.Windows.Forms.Label labelContinuousInspectionYield1;
         private System.Windows.Forms.Label labelContinuousInspectionYield2;
         private System.Windows.Forms.Label labelContinuousInspectionYield3;
@@ -446,6 +447,7 @@ namespace AoiMeasureTool
             this.labelContinuousInspectionYield1 = new System.Windows.Forms.Label();
             this.buttonContinuousInspectionJudge1 = new System.Windows.Forms.Button();
             this.labelContinuousInspectionResult1 = new System.Windows.Forms.Label();
+            this.buttonContinuousInspectionResetYield = new System.Windows.Forms.Button();
             this.buttonContinuousInspectionLoadImage1 = new System.Windows.Forms.Button();
             this.panelContinuousInspectionPreview1 = new System.Windows.Forms.Panel();
             this.pictureBoxContinuousInspection1 = new System.Windows.Forms.PictureBox();
@@ -2479,12 +2481,26 @@ namespace AoiMeasureTool
             // 
             this.tabPageContinuousInspection.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
             this.tabPageContinuousInspection.Controls.Add(this.panelContinuousInspection);
+            this.tabPageContinuousInspection.Controls.Add(this.buttonContinuousInspectionResetYield);
             this.tabPageContinuousInspection.Location = new System.Drawing.Point(4, 26);
             this.tabPageContinuousInspection.Name = "tabPageContinuousInspection";
             this.tabPageContinuousInspection.Padding = new System.Windows.Forms.Padding(3);
             this.tabPageContinuousInspection.Size = new System.Drawing.Size(1032, 656);
             this.tabPageContinuousInspection.TabIndex = 7;
             this.tabPageContinuousInspection.Text = "連續檢測";
+            // 
+            // buttonContinuousInspectionResetYield
+            // 
+            this.buttonContinuousInspectionResetYield.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Right | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.buttonContinuousInspectionResetYield.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonContinuousInspectionResetYield.FlatAppearance.BorderSize = 0;
+            this.buttonContinuousInspectionResetYield.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonContinuousInspectionResetYield.Location = new System.Drawing.Point(852, 612);
+            this.buttonContinuousInspectionResetYield.Name = "buttonContinuousInspectionResetYield";
+            this.buttonContinuousInspectionResetYield.Size = new System.Drawing.Size(156, 30);
+            this.buttonContinuousInspectionResetYield.TabIndex = 8;
+            this.buttonContinuousInspectionResetYield.Text = "歸零良率計算";
+            this.buttonContinuousInspectionResetYield.UseVisualStyleBackColor = false;
             // 
             // panelContinuousInspection
             // 

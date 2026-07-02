@@ -175,6 +175,7 @@ namespace AoiMeasureTool
         private readonly Label[] _continuousInspectionYieldLabels = new Label[3];
         private readonly CheckBox[] _continuousInspectionSaveOriginalImageChecks = new CheckBox[3];
         private readonly Button[] _continuousInspectionJudgeButtons = new Button[3];
+        private Button _buttonContinuousInspectionResetYield;
         private readonly string[] _continuousInspectionImagePaths = new string[3];
         private readonly float[] _continuousInspectionImageScales = new float[3];
         private readonly float[] _continuousInspectionFitScales = new float[3];
@@ -514,6 +515,7 @@ namespace AoiMeasureTool
             _continuousInspectionJudgeButtons[0] = buttonContinuousInspectionJudge1;
             _continuousInspectionJudgeButtons[1] = buttonContinuousInspectionJudge2;
             _continuousInspectionJudgeButtons[2] = buttonContinuousInspectionJudge3;
+            _buttonContinuousInspectionResetYield = buttonContinuousInspectionResetYield;
 
             buttonContinuousInspectionLoadImage1.Tag = 0;
             buttonContinuousInspectionLoadImage2.Tag = 1;
@@ -527,6 +529,10 @@ namespace AoiMeasureTool
             buttonContinuousInspectionJudge1.Click += ContinuousInspectionJudgeButton_Click;
             buttonContinuousInspectionJudge2.Click += ContinuousInspectionJudgeButton_Click;
             buttonContinuousInspectionJudge3.Click += ContinuousInspectionJudgeButton_Click;
+            if (_buttonContinuousInspectionResetYield != null)
+            {
+                _buttonContinuousInspectionResetYield.Click += ContinuousInspectionResetYield_Click;
+            }
 
             for (var i = 0; i < _continuousInspectionPictureBoxes.Length; i++)
             {
@@ -557,6 +563,16 @@ namespace AoiMeasureTool
                     _continuousInspectionResultLabels[i].BackColor = Color.White;
                 }
 
+                UpdateContinuousInspectionYieldLabel(i);
+            }
+        }
+
+        private void ContinuousInspectionResetYield_Click(object sender, EventArgs e)
+        {
+            for (var i = 0; i < _continuousInspectionPassCounts.Length; i++)
+            {
+                _continuousInspectionPassCounts[i] = 0;
+                _continuousInspectionJudgeCounts[i] = 0;
                 UpdateContinuousInspectionYieldLabel(i);
             }
         }
