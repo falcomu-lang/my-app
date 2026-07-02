@@ -110,6 +110,19 @@ namespace AoiMeasureTool
             return new Point((int)Math.Round(x), (int)Math.Round(y));
         }
 
+        public static Point ToClampedImagePoint(Point displayPoint, Rectangle imageRect, Size imageSize)
+        {
+            var imagePoint = ToImagePoint(displayPoint, imageRect, imageSize);
+            if (imagePoint == Point.Empty || imageSize.Width <= 0 || imageSize.Height <= 0)
+            {
+                return imagePoint;
+            }
+
+            return new Point(
+                Math.Max(0, Math.Min(imageSize.Width - 1, imagePoint.X)),
+                Math.Max(0, Math.Min(imageSize.Height - 1, imagePoint.Y)));
+        }
+
         public static Point ToDisplayPoint(Point imagePoint, Rectangle imageRect, Size imageSize)
         {
             if (imageRect.Width <= 0 || imageRect.Height <= 0 || imageSize.Width <= 0 || imageSize.Height <= 0)

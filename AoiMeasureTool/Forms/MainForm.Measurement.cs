@@ -2787,7 +2787,7 @@ namespace AoiMeasureTool
                 return Point.Empty;
             }
 
-            return MeasurementOverlayService.ToImagePoint(displayPoint, imageRect, _pictureBoxMeasurePreview.Image.Size);
+            return MeasurementOverlayService.ToClampedImagePoint(displayPoint, imageRect, _pictureBoxMeasurePreview.Image.Size);
         }
 
         private Point GetMeasureDisplayPoint(Point imagePoint)
