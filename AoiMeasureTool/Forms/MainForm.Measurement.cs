@@ -2225,7 +2225,7 @@ namespace AoiMeasureTool
                 return;
             }
 
-            var imagePoint = GetMeasureImagePointFromMouse(e.Location);
+            var imagePoint = GetMeasureImagePointFromMouse(sender as Control, e.Location);
             if (imagePoint == Point.Empty)
             {
                 return;
@@ -2803,20 +2803,25 @@ namespace AoiMeasureTool
             return MeasurementOverlayService.ConstrainPoint(startPoint, rawPoint, _referenceCornerCandidate, _measureDirectionMode);
         }
 
-        private Point GetMeasureImagePointFromMouse(Point displayPoint)
+        private Point GetMeasureImagePointFromMouse(Control sourceControl, Point displayPoint)
         {
-            if (_pictureBoxMeasurePreview.Image == null)
+            if (_pictureBoxMeasurePreview.Image == null || sourceControl == null)
             {
                 return Point.Empty;
             }
 
-            var imageRect = GetMeasureImageDisplayRect();
+            var sourcePoint = _panelMeasurePreview.PointToClient(sourceControl.PointToScreen(displayPoint));
+            var imageRect = new Rectangle(
+                _pictureBoxMeasurePreview.Left,
+                _pictureBoxMeasurePreview.Top,
+                _pictureBoxMeasurePreview.Width,
+                _pictureBoxMeasurePreview.Height);
             if (imageRect.Width <= 0 || imageRect.Height <= 0)
             {
                 return Point.Empty;
             }
 
-            return MeasurementOverlayService.ToClampedImagePoint(displayPoint, imageRect, _pictureBoxMeasurePreview.Image.Size);
+            return MeasurementOverlayService.ToClampedImagePoint(sourcePoint, imageRect, _pictureBoxMeasurePreview.Image.Size);
         }
 
         private Point GetMeasureDisplayPoint(Point imagePoint)
