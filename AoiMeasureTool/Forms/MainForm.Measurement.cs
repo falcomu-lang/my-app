@@ -620,11 +620,10 @@ namespace AoiMeasureTool
             {
                 writer.WriteLine(string.Join(",", header.Select(EscapeCsvValue)));
 
-                var referenceCandidate = GetMultiImageConfirmReferenceCandidate();
                 for (var i = 0; i < _multiImageConfirmImagePaths.Count; i++)
                 {
                     var imagePath = _multiImageConfirmImagePaths[i];
-                    var values = BuildMultiImageCsvValuesForImage(imagePath, referenceCandidate);
+                    var values = BuildMultiImageCsvValuesForImage(imagePath);
                     var row = new List<string> { Path.GetFileName(imagePath) };
                     row.AddRange(values);
                     writer.WriteLine(string.Join(",", row.Select(EscapeCsvValue)));
@@ -634,7 +633,7 @@ namespace AoiMeasureTool
             MessageBox.Show(this, "已輸出 CSV 至根目錄。", "多影像確認結果", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private List<string> BuildMultiImageCsvValuesForImage(string imagePath, ReferenceCornerCandidate referenceCandidate)
+        private List<string> BuildMultiImageCsvValuesForImage(string imagePath)
         {
             var values = new List<string>();
             if (_judgementCriteriaRules == null || _judgementCriteriaRules.Count == 0)
@@ -642,6 +641,7 @@ namespace AoiMeasureTool
                 return values;
             }
 
+            var referenceCandidate = GetMultiImageConfirmReferenceCandidate(imagePath);
             var lineMeasurements = BuildMultiImageConfirmLineMeasurementsForImage(imagePath, referenceCandidate);
             var lineValues = new Dictionary<int, double>();
             for (var i = 0; i < lineMeasurements.Count; i++)
@@ -700,6 +700,60 @@ namespace AoiMeasureTool
             }
 
             return results;
+        }
+
+        private ReferenceCornerCandidate GetMultiImageConfirmReferenceCandidate(string imagePath)
+        {
+            if (string.IsNullOrWhiteSpace(imagePath) || !File.Exists(imagePath))
+            {
+                return null;
+            }
+
+            using (var sourceMat = Cv2.ImRead(imagePath, ImreadModes.Color))
+            using (var grayMat = new OpenCvSharp.Mat())
+            {
+                if (sourceMat.Empty())
+                {
+                    return null;
+                }
+
+                if (sourceMat.Channels() == 1)
+                {
+                    sourceMat.CopyTo(grayMat);
+                }
+                else
+                {
+                    OpenCvSharp.Cv2.CvtColor(sourceMat, grayMat, OpenCvSharp.ColorConversionCodes.BGR2GRAY);
+                }
+
+                var productKey = string.IsNullOrWhiteSpace(_multiImageConfirmProductKey)
+                    ? GetCurrentProductKeyOrDefault()
+                    : _multiImageConfirmProductKey;
+                var referenceSnapshot = GetReferenceCornerSnapshotForProduct(productKey);
+                if (referenceSnapshot == null)
+                {
+                    return null;
+                }
+
+                var roi = GetMultiImageConfirmReferenceRoi(grayMat.Size());
+                if (roi.Width <= 0 || roi.Height <= 0)
+                {
+                    return null;
+                }
+
+                using (var binaryMat = BuildMultiImageConfirmReferenceBinary(grayMat))
+                {
+                    if (binaryMat == null || binaryMat.Empty())
+                    {
+                        return null;
+                    }
+
+                    var center = new System.Drawing.Point(
+                        roi.Left + roi.Width / 2,
+                        roi.Top + roi.Height / 2);
+                    return ReferenceCornerDetectionService.FindCandidate(binaryMat, roi, center, referenceSnapshot.PointMode);
+                }
+            }
         }
 
         private string EvaluateJudgementRuleCsvValue(JudgementCriterionRule rule, IReadOnlyDictionary<int, double> lineValues)
