@@ -172,6 +172,7 @@ namespace AoiMeasureTool
         private readonly PictureBox[] _continuousInspectionPictureBoxes = new PictureBox[3];
         private readonly Label[] _continuousInspectionResultLabels = new Label[3];
         private readonly Label[] _continuousInspectionYieldLabels = new Label[3];
+        private readonly CheckBox[] _continuousInspectionSaveOriginalImageChecks = new CheckBox[3];
         private readonly Button[] _continuousInspectionJudgeButtons = new Button[3];
         private readonly string[] _continuousInspectionImagePaths = new string[3];
         private readonly float[] _continuousInspectionImageScales = new float[3];
@@ -486,6 +487,9 @@ namespace AoiMeasureTool
             buttonContinuousInspectionLoadImage1.Text = "讀取圖";
             buttonContinuousInspectionLoadImage2.Text = "讀取圖";
             buttonContinuousInspectionLoadImage3.Text = "讀取圖";
+            checkBoxContinuousInspectionSaveOriginalImage1.Text = "保存原始影像";
+            checkBoxContinuousInspectionSaveOriginalImage2.Text = "保存原始影像";
+            checkBoxContinuousInspectionSaveOriginalImage3.Text = "保存原始影像";
             _comboBoxContinuousInspectionMainParameter = comboBoxContinuousInspectionMainParameter;
             _comboBoxContinuousInspectionMainParameter.SelectedIndexChanged += ContinuousInspectionMainParameterComboBox_SelectedIndexChanged;
             _continuousInspectionSubParameterLabels[0] = labelContinuousInspectionSubParameter1;
@@ -503,6 +507,9 @@ namespace AoiMeasureTool
             _continuousInspectionYieldLabels[0] = labelContinuousInspectionYield1;
             _continuousInspectionYieldLabels[1] = labelContinuousInspectionYield2;
             _continuousInspectionYieldLabels[2] = labelContinuousInspectionYield3;
+            _continuousInspectionSaveOriginalImageChecks[0] = checkBoxContinuousInspectionSaveOriginalImage1;
+            _continuousInspectionSaveOriginalImageChecks[1] = checkBoxContinuousInspectionSaveOriginalImage2;
+            _continuousInspectionSaveOriginalImageChecks[2] = checkBoxContinuousInspectionSaveOriginalImage3;
             _continuousInspectionJudgeButtons[0] = buttonContinuousInspectionJudge1;
             _continuousInspectionJudgeButtons[1] = buttonContinuousInspectionJudge2;
             _continuousInspectionJudgeButtons[2] = buttonContinuousInspectionJudge3;
@@ -717,6 +724,7 @@ namespace AoiMeasureTool
                 var resultText = SummarizeContinuousInspectionJudgement(rows);
                 _continuousInspectionResultLabels[index].Text = resultText;
                 _continuousInspectionResultLabels[index].BackColor = GetContinuousInspectionResultBackColor(resultText);
+                SaveContinuousInspectionOriginalImageIfNeeded(index, subParameterName, imagePath);
                 _continuousInspectionJudgeCounts[index]++;
                 if (string.Equals(resultText, "A", StringComparison.Ordinal))
                 {
@@ -778,6 +786,53 @@ namespace AoiMeasureTool
                 _multiImageConfirmImagePaths.AddRange(originalImagePaths);
                 _multiImageConfirmImageIndex = originalImageIndex;
             }
+        }
+
+        private void SaveContinuousInspectionOriginalImageIfNeeded(int index, string subParameterName, string imagePath)
+        {
+            if (index < 0 ||
+                index >= _continuousInspectionSaveOriginalImageChecks.Length ||
+                _continuousInspectionSaveOriginalImageChecks[index] == null ||
+                !_continuousInspectionSaveOriginalImageChecks[index].Checked)
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(subParameterName) || string.IsNullOrWhiteSpace(imagePath) || !File.Exists(imagePath))
+            {
+                return;
+            }
+
+            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            var targetDirectory = Path.Combine(baseDirectory, (index + 1).ToString(CultureInfo.InvariantCulture));
+            Directory.CreateDirectory(targetDirectory);
+
+            var safeSubParameterName = SanitizeFileName(subParameterName);
+            var timestamp = DateTime.Now.ToString("MM_dd_HH_mm_ss", CultureInfo.InvariantCulture);
+            var targetPath = Path.Combine(targetDirectory, safeSubParameterName + "_" + timestamp + ".png");
+
+            using (var image = Image.FromFile(imagePath))
+            using (var bitmap = new Bitmap(image))
+            {
+                bitmap.Save(targetPath, System.Drawing.Imaging.ImageFormat.Png);
+            }
+        }
+
+        private static string SanitizeFileName(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return "Unnamed";
+            }
+
+            var invalidChars = Path.GetInvalidFileNameChars();
+            var sanitized = value;
+            foreach (var invalidChar in invalidChars)
+            {
+                sanitized = sanitized.Replace(invalidChar, '_');
+            }
+
+            return string.IsNullOrWhiteSpace(sanitized) ? "Unnamed" : sanitized;
         }
 
         private Bitmap BuildContinuousInspectionAnnotatedBitmap()

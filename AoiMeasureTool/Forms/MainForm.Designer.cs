@@ -68,6 +68,9 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Label labelContinuousInspectionYield1;
         private System.Windows.Forms.Label labelContinuousInspectionYield2;
         private System.Windows.Forms.Label labelContinuousInspectionYield3;
+        private System.Windows.Forms.CheckBox checkBoxContinuousInspectionSaveOriginalImage1;
+        private System.Windows.Forms.CheckBox checkBoxContinuousInspectionSaveOriginalImage2;
+        private System.Windows.Forms.CheckBox checkBoxContinuousInspectionSaveOriginalImage3;
         private System.Windows.Forms.Panel panelDetectionParameterSummary;
         private System.Windows.Forms.GroupBox groupBoxDetectionParameterCreate;
         private System.Windows.Forms.TextBox textBoxDetectionMainParameterName;
@@ -439,6 +442,7 @@ namespace AoiMeasureTool
             this.labelContinuousInspectionMainParameter = new System.Windows.Forms.Label();
             this.comboBoxContinuousInspectionMainParameter = new System.Windows.Forms.ComboBox();
             this.groupBoxContinuousInspection1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxContinuousInspectionSaveOriginalImage1 = new System.Windows.Forms.CheckBox();
             this.labelContinuousInspectionYield1 = new System.Windows.Forms.Label();
             this.buttonContinuousInspectionJudge1 = new System.Windows.Forms.Button();
             this.labelContinuousInspectionResult1 = new System.Windows.Forms.Label();
@@ -447,6 +451,7 @@ namespace AoiMeasureTool
             this.pictureBoxContinuousInspection1 = new System.Windows.Forms.PictureBox();
             this.labelContinuousInspectionSubParameter1 = new System.Windows.Forms.Label();
             this.groupBoxContinuousInspection2 = new System.Windows.Forms.GroupBox();
+            this.checkBoxContinuousInspectionSaveOriginalImage2 = new System.Windows.Forms.CheckBox();
             this.labelContinuousInspectionYield2 = new System.Windows.Forms.Label();
             this.buttonContinuousInspectionJudge2 = new System.Windows.Forms.Button();
             this.labelContinuousInspectionResult2 = new System.Windows.Forms.Label();
@@ -455,6 +460,7 @@ namespace AoiMeasureTool
             this.pictureBoxContinuousInspection2 = new System.Windows.Forms.PictureBox();
             this.labelContinuousInspectionSubParameter2 = new System.Windows.Forms.Label();
             this.groupBoxContinuousInspection3 = new System.Windows.Forms.GroupBox();
+            this.checkBoxContinuousInspectionSaveOriginalImage3 = new System.Windows.Forms.CheckBox();
             this.labelContinuousInspectionYield3 = new System.Windows.Forms.Label();
             this.buttonContinuousInspectionJudge3 = new System.Windows.Forms.Button();
             this.labelContinuousInspectionResult3 = new System.Windows.Forms.Label();
@@ -2525,6 +2531,7 @@ namespace AoiMeasureTool
             // 
             // groupBoxContinuousInspection1
             // 
+            this.groupBoxContinuousInspection1.Controls.Add(this.checkBoxContinuousInspectionSaveOriginalImage1);
             this.groupBoxContinuousInspection1.Controls.Add(this.labelContinuousInspectionYield1);
             this.groupBoxContinuousInspection1.Controls.Add(this.buttonContinuousInspectionJudge1);
             this.groupBoxContinuousInspection1.Controls.Add(this.labelContinuousInspectionResult1);
@@ -2538,6 +2545,16 @@ namespace AoiMeasureTool
             this.groupBoxContinuousInspection1.TabIndex = 3;
             this.groupBoxContinuousInspection1.TabStop = false;
             this.groupBoxContinuousInspection1.Text = "子參數 1";
+            // 
+            // checkBoxContinuousInspectionSaveOriginalImage1
+            // 
+            this.checkBoxContinuousInspectionSaveOriginalImage1.AutoSize = true;
+            this.checkBoxContinuousInspectionSaveOriginalImage1.Location = new System.Drawing.Point(16, 489);
+            this.checkBoxContinuousInspectionSaveOriginalImage1.Name = "checkBoxContinuousInspectionSaveOriginalImage1";
+            this.checkBoxContinuousInspectionSaveOriginalImage1.Size = new System.Drawing.Size(125, 24);
+            this.checkBoxContinuousInspectionSaveOriginalImage1.TabIndex = 6;
+            this.checkBoxContinuousInspectionSaveOriginalImage1.Text = "保存原始影像";
+            this.checkBoxContinuousInspectionSaveOriginalImage1.UseVisualStyleBackColor = true;
             // 
             // labelContinuousInspectionYield1
             // 
@@ -2615,6 +2632,7 @@ namespace AoiMeasureTool
             // 
             // groupBoxContinuousInspection2
             // 
+            this.groupBoxContinuousInspection2.Controls.Add(this.checkBoxContinuousInspectionSaveOriginalImage2);
             this.groupBoxContinuousInspection2.Controls.Add(this.labelContinuousInspectionYield2);
             this.groupBoxContinuousInspection2.Controls.Add(this.buttonContinuousInspectionJudge2);
             this.groupBoxContinuousInspection2.Controls.Add(this.labelContinuousInspectionResult2);
@@ -2628,6 +2646,16 @@ namespace AoiMeasureTool
             this.groupBoxContinuousInspection2.TabIndex = 4;
             this.groupBoxContinuousInspection2.TabStop = false;
             this.groupBoxContinuousInspection2.Text = "子參數 2";
+            // 
+            // checkBoxContinuousInspectionSaveOriginalImage2
+            // 
+            this.checkBoxContinuousInspectionSaveOriginalImage2.AutoSize = true;
+            this.checkBoxContinuousInspectionSaveOriginalImage2.Location = new System.Drawing.Point(16, 489);
+            this.checkBoxContinuousInspectionSaveOriginalImage2.Name = "checkBoxContinuousInspectionSaveOriginalImage2";
+            this.checkBoxContinuousInspectionSaveOriginalImage2.Size = new System.Drawing.Size(125, 24);
+            this.checkBoxContinuousInspectionSaveOriginalImage2.TabIndex = 6;
+            this.checkBoxContinuousInspectionSaveOriginalImage2.Text = "保存原始影像";
+            this.checkBoxContinuousInspectionSaveOriginalImage2.UseVisualStyleBackColor = true;
             // 
             // labelContinuousInspectionYield2
             // 
@@ -2705,6 +2733,7 @@ namespace AoiMeasureTool
             // 
             // groupBoxContinuousInspection3
             // 
+            this.groupBoxContinuousInspection3.Controls.Add(this.checkBoxContinuousInspectionSaveOriginalImage3);
             this.groupBoxContinuousInspection3.Controls.Add(this.labelContinuousInspectionYield3);
             this.groupBoxContinuousInspection3.Controls.Add(this.buttonContinuousInspectionJudge3);
             this.groupBoxContinuousInspection3.Controls.Add(this.labelContinuousInspectionResult3);
@@ -2718,6 +2747,16 @@ namespace AoiMeasureTool
             this.groupBoxContinuousInspection3.TabIndex = 5;
             this.groupBoxContinuousInspection3.TabStop = false;
             this.groupBoxContinuousInspection3.Text = "子參數 3";
+            // 
+            // checkBoxContinuousInspectionSaveOriginalImage3
+            // 
+            this.checkBoxContinuousInspectionSaveOriginalImage3.AutoSize = true;
+            this.checkBoxContinuousInspectionSaveOriginalImage3.Location = new System.Drawing.Point(16, 489);
+            this.checkBoxContinuousInspectionSaveOriginalImage3.Name = "checkBoxContinuousInspectionSaveOriginalImage3";
+            this.checkBoxContinuousInspectionSaveOriginalImage3.Size = new System.Drawing.Size(125, 24);
+            this.checkBoxContinuousInspectionSaveOriginalImage3.TabIndex = 6;
+            this.checkBoxContinuousInspectionSaveOriginalImage3.Text = "保存原始影像";
+            this.checkBoxContinuousInspectionSaveOriginalImage3.UseVisualStyleBackColor = true;
             // 
             // labelContinuousInspectionYield3
             // 
