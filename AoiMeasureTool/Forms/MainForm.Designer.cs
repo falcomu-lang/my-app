@@ -2481,7 +2481,6 @@ namespace AoiMeasureTool
             // 
             this.tabPageContinuousInspection.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
             this.tabPageContinuousInspection.Controls.Add(this.panelContinuousInspection);
-            this.tabPageContinuousInspection.Controls.Add(this.buttonContinuousInspectionResetYield);
             this.tabPageContinuousInspection.Location = new System.Drawing.Point(4, 26);
             this.tabPageContinuousInspection.Name = "tabPageContinuousInspection";
             this.tabPageContinuousInspection.Padding = new System.Windows.Forms.Padding(3);
@@ -2495,7 +2494,7 @@ namespace AoiMeasureTool
             this.buttonContinuousInspectionResetYield.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
             this.buttonContinuousInspectionResetYield.FlatAppearance.BorderSize = 0;
             this.buttonContinuousInspectionResetYield.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonContinuousInspectionResetYield.Location = new System.Drawing.Point(852, 612);
+            this.buttonContinuousInspectionResetYield.Location = new System.Drawing.Point(842, 607);
             this.buttonContinuousInspectionResetYield.Name = "buttonContinuousInspectionResetYield";
             this.buttonContinuousInspectionResetYield.Size = new System.Drawing.Size(156, 30);
             this.buttonContinuousInspectionResetYield.TabIndex = 8;
@@ -2505,6 +2504,7 @@ namespace AoiMeasureTool
             // panelContinuousInspection
             // 
             this.panelContinuousInspection.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
+            this.panelContinuousInspection.Controls.Add(this.buttonContinuousInspectionResetYield);
             this.panelContinuousInspection.Controls.Add(this.groupBoxContinuousInspection3);
             this.panelContinuousInspection.Controls.Add(this.groupBoxContinuousInspection2);
             this.panelContinuousInspection.Controls.Add(this.groupBoxContinuousInspection1);
