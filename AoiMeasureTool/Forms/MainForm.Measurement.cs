@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Data;
 using System.Windows.Forms;
@@ -92,6 +94,7 @@ namespace AoiMeasureTool
             _comboBoxMultiImageLineDisplayMode = comboBoxMultiImageLineDisplayMode;
             _dataGridViewMultiImageInfo = dataGridViewMultiImageInfo;
             _dataGridViewMultiImageJudgementResult = InitializeMultiImageJudgementResultGrid();
+            _buttonExportMultiImageFolderCsv = InitializeMultiImageFolderCsvButton();
             groupBoxMultiImagePreviewSource = groupBoxMultiImagePreviewSource ?? this.groupBoxMultiImagePreviewSource;
             comboBoxMultiImagePreviewSource = comboBoxMultiImagePreviewSource ?? this.comboBoxMultiImagePreviewSource;
             buttonLoadMultiImagePreprocess = buttonLoadMultiImagePreprocess ?? this.buttonLoadMultiImagePreprocess;
@@ -279,6 +282,30 @@ namespace AoiMeasureTool
             tabPageMultiImageJudgementResult.Controls.Clear();
             tabPageMultiImageJudgementResult.Controls.Add(grid);
             return grid;
+        }
+
+        private Button InitializeMultiImageFolderCsvButton()
+        {
+            if (tabPageMultiImageJudgementResult == null)
+            {
+                return null;
+            }
+
+            var button = new Button();
+            button.Anchor = AnchorStyles.Right | AnchorStyles.Bottom;
+            button.BackColor = Color.FromArgb(224, 228, 231);
+            button.FlatAppearance.BorderSize = 0;
+            button.FlatStyle = FlatStyle.Flat;
+            button.Location = new Point(tabPageMultiImageJudgementResult.ClientSize.Width - 194, tabPageMultiImageJudgementResult.ClientSize.Height - 42);
+            button.Name = "buttonExportMultiImageFolderCsv";
+            button.Size = new Size(180, 32);
+            button.Text = "全資料夾圖計算結果";
+            button.UseVisualStyleBackColor = false;
+            button.Click += ExportMultiImageFolderCsv_Click;
+
+            tabPageMultiImageJudgementResult.Controls.Add(button);
+            button.BringToFront();
+            return button;
         }
 
         private void InitializeMultiImageInfoGrid()
@@ -569,6 +596,143 @@ namespace AoiMeasureTool
             }
 
             return rows;
+        }
+
+        private void ExportMultiImageFolderCsv_Click(object sender, EventArgs e)
+        {
+            if (_multiImageConfirmImagePaths.Count == 0)
+            {
+                MessageBox.Show(this, "請先讀取資料夾。", "多影像確認結果", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var csvPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "連續判定結果.csv");
+            var header = new List<string> { "檔案名" };
+            if (_judgementCriteriaRules != null)
+            {
+                foreach (var rule in _judgementCriteriaRules)
+                {
+                    header.Add((rule == null || string.IsNullOrWhiteSpace(rule.Name)) ? string.Empty : rule.Name);
+                }
+            }
+
+            using (var writer = new StreamWriter(csvPath, false, new System.Text.UTF8Encoding(true)))
+            {
+                writer.WriteLine(string.Join(",", header.Select(EscapeCsvValue)));
+
+                var referenceCandidate = GetMultiImageConfirmReferenceCandidate();
+                for (var i = 0; i < _multiImageConfirmImagePaths.Count; i++)
+                {
+                    var imagePath = _multiImageConfirmImagePaths[i];
+                    var values = BuildMultiImageCsvValuesForImage(imagePath, referenceCandidate);
+                    var row = new List<string> { Path.GetFileName(imagePath) };
+                    row.AddRange(values);
+                    writer.WriteLine(string.Join(",", row.Select(EscapeCsvValue)));
+                }
+            }
+
+            MessageBox.Show(this, "已輸出 CSV 至根目錄。", "多影像確認結果", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private List<string> BuildMultiImageCsvValuesForImage(string imagePath, ReferenceCornerCandidate referenceCandidate)
+        {
+            var values = new List<string>();
+            if (_judgementCriteriaRules == null || _judgementCriteriaRules.Count == 0)
+            {
+                return values;
+            }
+
+            var lineMeasurements = BuildMultiImageConfirmLineMeasurementsForImage(imagePath, referenceCandidate);
+            var lineValues = new Dictionary<int, double>();
+            for (var i = 0; i < lineMeasurements.Count; i++)
+            {
+                if (lineMeasurements[i] != null && lineMeasurements[i].IsValid)
+                {
+                    lineValues[i + 1] = lineMeasurements[i].MillimeterDistance;
+                }
+            }
+
+            foreach (var rule in _judgementCriteriaRules)
+            {
+                values.Add(EvaluateJudgementRuleCsvValue(rule, lineValues));
+            }
+
+            return values;
+        }
+
+        private List<MultiImageLineMeasurementResult> BuildMultiImageConfirmLineMeasurementsForImage(string imagePath, ReferenceCornerCandidate referenceCandidate)
+        {
+            var results = new List<MultiImageLineMeasurementResult>();
+            var records = GetMultiImageConfirmMeasureRecords(referenceCandidate);
+            if (records.Count == 0 || string.IsNullOrWhiteSpace(imagePath))
+            {
+                return results;
+            }
+
+            using (var sourceGray = LoadMultiImageConfirmGrayImage(imagePath))
+            {
+                if (sourceGray == null || sourceGray.Empty())
+                {
+                    return results;
+                }
+
+                for (var i = 0; i < records.Count; i++)
+                {
+                    var record = records[i];
+                    var sourceIndex = GetMeasureSourceIndexFromName(record.SourceName);
+                    var preprocessParam = TryGetMultiImageConfirmPreprocessParam(sourceIndex, out var param) ? param : null;
+                    if (preprocessParam == null || !preprocessParam.Enabled)
+                    {
+                        results.Add(MultiImageLineMeasurementResult.Invalid());
+                        continue;
+                    }
+
+                    using (var binary = PreprocessPipelineService.Build(sourceGray, preprocessParam))
+                    {
+                        results.Add(AnalyzeMultiImageLineMeasurement(
+                            binary,
+                            record.StartPoint,
+                            record.EndPoint,
+                            _innerSettings.CcdXPrecision,
+                            _innerSettings.CcdYPrecision));
+                    }
+                }
+            }
+
+            return results;
+        }
+
+        private string EvaluateJudgementRuleCsvValue(JudgementCriterionRule rule, IReadOnlyDictionary<int, double> lineValues)
+        {
+            if (rule == null)
+            {
+                return "0";
+            }
+
+            var calcValueA = EvaluateJudgementCalculation(rule.CalculationExpression, lineValues, out var calcTextA);
+            var hasBRule = !string.IsNullOrWhiteSpace(rule.CalculationExpressionB) || !string.IsNullOrWhiteSpace(rule.SpecExpressionB);
+            var calcValueB = hasBRule
+                ? EvaluateJudgementCalculation(rule.CalculationExpressionB, lineValues, out var calcTextB)
+                : (double?)null;
+
+            var value = calcValueA ?? calcValueB;
+            if (!value.HasValue)
+            {
+                return "0";
+            }
+
+            return value.Value.ToString("0.###", CultureInfo.InvariantCulture);
+        }
+
+        private static string EscapeCsvValue(string value)
+        {
+            value = value ?? string.Empty;
+            if (value.IndexOfAny(new[] { ',', '"', '\r', '\n' }) < 0)
+            {
+                return value;
+            }
+
+            return "\"" + value.Replace("\"", "\"\"") + "\"";
         }
 
         private MultiImageJudgementResultRow EvaluateJudgementRule(JudgementCriterionRule rule, IReadOnlyDictionary<int, double> lineValues)

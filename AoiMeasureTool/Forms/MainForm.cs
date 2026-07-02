@@ -124,6 +124,7 @@ namespace AoiMeasureTool
         private ComboBox _comboBoxMultiImageLineDisplayMode;
         private DataGridView _dataGridViewMultiImageInfo;
         private DataGridView _dataGridViewMultiImageJudgementResult;
+        private Button _buttonExportMultiImageFolderCsv;
         private DataGridView _dataGridViewMeasureRecords;
         private NumericUpDown _numericInnerCcdXPrecision;
         private NumericUpDown _numericInnerCcdYPrecision;
