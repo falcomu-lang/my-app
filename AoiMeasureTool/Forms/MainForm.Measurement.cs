@@ -132,6 +132,14 @@ namespace AoiMeasureTool
                 _pictureBoxMeasurePreview.MouseEnter += PictureBoxMeasurePreview_MouseEnter;
                 _pictureBoxMeasurePreview.Paint += PictureBoxMeasurePreview_Paint;
             }
+            if (_panelMeasurePreview != null)
+            {
+                _panelMeasurePreview.MouseDown += PictureBoxMeasurePreview_MouseDown;
+                _panelMeasurePreview.MouseMove += PictureBoxMeasurePreview_MouseMove;
+                _panelMeasurePreview.MouseUp += PictureBoxMeasurePreview_MouseUp;
+                _panelMeasurePreview.MouseWheel += PictureBoxMeasurePreview_MouseWheel;
+                _panelMeasurePreview.MouseEnter += PictureBoxMeasurePreview_MouseEnter;
+            }
             if (_dataGridViewMeasureRecords != null)
             {
                 _dataGridViewMeasureRecords.ReadOnly = true;
@@ -2200,7 +2208,13 @@ namespace AoiMeasureTool
             if (e.Button == MouseButtons.Right && _pictureBoxMeasurePreview.Image != null)
             {
                 _measurePreviewPanning = true;
-                _lastMeasureMousePosition = _panelMeasurePreview.PointToClient(_pictureBoxMeasurePreview.PointToScreen(e.Location));
+                var sourceControl = sender as Control;
+                if (sourceControl == null)
+                {
+                    return;
+                }
+
+                _lastMeasureMousePosition = _panelMeasurePreview.PointToClient(sourceControl.PointToScreen(e.Location));
                 _pictureBoxMeasurePreview.Cursor = Cursors.SizeAll;
                 _pictureBoxMeasurePreview.Capture = true;
                 return;
@@ -2248,7 +2262,13 @@ namespace AoiMeasureTool
                 return;
             }
 
-            var currentPosition = _panelMeasurePreview.PointToClient(_pictureBoxMeasurePreview.PointToScreen(e.Location));
+            var sourceControl = sender as Control;
+            if (sourceControl == null)
+            {
+                return;
+            }
+
+            var currentPosition = _panelMeasurePreview.PointToClient(sourceControl.PointToScreen(e.Location));
             _pictureBoxMeasurePreview.Left += currentPosition.X - _lastMeasureMousePosition.X;
             _pictureBoxMeasurePreview.Top += currentPosition.Y - _lastMeasureMousePosition.Y;
             _lastMeasureMousePosition = currentPosition;
@@ -2274,7 +2294,12 @@ namespace AoiMeasureTool
                 return;
             }
 
-            var sourceControl = (Control)sender;
+            var sourceControl = sender as Control;
+            if (sourceControl == null)
+            {
+                return;
+            }
+
             var mousePosition = _panelMeasurePreview.PointToClient(sourceControl.PointToScreen(e.Location));
             var imageX = (mousePosition.X - _pictureBoxMeasurePreview.Left) / _measureImageScale;
             var imageY = (mousePosition.Y - _pictureBoxMeasurePreview.Top) / _measureImageScale;
@@ -2293,7 +2318,11 @@ namespace AoiMeasureTool
 
         private void PictureBoxMeasurePreview_MouseEnter(object sender, EventArgs e)
         {
-            _pictureBoxMeasurePreview.Focus();
+            var sourceControl = sender as Control;
+            if (sourceControl != null)
+            {
+                sourceControl.Focus();
+            }
         }
 
         private void PictureBoxMeasurePreview_Paint(object sender, PaintEventArgs e)
