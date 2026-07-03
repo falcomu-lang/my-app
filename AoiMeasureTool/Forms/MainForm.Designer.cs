@@ -2406,7 +2406,7 @@ namespace AoiMeasureTool
             this.panelInnerSettings.Controls.Add(this.buttonSaveInnerSettings);
             this.panelInnerSettings.Location = new System.Drawing.Point(28, 46);
             this.panelInnerSettings.Name = "panelInnerSettings";
-            this.panelInnerSettings.Size = new System.Drawing.Size(420, 190);
+            this.panelInnerSettings.Size = new System.Drawing.Size(420, 230);
             this.panelInnerSettings.TabIndex = 1;
             // 
             // labelInnerCcdXPrecision
@@ -2475,7 +2475,7 @@ namespace AoiMeasureTool
             this.buttonSaveInnerSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
             this.buttonSaveInnerSettings.FlatAppearance.BorderSize = 0;
             this.buttonSaveInnerSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSaveInnerSettings.Location = new System.Drawing.Point(24, 170);
+            this.buttonSaveInnerSettings.Location = new System.Drawing.Point(24, 198);
             this.buttonSaveInnerSettings.Name = "buttonSaveInnerSettings";
             this.buttonSaveInnerSettings.Size = new System.Drawing.Size(120, 36);
             this.buttonSaveInnerSettings.TabIndex = 6;
