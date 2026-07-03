@@ -587,6 +587,10 @@ namespace AoiMeasureTool
             }
 
             var selectedName = _comboBoxContinuousInspectionMainParameter.SelectedItem as string;
+            if (string.IsNullOrWhiteSpace(selectedName))
+            {
+                selectedName = _savedContinuousInspectionMainParameter;
+            }
             _comboBoxContinuousInspectionMainParameter.BeginUpdate();
             try
             {
@@ -611,7 +615,9 @@ namespace AoiMeasureTool
                 }
             }
 
-            if (_comboBoxContinuousInspectionMainParameter.Items.Count > 0 && _comboBoxContinuousInspectionMainParameter.SelectedIndex < 0)
+            if (_comboBoxContinuousInspectionMainParameter.Items.Count > 0 &&
+                _comboBoxContinuousInspectionMainParameter.SelectedIndex < 0 &&
+                string.IsNullOrWhiteSpace(_savedContinuousInspectionMainParameter))
             {
                 _comboBoxContinuousInspectionMainParameter.SelectedIndex = 0;
                 return;
@@ -697,6 +703,10 @@ namespace AoiMeasureTool
                 }
 
                 _continuousInspectionImagePaths[index] = openFileDialogImage.FileName;
+                SaveContinuousInspectionOriginalImageIfNeeded(
+                    index,
+                    _continuousInspectionSubParameterLabels[index]?.Text,
+                    openFileDialogImage.FileName);
                 _continuousInspectionOverlayVisible[index] = false;
                 if (_continuousInspectionResultLabels[index] != null)
                 {
@@ -743,7 +753,6 @@ namespace AoiMeasureTool
                 var resultText = SummarizeContinuousInspectionJudgement(rows);
                 _continuousInspectionResultLabels[index].Text = resultText;
                 _continuousInspectionResultLabels[index].BackColor = GetContinuousInspectionResultBackColor(resultText);
-                SaveContinuousInspectionOriginalImageIfNeeded(index, subParameterName, imagePath);
                 _continuousInspectionJudgeCounts[index]++;
                 if (string.Equals(resultText, "A", StringComparison.Ordinal))
                 {
