@@ -109,6 +109,7 @@ namespace AoiMeasureTool
         private System.Windows.Forms.NumericUpDown numericInnerCcdYPrecision;
         private System.Windows.Forms.Button buttonSaveInnerSettings;
         private System.Windows.Forms.Label labelJudgementCriteriaTitle;
+        private System.Windows.Forms.Button buttonJudgementSyntaxHelp;
         private System.Windows.Forms.Panel panelJudgementCriteria;
         private System.Windows.Forms.Label labelJudgementName;
         private System.Windows.Forms.TextBox textBoxJudgementName;
@@ -499,6 +500,7 @@ namespace AoiMeasureTool
             this.checkBoxDetectionSubParameter3Enabled = new System.Windows.Forms.CheckBox();
             this.buttonDetectionSaveParameterReference = new System.Windows.Forms.Button();
             this.labelJudgementCriteriaTitle = new System.Windows.Forms.Label();
+            this.buttonJudgementSyntaxHelp = new System.Windows.Forms.Button();
             this.panelJudgementCriteria = new System.Windows.Forms.Panel();
             this.labelJudgementName = new System.Windows.Forms.Label();
             this.textBoxJudgementName = new System.Windows.Forms.TextBox();
@@ -2458,6 +2460,7 @@ namespace AoiMeasureTool
             // 
             this.tabPageJudgementCriteria.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
             this.tabPageJudgementCriteria.Controls.Add(this.labelJudgementCriteriaTitle);
+            this.tabPageJudgementCriteria.Controls.Add(this.buttonJudgementSyntaxHelp);
             this.tabPageJudgementCriteria.Controls.Add(this.panelJudgementCriteria);
             this.tabPageJudgementCriteria.Location = new System.Drawing.Point(4, 26);
             this.tabPageJudgementCriteria.Name = "tabPageJudgementCriteria";
@@ -3169,6 +3172,20 @@ namespace AoiMeasureTool
             this.labelJudgementCriteriaTitle.Size = new System.Drawing.Size(96, 18);
             this.labelJudgementCriteriaTitle.TabIndex = 0;
             this.labelJudgementCriteriaTitle.Text = "良品判斷條件";
+            // 
+            // buttonJudgementSyntaxHelp
+            // 
+            this.buttonJudgementSyntaxHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonJudgementSyntaxHelp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonJudgementSyntaxHelp.FlatAppearance.BorderSize = 0;
+            this.buttonJudgementSyntaxHelp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonJudgementSyntaxHelp.Location = new System.Drawing.Point(930, 16);
+            this.buttonJudgementSyntaxHelp.Name = "buttonJudgementSyntaxHelp";
+            this.buttonJudgementSyntaxHelp.Size = new System.Drawing.Size(72, 28);
+            this.buttonJudgementSyntaxHelp.TabIndex = 1;
+            this.buttonJudgementSyntaxHelp.Text = "語法";
+            this.buttonJudgementSyntaxHelp.UseVisualStyleBackColor = false;
+            this.buttonJudgementSyntaxHelp.Click += new System.EventHandler(this.JudgementSyntaxHelpButton_Click);
             // 
             // panelJudgementCriteria
             // 

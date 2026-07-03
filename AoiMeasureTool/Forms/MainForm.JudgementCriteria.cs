@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace AoiMeasureTool
@@ -114,6 +116,67 @@ namespace AoiMeasureTool
             SaveCurrentAppSettings();
             RefreshMultiImageJudgementResultTable();
             MessageBox.Show(this, "判斷條件已儲存。", "良品判斷條件", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void JudgementSyntaxHelpButton_Click(object sender, EventArgs e)
+        {
+            using (var form = new Form())
+            using (var textBox = new TextBox())
+            {
+                form.Text = "良品判斷條件語法說明";
+                form.StartPosition = FormStartPosition.CenterParent;
+                form.Size = new Size(720, 520);
+                form.MinimizeBox = false;
+                form.MaximizeBox = false;
+                form.ShowIcon = false;
+                form.ShowInTaskbar = false;
+
+                textBox.Dock = DockStyle.Fill;
+                textBox.Multiline = true;
+                textBox.ReadOnly = true;
+                textBox.ScrollBars = ScrollBars.Vertical;
+                textBox.BorderStyle = BorderStyle.None;
+                textBox.BackColor = Color.White;
+                textBox.Font = new Font("Microsoft JhengHei UI", 10F);
+                textBox.Text = BuildJudgementSyntaxHelpText();
+
+                form.Controls.Add(textBox);
+                form.ShowDialog(this);
+            }
+        }
+
+        private static string BuildJudgementSyntaxHelpText()
+        {
+            var lines = new List<string>
+            {
+                "良品判斷條件語法說明",
+                "",
+                "1. 基本欄位",
+                "   - (1), (2), (3) 代表量測結果編號",
+                "   - 可直接放入加減乘除運算式",
+                "",
+                "2. 聚合函式",
+                "   - max((1)(2)(3))",
+                "   - max((1),(2),(3))",
+                "   - min((1)(2)(3))",
+                "   - min((1),(2),(3))",
+                "",
+                "3. 巢狀寫法",
+                "   - max(((2)-(1))((4)-(3)))",
+                "   - min(((2)-(1)),((4)-(3)))",
+                "",
+                "4. 範例",
+                "   - max((1)(2)(3)) + 1.5",
+                "   - min(((2)-(1))((4)-(3))) / 2",
+                "",
+                "5. 判斷式",
+                "   - x<5",
+                "   - x<=5",
+                "   - 5<x<10",
+                "   - 10>=x>=5"
+            };
+
+            return string.Join(Environment.NewLine, lines);
         }
 
         private void JudgementMoveUpButton_Click(object sender, EventArgs e)
