@@ -2651,7 +2651,7 @@ namespace AoiMeasureTool
             this.panelContinuousInspectionPreview1.BackColor = System.Drawing.Color.White;
             this.panelContinuousInspectionPreview1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelContinuousInspectionPreview1.Controls.Add(this.pictureBoxContinuousInspection1);
-            this.panelContinuousInspectionPreview1.Location = new System.Drawing.Point(16, 36);
+            this.panelContinuousInspectionPreview1.Location = new System.Drawing.Point(16, 54);
             this.panelContinuousInspectionPreview1.Name = "panelContinuousInspectionPreview1";
             this.panelContinuousInspectionPreview1.Size = new System.Drawing.Size(258, 250);
             this.panelContinuousInspectionPreview1.TabIndex = 1;
@@ -2670,7 +2670,7 @@ namespace AoiMeasureTool
             // labelContinuousInspectionSubParameter1
             // 
             this.labelContinuousInspectionSubParameter1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.labelContinuousInspectionSubParameter1.Location = new System.Drawing.Point(16, 4);
+            this.labelContinuousInspectionSubParameter1.Location = new System.Drawing.Point(16, 22);
             this.labelContinuousInspectionSubParameter1.Name = "labelContinuousInspectionSubParameter1";
             this.labelContinuousInspectionSubParameter1.Size = new System.Drawing.Size(258, 36);
             this.labelContinuousInspectionSubParameter1.TabIndex = 0;
@@ -2752,7 +2752,7 @@ namespace AoiMeasureTool
             this.panelContinuousInspectionPreview2.BackColor = System.Drawing.Color.White;
             this.panelContinuousInspectionPreview2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelContinuousInspectionPreview2.Controls.Add(this.pictureBoxContinuousInspection2);
-            this.panelContinuousInspectionPreview2.Location = new System.Drawing.Point(16, 36);
+            this.panelContinuousInspectionPreview2.Location = new System.Drawing.Point(16, 54);
             this.panelContinuousInspectionPreview2.Name = "panelContinuousInspectionPreview2";
             this.panelContinuousInspectionPreview2.Size = new System.Drawing.Size(258, 250);
             this.panelContinuousInspectionPreview2.TabIndex = 1;
@@ -2771,7 +2771,7 @@ namespace AoiMeasureTool
             // labelContinuousInspectionSubParameter2
             // 
             this.labelContinuousInspectionSubParameter2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.labelContinuousInspectionSubParameter2.Location = new System.Drawing.Point(16, 4);
+            this.labelContinuousInspectionSubParameter2.Location = new System.Drawing.Point(16, 22);
             this.labelContinuousInspectionSubParameter2.Name = "labelContinuousInspectionSubParameter2";
             this.labelContinuousInspectionSubParameter2.Size = new System.Drawing.Size(258, 36);
             this.labelContinuousInspectionSubParameter2.TabIndex = 0;
@@ -2853,7 +2853,7 @@ namespace AoiMeasureTool
             this.panelContinuousInspectionPreview3.BackColor = System.Drawing.Color.White;
             this.panelContinuousInspectionPreview3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelContinuousInspectionPreview3.Controls.Add(this.pictureBoxContinuousInspection3);
-            this.panelContinuousInspectionPreview3.Location = new System.Drawing.Point(16, 36);
+            this.panelContinuousInspectionPreview3.Location = new System.Drawing.Point(16, 54);
             this.panelContinuousInspectionPreview3.Name = "panelContinuousInspectionPreview3";
             this.panelContinuousInspectionPreview3.Size = new System.Drawing.Size(258, 250);
             this.panelContinuousInspectionPreview3.TabIndex = 1;
@@ -2872,7 +2872,7 @@ namespace AoiMeasureTool
             // labelContinuousInspectionSubParameter3
             // 
             this.labelContinuousInspectionSubParameter3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.labelContinuousInspectionSubParameter3.Location = new System.Drawing.Point(16, 4);
+            this.labelContinuousInspectionSubParameter3.Location = new System.Drawing.Point(16, 22);
             this.labelContinuousInspectionSubParameter3.Name = "labelContinuousInspectionSubParameter3";
             this.labelContinuousInspectionSubParameter3.Size = new System.Drawing.Size(258, 36);
             this.labelContinuousInspectionSubParameter3.TabIndex = 0;
