@@ -922,8 +922,7 @@ namespace AoiMeasureTool
                         }
                         else
                         {
-                            missingValue = true;
-                            return resolved;
+                            continue;
                         }
                     }
                     else
@@ -932,8 +931,7 @@ namespace AoiMeasureTool
                         var nestedResolved = ResolveAggregateCalculationExpression(argExpression, lineValues, ref nestedMissingValue);
                         if (nestedMissingValue)
                         {
-                            missingValue = true;
-                            return resolved;
+                            continue;
                         }
 
                         double parsedValue;
@@ -951,8 +949,7 @@ namespace AoiMeasureTool
                             }
                             catch
                             {
-                                missingValue = true;
-                                return resolved;
+                                continue;
                             }
                         }
                     }
@@ -965,6 +962,7 @@ namespace AoiMeasureTool
 
                 if (values.Count == 0)
                 {
+                    missingValue = true;
                     return resolved;
                 }
 
