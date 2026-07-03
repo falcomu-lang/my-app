@@ -845,7 +845,14 @@ namespace AoiMeasureTool
             }
 
             var missingValue = false;
-            var resolved = Regex.Replace(expression, @"\((\d+)\)", match =>
+            var resolved = ResolveAggregateCalculationExpression(expression, lineValues, ref missingValue);
+            if (missingValue)
+            {
+                text = resolved;
+                return null;
+            }
+
+            resolved = Regex.Replace(resolved, @"\((\d+)\)", match =>
             {
                 var index = int.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
                 double value;
@@ -877,6 +884,221 @@ namespace AoiMeasureTool
                 text = resolved;
                 return null;
             }
+        }
+
+        private static string ResolveAggregateCalculationExpression(string expression, IReadOnlyDictionary<int, double> lineValues, ref bool missingValue)
+        {
+            if (string.IsNullOrWhiteSpace(expression))
+            {
+                return string.Empty;
+            }
+
+            var resolved = expression;
+            while (true)
+            {
+                var aggregate = FindNextAggregateCall(resolved);
+                if (aggregate == null)
+                {
+                    return resolved;
+                }
+
+                var values = new List<double>();
+                foreach (var argument in aggregate.Arguments)
+                {
+                    var argExpression = argument.Trim();
+                    if (string.IsNullOrWhiteSpace(argExpression))
+                    {
+                        continue;
+                    }
+
+                    double? argumentValue = null;
+                    if (Regex.IsMatch(argExpression, @"^\(\d+\)$"))
+                    {
+                        var index = int.Parse(argExpression.Substring(1, argExpression.Length - 2), CultureInfo.InvariantCulture);
+                        double value;
+                        if (lineValues != null && lineValues.TryGetValue(index, out value))
+                        {
+                            argumentValue = value;
+                        }
+                        else
+                        {
+                            missingValue = true;
+                            return resolved;
+                        }
+                    }
+                    else
+                    {
+                        var nestedMissingValue = false;
+                        var nestedResolved = ResolveAggregateCalculationExpression(argExpression, lineValues, ref nestedMissingValue);
+                        if (nestedMissingValue)
+                        {
+                            missingValue = true;
+                            return resolved;
+                        }
+
+                        double parsedValue;
+                        if (double.TryParse(nestedResolved, NumberStyles.Float, CultureInfo.InvariantCulture, out parsedValue))
+                        {
+                            argumentValue = parsedValue;
+                        }
+                        else
+                        {
+                            try
+                            {
+                                var nestedTable = new DataTable();
+                                var nestedResult = nestedTable.Compute(nestedResolved, string.Empty);
+                                argumentValue = Convert.ToDouble(nestedResult, CultureInfo.InvariantCulture);
+                            }
+                            catch
+                            {
+                                missingValue = true;
+                                return resolved;
+                            }
+                        }
+                    }
+
+                    if (argumentValue.HasValue)
+                    {
+                        values.Add(argumentValue.Value);
+                    }
+                }
+
+                if (values.Count == 0)
+                {
+                    return resolved;
+                }
+
+                var aggregateValue = string.Equals(aggregate.FunctionName, "max", StringComparison.OrdinalIgnoreCase)
+                    ? values.Max()
+                    : values.Min();
+                resolved = resolved.Substring(0, aggregate.StartIndex) +
+                    aggregateValue.ToString(CultureInfo.InvariantCulture) +
+                    resolved.Substring(aggregate.EndIndex + 1);
+            }
+        }
+
+        private sealed class AggregateCall
+        {
+            public string FunctionName { get; set; }
+            public int StartIndex { get; set; }
+            public int EndIndex { get; set; }
+            public List<string> Arguments { get; set; }
+        }
+
+        private static AggregateCall FindNextAggregateCall(string expression)
+        {
+            if (string.IsNullOrWhiteSpace(expression))
+            {
+                return null;
+            }
+
+            for (var i = 0; i < expression.Length - 3; i++)
+            {
+                var funcName = expression.Substring(i, 3);
+                if (!funcName.Equals("max", StringComparison.OrdinalIgnoreCase) &&
+                    !funcName.Equals("min", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                if (i > 0)
+                {
+                    var prev = expression[i - 1];
+                    if (char.IsLetterOrDigit(prev) || prev == '_')
+                    {
+                        continue;
+                    }
+                }
+
+                var openParenIndex = i + 3;
+                if (openParenIndex >= expression.Length || expression[openParenIndex] != '(')
+                {
+                    continue;
+                }
+
+                var closeParenIndex = FindMatchingParen(expression, openParenIndex);
+                if (closeParenIndex < 0)
+                {
+                    return null;
+                }
+
+                var inner = expression.Substring(openParenIndex + 1, closeParenIndex - openParenIndex - 1);
+                var arguments = ParseAggregateArguments(inner);
+                return new AggregateCall
+                {
+                    FunctionName = funcName,
+                    StartIndex = i,
+                    EndIndex = closeParenIndex,
+                    Arguments = arguments
+                };
+            }
+
+            return null;
+        }
+
+        private static int FindMatchingParen(string text, int openParenIndex)
+        {
+            var depth = 0;
+            for (var i = openParenIndex; i < text.Length; i++)
+            {
+                if (text[i] == '(')
+                {
+                    depth++;
+                }
+                else if (text[i] == ')')
+                {
+                    depth--;
+                    if (depth == 0)
+                    {
+                        return i;
+                    }
+                }
+            }
+
+            return -1;
+        }
+
+        private static List<string> ParseAggregateArguments(string inner)
+        {
+            var arguments = new List<string>();
+            if (string.IsNullOrWhiteSpace(inner))
+            {
+                return arguments;
+            }
+
+            var current = string.Empty;
+            var depth = 0;
+            for (var i = 0; i < inner.Length; i++)
+            {
+                var ch = inner[i];
+                if (ch == '(')
+                {
+                    if (depth == 0 && current.Trim().Length > 0)
+                    {
+                        current = string.Empty;
+                    }
+
+                    depth++;
+                }
+
+                current += ch;
+
+                if (ch == ')')
+                {
+                    depth--;
+                    if (depth == 0)
+                    {
+                        arguments.Add(current.Trim());
+                        current = string.Empty;
+                    }
+                }
+                else if (ch == ',' && depth == 0)
+                {
+                    current = string.Empty;
+                }
+            }
+
+            return arguments;
         }
 
         private static JudgementSpecResult EvaluateJudgementSpec(double? value, string specExpression)
