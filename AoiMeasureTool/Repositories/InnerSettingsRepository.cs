@@ -48,6 +48,14 @@ namespace AoiMeasureTool
                         data.CcdYPrecision = parsed;
                     }
                 }
+                else if (name.Equals("MeasurementScaleFactor", StringComparison.OrdinalIgnoreCase))
+                {
+                    double parsed;
+                    if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out parsed) && parsed > 0)
+                    {
+                        data.MeasurementScaleFactor = parsed;
+                    }
+                }
             }
 
             return data;
@@ -66,6 +74,7 @@ namespace AoiMeasureTool
                 writer.WriteLine("[InnerSettings]");
                 writer.WriteLine("CCDXPrecision=" + data.CcdXPrecision.ToString(CultureInfo.InvariantCulture));
                 writer.WriteLine("CCDYPrecision=" + data.CcdYPrecision.ToString(CultureInfo.InvariantCulture));
+                writer.WriteLine("MeasurementScaleFactor=" + data.MeasurementScaleFactor.ToString(CultureInfo.InvariantCulture));
             }
         }
     }

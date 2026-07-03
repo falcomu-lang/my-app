@@ -107,6 +107,8 @@ namespace AoiMeasureTool
         private System.Windows.Forms.NumericUpDown numericInnerCcdXPrecision;
         private System.Windows.Forms.Label labelInnerCcdYPrecision;
         private System.Windows.Forms.NumericUpDown numericInnerCcdYPrecision;
+        private System.Windows.Forms.Label labelInnerMeasurementScaleFactor;
+        private System.Windows.Forms.NumericUpDown numericInnerMeasurementScaleFactor;
         private System.Windows.Forms.Button buttonSaveInnerSettings;
         private System.Windows.Forms.Label labelJudgementCriteriaTitle;
         private System.Windows.Forms.Button buttonJudgementSyntaxHelp;
@@ -434,6 +436,8 @@ namespace AoiMeasureTool
             this.numericInnerCcdXPrecision = new System.Windows.Forms.NumericUpDown();
             this.labelInnerCcdYPrecision = new System.Windows.Forms.Label();
             this.numericInnerCcdYPrecision = new System.Windows.Forms.NumericUpDown();
+            this.labelInnerMeasurementScaleFactor = new System.Windows.Forms.Label();
+            this.numericInnerMeasurementScaleFactor = new System.Windows.Forms.NumericUpDown();
             this.buttonSaveInnerSettings = new System.Windows.Forms.Button();
             this.tabPageJudgementCriteria = new System.Windows.Forms.TabPage();
             this.tabPageDetectionParameterSummary = new System.Windows.Forms.TabPage();
@@ -2397,6 +2401,8 @@ namespace AoiMeasureTool
             this.panelInnerSettings.Controls.Add(this.numericInnerCcdXPrecision);
             this.panelInnerSettings.Controls.Add(this.labelInnerCcdYPrecision);
             this.panelInnerSettings.Controls.Add(this.numericInnerCcdYPrecision);
+            this.panelInnerSettings.Controls.Add(this.labelInnerMeasurementScaleFactor);
+            this.panelInnerSettings.Controls.Add(this.numericInnerMeasurementScaleFactor);
             this.panelInnerSettings.Controls.Add(this.buttonSaveInnerSettings);
             this.panelInnerSettings.Location = new System.Drawing.Point(28, 46);
             this.panelInnerSettings.Name = "panelInnerSettings";
@@ -2443,15 +2449,36 @@ namespace AoiMeasureTool
             this.numericInnerCcdYPrecision.TabIndex = 3;
             this.numericInnerCcdYPrecision.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
+            // labelInnerMeasurementScaleFactor
+            // 
+            this.labelInnerMeasurementScaleFactor.AutoSize = true;
+            this.labelInnerMeasurementScaleFactor.Location = new System.Drawing.Point(24, 124);
+            this.labelInnerMeasurementScaleFactor.Name = "labelInnerMeasurementScaleFactor";
+            this.labelInnerMeasurementScaleFactor.Size = new System.Drawing.Size(103, 18);
+            this.labelInnerMeasurementScaleFactor.TabIndex = 4;
+            this.labelInnerMeasurementScaleFactor.Text = "計算值倍率";
+            // 
+            // numericInnerMeasurementScaleFactor
+            // 
+            this.numericInnerMeasurementScaleFactor.DecimalPlaces = 4;
+            this.numericInnerMeasurementScaleFactor.Increment = new decimal(new int[] {1, 0, 0, 262144});
+            this.numericInnerMeasurementScaleFactor.Location = new System.Drawing.Point(160, 120);
+            this.numericInnerMeasurementScaleFactor.Maximum = new decimal(new int[] {1000, 0, 0, 0});
+            this.numericInnerMeasurementScaleFactor.Minimum = new decimal(new int[] {1, 0, 0, 262144});
+            this.numericInnerMeasurementScaleFactor.Name = "numericInnerMeasurementScaleFactor";
+            this.numericInnerMeasurementScaleFactor.Size = new System.Drawing.Size(180, 25);
+            this.numericInnerMeasurementScaleFactor.TabIndex = 5;
+            this.numericInnerMeasurementScaleFactor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
             // buttonSaveInnerSettings
             // 
             this.buttonSaveInnerSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
             this.buttonSaveInnerSettings.FlatAppearance.BorderSize = 0;
             this.buttonSaveInnerSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSaveInnerSettings.Location = new System.Drawing.Point(24, 126);
+            this.buttonSaveInnerSettings.Location = new System.Drawing.Point(24, 170);
             this.buttonSaveInnerSettings.Name = "buttonSaveInnerSettings";
             this.buttonSaveInnerSettings.Size = new System.Drawing.Size(120, 36);
-            this.buttonSaveInnerSettings.TabIndex = 4;
+            this.buttonSaveInnerSettings.TabIndex = 6;
             this.buttonSaveInnerSettings.Text = "儲存";
             this.buttonSaveInnerSettings.UseVisualStyleBackColor = false;
             this.buttonSaveInnerSettings.Click += new System.EventHandler(this.SaveInnerSettingsButton_Click);

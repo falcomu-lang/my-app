@@ -12,6 +12,8 @@ namespace AoiMeasureTool
             _numericInnerCcdYPrecision = numericInnerCcdYPrecision;
             _labelInnerCcdXPrecision = labelInnerCcdXPrecision;
             _labelInnerCcdYPrecision = labelInnerCcdYPrecision;
+            _labelInnerMeasurementScaleFactor = labelInnerMeasurementScaleFactor;
+            _numericInnerMeasurementScaleFactor = numericInnerMeasurementScaleFactor;
             _buttonSaveInnerSettings = buttonSaveInnerSettings;
             ApplyInnerSettings(_innerSettings);
         }

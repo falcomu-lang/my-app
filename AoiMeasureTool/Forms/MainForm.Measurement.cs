@@ -689,12 +689,12 @@ namespace AoiMeasureTool
 
                     using (var binary = PreprocessPipelineService.Build(sourceGray, preprocessParam))
                     {
-                        results.Add(AnalyzeMultiImageLineMeasurement(
+                        results.Add(ScaleMultiImageLineMeasurementResult(AnalyzeMultiImageLineMeasurement(
                             binary,
                             record.StartPoint,
                             record.EndPoint,
                             _innerSettings.CcdXPrecision,
-                            _innerSettings.CcdYPrecision));
+                            _innerSettings.CcdYPrecision)));
                     }
                 }
             }
@@ -1350,12 +1350,12 @@ namespace AoiMeasureTool
 
                     using (var binary = PreprocessPipelineService.Build(sourceGray, preprocessParam))
                     {
-                        results.Add(AnalyzeMultiImageLineMeasurement(
+                        results.Add(ScaleMultiImageLineMeasurementResult(AnalyzeMultiImageLineMeasurement(
                             binary,
                             record.StartPoint,
                             record.EndPoint,
                             _innerSettings.CcdXPrecision,
-                            _innerSettings.CcdYPrecision));
+                            _innerSettings.CcdYPrecision)));
                     }
                 }
             }
@@ -1521,6 +1521,23 @@ namespace AoiMeasureTool
                 Distance = distance,
                 MillimeterDistance = millimeterDistance
             };
+        }
+
+        private MultiImageLineMeasurementResult ScaleMultiImageLineMeasurementResult(MultiImageLineMeasurementResult result)
+        {
+            if (result == null || !result.IsValid)
+            {
+                return result;
+            }
+
+            var scale = _innerSettings == null ? 1.0 : _innerSettings.MeasurementScaleFactor;
+            if (scale <= 0)
+            {
+                scale = 1.0;
+            }
+
+            result.MillimeterDistance *= scale;
+            return result;
         }
 
         private static List<Point> SampleLinePoints(Point startPoint, Point endPoint)
@@ -2198,12 +2215,12 @@ namespace AoiMeasureTool
 
                 using (var binary = PreprocessPipelineService.Build(sourceGray, preprocessParam))
                 {
-                    return AnalyzeMultiImageLineMeasurement(
+                    return ScaleMultiImageLineMeasurementResult(AnalyzeMultiImageLineMeasurement(
                         binary,
                         record.StartPoint,
                         record.EndPoint,
                         _innerSettings.CcdXPrecision,
-                        _innerSettings.CcdYPrecision);
+                        _innerSettings.CcdYPrecision));
                 }
             }
         }

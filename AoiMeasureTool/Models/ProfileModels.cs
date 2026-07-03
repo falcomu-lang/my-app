@@ -136,5 +136,6 @@ namespace AoiMeasureTool
     {
         public double CcdXPrecision { get; set; }
         public double CcdYPrecision { get; set; }
+        public double MeasurementScaleFactor { get; set; } = 1.0;
     }
 }

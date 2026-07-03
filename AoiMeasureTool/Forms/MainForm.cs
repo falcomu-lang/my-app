@@ -128,8 +128,10 @@ namespace AoiMeasureTool
         private DataGridView _dataGridViewMeasureRecords;
         private NumericUpDown _numericInnerCcdXPrecision;
         private NumericUpDown _numericInnerCcdYPrecision;
+        private NumericUpDown _numericInnerMeasurementScaleFactor;
         private Label _labelInnerCcdXPrecision;
         private Label _labelInnerCcdYPrecision;
+        private Label _labelInnerMeasurementScaleFactor;
         private Button _buttonSaveMeasurePoint;
         private Button _buttonClearMeasurePoint;
         private Button _buttonSaveMeasureRecords;
@@ -1494,6 +1496,12 @@ namespace AoiMeasureTool
             {
                 _numericInnerCcdYPrecision.Value = ClampNumericUpDown(_numericInnerCcdYPrecision, (decimal)data.CcdYPrecision);
             }
+
+            if (_numericInnerMeasurementScaleFactor != null)
+            {
+                var scale = data.MeasurementScaleFactor <= 0 ? 1.0 : data.MeasurementScaleFactor;
+                _numericInnerMeasurementScaleFactor.Value = ClampNumericUpDown(_numericInnerMeasurementScaleFactor, (decimal)scale);
+            }
         }
 
         private static List<JudgementCriterionRule> CloneJudgementCriteriaRules(List<JudgementCriterionRule> rules)
@@ -1503,13 +1511,14 @@ namespace AoiMeasureTool
 
         private void SaveInnerSettings()
         {
-            if (_numericInnerCcdXPrecision == null || _numericInnerCcdYPrecision == null)
+            if (_numericInnerCcdXPrecision == null || _numericInnerCcdYPrecision == null || _numericInnerMeasurementScaleFactor == null)
             {
                 return;
             }
 
             _innerSettings.CcdXPrecision = (double)_numericInnerCcdXPrecision.Value;
             _innerSettings.CcdYPrecision = (double)_numericInnerCcdYPrecision.Value;
+            _innerSettings.MeasurementScaleFactor = (double)_numericInnerMeasurementScaleFactor.Value;
             _innerSettingsRepository.Save(GetInnerSettingsPath(), _innerSettings);
         }
 
