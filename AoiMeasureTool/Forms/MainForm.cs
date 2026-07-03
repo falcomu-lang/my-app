@@ -475,19 +475,6 @@ namespace AoiMeasureTool
                 return;
             }
 
-            labelContinuousInspectionTitle.Visible = false;
-            labelContinuousInspectionMainParameter.Text = "主參數";
-            labelContinuousInspectionMainParameter.Location = new Point(24, 18);
-            comboBoxContinuousInspectionMainParameter.Location = new Point(92, 14);
-            groupBoxContinuousInspection1.Text = "子參數 1";
-            groupBoxContinuousInspection2.Text = "子參數 2";
-            groupBoxContinuousInspection3.Text = "子參數 3";
-            groupBoxContinuousInspection1.Location = new Point(24, 40);
-            groupBoxContinuousInspection2.Location = new Point(334, 40);
-            groupBoxContinuousInspection3.Location = new Point(644, 40);
-            groupBoxContinuousInspection1.Size = new Size(292, 510);
-            groupBoxContinuousInspection2.Size = new Size(292, 510);
-            groupBoxContinuousInspection3.Size = new Size(292, 510);
             buttonContinuousInspectionLoadImage1.Text = "讀取圖";
             buttonContinuousInspectionLoadImage2.Text = "讀取圖";
             buttonContinuousInspectionLoadImage3.Text = "讀取圖";
