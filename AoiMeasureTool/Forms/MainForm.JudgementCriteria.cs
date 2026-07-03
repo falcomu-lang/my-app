@@ -138,7 +138,7 @@ namespace AoiMeasureTool
                 textBox.BorderStyle = BorderStyle.None;
                 textBox.BackColor = Color.White;
                 textBox.Font = new Font("Microsoft JhengHei UI", 10F);
-                textBox.Text = BuildJudgementSyntaxHelpText();
+                textBox.Text = BuildJudgementSyntaxHelpTextV2();
 
                 form.Controls.Add(textBox);
                 form.ShowDialog(this);
@@ -179,6 +179,40 @@ namespace AoiMeasureTool
             };
 
             return string.Join(Environment.NewLine, lines);
+        }
+
+        private static string BuildJudgementSyntaxHelpTextV2()
+        {
+            return string.Join(Environment.NewLine, new[]
+            {
+                "良品判斷條件語法說明",
+                "",
+                "1. 參數格式",
+                "   - (1), (2), (3) 表示各量測段編號",
+                "   - 可直接使用單一段，也可組合多段計算",
+                "",
+                "2. 聚合函數",
+                "   - max((1)(2)(3))",
+                "   - max((1),(2),(3))",
+                "   - min((1)(2)(3))",
+                "   - min((1),(2),(3))",
+                "   - 缺值會忽略，不會讓整個式子失效",
+                "   - 例如 max(((2)-(1)),((4)-(3))) 中，若 2 無法量測，則 (2)-(1) 會被忽略",
+                "",
+                "3. 差值與巢狀寫法",
+                "   - max(((2)-(1))((4)-(3)))",
+                "   - min(((2)-(1)),((4)-(3)))",
+                "",
+                "4. 混合運算",
+                "   - max((1)(2)(3)) + 1.5",
+                "   - min(((2)-(1))((4)-(3))) / 2",
+                "",
+                "5. 判斷式",
+                "   - x<5",
+                "   - x<=5",
+                "   - 5<x<10",
+                "   - 10>=x>=5"
+            });
         }
 
         private void JudgementMoveUpButton_Click(object sender, EventArgs e)

@@ -2489,6 +2489,7 @@ namespace AoiMeasureTool
             this.tabPageJudgementCriteria.Controls.Add(this.labelJudgementCriteriaTitle);
             this.tabPageJudgementCriteria.Controls.Add(this.buttonJudgementSyntaxHelp);
             this.tabPageJudgementCriteria.Controls.Add(this.panelJudgementCriteria);
+            this.buttonJudgementSyntaxHelp.BringToFront();
             this.tabPageJudgementCriteria.Location = new System.Drawing.Point(4, 26);
             this.tabPageJudgementCriteria.Name = "tabPageJudgementCriteria";
             this.tabPageJudgementCriteria.Padding = new System.Windows.Forms.Padding(3);
