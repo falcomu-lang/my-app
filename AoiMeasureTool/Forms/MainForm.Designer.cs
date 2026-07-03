@@ -2420,8 +2420,8 @@ namespace AoiMeasureTool
             // 
             // numericInnerCcdXPrecision
             // 
-            this.numericInnerCcdXPrecision.DecimalPlaces = 4;
-            this.numericInnerCcdXPrecision.Increment = new decimal(new int[] {1, 0, 0, 262144});
+            this.numericInnerCcdXPrecision.DecimalPlaces = 5;
+            this.numericInnerCcdXPrecision.Increment = new decimal(new int[] {1, 0, 0, 131072});
             this.numericInnerCcdXPrecision.Location = new System.Drawing.Point(160, 28);
             this.numericInnerCcdXPrecision.Maximum = new decimal(new int[] {1000, 0, 0, 0});
             this.numericInnerCcdXPrecision.Name = "numericInnerCcdXPrecision";
@@ -2440,8 +2440,8 @@ namespace AoiMeasureTool
             // 
             // numericInnerCcdYPrecision
             // 
-            this.numericInnerCcdYPrecision.DecimalPlaces = 4;
-            this.numericInnerCcdYPrecision.Increment = new decimal(new int[] {1, 0, 0, 262144});
+            this.numericInnerCcdYPrecision.DecimalPlaces = 5;
+            this.numericInnerCcdYPrecision.Increment = new decimal(new int[] {1, 0, 0, 131072});
             this.numericInnerCcdYPrecision.Location = new System.Drawing.Point(160, 74);
             this.numericInnerCcdYPrecision.Maximum = new decimal(new int[] {1000, 0, 0, 0});
             this.numericInnerCcdYPrecision.Name = "numericInnerCcdYPrecision";
@@ -2460,8 +2460,8 @@ namespace AoiMeasureTool
             // 
             // numericInnerMeasurementScaleFactor
             // 
-            this.numericInnerMeasurementScaleFactor.DecimalPlaces = 4;
-            this.numericInnerMeasurementScaleFactor.Increment = new decimal(new int[] {1, 0, 0, 262144});
+            this.numericInnerMeasurementScaleFactor.DecimalPlaces = 5;
+            this.numericInnerMeasurementScaleFactor.Increment = new decimal(new int[] {1, 0, 0, 131072});
             this.numericInnerMeasurementScaleFactor.Location = new System.Drawing.Point(160, 120);
             this.numericInnerMeasurementScaleFactor.Maximum = new decimal(new int[] {1000, 0, 0, 0});
             this.numericInnerMeasurementScaleFactor.Minimum = new decimal(new int[] {1, 0, 0, 262144});
