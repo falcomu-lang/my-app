@@ -88,7 +88,8 @@ namespace AoiMeasureTool
                 ReferenceTopRight = record.ReferenceTopRight,
                 ReferenceLength = record.ReferenceLength,
                 LocalStartPoint = record.LocalStartPoint,
-                LocalEndPoint = record.LocalEndPoint
+                LocalEndPoint = record.LocalEndPoint,
+                StatusText = record.StatusText
             };
         }
 

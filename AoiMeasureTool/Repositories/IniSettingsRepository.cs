@@ -236,6 +236,7 @@ namespace AoiMeasureTool
                         writer.WriteLine("Measure" + (i + 1) + "Distance=" + record.Distance.ToString(CultureInfo.InvariantCulture));
                         writer.WriteLine("Measure" + (i + 1) + "Source=" + (record.SourceName ?? string.Empty));
                         writer.WriteLine("Measure" + (i + 1) + "Direction=" + (record.DirectionName ?? string.Empty));
+                        writer.WriteLine("Measure" + (i + 1) + "Status=" + (record.StatusText ?? string.Empty));
                     }
 
                     List<JudgementCriterionRule> judgementCriteriaRules;
@@ -444,6 +445,10 @@ namespace AoiMeasureTool
             else if (propertyName.Equals("Direction", StringComparison.OrdinalIgnoreCase))
             {
                 record.DirectionName = value;
+            }
+            else if (propertyName.Equals("Status", StringComparison.OrdinalIgnoreCase))
+            {
+                record.StatusText = value;
             }
             else if (propertyName.Equals("LtX", StringComparison.OrdinalIgnoreCase))
             {

@@ -24,6 +24,7 @@ namespace AoiMeasureTool
         public double Distance { get; set; }
         public string SourceName { get; set; }
         public string DirectionName { get; set; }
+        public string StatusText { get; set; }
     }
 
     internal sealed class JudgementCriterionRule

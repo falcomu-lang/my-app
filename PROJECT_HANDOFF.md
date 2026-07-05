@@ -1,4 +1,4 @@
-# PROJECT HANDOFF
+﻿# PROJECT HANDOFF
 
 ## Current Baseline
 
@@ -36,40 +36,40 @@ The project target framework is `.NET Framework 4.7.2`.
 
 ## Detection Parameter Summary
 
-A dedicated `檢測參數整理` workspace now exists.
+A dedicated `瑼Ｘ葫??渡?` workspace now exists.
 
 ### Layout
 
-- Left side contains a small `建立主參數` group:
+- Left side contains a small `撱箇?銝餃??節 group:
   - main-parameter input textbox
-  - `確認` button
-- Middle-left contains the `主參數` listbox.
+  - `蝣箄?` button
+- Middle-left contains the `銝餃??節 listbox.
 - Right side top area contains three synchronized sub-parameter list groups:
-  - `子參數1`
-  - `子參數2`
-  - `子參數3`
+  - `摮???`
+  - `摮???`
+  - `摮???`
 - Each sub-parameter group now contains:
   - listbox
-  - `↑`
-  - `↓`
-  - `保存順序`
+  - `?
+  - `?
+  - `靽???`
   - a checkbox near the group title
-- A `儲存關聯` button exists near the lower-right of the sub-parameter area.
+- A `?脣??` button exists near the lower-right of the sub-parameter area.
 
 ### Main Parameter Behavior
 
-- Clicking `確認` with text in the main-parameter textbox adds a new item to the `主參數` listbox.
+- Clicking `蝣箄?` with text in the main-parameter textbox adds a new item to the `銝餃??節 listbox.
 - Duplicate main-parameter names are prevented case-insensitively.
-- Main-parameter order can be adjusted with `↑` and `↓`.
-- Clicking `保存順序` persists main-parameter order to `parameterReferenceList.ini`.
+- Main-parameter order can be adjusted with `? and `?.
+- Clicking `靽???` persists main-parameter order to `parameterReferenceList.ini`.
 
 ### Sub-Parameter List Behavior
 
-- `子參數1` reads `setting.ini` `[listSort]`.
+- `摮???` reads `setting.ini` `[listSort]`.
 - If `setting.ini` does not yet contain `[listSort]`, the sub-parameter list falls back to section names from `setting.ini`.
-- `子參數2` and `子參數3` are intentionally synchronized to the exact same item list and order as `子參數1`.
+- `摮???` and `摮???` are intentionally synchronized to the exact same item list and order as `摮???`.
 - Moving order in any of the three sub-parameter listboxes updates the shared in-memory order and refreshes all three listboxes together.
-- Clicking `保存順序` in any sub-parameter group writes the shared order back to `setting.ini` `[listSort]`.
+- Clicking `靽???` in any sub-parameter group writes the shared order back to `setting.ini` `[listSort]`.
 - Shared sub-parameter order is reloaded correctly after app startup and after settings restore.
 - When saving the current binarization settings under a new parameter name, that name must also be appended to `setting.ini` `[listSort]` if it does not already exist.
 
@@ -85,14 +85,14 @@ A dedicated `檢測參數整理` workspace now exists.
 - If a saved sub-parameter value is empty:
   - the corresponding listbox selection is cleared
   - the corresponding checkbox is unchecked
-- Clicking `儲存關聯` saves the currently selected main parameter's association.
+- Clicking `?脣??` saves the currently selected main parameter's association.
 - For each sub-parameter:
   - if its checkbox is checked, the selected list item is saved
   - if its checkbox is unchecked, an empty value is saved
 
 ## Continuous Inspection
 
-A dedicated `連續檢測` workspace now exists.
+A dedicated `???瑼Ｘ葫` workspace now exists.
 
 ### Layout
 
@@ -103,10 +103,10 @@ A dedicated `連續檢測` workspace now exists.
   - sub-parameter name label
   - preview viewport
   - result label
-  - `讀取圖` button
-  - `判斷` button
+  - `霈??` button
+  - `?斗` button
   - yield label
-  - `保存原始影像` checkbox
+  - `靽???敶勗?` checkbox
 - The result / button / yield controls are real designer controls, not runtime-generated controls.
 - The groupboxes were extended vertically so the result area no longer overlaps the preview image.
 
@@ -119,19 +119,19 @@ A dedicated `連續檢測` workspace now exists.
 
 ### Image Loading Behavior
 
-- Each `讀取圖` button opens a file picker for that slot.
+- Each `霈??` button opens a file picker for that slot.
 - Each slot loads one manual image path.
 - Loading an image does not trigger judgement.
-- If `保存原始影像` is checked, the original image is saved immediately when the image is loaded.
+- If `靽???敶勗?` is checked, the original image is saved immediately when the image is loaded.
 - Loading or judging preserves the current zoom scale and viewport position when possible.
 
 ### Judgement Behavior
 
-- Each `判斷` button runs only its own slot.
+- Each `?斗` button runs only its own slot.
 - Judgement uses that slot's sub-parameter name as the product / profile key.
 - This means continuous inspection reuses the saved preprocess, reference-corner, measurement, and judgement-criteria data of the selected sub-parameter.
-- If no sub-parameter is configured for that slot, the result label shows `未設定條件`.
-- If no image is loaded, the result label shows `未載入圖片`.
+- If no sub-parameter is configured for that slot, the result label shows `?芾身摰?隞跆.
+- If no image is loaded, the result label shows `?芾??亙??.
 - Result summarization rules are:
   - all A criteria -> `A`
   - any B criterion and no C criterion -> `B`
@@ -140,10 +140,10 @@ A dedicated `連續檢測` workspace now exists.
   - `A` -> green
   - `B` -> yellow
   - `NG` -> red
-- Yield text is tracked per slot in the format `良率 x/x(XX%)`.
+- Yield text is tracked per slot in the format `?舐? x/x(XX%)`.
 - Only `A` counts as good.
 - `B` and `NG` both count as NG for yield purposes.
-- Yield updates only when that slot's `判斷` button is pressed.
+- Yield updates only when that slot's `?斗` button is pressed.
 - Yield is currently in-memory only and is not persisted across app restart.
 
 ### Preview / Overlay Behavior
@@ -151,13 +151,13 @@ A dedicated `連續檢測` workspace now exists.
 - Each preview supports:
   - mouse-wheel zoom
   - left-drag pan
-- Overlay drawing happens only after pressing `判斷`.
+- Overlay drawing happens only after pressing `?斗`.
 - Continuous inspection reuses the multi-image-confirm style for result overlays.
 - The green ROI rectangle is intentionally not drawn in continuous inspection.
 
 ## Judgement Criteria
 
-The `良品判斷條件` tabpage contains a syntax help button in the top-right corner.
+The `?臬??斗璇辣` tabpage contains a syntax help button in the top-right corner.
 
 ### Supported Calculation Syntax
 
@@ -178,9 +178,12 @@ The `良品判斷條件` tabpage contains a syntax help button in the top-right 
 ### Missing-Value Behavior
 
 - For `max` / `min`, a missing sub-expression is ignored.
-- If one child expression in `max/min` cannot be evaluated, the remaining children still participate.
-- Only when all children are missing does the aggregate result become `不可判斷`.
-- This behavior applies consistently to display and judgement.
+- If one child expression in `max/min` cannot be evaluated, that child is skipped and the remaining children still participate.
+- Example: `min((1)-(2),(3))` skips `(1)-(2)` when `(2)` has no value, and the result becomes `(3)` if `(3)` is valid.
+- Example: `max(((1)-(2)),((1)-(3)))` returns `0` when both children cannot be evaluated.
+- Only when all children are missing does the aggregate result become `0`.
+- For non-aggregate arithmetic, if a required value is missing, the result becomes `0`.
+- This behavior applies consistently to display, judgement, and multi-image confirm.
 
 ### Judgement Rules
 
@@ -263,6 +266,10 @@ The `良品判斷條件` tabpage contains a syntax help button in the top-right 
 - Rendering uses the existing custom paint-based viewport flow.
 - Double buffering remains enabled for the relevant confirm controls.
 - The right-side info table appends a final processing-time row in seconds.
+- The multi-image confirm calculation follows the same missing-value rules as judgement criteria.
+- Continuous inspection uses the same multi-image judgement core, so it follows the same missing-value rules.
+- For `max` / `min`, invalid child expressions are skipped instead of forcing the aggregate to `-1`.
+- If every child expression is invalid, the displayed and judged value becomes `0`.
 
 ## Persistence Rules
 
@@ -285,14 +292,14 @@ The `良品判斷條件` tabpage contains a syntax help button in the top-right 
 
 The inner-settings tab now contains:
 
-- `CCD X向精度`
-- `CCD Y向精度`
-- `計算值倍率`
+- `CCD X?移摨圳
+- `CCD Y?移摨圳
+- `閮??澆?`
 
 ### Inner Settings Behavior
 
-- `CCD X向精度` and `CCD Y向精度` are used by measurement calculations as before.
-- `計算值倍率` defaults to `1.0`.
+- `CCD X?移摨圳 and `CCD Y?移摨圳 are used by measurement calculations as before.
+- `閮??澆?` defaults to `1.0`.
 - The measurement scale factor is applied once to the final calculated measurement value.
 - The displayed calculation values and the values used by judgement criteria both use the same scaled value.
 - Do not apply the multiplier in multiple places.
@@ -341,6 +348,10 @@ Do not move these back to runtime-generated controls unless explicitly requested
 
 - `AoiMeasureTool.sln /t:Rebuild /p:Configuration=Release` previously built successfully on this machine.
 - The build still emits existing OpenCvSharp analyzer warnings, but current functional changes compile cleanly.
+- Judgement syntax help now documents the formal missing-value rules:
+  - missing child expressions are skipped inside `max` / `min`
+  - `min((1)-(2),(3))` falls back to `(3)` when `(2)` is missing
+  - non-aggregate expressions with missing required values resolve to `0`
 - The detection parameter summary workflow is functional for:
   - creating main parameters
   - reordering main parameters
@@ -364,7 +375,9 @@ Do not move these back to runtime-generated controls unless explicitly requested
 Likely next work areas are:
 
 - decide whether continuous-inspection yield should persist across restart
-- decide whether `保存原始影像` should also persist its checkbox state across restart
+- decide whether `靽???敶勗?` should also persist its checkbox state across restart
 - validate continuous-inspection overlay appearance against multi-image-confirm side by side
 - add delete / rename behavior for detection main parameters if needed
-- decide whether `儲存關聯` should also auto-save on main-parameter switch
+- decide whether `?脣??` should also auto-save on main-parameter switch
+
+

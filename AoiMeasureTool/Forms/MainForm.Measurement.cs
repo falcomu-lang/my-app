@@ -171,6 +171,7 @@ namespace AoiMeasureTool
                     _dataGridViewMeasureRecords.Columns.Add("colDistance", "Distance(px)");
                     _dataGridViewMeasureRecords.Columns.Add("colSource", "來源");
                     _dataGridViewMeasureRecords.Columns.Add("colMode", "方向");
+                    _dataGridViewMeasureRecords.Columns.Add("colStatus", "狀態");
                 }
                 _dataGridViewMeasureRecords.MouseDown += MeasureRecords_MouseDown;
                 _measureRecordMenu = new ContextMenuStrip();
@@ -551,7 +552,7 @@ namespace AoiMeasureTool
                 var label = string.Format("線段 {0}", i + 1);
                 AddMultiImageInfoRow(label, measurement.IsValid
                     ? string.Format("{0:0.##} mm ({1:0.##} px)", measurement.MillimeterDistance, measurement.Distance)
-                    : "不可判斷");
+                    : (string.IsNullOrWhiteSpace(measurement.StatusText) ? "找不到物件" : measurement.StatusText));
             }
 
             stopwatch.Stop();
@@ -859,26 +860,47 @@ namespace AoiMeasureTool
         private static double? EvaluateJudgementCalculation(string expression, IReadOnlyDictionary<int, double> lineValues, out string text)
         {
             text = string.Empty;
+            double value;
+            if (!TryEvaluateExpression(expression, lineValues, out value))
+            {
+                text = "0";
+                return 0d;
+            }
+
+            try
+            {
+                text = value.ToString("0.##", CultureInfo.InvariantCulture);
+                return value;
+            }
+            catch
+            {
+                text = "0";
+                return 0d;
+            }
+        }
+
+        private static bool TryEvaluateExpression(string expression, IReadOnlyDictionary<int, double> lineValues, out double value)
+        {
+            value = 0d;
             if (string.IsNullOrWhiteSpace(expression))
             {
-                return null;
+                return false;
             }
 
             var missingValue = false;
             var resolved = ResolveAggregateCalculationExpression(expression, lineValues, ref missingValue);
             if (missingValue)
             {
-                text = resolved;
-                return null;
+                return false;
             }
 
             resolved = Regex.Replace(resolved, @"\((\d+)\)", match =>
             {
                 var index = int.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
-                double value;
-                if (lineValues != null && lineValues.TryGetValue(index, out value))
+                double lineValue;
+                if (lineValues != null && lineValues.TryGetValue(index, out lineValue))
                 {
-                    return value.ToString(CultureInfo.InvariantCulture);
+                    return lineValue.ToString(CultureInfo.InvariantCulture);
                 }
 
                 missingValue = true;
@@ -887,22 +909,19 @@ namespace AoiMeasureTool
 
             if (missingValue)
             {
-                text = resolved;
-                return null;
+                return false;
             }
 
             try
             {
                 var table = new DataTable();
                 var result = table.Compute(resolved, string.Empty);
-                var numeric = Convert.ToDouble(result, CultureInfo.InvariantCulture);
-                text = numeric.ToString("0.##", CultureInfo.InvariantCulture);
-                return numeric;
+                value = Convert.ToDouble(result, CultureInfo.InvariantCulture);
+                return true;
             }
             catch
             {
-                text = resolved;
-                return null;
+                return false;
             }
         }
 
@@ -947,30 +966,10 @@ namespace AoiMeasureTool
                     }
                     else
                     {
-                        var nestedMissingValue = false;
-                        var nestedResolved = ResolveAggregateCalculationExpression(argExpression, lineValues, ref nestedMissingValue);
-                        if (nestedMissingValue)
+                        double nestedValue;
+                        if (TryEvaluateExpression(argExpression, lineValues, out nestedValue))
                         {
-                            continue;
-                        }
-
-                        double parsedValue;
-                        if (double.TryParse(nestedResolved, NumberStyles.Float, CultureInfo.InvariantCulture, out parsedValue))
-                        {
-                            argumentValue = parsedValue;
-                        }
-                        else
-                        {
-                            try
-                            {
-                                var nestedTable = new DataTable();
-                                var nestedResult = nestedTable.Compute(nestedResolved, string.Empty);
-                                argumentValue = Convert.ToDouble(nestedResult, CultureInfo.InvariantCulture);
-                            }
-                            catch
-                            {
-                                continue;
-                            }
+                            argumentValue = nestedValue;
                         }
                     }
 
@@ -1324,14 +1323,20 @@ namespace AoiMeasureTool
         private sealed class MultiImageLineMeasurementResult
         {
             public bool IsValid { get; set; }
+            public bool IsObjectFound { get; set; }
             public Point StartPoint { get; set; }
             public Point EndPoint { get; set; }
             public double Distance { get; set; }
             public double MillimeterDistance { get; set; }
+            public string StatusText { get; set; }
 
             public static MultiImageLineMeasurementResult Invalid()
             {
-                return new MultiImageLineMeasurementResult();
+                return new MultiImageLineMeasurementResult
+                {
+                    IsObjectFound = false,
+                    StatusText = "找不到物件"
+                };
             }
         }
 
@@ -1536,10 +1541,12 @@ namespace AoiMeasureTool
             return new MultiImageLineMeasurementResult
             {
                 IsValid = true,
+                IsObjectFound = true,
                 StartPoint = firstPoint,
                 EndPoint = lastPoint,
                 Distance = distance,
-                MillimeterDistance = millimeterDistance
+                MillimeterDistance = millimeterDistance,
+                StatusText = string.Empty
             };
         }
 
@@ -3411,7 +3418,8 @@ namespace AoiMeasureTool
                 record.LocalEndPoint.Y.ToString("0.###", CultureInfo.InvariantCulture),
                 record.Distance.ToString("0.##"),
                 record.SourceName,
-                record.DirectionName);
+                record.DirectionName,
+                string.IsNullOrWhiteSpace(record.StatusText) ? string.Empty : record.StatusText);
             _dataGridViewMeasureRecords.Rows[rowIndex].Tag = record;
         }
 
@@ -3440,6 +3448,10 @@ namespace AoiMeasureTool
             row.Cells[16].Value = record.Distance.ToString("0.##");
             row.Cells[17].Value = record.SourceName;
             row.Cells[18].Value = record.DirectionName;
+            if (row.Cells.Count > 19)
+            {
+                row.Cells[19].Value = string.IsNullOrWhiteSpace(record.StatusText) ? string.Empty : record.StatusText;
+            }
         }
 
         private DataGridViewRow GetSelectedMeasureRecordRow()
