@@ -11,7 +11,9 @@ namespace AoiMeasureTool
             var centerX = (startPoint.X + endPoint.X) / 2.0;
             var centerY = (startPoint.Y + endPoint.Y) / 2.0;
             var distance = Math.Sqrt(Math.Pow(endPoint.X - startPoint.X, 2) + Math.Pow(endPoint.Y - startPoint.Y, 2));
-            var basis = CreateReferenceBasis(candidate.TopLeft, candidate.TopRight);
+            var basis = CreateReferenceBasis(candidate);
+            var referenceTopLeft = candidate != null ? candidate.TopLeft : Point.Empty;
+            var referenceTopRight = candidate != null ? candidate.TopRight : Point.Empty;
 
             return new MeasureRecord
             {
@@ -21,8 +23,8 @@ namespace AoiMeasureTool
                 Distance = distance,
                 SourceName = sourceName,
                 DirectionName = directionName,
-                ReferenceTopLeft = candidate.TopLeft,
-                ReferenceTopRight = candidate.TopRight,
+                ReferenceTopLeft = referenceTopLeft,
+                ReferenceTopRight = referenceTopRight,
                 ReferenceLength = basis.Length,
                 LocalStartPoint = ToLocalReferencePoint(startPoint, basis),
                 LocalEndPoint = ToLocalReferencePoint(endPoint, basis)
@@ -48,7 +50,7 @@ namespace AoiMeasureTool
                 return cloned;
             }
 
-            var basis = CreateReferenceBasis(candidate.TopLeft, candidate.TopRight);
+            var basis = CreateReferenceBasis(candidate);
             cloned.StartPoint = FromNormalizedReferencePoint(cloned.LocalStartPoint, cloned.ReferenceLength, basis);
             cloned.EndPoint = FromNormalizedReferencePoint(cloned.LocalEndPoint, cloned.ReferenceLength, basis);
             cloned.CenterPoint = new Point(
@@ -90,6 +92,22 @@ namespace AoiMeasureTool
             };
         }
 
+        private static ReferenceBasis CreateReferenceBasis(ReferenceCornerCandidate candidate)
+        {
+            if (candidate == null)
+            {
+                return new ReferenceBasis
+                {
+                    Anchor = Point.Empty,
+                    UnitX = new PointF(1f, 0f),
+                    UnitY = new PointF(0f, 1f),
+                    Length = 1d
+                };
+            }
+
+            return CreateReferenceBasis(candidate.TopLeft, candidate.TopRight);
+        }
+
         private static ReferenceBasis CreateReferenceBasis(Point topLeft, Point topRight)
         {
             var dx = topRight.X - topLeft.X;
@@ -119,6 +137,11 @@ namespace AoiMeasureTool
 
         private static PointF ToLocalReferencePoint(Point point, ReferenceBasis basis)
         {
+            if (basis.Anchor == Point.Empty)
+            {
+                return new PointF(point.X, point.Y);
+            }
+
             var vx = point.X - basis.Anchor.X;
             var vy = point.Y - basis.Anchor.Y;
             return new PointF(
@@ -128,6 +151,11 @@ namespace AoiMeasureTool
 
         private static Point FromNormalizedReferencePoint(PointF normalizedPoint, double sourceReferenceLength, ReferenceBasis basis)
         {
+            if (basis.Anchor == Point.Empty)
+            {
+                return new Point((int)Math.Round(normalizedPoint.X), (int)Math.Round(normalizedPoint.Y));
+            }
+
             var sourceLength = sourceReferenceLength > 0 ? sourceReferenceLength : basis.Length;
             var scaledX = normalizedPoint.X * sourceLength;
             var scaledY = normalizedPoint.Y * sourceLength;

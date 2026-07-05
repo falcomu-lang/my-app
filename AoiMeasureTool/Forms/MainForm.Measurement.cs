@@ -435,6 +435,26 @@ namespace AoiMeasureTool
             RefreshMultiImageJudgementResultTable();
         }
 
+        private void SyncMultiImageConfirmWithActiveProduct(string productKey)
+        {
+            if (string.IsNullOrWhiteSpace(productKey))
+            {
+                return;
+            }
+
+            _multiImageConfirmProductKey = productKey;
+            _multiImageLineMeasurementCache.Clear();
+
+            if (_multiImageConfirmImagePaths.Count == 0 || _multiImageConfirmImageIndex < 0)
+            {
+                UpdateMultiImageInfoTable();
+                RefreshMultiImageJudgementResultTable();
+                return;
+            }
+
+            ShowCurrentMultiImageConfirmImage();
+        }
+
         private string ResolveMultiImageConfirmProductKey(string folderPath, string selectedImagePath)
         {
             return GetCurrentProductKeyOrDefault();
@@ -2633,12 +2653,12 @@ namespace AoiMeasureTool
 
             if (_buttonParallelMeasure != null)
             {
-                _buttonParallelMeasure.Enabled = _measureSourceAvailable && _referenceCornerFound && _referenceCornerCandidate != null && !_isEditingMeasureRecord;
+                _buttonParallelMeasure.Enabled = _measureSourceAvailable && !_isEditingMeasureRecord;
             }
 
             if (_buttonPerpendicularMeasure != null)
             {
-                _buttonPerpendicularMeasure.Enabled = _measureSourceAvailable && _referenceCornerFound && _referenceCornerCandidate != null && !_isEditingMeasureRecord;
+                _buttonPerpendicularMeasure.Enabled = _measureSourceAvailable && !_isEditingMeasureRecord;
             }
 
             if (_labelMeasureStatus != null)
@@ -2845,8 +2865,15 @@ namespace AoiMeasureTool
 
             if (_referenceCornerCandidate == null)
             {
-                MessageBox.Show(this, "請先完成左上角與右上角基準的辨識，才能保存相對量測資料。", "量測距離", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
+                if (_measureDirectionMode != MeasureDirectionMode.None)
+                {
+                    // 方向綁定可在沒有角點時使用畫面座標基準，因此不再阻擋保存。
+                }
+                else
+                {
+                    MessageBox.Show(this, "請先選擇平行或垂直方向，才能保存量測資料。", "量測距離", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
             }
 
             var p1 = _measurePoints[0];
@@ -3073,8 +3100,11 @@ namespace AoiMeasureTool
 
             if (_referenceCornerCandidate == null)
             {
-                MessageBox.Show(this, "請先完成左上角與右上角基準的辨識，才能修改量測資料。", "量測距離", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
+                if (_measureDirectionMode == MeasureDirectionMode.None)
+                {
+                    MessageBox.Show(this, "請先選擇平行或垂直方向，才能修改量測資料。", "量測距離", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
             }
 
             var updatedRecord = MeasurementRecordService.CreateRecord(
@@ -3237,7 +3267,7 @@ namespace AoiMeasureTool
                 return;
             }
 
-            var directionEnabled = _measureSourceAvailable && _referenceCornerFound && _referenceCornerCandidate != null;
+            var directionEnabled = _measureSourceAvailable && !_isEditingMeasureRecord;
             _buttonParallelMeasure.Enabled = directionEnabled;
             _buttonPerpendicularMeasure.Enabled = directionEnabled;
             _buttonParallelMeasure.BackColor = _measureDirectionMode == MeasureDirectionMode.Parallel
@@ -3250,12 +3280,12 @@ namespace AoiMeasureTool
 
         private Point ConstrainMeasurePoint(Point startPoint, Point rawPoint)
         {
-            if (!_referenceCornerFound)
-            {
-                return rawPoint;
-            }
-
-            return MeasurementOverlayService.ConstrainPoint(startPoint, rawPoint, _referenceCornerCandidate, _measureDirectionMode);
+            return MeasurementOverlayService.ConstrainPoint(
+                startPoint,
+                rawPoint,
+                _referenceCornerFound && _referenceCornerCandidate != null,
+                _referenceCornerCandidate,
+                _measureDirectionMode);
         }
 
         private Point GetMeasureImagePointFromMouse(Control sourceControl, Point displayPoint)

@@ -51,14 +51,26 @@ namespace AoiMeasureTool
             ReferenceCornerCandidate referenceCornerCandidate,
             MeasureDirectionMode directionMode)
         {
-            if (referenceCornerCandidate == null || directionMode == MeasureDirectionMode.None)
+            return ConstrainPoint(startPoint, rawPoint, referenceCornerCandidate != null, referenceCornerCandidate, directionMode);
+        }
+
+        public static Point ConstrainPoint(
+            Point startPoint,
+            Point rawPoint,
+            bool hasReferenceCorner,
+            ReferenceCornerCandidate referenceCornerCandidate,
+            MeasureDirectionMode directionMode)
+        {
+            if (directionMode == MeasureDirectionMode.None)
             {
                 return rawPoint;
             }
 
-            var axis = new Point(
-                referenceCornerCandidate.TopRight.X - referenceCornerCandidate.TopLeft.X,
-                referenceCornerCandidate.TopRight.Y - referenceCornerCandidate.TopLeft.Y);
+            var axis = hasReferenceCorner && referenceCornerCandidate != null
+                ? new Point(
+                    referenceCornerCandidate.TopRight.X - referenceCornerCandidate.TopLeft.X,
+                    referenceCornerCandidate.TopRight.Y - referenceCornerCandidate.TopLeft.Y)
+                : new Point(1, 0);
 
             var length = Math.Sqrt(axis.X * axis.X + axis.Y * axis.Y);
             if (length <= 0.001)

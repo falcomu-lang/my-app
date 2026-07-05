@@ -336,6 +336,7 @@ namespace AoiMeasureTool
 
                     var productKey = GetProductKeyFromImagePath(openFileDialogImage.FileName);
                     SwitchActiveProduct(productKey);
+                    SyncMultiImageConfirmWithActiveProduct(productKey);
                     RefreshMeasureDistancePreview();
 
                     labelImageInfo.Text = string.Format(
@@ -1572,6 +1573,7 @@ namespace AoiMeasureTool
                 {
                     _suppressPersistOnProductSwitch = false;
                 }
+                SyncMultiImageConfirmWithActiveProduct(GetCurrentProductKeyOrDefault());
                 ApplyProductState(_productProfileService.GetOrCreateState(GetCurrentProductKeyOrDefault()));
                 RefreshMeasureDistancePreview();
 
