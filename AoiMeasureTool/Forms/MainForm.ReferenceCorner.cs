@@ -34,6 +34,7 @@ namespace AoiMeasureTool
                 _referenceCornerEnabled,
                 _referenceSourceIndex,
                 _referencePointMode,
+                _referenceScanLineThreshold,
                 _referenceRoiRectangle,
                 _referenceRoiSaved,
                 _referenceCornerFound);
@@ -65,6 +66,7 @@ namespace AoiMeasureTool
                 {
                     _referencePointMode = ReferenceCornerPointMode.ContourNearest;
                 }
+                _referenceScanLineThreshold = Math.Max(1, snapshot.ScanLineThreshold);
                 _referenceRoiRectangle = ReferenceCornerSelectionService.NormalizeRectangle(snapshot.Roi);
                 _referenceRoiSaved = snapshot.RoiSaved && _referenceRoiRectangle.Width > 0 && _referenceRoiRectangle.Height > 0;
                 _referenceCornerFound = snapshot.CornerFound && _referenceRoiSaved;
@@ -100,9 +102,11 @@ namespace AoiMeasureTool
             _comboBoxReferencePointMode.Items.Add("Contour nearest");
             _comboBoxReferencePointMode.Items.Add("ROI top edge");
             _comboBoxReferencePointMode.Items.Add("Incomplete protrusion");
+            _comboBoxReferencePointMode.Items.Add("Scan search");
             _comboBoxReferencePointMode.SelectedIndex = 0;
             _referenceSourceIndex = 0;
             _referencePointMode = ReferenceCornerPointMode.ContourNearest;
+            _referenceScanLineThreshold = 200;
             _referenceCornerEnabled = false;
             ApplyReferenceCornerUiState();
         }
@@ -253,7 +257,32 @@ namespace AoiMeasureTool
                 _comboBoxReferencePointMode.BringToFront();
             }
 
-            buttonSaveReferenceRoi.Location = new Point(16, 174);
+            if (_labelReferenceScanLineThreshold == null)
+            {
+                _labelReferenceScanLineThreshold = new Label
+                {
+                    AutoSize = true,
+                    Location = new Point(16, 168),
+                    Text = "掃描線門檻"
+                };
+                panelReferenceCornerControls.Controls.Add(_labelReferenceScanLineThreshold);
+            }
+
+            if (_numericReferenceScanLineThreshold == null)
+            {
+                _numericReferenceScanLineThreshold = new NumericUpDown
+                {
+                    Location = new Point(16, 190),
+                    Size = new Size(120, 24),
+                    Minimum = 1,
+                    Maximum = 9999,
+                    Value = 200
+                };
+                _numericReferenceScanLineThreshold.ValueChanged += ReferenceScanLineThreshold_ValueChanged;
+                panelReferenceCornerControls.Controls.Add(_numericReferenceScanLineThreshold);
+            }
+
+            buttonSaveReferenceRoi.Location = new Point(16, 228);
         }
 
         private void ApplyReferenceCornerUiState()
@@ -276,8 +305,14 @@ namespace AoiMeasureTool
 
             if (_comboBoxReferencePointMode != null && _comboBoxReferencePointMode.Items.Count > 0)
             {
-                _comboBoxReferencePointMode.SelectedIndex = (int)_referencePointMode;
+                _comboBoxReferencePointMode.SelectedIndex = Math.Max(0, Math.Min(_comboBoxReferencePointMode.Items.Count - 1, (int)_referencePointMode));
                 _comboBoxReferencePointMode.Enabled = _referenceCornerEnabled;
+            }
+
+            if (_numericReferenceScanLineThreshold != null)
+            {
+                _numericReferenceScanLineThreshold.Value = Math.Max(_numericReferenceScanLineThreshold.Minimum, Math.Min(_numericReferenceScanLineThreshold.Maximum, _referenceScanLineThreshold));
+                _numericReferenceScanLineThreshold.Enabled = _referenceCornerEnabled && _referencePointMode == ReferenceCornerPointMode.ScanSearch;
             }
 
             if (_referenceRoiSaved)
@@ -330,6 +365,10 @@ namespace AoiMeasureTool
             }
 
             _referencePointMode = (ReferenceCornerPointMode)_comboBoxReferencePointMode.SelectedIndex;
+            if (_numericReferenceScanLineThreshold != null)
+            {
+                _numericReferenceScanLineThreshold.Enabled = _referenceCornerEnabled && _referencePointMode == ReferenceCornerPointMode.ScanSearch;
+            }
             if (_referenceRoiSaved)
             {
                 RefreshReferenceCornerCandidate();
@@ -406,6 +445,23 @@ namespace AoiMeasureTool
             {
                 PersistReferenceCornerState();
             }
+        }
+
+        private void ReferenceScanLineThreshold_ValueChanged(object sender, EventArgs e)
+        {
+            if (_isApplyingReferenceCornerState || _numericReferenceScanLineThreshold == null)
+            {
+                return;
+            }
+
+            _referenceScanLineThreshold = (int)_numericReferenceScanLineThreshold.Value;
+            if (_referenceRoiSaved)
+            {
+                RefreshReferenceCornerCandidate();
+            }
+
+            PersistReferenceCornerState();
+            UpdateReferenceCornerPreview();
         }
 
         private static void DrawReferencePoint(Graphics graphics, Brush brush, Pen outlinePen, int x, int y)

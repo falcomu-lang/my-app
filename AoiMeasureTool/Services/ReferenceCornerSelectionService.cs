@@ -4,13 +4,14 @@ namespace AoiMeasureTool
 {
     internal static class ReferenceCornerSelectionService
     {
-        public static ReferenceCornerSnapshot CaptureSnapshot(bool enabled, int sourceIndex, ReferenceCornerPointMode pointMode, Rectangle roi, bool roiSaved, bool cornerFound)
+        public static ReferenceCornerSnapshot CaptureSnapshot(bool enabled, int sourceIndex, ReferenceCornerPointMode pointMode, int scanLineThreshold, Rectangle roi, bool roiSaved, bool cornerFound)
         {
             return new ReferenceCornerSnapshot
             {
                 Enabled = enabled,
                 SourceIndex = sourceIndex,
                 PointMode = pointMode,
+                ScanLineThreshold = scanLineThreshold,
                 Roi = roi,
                 RoiSaved = roiSaved,
                 CornerFound = cornerFound

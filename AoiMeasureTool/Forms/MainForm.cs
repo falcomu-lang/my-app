@@ -54,6 +54,7 @@ namespace AoiMeasureTool
         private bool _referenceCornerEnabled;
         private int _referenceSourceIndex;
         private ReferenceCornerPointMode _referencePointMode = ReferenceCornerPointMode.ContourNearest;
+        private int _referenceScanLineThreshold = 200;
         private bool _referenceRoiSaved;
         private bool _referenceCornerFound;
         private bool _isSelectingReferenceRoi;
@@ -74,6 +75,8 @@ namespace AoiMeasureTool
         private Label _labelReferenceProtrusionMinHeight;
         private Label _labelReferenceProtrusionWidthIncreaseThreshold;
         private Label _labelReferenceProtrusionConsecutiveRows;
+        private NumericUpDown _numericReferenceScanLineThreshold;
+        private Label _labelReferenceScanLineThreshold;
         private float _activeImageScale = 1f;
         private float _activeFitScale = 1f;
         private bool _isDraggingActiveImage;

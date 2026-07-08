@@ -11,6 +11,7 @@ namespace AoiMeasureTool
         public static ReferenceCornerCandidate FindCandidate(Mat binaryMat, Rectangle roi, System.Drawing.Point roiCenter, ReferenceCornerSnapshot snapshot)
         {
             LastDebugInfo = new ReferenceCornerDetectionDebugInfo();
+
             if (binaryMat == null || binaryMat.Empty())
             {
                 LastDebugInfo.Message = "binary empty";
@@ -26,6 +27,11 @@ namespace AoiMeasureTool
             {
                 LastDebugInfo.UsedProtrusionMode = true;
                 return FindProtrusionCandidate(binaryMat, roi, snapshot);
+            }
+
+            if (snapshot.PointMode == ReferenceCornerPointMode.ScanSearch)
+            {
+                return FindScanSearchCandidate(binaryMat, roi, snapshot.ScanLineThreshold);
             }
 
             using (var labels = new Mat())
@@ -302,7 +308,7 @@ namespace AoiMeasureTool
                 }
 
                 var rotatedRect = Cv2.MinAreaRect(bestContour);
-                var topPoints = GetTopPoints(labels, labelIndex, bestContour, boundingRect, snapshot);
+                var topPoints = GetTopPoints(bestContour, boundingRect, snapshot);
                 var topLeft = topPoints.Item1;
                 var topRight = topPoints.Item2;
                 return new ReferenceCornerCandidate(
@@ -314,9 +320,67 @@ namespace AoiMeasureTool
             }
         }
 
+        private static ReferenceCornerCandidate FindScanSearchCandidate(Mat binaryMat, Rectangle roi, int scanLineThreshold)
+        {
+            var left = Math.Max(0, roi.Left);
+            var top = Math.Max(0, roi.Top);
+            var right = Math.Min(binaryMat.Width, roi.Right);
+            var bottom = Math.Min(binaryMat.Height, roi.Bottom);
+
+            if (right <= left || bottom <= top)
+            {
+                return null;
+            }
+
+            var threshold = Math.Max(1, scanLineThreshold);
+            for (var y = top; y < bottom; y++)
+            {
+                var x = left;
+                while (x < right)
+                {
+                    while (x < right && binaryMat.At<byte>(y, x) == 0)
+                    {
+                        x++;
+                    }
+
+                    if (x >= right)
+                    {
+                        break;
+                    }
+
+                    var segmentStart = x;
+                    while (x < right && binaryMat.At<byte>(y, x) != 0)
+                    {
+                        x++;
+                    }
+
+                    var segmentEnd = x - 1;
+                    var segmentLength = segmentEnd - segmentStart + 1;
+                    if (segmentLength < threshold)
+                    {
+                        continue;
+                    }
+
+                    var boundingRect = new Rectangle(segmentStart, y, segmentLength, 1);
+                    var topLeft = new System.Drawing.Point(segmentStart, y);
+                    var topRight = new System.Drawing.Point(segmentEnd, y);
+                    var centerX = segmentStart + segmentLength / 2;
+                    return new ReferenceCornerCandidate(
+                        new RotatedRect(
+                            new Point2f(centerX, y),
+                            new Size2f(segmentLength, 1),
+                            0),
+                        topLeft,
+                        topRight,
+                        new System.Drawing.Point(centerX, y),
+                        boundingRect);
+                }
+            }
+
+            return null;
+        }
+
         private static Tuple<System.Drawing.Point, System.Drawing.Point> GetTopPoints(
-            Mat labels,
-            int labelIndex,
             OpenCvSharp.Point[] contour,
             Rectangle boundingRect,
             ReferenceCornerSnapshot snapshot)
