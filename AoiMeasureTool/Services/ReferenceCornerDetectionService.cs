@@ -74,6 +74,8 @@ namespace AoiMeasureTool
             var minWidth = Math.Max(1, snapshot.ProtrusionMinWidth);
             var minHeight = Math.Max(1, snapshot.ProtrusionMinHeight);
             var consecutiveRows = Math.Max(1, snapshot.ProtrusionConsecutiveRows);
+            var leftWindowWidth = Math.Max(1, Math.Min(roi.Width, minWidth));
+            var leftHalfThreshold = Math.Max(1, leftWindowWidth / 2);
 
             var scanTop = Math.Max(0, roi.Top);
             var scanBottom = Math.Min(binaryMat.Rows, roi.Bottom);
@@ -84,17 +86,16 @@ namespace AoiMeasureTool
                 return null;
             }
 
-            var streak = 0;
-            var startRow = -1;
-            var endRow = -1;
-            var leftEdge = int.MaxValue;
-            var rightEdge = int.MinValue;
+            var rowMetrics = new RowMetric[scanBottom - scanTop];
+            var baselineCount = Math.Max(1, Math.Min(5, rowMetrics.Length / 3));
+            var baselineSum = 0;
 
             for (var y = scanTop; y < scanBottom; y++)
             {
                 var rowLeft = int.MaxValue;
                 var rowRight = int.MinValue;
-                var hasWhite = false;
+                var whiteCount = 0;
+                var leftWhiteCount = 0;
 
                 for (var x = scanLeft; x < scanRight; x++)
                 {
@@ -104,7 +105,11 @@ namespace AoiMeasureTool
                         continue;
                     }
 
-                    hasWhite = true;
+                    whiteCount++;
+                    if (x < scanLeft + leftWindowWidth)
+                    {
+                        leftWhiteCount++;
+                    }
                     if (x < rowLeft)
                     {
                         rowLeft = x;
@@ -115,73 +120,97 @@ namespace AoiMeasureTool
                     }
                 }
 
-                if (!hasWhite)
+                var index = y - scanTop;
+                rowMetrics[index] = new RowMetric
                 {
-                    streak = 0;
-                    if (startRow >= 0 && endRow < 0)
-                    {
-                        endRow = y - 1;
-                        break;
-                    }
-                    continue;
-                }
+                    Row = y,
+                    WhiteCount = whiteCount,
+                    LeftWhiteCount = leftWhiteCount,
+                    RowLeft = rowLeft,
+                    RowRight = rowRight
+                };
 
-                var span = rowRight - rowLeft + 1;
-                if (span < minWidth)
+                if (index < baselineCount)
                 {
-                    streak = 0;
-                    if (startRow >= 0 && endRow < 0)
-                    {
-                        endRow = y - 1;
-                        break;
-                    }
-                    continue;
-                }
-
-                if (startRow < 0)
-                {
-                    startRow = y;
-                    endRow = -1;
-                    streak = 1;
-                    leftEdge = rowLeft;
-                    rightEdge = rowRight;
-                }
-                else
-                {
-                    var widthChange = Math.Abs(span - (rightEdge - leftEdge + 1));
-                    if (widthChange > snapshot.ProtrusionWidthIncreaseThreshold)
-                    {
-                        streak = 1;
-                        startRow = y;
-                        leftEdge = rowLeft;
-                        rightEdge = rowRight;
-                    }
-                    else
-                    {
-                        streak++;
-                        if (rowLeft < leftEdge)
-                        {
-                            leftEdge = rowLeft;
-                        }
-                        if (rowRight > rightEdge)
-                        {
-                            rightEdge = rowRight;
-                        }
-                    }
-
-                    if (streak >= consecutiveRows)
-                    {
-                        endRow = y;
-                        break;
-                    }
+                    baselineSum += leftWhiteCount;
                 }
             }
 
-            if (startRow < 0 || endRow < 0 || endRow < startRow)
+            var baselineAverage = baselineSum / (double)Math.Max(1, baselineCount);
+            var triggerThreshold = Math.Max(2, snapshot.ProtrusionWidthIncreaseThreshold);
+            var triggerRow = -1;
+            for (var i = baselineCount; i < rowMetrics.Length; i++)
             {
-                if (startRow >= 0 && endRow < 0)
+                var metric = rowMetrics[i];
+                if (metric.WhiteCount <= 0)
                 {
-                    endRow = scanBottom - 1;
+                    continue;
+                }
+
+                var leftDelta = metric.LeftWhiteCount - baselineAverage;
+                if (leftDelta >= triggerThreshold)
+                {
+                    triggerRow = metric.Row;
+                    continue;
+                }
+
+                if (triggerRow >= 0)
+                {
+                    break;
+                }
+            }
+
+            if (triggerRow < 0)
+            {
+                return null;
+            }
+
+            var startIndex = Math.Max(0, triggerRow - scanTop);
+            var bestRunStart = -1;
+            var bestRunEnd = -1;
+            var runStart = -1;
+            var runEnd = -1;
+            var runSpan = 0;
+            for (var i = startIndex; i < rowMetrics.Length; i++)
+            {
+                var metric = rowMetrics[i];
+                if (metric.WhiteCount < minWidth)
+                {
+                    if (runStart >= 0)
+                    {
+                        if (runSpan >= minWidth && runEnd - runStart + 1 >= minHeight)
+                        {
+                            bestRunStart = runStart;
+                            bestRunEnd = runEnd;
+                            break;
+                        }
+                    }
+
+                    runStart = -1;
+                    runEnd = -1;
+                    runSpan = 0;
+                    continue;
+                }
+
+                if (runStart < 0)
+                {
+                    runStart = metric.Row;
+                    runEnd = metric.Row;
+                    runSpan = metric.WhiteCount;
+                }
+                else
+                {
+                    runEnd = metric.Row;
+                    runSpan = Math.Max(runSpan, metric.WhiteCount);
+                }
+            }
+
+            if (bestRunStart < 0)
+            {
+                if (runStart >= 0 && runSpan >= minWidth && runEnd - runStart + 1 >= minHeight)
+                {
+                    bestRunStart = runStart;
+                    bestRunEnd = runEnd;
                 }
                 else
                 {
@@ -189,26 +218,31 @@ namespace AoiMeasureTool
                 }
             }
 
-            if (endRow - startRow + 1 < minHeight)
+            var topMetric = rowMetrics[Math.Max(0, bestRunStart - scanTop)];
+            if (topMetric.RowLeft == int.MaxValue || topMetric.RowRight == int.MinValue)
             {
                 return null;
             }
 
-            if (leftEdge == int.MaxValue || rightEdge == int.MinValue)
-            {
-                return null;
-            }
-
-            var topLeft = new System.Drawing.Point(leftEdge, startRow);
-            var topRight = new System.Drawing.Point(rightEdge, startRow);
-            var boundingRect = Rectangle.FromLTRB(leftEdge, startRow, rightEdge + 1, endRow + 1);
-            var centerPoint = new System.Drawing.Point((leftEdge + rightEdge) / 2, (startRow + endRow) / 2);
+            var topLeft = new System.Drawing.Point(topMetric.RowLeft, bestRunStart);
+            var topRight = new System.Drawing.Point(topMetric.RowRight, bestRunStart);
+            var boundingRect = Rectangle.FromLTRB(topMetric.RowLeft, bestRunStart, topMetric.RowRight + 1, bestRunEnd + 1);
+            var centerPoint = new System.Drawing.Point((topMetric.RowLeft + topMetric.RowRight) / 2, (bestRunStart + bestRunEnd) / 2);
             var rotatedRect = new RotatedRect(
                 new Point2f(centerPoint.X, centerPoint.Y),
                 new Size2f(Math.Max(1, boundingRect.Width), Math.Max(1, boundingRect.Height)),
                 0);
 
             return new ReferenceCornerCandidate(rotatedRect, topLeft, topRight, centerPoint, boundingRect);
+        }
+
+        private sealed class RowMetric
+        {
+            public int Row { get; set; }
+            public int WhiteCount { get; set; }
+            public int LeftWhiteCount { get; set; }
+            public int RowLeft { get; set; }
+            public int RowRight { get; set; }
         }
 
         private static ReferenceCornerCandidate CreateCandidate(Mat labels, int labelIndex, Rectangle boundingRect, ReferenceCornerSnapshot snapshot)
