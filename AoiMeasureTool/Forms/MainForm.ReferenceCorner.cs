@@ -104,7 +104,6 @@ namespace AoiMeasureTool
             _referenceSourceIndex = 0;
             _referencePointMode = ReferenceCornerPointMode.ContourNearest;
             _referenceCornerEnabled = false;
-            EnsureReferenceCornerProtrusionParameterControls();
             ApplyReferenceCornerUiState();
         }
 
@@ -114,9 +113,6 @@ namespace AoiMeasureTool
             {
                 return;
             }
-
-            panelReferenceCornerControls.Height = Math.Max(panelReferenceCornerControls.Height, 320);
-            panelReferenceCornerControls.AutoScroll = true;
 
             if (_labelReferenceProtrusionMinWidth == null)
             {
@@ -780,6 +776,7 @@ namespace AoiMeasureTool
         }
     }
 }
+
 
 
 

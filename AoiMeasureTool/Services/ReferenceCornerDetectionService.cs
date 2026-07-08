@@ -18,6 +18,11 @@ namespace AoiMeasureTool
                 snapshot = ProfileDataCloner.CreateDefaultReferenceCornerSnapshot();
             }
 
+            if (snapshot.PointMode == ReferenceCornerPointMode.ProtrusionWithoutCompleteShape)
+            {
+                return FindProtrusionCandidate(binaryMat, roi, snapshot);
+            }
+
             using (var labels = new Mat())
             using (var stats = new Mat())
             using (var centroids = new Mat())
@@ -57,6 +62,140 @@ namespace AoiMeasureTool
 
                 return bestCandidate;
             }
+        }
+
+        private static ReferenceCornerCandidate FindProtrusionCandidate(Mat binaryMat, Rectangle roi, ReferenceCornerSnapshot snapshot)
+        {
+            if (binaryMat == null || binaryMat.Empty() || roi.Width <= 0 || roi.Height <= 0)
+            {
+                return null;
+            }
+
+            var minWidth = Math.Max(1, snapshot.ProtrusionMinWidth);
+            var minHeight = Math.Max(1, snapshot.ProtrusionMinHeight);
+            var widthIncreaseThreshold = Math.Max(0, snapshot.ProtrusionWidthIncreaseThreshold);
+            var consecutiveRows = Math.Max(1, snapshot.ProtrusionConsecutiveRows);
+
+            var scanTop = Math.Max(0, roi.Top);
+            var scanBottom = Math.Min(binaryMat.Rows, roi.Bottom);
+            var scanLeft = Math.Max(0, roi.Left);
+            var scanRight = Math.Min(binaryMat.Cols, roi.Right);
+            if (scanTop >= scanBottom || scanLeft >= scanRight)
+            {
+                return null;
+            }
+
+            var previousWidth = 0;
+            var streak = 0;
+            var startRow = -1;
+            var endRow = -1;
+            var leftEdge = int.MaxValue;
+            var rightEdge = int.MinValue;
+
+            for (var y = scanTop; y < scanBottom; y++)
+            {
+                var rowLeft = int.MaxValue;
+                var rowRight = int.MinValue;
+                var hasWhite = false;
+
+                for (var x = scanLeft; x < scanRight; x++)
+                {
+                    var value = binaryMat.At<byte>(y, x);
+                    if (value == 0)
+                    {
+                        continue;
+                    }
+
+                    hasWhite = true;
+                    if (x < rowLeft)
+                    {
+                        rowLeft = x;
+                    }
+                    if (x > rowRight)
+                    {
+                        rowRight = x;
+                    }
+                }
+
+                if (!hasWhite)
+                {
+                    previousWidth = 0;
+                    streak = 0;
+                    continue;
+                }
+
+                var span = rowRight - rowLeft + 1;
+                if (span < minWidth)
+                {
+                    previousWidth = span;
+                    streak = 0;
+                    continue;
+                }
+
+                var widthJump = span - previousWidth;
+                if (widthJump >= widthIncreaseThreshold)
+                {
+                    streak++;
+                    if (streak == 1)
+                    {
+                        startRow = y;
+                        leftEdge = rowLeft;
+                        rightEdge = rowRight;
+                    }
+                    else
+                    {
+                        if (rowLeft < leftEdge)
+                        {
+                            leftEdge = rowLeft;
+                        }
+                        if (rowRight > rightEdge)
+                        {
+                            rightEdge = rowRight;
+                        }
+                    }
+
+                    if (streak >= consecutiveRows)
+                    {
+                        endRow = y;
+                        break;
+                    }
+                }
+                else
+                {
+                    streak = 0;
+                    startRow = -1;
+                    leftEdge = int.MaxValue;
+                    rightEdge = int.MinValue;
+                }
+
+                previousWidth = span;
+            }
+
+            if (startRow < 0 || endRow < 0 || endRow < startRow)
+            {
+                return null;
+            }
+
+            if (endRow - startRow + 1 < minHeight)
+            {
+                return null;
+            }
+
+            if (leftEdge == int.MaxValue || rightEdge == int.MinValue)
+            {
+                return null;
+            }
+
+            var topLeft = new System.Drawing.Point(leftEdge, startRow);
+            var topRight = new System.Drawing.Point(rightEdge, startRow);
+            var boundingRect = Rectangle.FromLTRB(leftEdge, startRow, rightEdge + 1, endRow + 1);
+            var centerPoint = new System.Drawing.Point((leftEdge + rightEdge) / 2, (startRow + endRow) / 2);
+            var rotatedRect = new RotatedRect(
+                new Point2f(centerPoint.X, centerPoint.Y),
+                new Size2f(Math.Max(1, boundingRect.Width), Math.Max(1, boundingRect.Height)),
+                0);
+
+            return new ReferenceCornerCandidate(rotatedRect, topLeft, topRight, centerPoint, boundingRect);
         }
 
         private static ReferenceCornerCandidate CreateCandidate(Mat labels, int labelIndex, Rectangle boundingRect, ReferenceCornerSnapshot snapshot)
@@ -117,145 +256,9 @@ namespace AoiMeasureTool
                     new System.Drawing.Point(boundingRect.Right, boundingRect.Top));
             }
 
-            if (snapshot.PointMode == ReferenceCornerPointMode.ProtrusionWithoutCompleteShape)
-            {
-                return GetProtrusionTopPoints(labels, labelIndex, boundingRect, snapshot);
-            }
-
             var rectTopLeft = new System.Drawing.Point(boundingRect.Left, boundingRect.Top);
             var rectTopRight = new System.Drawing.Point(boundingRect.Right, boundingRect.Top);
             return GetNearestContourTopPoints(contour, rectTopLeft, rectTopRight);
-        }
-
-        private static Tuple<System.Drawing.Point, System.Drawing.Point> GetProtrusionTopPoints(Mat labels, int labelIndex, Rectangle boundingRect, ReferenceCornerSnapshot snapshot)
-        {
-            if (labels == null || labels.Empty() || boundingRect.Width <= 0 || boundingRect.Height <= 0)
-            {
-                return Tuple.Create(System.Drawing.Point.Empty, System.Drawing.Point.Empty);
-            }
-
-            var minWidth = Math.Max(1, snapshot.ProtrusionMinWidth);
-            var minHeight = Math.Max(1, snapshot.ProtrusionMinHeight);
-            var widthIncreaseThreshold = Math.Max(0, snapshot.ProtrusionWidthIncreaseThreshold);
-            var consecutiveRows = Math.Max(1, snapshot.ProtrusionConsecutiveRows);
-            var topRow = -1;
-            var bestSpan = -1;
-            var streak = 0;
-
-            for (var y = boundingRect.Top; y < boundingRect.Bottom; y++)
-            {
-                var rowLeft = int.MaxValue;
-                var rowRight = int.MinValue;
-                var hasPixel = false;
-
-                for (var x = boundingRect.Left; x < boundingRect.Right; x++)
-                {
-                    if (labels.At<int>(y, x) != labelIndex)
-                    {
-                        continue;
-                    }
-
-                    hasPixel = true;
-                    if (x < rowLeft)
-                    {
-                        rowLeft = x;
-                    }
-                    if (x > rowRight)
-                    {
-                        rowRight = x;
-                    }
-                }
-
-                if (!hasPixel)
-                {
-                    streak = 0;
-                    continue;
-                }
-
-                var span = rowRight - rowLeft + 1;
-                if (span >= minWidth && span > bestSpan + widthIncreaseThreshold)
-                {
-                    streak++;
-                    if (streak >= consecutiveRows)
-                    {
-                        topRow = y - consecutiveRows + 1;
-                        bestSpan = span;
-                        break;
-                    }
-                }
-                else
-                {
-                    streak = 0;
-                }
-            }
-
-            if (topRow < 0)
-            {
-                var fallbackRow = -1;
-                for (var y = boundingRect.Top; y < boundingRect.Bottom; y++)
-                {
-                    var rowLeft = int.MaxValue;
-                    var rowRight = int.MinValue;
-                    var hasPixel = false;
-                    for (var x = boundingRect.Left; x < boundingRect.Right; x++)
-                    {
-                        if (labels.At<int>(y, x) != labelIndex)
-                        {
-                            continue;
-                        }
-                        hasPixel = true;
-                        if (x < rowLeft) rowLeft = x;
-                        if (x > rowRight) rowRight = x;
-                    }
-                    if (!hasPixel)
-                    {
-                        continue;
-                    }
-                    var span = rowRight - rowLeft + 1;
-                    if (span >= minWidth && (fallbackRow < 0 || span > bestSpan))
-                    {
-                        fallbackRow = y;
-                        bestSpan = span;
-                    }
-                }
-
-                topRow = fallbackRow;
-            }
-
-            if (topRow - boundingRect.Top + 1 < minHeight)
-            {
-                return Tuple.Create(System.Drawing.Point.Empty, System.Drawing.Point.Empty);
-            }
-
-            if (topRow < 0)
-            {
-                return Tuple.Create(System.Drawing.Point.Empty, System.Drawing.Point.Empty);
-            }
-
-            var topLeft = new System.Drawing.Point(int.MaxValue, topRow);
-            var topRight = new System.Drawing.Point(int.MinValue, topRow);
-            for (var x = boundingRect.Left; x < boundingRect.Right; x++)
-            {
-                if (labels.At<int>(topRow, x) != labelIndex)
-                {
-                    continue;
-                }
-                if (x < topLeft.X)
-                {
-                    topLeft = new System.Drawing.Point(x, topRow);
-                }
-                if (x > topRight.X)
-                {
-                    topRight = new System.Drawing.Point(x, topRow);
-                }
-            }
-
-            if (topLeft.X == int.MaxValue || topRight.X == int.MinValue)
-            {
-                return Tuple.Create(System.Drawing.Point.Empty, System.Drawing.Point.Empty);
-            }
-
-            return Tuple.Create(topLeft, topRight);
         }
 
         private static Tuple<System.Drawing.Point, System.Drawing.Point> GetNearestContourTopPoints(
