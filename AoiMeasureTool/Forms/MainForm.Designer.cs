@@ -2325,7 +2325,7 @@ namespace AoiMeasureTool
             this.buttonSaveReferenceRoi.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
             this.buttonSaveReferenceRoi.FlatAppearance.BorderSize = 0;
             this.buttonSaveReferenceRoi.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSaveReferenceRoi.Location = new System.Drawing.Point(16, 122);
+            this.buttonSaveReferenceRoi.Location = new System.Drawing.Point(168, 122);
             this.buttonSaveReferenceRoi.Name = "buttonSaveReferenceRoi";
             this.buttonSaveReferenceRoi.Size = new System.Drawing.Size(280, 40);
             this.buttonSaveReferenceRoi.TabIndex = 3;
@@ -2338,9 +2338,9 @@ namespace AoiMeasureTool
             this.panelReferencePreview.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(241)))), ((int)(((byte)(243)))));
             this.panelReferencePreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelReferencePreview.Controls.Add(this.pictureBoxReferencePreview);
-            this.panelReferencePreview.Location = new System.Drawing.Point(20, 376);
+            this.panelReferencePreview.Location = new System.Drawing.Point(20, 320);
             this.panelReferencePreview.Name = "panelReferencePreview";
-            this.panelReferencePreview.Size = new System.Drawing.Size(980, 240);
+            this.panelReferencePreview.Size = new System.Drawing.Size(980, 296);
             this.panelReferencePreview.TabIndex = 1;
             this.panelReferencePreview.MouseEnter += new System.EventHandler(this.ReferencePreview_MouseEnter);
             this.panelReferencePreview.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.ReferencePreview_MouseWheel);
@@ -2350,7 +2350,7 @@ namespace AoiMeasureTool
             this.pictureBoxReferencePreview.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(241)))), ((int)(((byte)(243)))));
             this.pictureBoxReferencePreview.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxReferencePreview.Name = "pictureBoxReferencePreview";
-            this.pictureBoxReferencePreview.Size = new System.Drawing.Size(978, 238);
+            this.pictureBoxReferencePreview.Size = new System.Drawing.Size(978, 294);
             this.pictureBoxReferencePreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBoxReferencePreview.TabIndex = 0;
             this.pictureBoxReferencePreview.TabStop = false;

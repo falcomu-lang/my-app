@@ -92,16 +92,16 @@ namespace AoiMeasureTool
         {
             EnsureReferenceCornerPointModeControls();
             comboBoxReferenceSource.Items.Clear();
-            comboBoxReferenceSource.Items.Add("Preprocess 1");
-            comboBoxReferenceSource.Items.Add("Preprocess 2");
-            comboBoxReferenceSource.Items.Add("Preprocess 3");
-            comboBoxReferenceSource.Items.Add("Preprocess 4");
-            comboBoxReferenceSource.Items.Add("Dual Threshold");
+            comboBoxReferenceSource.Items.Add("前處理 1");
+            comboBoxReferenceSource.Items.Add("前處理 2");
+            comboBoxReferenceSource.Items.Add("前處理 3");
+            comboBoxReferenceSource.Items.Add("前處理 4");
+            comboBoxReferenceSource.Items.Add("雙閾值");
             comboBoxReferenceSource.SelectedIndex = 0;
             _comboBoxReferencePointMode.Items.Clear();
-            _comboBoxReferencePointMode.Items.Add("Contour nearest");
-            _comboBoxReferencePointMode.Items.Add("ROI top edge");
-            _comboBoxReferencePointMode.Items.Add("Scan search");
+            _comboBoxReferencePointMode.Items.Add("輪廓近似角點");
+            _comboBoxReferencePointMode.Items.Add("ROI 上緣");
+            _comboBoxReferencePointMode.Items.Add("以掃描找尋參考角點");
             _comboBoxReferencePointMode.SelectedIndex = 0;
             _referenceSourceIndex = 0;
             _referencePointMode = ReferenceCornerPointMode.ContourNearest;
@@ -119,7 +119,7 @@ namespace AoiMeasureTool
 
             if (_labelReferenceProtrusionMinWidth == null)
             {
-                _labelReferenceProtrusionMinWidth = new Label { AutoSize = true, Location = new Point(16, 166), Text = "Min protrusion width" };
+                _labelReferenceProtrusionMinWidth = new Label { AutoSize = true, Location = new Point(16, 166), Text = "最小凸出寬度" };
                 panelReferenceCornerControls.Controls.Add(_labelReferenceProtrusionMinWidth);
             }
 
@@ -131,7 +131,7 @@ namespace AoiMeasureTool
 
             if (_labelReferenceProtrusionMinHeight == null)
             {
-                _labelReferenceProtrusionMinHeight = new Label { AutoSize = true, Location = new Point(150, 166), Text = "Min protrusion height" };
+                _labelReferenceProtrusionMinHeight = new Label { AutoSize = true, Location = new Point(150, 166), Text = "最小凸出高度" };
                 panelReferenceCornerControls.Controls.Add(_labelReferenceProtrusionMinHeight);
             }
 
@@ -143,7 +143,7 @@ namespace AoiMeasureTool
 
             if (_labelReferenceProtrusionWidthIncreaseThreshold == null)
             {
-                _labelReferenceProtrusionWidthIncreaseThreshold = new Label { AutoSize = true, Location = new Point(16, 214), Text = "Width increase threshold" };
+                _labelReferenceProtrusionWidthIncreaseThreshold = new Label { AutoSize = true, Location = new Point(16, 214), Text = "寬度增加門檻" };
                 panelReferenceCornerControls.Controls.Add(_labelReferenceProtrusionWidthIncreaseThreshold);
             }
 
@@ -155,7 +155,7 @@ namespace AoiMeasureTool
 
             if (_labelReferenceProtrusionConsecutiveRows == null)
             {
-                _labelReferenceProtrusionConsecutiveRows = new Label { AutoSize = true, Location = new Point(150, 214), Text = "Consecutive rows" };
+                _labelReferenceProtrusionConsecutiveRows = new Label { AutoSize = true, Location = new Point(150, 214), Text = "連續列數" };
                 panelReferenceCornerControls.Controls.Add(_labelReferenceProtrusionConsecutiveRows);
             }
 
@@ -165,7 +165,8 @@ namespace AoiMeasureTool
                 panelReferenceCornerControls.Controls.Add(_numericReferenceProtrusionConsecutiveRows);
             }
 
-            buttonSaveReferenceRoi.Location = new Point(16, 270);
+            buttonSaveReferenceRoi.Location = new Point(168, 122);
+            buttonSaveReferenceRoi.Text = "套用 ROI 範圍";
         }
 
         private static NumericUpDown CreateReferenceParameterNumeric(int left, int top, decimal minimum, decimal maximum, decimal value, EventHandler handler)
@@ -281,7 +282,7 @@ namespace AoiMeasureTool
                 panelReferenceCornerControls.Controls.Add(_numericReferenceScanLineThreshold);
             }
 
-            buttonSaveReferenceRoi.Location = new Point(16, 270);
+            buttonSaveReferenceRoi.Location = new Point(168, 122);
         }
 
         private void ApplyReferenceCornerUiState()
