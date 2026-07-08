@@ -94,6 +94,18 @@ namespace AoiMeasureTool
         public Rectangle BoundingRect { get; }
     }
 
+    internal sealed class ReferenceCornerDetectionDebugInfo
+    {
+        public bool UsedProtrusionMode { get; set; }
+        public double BaselineAverage { get; set; }
+        public int TriggerRow { get; set; } = -1;
+        public int RunStartRow { get; set; } = -1;
+        public int RunEndRow { get; set; } = -1;
+        public int PeakLeftDelta { get; set; }
+        public int PeakWhiteCount { get; set; }
+        public string Message { get; set; }
+    }
+
     internal sealed class AppSettingsData
     {
         public AppSettingsData()

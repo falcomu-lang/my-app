@@ -348,8 +348,38 @@ namespace AoiMeasureTool
 
             var image = GetSelectedReferencePreviewBitmap();
             SetPictureBoxImage(pictureBoxReferencePreview, image);
+            UpdateReferenceCornerDebugStatus();
             FitReferenceImageToViewport();
             pictureBoxReferencePreview.Invalidate();
+        }
+
+        private void UpdateReferenceCornerDebugStatus()
+        {
+            if (labelReferenceCornerStatus == null)
+            {
+                return;
+            }
+
+            var debug = ReferenceCornerDetectionService.LastDebugInfo;
+            if (debug == null)
+            {
+                return;
+            }
+
+            if (debug.Message == "no trigger")
+            {
+                labelReferenceCornerStatus.Visible = true;
+                labelReferenceCornerStatus.Text = string.Format(
+                    "Debug: no trigger, baseline={0:0.0}, peakDelta={1}, peakWhite={2}",
+                    debug.BaselineAverage,
+                    debug.PeakLeftDelta,
+                    debug.PeakWhiteCount);
+            }
+            else if (!string.IsNullOrWhiteSpace(debug.Message))
+            {
+                labelReferenceCornerStatus.Visible = true;
+                labelReferenceCornerStatus.Text = "Debug: " + debug.Message;
+            }
         }
 
         private void PersistReferenceCornerState()

@@ -6,10 +6,14 @@ namespace AoiMeasureTool
 {
     internal static class ReferenceCornerDetectionService
     {
+        public static ReferenceCornerDetectionDebugInfo LastDebugInfo { get; private set; }
+
         public static ReferenceCornerCandidate FindCandidate(Mat binaryMat, Rectangle roi, System.Drawing.Point roiCenter, ReferenceCornerSnapshot snapshot)
         {
+            LastDebugInfo = new ReferenceCornerDetectionDebugInfo();
             if (binaryMat == null || binaryMat.Empty())
             {
+                LastDebugInfo.Message = "binary empty";
                 return null;
             }
 
@@ -20,6 +24,7 @@ namespace AoiMeasureTool
 
             if (snapshot.PointMode == ReferenceCornerPointMode.ProtrusionWithoutCompleteShape)
             {
+                LastDebugInfo.UsedProtrusionMode = true;
                 return FindProtrusionCandidate(binaryMat, roi, snapshot);
             }
 
@@ -68,6 +73,7 @@ namespace AoiMeasureTool
         {
             if (binaryMat == null || binaryMat.Empty() || roi.Width <= 0 || roi.Height <= 0)
             {
+                LastDebugInfo.Message = "invalid roi";
                 return null;
             }
 
@@ -139,6 +145,8 @@ namespace AoiMeasureTool
             var baselineAverage = baselineSum / (double)Math.Max(1, baselineCount);
             var triggerThreshold = Math.Max(2, snapshot.ProtrusionWidthIncreaseThreshold);
             var triggerRow = -1;
+            var peakLeftDelta = 0;
+            var peakWhiteCount = 0;
             for (var i = baselineCount; i < rowMetrics.Length; i++)
             {
                 var metric = rowMetrics[i];
@@ -148,6 +156,11 @@ namespace AoiMeasureTool
                 }
 
                 var leftDelta = metric.LeftWhiteCount - baselineAverage;
+                if (leftDelta > peakLeftDelta)
+                {
+                    peakLeftDelta = (int)Math.Round(leftDelta);
+                    peakWhiteCount = metric.WhiteCount;
+                }
                 if (leftDelta >= triggerThreshold)
                 {
                     triggerRow = metric.Row;
@@ -162,6 +175,10 @@ namespace AoiMeasureTool
 
             if (triggerRow < 0)
             {
+                LastDebugInfo.BaselineAverage = baselineAverage;
+                LastDebugInfo.PeakLeftDelta = peakLeftDelta;
+                LastDebugInfo.PeakWhiteCount = peakWhiteCount;
+                LastDebugInfo.Message = "no trigger";
                 return null;
             }
 
@@ -218,9 +235,17 @@ namespace AoiMeasureTool
                 }
             }
 
+            LastDebugInfo.BaselineAverage = baselineAverage;
+            LastDebugInfo.TriggerRow = triggerRow;
+            LastDebugInfo.RunStartRow = bestRunStart;
+            LastDebugInfo.RunEndRow = bestRunEnd;
+            LastDebugInfo.PeakLeftDelta = peakLeftDelta;
+            LastDebugInfo.PeakWhiteCount = peakWhiteCount;
+
             var topMetric = rowMetrics[Math.Max(0, bestRunStart - scanTop)];
             if (topMetric.RowLeft == int.MaxValue || topMetric.RowRight == int.MinValue)
             {
+                LastDebugInfo.Message = "invalid top metric";
                 return null;
             }
 
