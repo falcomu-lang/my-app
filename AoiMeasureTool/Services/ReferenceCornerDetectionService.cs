@@ -73,7 +73,6 @@ namespace AoiMeasureTool
 
             var minWidth = Math.Max(1, snapshot.ProtrusionMinWidth);
             var minHeight = Math.Max(1, snapshot.ProtrusionMinHeight);
-            var widthIncreaseThreshold = Math.Max(0, snapshot.ProtrusionWidthIncreaseThreshold);
             var consecutiveRows = Math.Max(1, snapshot.ProtrusionConsecutiveRows);
 
             var scanTop = Math.Max(0, roi.Top);
@@ -85,7 +84,6 @@ namespace AoiMeasureTool
                 return null;
             }
 
-            var previousWidth = 0;
             var streak = 0;
             var startRow = -1;
             var endRow = -1;
@@ -119,31 +117,48 @@ namespace AoiMeasureTool
 
                 if (!hasWhite)
                 {
-                    previousWidth = 0;
                     streak = 0;
+                    if (startRow >= 0 && endRow < 0)
+                    {
+                        endRow = y - 1;
+                        break;
+                    }
                     continue;
                 }
 
                 var span = rowRight - rowLeft + 1;
                 if (span < minWidth)
                 {
-                    previousWidth = span;
                     streak = 0;
+                    if (startRow >= 0 && endRow < 0)
+                    {
+                        endRow = y - 1;
+                        break;
+                    }
                     continue;
                 }
 
-                var widthJump = span - previousWidth;
-                if (widthJump >= widthIncreaseThreshold)
+                if (startRow < 0)
                 {
-                    streak++;
-                    if (streak == 1)
+                    startRow = y;
+                    endRow = -1;
+                    streak = 1;
+                    leftEdge = rowLeft;
+                    rightEdge = rowRight;
+                }
+                else
+                {
+                    var widthChange = Math.Abs(span - (rightEdge - leftEdge + 1));
+                    if (widthChange > snapshot.ProtrusionWidthIncreaseThreshold)
                     {
+                        streak = 1;
                         startRow = y;
                         leftEdge = rowLeft;
                         rightEdge = rowRight;
                     }
                     else
                     {
+                        streak++;
                         if (rowLeft < leftEdge)
                         {
                             leftEdge = rowLeft;
@@ -160,20 +175,18 @@ namespace AoiMeasureTool
                         break;
                     }
                 }
-                else
-                {
-                    streak = 0;
-                    startRow = -1;
-                    leftEdge = int.MaxValue;
-                    rightEdge = int.MinValue;
-                }
-
-                previousWidth = span;
             }
 
             if (startRow < 0 || endRow < 0 || endRow < startRow)
             {
-                return null;
+                if (startRow >= 0 && endRow < 0)
+                {
+                    endRow = scanBottom - 1;
+                }
+                else
+                {
+                    return null;
+                }
             }
 
             if (endRow - startRow + 1 < minHeight)
