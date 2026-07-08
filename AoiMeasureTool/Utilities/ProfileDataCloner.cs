@@ -34,7 +34,11 @@ namespace AoiMeasureTool
                 PointMode = ReferenceCornerPointMode.ContourNearest,
                 Roi = System.Drawing.Rectangle.Empty,
                 RoiSaved = false,
-                CornerFound = false
+                CornerFound = false,
+                ProtrusionMinWidth = 20,
+                ProtrusionMinHeight = 5,
+                ProtrusionWidthIncreaseThreshold = 8,
+                ProtrusionConsecutiveRows = 3
             };
         }
 
@@ -83,7 +87,11 @@ namespace AoiMeasureTool
                 PointMode = snapshot.PointMode,
                 Roi = snapshot.Roi,
                 RoiSaved = snapshot.RoiSaved,
-                CornerFound = snapshot.CornerFound
+                CornerFound = snapshot.CornerFound,
+                ProtrusionMinWidth = snapshot.ProtrusionMinWidth,
+                ProtrusionMinHeight = snapshot.ProtrusionMinHeight,
+                ProtrusionWidthIncreaseThreshold = snapshot.ProtrusionWidthIncreaseThreshold,
+                ProtrusionConsecutiveRows = snapshot.ProtrusionConsecutiveRows
             };
         }
 

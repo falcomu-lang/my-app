@@ -772,7 +772,7 @@ namespace AoiMeasureTool
                     var center = new System.Drawing.Point(
                         roi.Left + roi.Width / 2,
                         roi.Top + roi.Height / 2);
-                    return ReferenceCornerDetectionService.FindCandidate(binaryMat, roi, center, referenceSnapshot.PointMode);
+                    return ReferenceCornerDetectionService.FindCandidate(binaryMat, roi, center, referenceSnapshot);
                 }
             }
         }
@@ -2374,7 +2374,7 @@ namespace AoiMeasureTool
                     var center = new System.Drawing.Point(
                         roi.Left + roi.Width / 2,
                         roi.Top + roi.Height / 2);
-                    return ReferenceCornerDetectionService.FindCandidate(binaryMat, roi, center, referenceSnapshot.PointMode);
+                    return ReferenceCornerDetectionService.FindCandidate(binaryMat, roi, center, referenceSnapshot);
                 }
             }
         }

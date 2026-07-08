@@ -66,6 +66,14 @@ namespace AoiMeasureTool
         private Point _lastReferenceMousePosition;
         private ComboBox _comboBoxReferencePointMode;
         private Label _labelReferencePointMode;
+        private NumericUpDown _numericReferenceProtrusionMinWidth;
+        private NumericUpDown _numericReferenceProtrusionMinHeight;
+        private NumericUpDown _numericReferenceProtrusionWidthIncreaseThreshold;
+        private NumericUpDown _numericReferenceProtrusionConsecutiveRows;
+        private Label _labelReferenceProtrusionMinWidth;
+        private Label _labelReferenceProtrusionMinHeight;
+        private Label _labelReferenceProtrusionWidthIncreaseThreshold;
+        private Label _labelReferenceProtrusionConsecutiveRows;
         private float _activeImageScale = 1f;
         private float _activeFitScale = 1f;
         private bool _isDraggingActiveImage;
