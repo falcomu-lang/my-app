@@ -101,7 +101,6 @@ namespace AoiMeasureTool
             _comboBoxReferencePointMode.Items.Clear();
             _comboBoxReferencePointMode.Items.Add("Contour nearest");
             _comboBoxReferencePointMode.Items.Add("ROI top edge");
-            _comboBoxReferencePointMode.Items.Add("Incomplete protrusion");
             _comboBoxReferencePointMode.Items.Add("Scan search");
             _comboBoxReferencePointMode.SelectedIndex = 0;
             _referenceSourceIndex = 0;
@@ -282,7 +281,7 @@ namespace AoiMeasureTool
                 panelReferenceCornerControls.Controls.Add(_numericReferenceScanLineThreshold);
             }
 
-            buttonSaveReferenceRoi.Location = new Point(16, 228);
+            buttonSaveReferenceRoi.Location = new Point(16, 270);
         }
 
         private void ApplyReferenceCornerUiState()

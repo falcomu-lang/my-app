@@ -74,8 +74,7 @@ namespace AoiMeasureTool
     {
         ContourNearest = 0,
         RoiTopEdge = 1,
-        ProtrusionWithoutCompleteShape = 2,
-        ScanSearch = 3
+        ScanSearch = 2
     }
 
     internal sealed class ReferenceCornerCandidate
