@@ -436,6 +436,18 @@ namespace AoiMeasureTool
             this.checkBoxReferenceCornerEnabled = new System.Windows.Forms.CheckBox();
             this.labelReferenceSource = new System.Windows.Forms.Label();
             this.comboBoxReferenceSource = new System.Windows.Forms.ComboBox();
+            this.labelReferencePointMode = new System.Windows.Forms.Label();
+            this.comboBoxReferencePointMode = new System.Windows.Forms.ComboBox();
+            this.labelReferenceScanLineThreshold = new System.Windows.Forms.Label();
+            this.numericReferenceScanLineThreshold = new System.Windows.Forms.NumericUpDown();
+            this.labelReferenceProtrusionMinWidth = new System.Windows.Forms.Label();
+            this.numericReferenceProtrusionMinWidth = new System.Windows.Forms.NumericUpDown();
+            this.labelReferenceProtrusionMinHeight = new System.Windows.Forms.Label();
+            this.numericReferenceProtrusionMinHeight = new System.Windows.Forms.NumericUpDown();
+            this.labelReferenceProtrusionWidthIncreaseThreshold = new System.Windows.Forms.Label();
+            this.numericReferenceProtrusionWidthIncreaseThreshold = new System.Windows.Forms.NumericUpDown();
+            this.labelReferenceProtrusionConsecutiveRows = new System.Windows.Forms.Label();
+            this.numericReferenceProtrusionConsecutiveRows = new System.Windows.Forms.NumericUpDown();
             this.buttonSaveReferenceRoi = new System.Windows.Forms.Button();
             this.panelReferencePreview = new System.Windows.Forms.Panel();
             this.pictureBoxReferencePreview = new System.Windows.Forms.PictureBox();
@@ -2370,7 +2382,7 @@ namespace AoiMeasureTool
             this.labelReferenceScanLineThreshold.Name = "labelReferenceScanLineThreshold";
             this.labelReferenceScanLineThreshold.Size = new System.Drawing.Size(87, 18);
             this.labelReferenceScanLineThreshold.TabIndex = 5;
-            this.labelReferenceScanLineThreshold.Text = "掃描線門檻";
+            this.labelReferenceScanLineThreshold.Text = "掃描線長度門檻";
             // 
             // numericReferenceScanLineThreshold
             // 

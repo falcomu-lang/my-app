@@ -244,6 +244,10 @@ namespace AoiMeasureTool
         {
             _productProfileService = new ProductProfileService(_productProfiles, _referenceCornerProfiles, _measureProfiles, _judgementCriteriaProfiles, _dualThresholdProfiles);
             InitializeComponent();
+            if (System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+            {
+                return;
+            }
             _tabPageContinuousInspection = tabPageContinuousInspection;
             ShowMainWorkspaceTabs();
             InitializePreprocessControls();
