@@ -38,10 +38,10 @@ namespace AoiMeasureTool
                 _referenceRoiRectangle,
                 _referenceRoiSaved,
                 _referenceCornerFound);
-            snapshot.ProtrusionMinWidth = _numericReferenceProtrusionMinWidth == null ? 20 : (int)_numericReferenceProtrusionMinWidth.Value;
-            snapshot.ProtrusionMinHeight = _numericReferenceProtrusionMinHeight == null ? 5 : (int)_numericReferenceProtrusionMinHeight.Value;
-            snapshot.ProtrusionWidthIncreaseThreshold = _numericReferenceProtrusionWidthIncreaseThreshold == null ? 8 : (int)_numericReferenceProtrusionWidthIncreaseThreshold.Value;
-            snapshot.ProtrusionConsecutiveRows = _numericReferenceProtrusionConsecutiveRows == null ? 3 : (int)_numericReferenceProtrusionConsecutiveRows.Value;
+            snapshot.ProtrusionMinWidth = numericReferenceProtrusionMinWidth == null ? 20 : (int)numericReferenceProtrusionMinWidth.Value;
+            snapshot.ProtrusionMinHeight = numericReferenceProtrusionMinHeight == null ? 5 : (int)numericReferenceProtrusionMinHeight.Value;
+            snapshot.ProtrusionWidthIncreaseThreshold = numericReferenceProtrusionWidthIncreaseThreshold == null ? 8 : (int)numericReferenceProtrusionWidthIncreaseThreshold.Value;
+            snapshot.ProtrusionConsecutiveRows = numericReferenceProtrusionConsecutiveRows == null ? 3 : (int)numericReferenceProtrusionConsecutiveRows.Value;
             return snapshot;
         }
 
@@ -62,7 +62,7 @@ namespace AoiMeasureTool
                 _referenceCornerEnabled = snapshot.Enabled;
                 _referenceSourceIndex = Math.Max(0, Math.Min(GetReferenceSourceCount() - 1, snapshot.SourceIndex));
                 _referencePointMode = snapshot.PointMode;
-                if (_comboBoxReferencePointMode == null || _comboBoxReferencePointMode.Items.Count <= 0 || (int)_referencePointMode < 0 || (int)_referencePointMode > _comboBoxReferencePointMode.Items.Count - 1)
+                if (comboBoxReferencePointMode == null || comboBoxReferencePointMode.Items.Count <= 0 || (int)_referencePointMode < 0 || (int)_referencePointMode > comboBoxReferencePointMode.Items.Count - 1)
                 {
                     _referencePointMode = ReferenceCornerPointMode.ContourNearest;
                 }
@@ -88,101 +88,6 @@ namespace AoiMeasureTool
             return ProfileDataCloner.CloneReferenceCornerSnapshot(snapshot);
         }
 
-        private void InitializeReferenceCornerControls()
-        {
-            EnsureReferenceCornerPointModeControls();
-            comboBoxReferenceSource.Items.Clear();
-            comboBoxReferenceSource.Items.Add("前處理 1");
-            comboBoxReferenceSource.Items.Add("前處理 2");
-            comboBoxReferenceSource.Items.Add("前處理 3");
-            comboBoxReferenceSource.Items.Add("前處理 4");
-            comboBoxReferenceSource.Items.Add("雙閾值");
-            comboBoxReferenceSource.SelectedIndex = 0;
-            _comboBoxReferencePointMode.Items.Clear();
-            _comboBoxReferencePointMode.Items.Add("輪廓近似角點");
-            _comboBoxReferencePointMode.Items.Add("ROI 上緣");
-            _comboBoxReferencePointMode.Items.Add("以掃描找尋參考角點");
-            _comboBoxReferencePointMode.SelectedIndex = 0;
-            _referenceSourceIndex = 0;
-            _referencePointMode = ReferenceCornerPointMode.ContourNearest;
-            _referenceScanLineThreshold = 200;
-            _referenceCornerEnabled = false;
-            ApplyReferenceCornerUiState();
-        }
-
-        private void EnsureReferenceCornerProtrusionParameterControls()
-        {
-            if (panelReferenceCornerControls == null)
-            {
-                return;
-            }
-
-            if (_labelReferenceProtrusionMinWidth == null)
-            {
-                _labelReferenceProtrusionMinWidth = new Label { AutoSize = true, Location = new Point(16, 166), Text = "最小凸出寬度" };
-                panelReferenceCornerControls.Controls.Add(_labelReferenceProtrusionMinWidth);
-            }
-
-            if (_numericReferenceProtrusionMinWidth == null)
-            {
-                _numericReferenceProtrusionMinWidth = CreateReferenceParameterNumeric(16, 186, 1, 999, 20, ReferenceCornerParameterChanged);
-                panelReferenceCornerControls.Controls.Add(_numericReferenceProtrusionMinWidth);
-            }
-
-            if (_labelReferenceProtrusionMinHeight == null)
-            {
-                _labelReferenceProtrusionMinHeight = new Label { AutoSize = true, Location = new Point(150, 166), Text = "最小凸出高度" };
-                panelReferenceCornerControls.Controls.Add(_labelReferenceProtrusionMinHeight);
-            }
-
-            if (_numericReferenceProtrusionMinHeight == null)
-            {
-                _numericReferenceProtrusionMinHeight = CreateReferenceParameterNumeric(150, 186, 1, 999, 5, ReferenceCornerParameterChanged);
-                panelReferenceCornerControls.Controls.Add(_numericReferenceProtrusionMinHeight);
-            }
-
-            if (_labelReferenceProtrusionWidthIncreaseThreshold == null)
-            {
-                _labelReferenceProtrusionWidthIncreaseThreshold = new Label { AutoSize = true, Location = new Point(16, 214), Text = "寬度增加門檻" };
-                panelReferenceCornerControls.Controls.Add(_labelReferenceProtrusionWidthIncreaseThreshold);
-            }
-
-            if (_numericReferenceProtrusionWidthIncreaseThreshold == null)
-            {
-                _numericReferenceProtrusionWidthIncreaseThreshold = CreateReferenceParameterNumeric(16, 234, 0, 999, 8, ReferenceCornerParameterChanged);
-                panelReferenceCornerControls.Controls.Add(_numericReferenceProtrusionWidthIncreaseThreshold);
-            }
-
-            if (_labelReferenceProtrusionConsecutiveRows == null)
-            {
-                _labelReferenceProtrusionConsecutiveRows = new Label { AutoSize = true, Location = new Point(150, 214), Text = "連續列數" };
-                panelReferenceCornerControls.Controls.Add(_labelReferenceProtrusionConsecutiveRows);
-            }
-
-            if (_numericReferenceProtrusionConsecutiveRows == null)
-            {
-                _numericReferenceProtrusionConsecutiveRows = CreateReferenceParameterNumeric(150, 234, 1, 20, 3, ReferenceCornerParameterChanged);
-                panelReferenceCornerControls.Controls.Add(_numericReferenceProtrusionConsecutiveRows);
-            }
-
-            buttonSaveReferenceRoi.Location = new Point(168, 122);
-            buttonSaveReferenceRoi.Text = "套用 ROI 範圍";
-        }
-
-        private static NumericUpDown CreateReferenceParameterNumeric(int left, int top, decimal minimum, decimal maximum, decimal value, EventHandler handler)
-        {
-            var control = new NumericUpDown
-            {
-                Location = new Point(left, top),
-                Size = new Size(108, 24),
-                Minimum = minimum,
-                Maximum = maximum,
-                Value = Math.Max(minimum, Math.Min(maximum, value))
-            };
-            control.ValueChanged += handler;
-            return control;
-        }
-
         private void ApplyReferenceCornerParameterSnapshot(ReferenceCornerSnapshot snapshot)
         {
             if (snapshot == null)
@@ -190,24 +95,24 @@ namespace AoiMeasureTool
                 snapshot = ProfileDataCloner.CreateDefaultReferenceCornerSnapshot();
             }
 
-            if (_numericReferenceProtrusionMinWidth != null)
+            if (numericReferenceProtrusionMinWidth != null)
             {
-                _numericReferenceProtrusionMinWidth.Value = ClampNumericUpDown(_numericReferenceProtrusionMinWidth, snapshot.ProtrusionMinWidth);
+                numericReferenceProtrusionMinWidth.Value = ClampNumericUpDown(numericReferenceProtrusionMinWidth, snapshot.ProtrusionMinWidth);
             }
 
-            if (_numericReferenceProtrusionMinHeight != null)
+            if (numericReferenceProtrusionMinHeight != null)
             {
-                _numericReferenceProtrusionMinHeight.Value = ClampNumericUpDown(_numericReferenceProtrusionMinHeight, snapshot.ProtrusionMinHeight);
+                numericReferenceProtrusionMinHeight.Value = ClampNumericUpDown(numericReferenceProtrusionMinHeight, snapshot.ProtrusionMinHeight);
             }
 
-            if (_numericReferenceProtrusionWidthIncreaseThreshold != null)
+            if (numericReferenceProtrusionWidthIncreaseThreshold != null)
             {
-                _numericReferenceProtrusionWidthIncreaseThreshold.Value = ClampNumericUpDown(_numericReferenceProtrusionWidthIncreaseThreshold, snapshot.ProtrusionWidthIncreaseThreshold);
+                numericReferenceProtrusionWidthIncreaseThreshold.Value = ClampNumericUpDown(numericReferenceProtrusionWidthIncreaseThreshold, snapshot.ProtrusionWidthIncreaseThreshold);
             }
 
-            if (_numericReferenceProtrusionConsecutiveRows != null)
+            if (numericReferenceProtrusionConsecutiveRows != null)
             {
-                _numericReferenceProtrusionConsecutiveRows.Value = ClampNumericUpDown(_numericReferenceProtrusionConsecutiveRows, snapshot.ProtrusionConsecutiveRows);
+                numericReferenceProtrusionConsecutiveRows.Value = ClampNumericUpDown(numericReferenceProtrusionConsecutiveRows, snapshot.ProtrusionConsecutiveRows);
             }
         }
 
@@ -226,63 +131,25 @@ namespace AoiMeasureTool
             UpdateReferenceCornerPreview();
         }
 
-        private void EnsureReferenceCornerPointModeControls()
+        private void InitializeReferenceCornerControls()
         {
-            if (panelReferenceCornerControls == null)
-            {
-                return;
-            }
-
-            if (_labelReferencePointMode == null)
-            {
-                _labelReferencePointMode = new Label
-                {
-                    AutoSize = true,
-                    Location = new Point(16, 112),
-                    Text = "Point mode"
-                };
-                panelReferenceCornerControls.Controls.Add(_labelReferencePointMode);
-            }
-
-            if (_comboBoxReferencePointMode == null)
-            {
-                _comboBoxReferencePointMode = new ComboBox
-                {
-                    DropDownStyle = ComboBoxStyle.DropDownList,
-                    Location = new Point(16, 134),
-                    Size = new Size(280, 25)
-                };
-                _comboBoxReferencePointMode.SelectedIndexChanged += ReferencePointMode_SelectedIndexChanged;
-                panelReferenceCornerControls.Controls.Add(_comboBoxReferencePointMode);
-                _comboBoxReferencePointMode.BringToFront();
-            }
-
-            if (_labelReferenceScanLineThreshold == null)
-            {
-                _labelReferenceScanLineThreshold = new Label
-                {
-                    AutoSize = true,
-                    Location = new Point(16, 168),
-                    Text = "掃描線門檻"
-                };
-                panelReferenceCornerControls.Controls.Add(_labelReferenceScanLineThreshold);
-            }
-
-            if (_numericReferenceScanLineThreshold == null)
-            {
-                _numericReferenceScanLineThreshold = new NumericUpDown
-                {
-                    Location = new Point(16, 190),
-                    Size = new Size(120, 24),
-                    Minimum = 1,
-                    Maximum = 9999,
-                    Value = 200
-                };
-                _numericReferenceScanLineThreshold.ValueChanged += ReferenceScanLineThreshold_ValueChanged;
-                panelReferenceCornerControls.Controls.Add(_numericReferenceScanLineThreshold);
-            }
-
-            buttonSaveReferenceRoi.Location = new Point(168, 122);
+            comboBoxReferenceSource.Items.Clear();
+            comboBoxReferenceSource.Items.Add("前處理 1");
+            comboBoxReferenceSource.Items.Add("前處理 2");
+            comboBoxReferenceSource.Items.Add("前處理 3");
+            comboBoxReferenceSource.Items.Add("前處理 4");
+            comboBoxReferenceSource.Items.Add("雙閾值");
+            comboBoxReferenceSource.SelectedIndex = 0;
+            comboBoxReferencePointMode.Items.Clear();
+            comboBoxReferencePointMode.Items.Add("輪廓近似角點");
+            comboBoxReferencePointMode.Items.Add("ROI 上緣");
+            comboBoxReferencePointMode.Items.Add("以掃描找尋參考角點");
+            comboBoxReferencePointMode.SelectedIndex = 0;
+            _referenceSourceIndex = 0;
+            _referencePointMode = ReferenceCornerPointMode.ContourNearest;
+            _referenceScanLineThreshold = 200;
+            _referenceCornerEnabled = false;
+            ApplyReferenceCornerUiState();
         }
 
         private void ApplyReferenceCornerUiState()
@@ -303,16 +170,16 @@ namespace AoiMeasureTool
                 comboBoxReferenceSource.Enabled = _referenceCornerEnabled;
             }
 
-            if (_comboBoxReferencePointMode != null && _comboBoxReferencePointMode.Items.Count > 0)
+            if (comboBoxReferencePointMode != null && comboBoxReferencePointMode.Items.Count > 0)
             {
-                _comboBoxReferencePointMode.SelectedIndex = Math.Max(0, Math.Min(_comboBoxReferencePointMode.Items.Count - 1, (int)_referencePointMode));
-                _comboBoxReferencePointMode.Enabled = _referenceCornerEnabled;
+                comboBoxReferencePointMode.SelectedIndex = Math.Max(0, Math.Min(comboBoxReferencePointMode.Items.Count - 1, (int)_referencePointMode));
+                comboBoxReferencePointMode.Enabled = _referenceCornerEnabled;
             }
 
-            if (_numericReferenceScanLineThreshold != null)
+            if (numericReferenceScanLineThreshold != null)
             {
-                _numericReferenceScanLineThreshold.Value = Math.Max(_numericReferenceScanLineThreshold.Minimum, Math.Min(_numericReferenceScanLineThreshold.Maximum, _referenceScanLineThreshold));
-                _numericReferenceScanLineThreshold.Enabled = _referenceCornerEnabled && _referencePointMode == ReferenceCornerPointMode.ScanSearch;
+                numericReferenceScanLineThreshold.Value = Math.Max(numericReferenceScanLineThreshold.Minimum, Math.Min(numericReferenceScanLineThreshold.Maximum, _referenceScanLineThreshold));
+                numericReferenceScanLineThreshold.Enabled = _referenceCornerEnabled && _referencePointMode == ReferenceCornerPointMode.ScanSearch;
             }
 
             if (_referenceRoiSaved)
@@ -359,15 +226,15 @@ namespace AoiMeasureTool
 
         private void ReferencePointMode_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_isApplyingReferenceCornerState || _comboBoxReferencePointMode == null || _comboBoxReferencePointMode.SelectedIndex < 0)
+            if (_isApplyingReferenceCornerState || comboBoxReferencePointMode == null || comboBoxReferencePointMode.SelectedIndex < 0)
             {
                 return;
             }
 
-            _referencePointMode = (ReferenceCornerPointMode)_comboBoxReferencePointMode.SelectedIndex;
-            if (_numericReferenceScanLineThreshold != null)
+            _referencePointMode = (ReferenceCornerPointMode)comboBoxReferencePointMode.SelectedIndex;
+            if (numericReferenceScanLineThreshold != null)
             {
-                _numericReferenceScanLineThreshold.Enabled = _referenceCornerEnabled && _referencePointMode == ReferenceCornerPointMode.ScanSearch;
+                numericReferenceScanLineThreshold.Enabled = _referenceCornerEnabled && _referencePointMode == ReferenceCornerPointMode.ScanSearch;
             }
             if (_referenceRoiSaved)
             {
@@ -449,12 +316,12 @@ namespace AoiMeasureTool
 
         private void ReferenceScanLineThreshold_ValueChanged(object sender, EventArgs e)
         {
-            if (_isApplyingReferenceCornerState || _numericReferenceScanLineThreshold == null)
+            if (_isApplyingReferenceCornerState || numericReferenceScanLineThreshold == null)
             {
                 return;
             }
 
-            _referenceScanLineThreshold = (int)_numericReferenceScanLineThreshold.Value;
+            _referenceScanLineThreshold = (int)numericReferenceScanLineThreshold.Value;
             if (_referenceRoiSaved)
             {
                 RefreshReferenceCornerCandidate();
@@ -853,7 +720,7 @@ namespace AoiMeasureTool
                 return;
             }
             buttonSaveReferenceRoi.Enabled = _referenceCornerEnabled && _referenceRoiRectangle.Width > 0 && _referenceRoiRectangle.Height > 0;
-            buttonSaveReferenceRoi.Text = _referenceRoiSaved ? "?靽? ROI 蝭?" : "靽? ROI 蝭?";
+            buttonSaveReferenceRoi.Text = _referenceRoiSaved ? "已套用 ROI 範圍" : "套用 ROI 範圍";
         }
 
         private void ConstrainReferenceImagePosition()
