@@ -30,7 +30,7 @@ namespace AoiMeasureTool
 
         private ReferenceCornerSnapshot CaptureCurrentReferenceCornerSnapshot()
         {
-            var snapshot = ReferenceCornerSelectionService.CaptureSnapshot(
+            return ReferenceCornerSelectionService.CaptureSnapshot(
                 _referenceCornerEnabled,
                 _referenceSourceIndex,
                 _referencePointMode,
@@ -38,11 +38,6 @@ namespace AoiMeasureTool
                 _referenceRoiRectangle,
                 _referenceRoiSaved,
                 _referenceCornerFound);
-            snapshot.ProtrusionMinWidth = numericReferenceProtrusionMinWidth == null ? 20 : (int)numericReferenceProtrusionMinWidth.Value;
-            snapshot.ProtrusionMinHeight = numericReferenceProtrusionMinHeight == null ? 5 : (int)numericReferenceProtrusionMinHeight.Value;
-            snapshot.ProtrusionWidthIncreaseThreshold = numericReferenceProtrusionWidthIncreaseThreshold == null ? 8 : (int)numericReferenceProtrusionWidthIncreaseThreshold.Value;
-            snapshot.ProtrusionConsecutiveRows = numericReferenceProtrusionConsecutiveRows == null ? 3 : (int)numericReferenceProtrusionConsecutiveRows.Value;
-            return snapshot;
         }
 
         private void ApplyReferenceCornerSnapshot(ReferenceCornerSnapshot snapshot)
@@ -70,7 +65,6 @@ namespace AoiMeasureTool
                 _referenceRoiRectangle = ReferenceCornerSelectionService.NormalizeRectangle(snapshot.Roi);
                 _referenceRoiSaved = snapshot.RoiSaved && _referenceRoiRectangle.Width > 0 && _referenceRoiRectangle.Height > 0;
                 _referenceCornerFound = snapshot.CornerFound && _referenceRoiSaved;
-                ApplyReferenceCornerParameterSnapshot(snapshot);
                 if (!_referenceRoiSaved)
                 {
                     _referenceRoiRectangle = Rectangle.Empty;
@@ -86,49 +80,6 @@ namespace AoiMeasureTool
         private static ReferenceCornerSnapshot CloneReferenceCornerSnapshot(ReferenceCornerSnapshot snapshot)
         {
             return ProfileDataCloner.CloneReferenceCornerSnapshot(snapshot);
-        }
-
-        private void ApplyReferenceCornerParameterSnapshot(ReferenceCornerSnapshot snapshot)
-        {
-            if (snapshot == null)
-            {
-                snapshot = ProfileDataCloner.CreateDefaultReferenceCornerSnapshot();
-            }
-
-            if (numericReferenceProtrusionMinWidth != null)
-            {
-                numericReferenceProtrusionMinWidth.Value = ClampNumericUpDown(numericReferenceProtrusionMinWidth, snapshot.ProtrusionMinWidth);
-            }
-
-            if (numericReferenceProtrusionMinHeight != null)
-            {
-                numericReferenceProtrusionMinHeight.Value = ClampNumericUpDown(numericReferenceProtrusionMinHeight, snapshot.ProtrusionMinHeight);
-            }
-
-            if (numericReferenceProtrusionWidthIncreaseThreshold != null)
-            {
-                numericReferenceProtrusionWidthIncreaseThreshold.Value = ClampNumericUpDown(numericReferenceProtrusionWidthIncreaseThreshold, snapshot.ProtrusionWidthIncreaseThreshold);
-            }
-
-            if (numericReferenceProtrusionConsecutiveRows != null)
-            {
-                numericReferenceProtrusionConsecutiveRows.Value = ClampNumericUpDown(numericReferenceProtrusionConsecutiveRows, snapshot.ProtrusionConsecutiveRows);
-            }
-        }
-
-        private void ReferenceCornerParameterChanged(object sender, EventArgs e)
-        {
-            if (_isApplyingReferenceCornerState)
-            {
-                return;
-            }
-
-            PersistReferenceCornerState();
-            if (_referenceRoiSaved)
-            {
-                RefreshReferenceCornerCandidate();
-            }
-            UpdateReferenceCornerPreview();
         }
 
         private void InitializeReferenceCornerControls()

@@ -149,14 +149,6 @@ namespace AoiMeasureTool
         private System.Windows.Forms.ComboBox comboBoxReferencePointMode;
         private System.Windows.Forms.Label labelReferenceScanLineThreshold;
         private System.Windows.Forms.NumericUpDown numericReferenceScanLineThreshold;
-        private System.Windows.Forms.Label labelReferenceProtrusionMinWidth;
-        private System.Windows.Forms.NumericUpDown numericReferenceProtrusionMinWidth;
-        private System.Windows.Forms.Label labelReferenceProtrusionMinHeight;
-        private System.Windows.Forms.NumericUpDown numericReferenceProtrusionMinHeight;
-        private System.Windows.Forms.Label labelReferenceProtrusionWidthIncreaseThreshold;
-        private System.Windows.Forms.NumericUpDown numericReferenceProtrusionWidthIncreaseThreshold;
-        private System.Windows.Forms.Label labelReferenceProtrusionConsecutiveRows;
-        private System.Windows.Forms.NumericUpDown numericReferenceProtrusionConsecutiveRows;
         private System.Windows.Forms.Button buttonSaveReferenceRoi;
         private System.Windows.Forms.Label labelReferenceCornerStatus;
         private System.Windows.Forms.Panel panelReferencePreview;
@@ -440,14 +432,6 @@ namespace AoiMeasureTool
             this.comboBoxReferencePointMode = new System.Windows.Forms.ComboBox();
             this.labelReferenceScanLineThreshold = new System.Windows.Forms.Label();
             this.numericReferenceScanLineThreshold = new System.Windows.Forms.NumericUpDown();
-            this.labelReferenceProtrusionMinWidth = new System.Windows.Forms.Label();
-            this.numericReferenceProtrusionMinWidth = new System.Windows.Forms.NumericUpDown();
-            this.labelReferenceProtrusionMinHeight = new System.Windows.Forms.Label();
-            this.numericReferenceProtrusionMinHeight = new System.Windows.Forms.NumericUpDown();
-            this.labelReferenceProtrusionWidthIncreaseThreshold = new System.Windows.Forms.Label();
-            this.numericReferenceProtrusionWidthIncreaseThreshold = new System.Windows.Forms.NumericUpDown();
-            this.labelReferenceProtrusionConsecutiveRows = new System.Windows.Forms.Label();
-            this.numericReferenceProtrusionConsecutiveRows = new System.Windows.Forms.NumericUpDown();
             this.buttonSaveReferenceRoi = new System.Windows.Forms.Button();
             this.panelReferencePreview = new System.Windows.Forms.Panel();
             this.pictureBoxReferencePreview = new System.Windows.Forms.PictureBox();
@@ -2313,18 +2297,10 @@ namespace AoiMeasureTool
             this.panelReferenceCornerControls.Controls.Add(this.comboBoxReferencePointMode);
             this.panelReferenceCornerControls.Controls.Add(this.labelReferenceScanLineThreshold);
             this.panelReferenceCornerControls.Controls.Add(this.numericReferenceScanLineThreshold);
-            this.panelReferenceCornerControls.Controls.Add(this.labelReferenceProtrusionMinWidth);
-            this.panelReferenceCornerControls.Controls.Add(this.numericReferenceProtrusionMinWidth);
-            this.panelReferenceCornerControls.Controls.Add(this.labelReferenceProtrusionMinHeight);
-            this.panelReferenceCornerControls.Controls.Add(this.numericReferenceProtrusionMinHeight);
-            this.panelReferenceCornerControls.Controls.Add(this.labelReferenceProtrusionWidthIncreaseThreshold);
-            this.panelReferenceCornerControls.Controls.Add(this.numericReferenceProtrusionWidthIncreaseThreshold);
-            this.panelReferenceCornerControls.Controls.Add(this.labelReferenceProtrusionConsecutiveRows);
-            this.panelReferenceCornerControls.Controls.Add(this.numericReferenceProtrusionConsecutiveRows);
             this.panelReferenceCornerControls.Controls.Add(this.buttonSaveReferenceRoi);
             this.panelReferenceCornerControls.Location = new System.Drawing.Point(20, 20);
             this.panelReferenceCornerControls.Name = "panelReferenceCornerControls";
-            this.panelReferenceCornerControls.Size = new System.Drawing.Size(330, 340);
+            this.panelReferenceCornerControls.Size = new System.Drawing.Size(330, 240);
             this.panelReferenceCornerControls.TabIndex = 0;
             // 
             // checkBoxReferenceCornerEnabled
@@ -2395,91 +2371,12 @@ namespace AoiMeasureTool
             this.numericReferenceScanLineThreshold.Value = new decimal(new int[] {200, 0, 0, 0});
             this.numericReferenceScanLineThreshold.ValueChanged += new System.EventHandler(this.ReferenceScanLineThreshold_ValueChanged);
             // 
-            // labelReferenceProtrusionMinWidth
-            // 
-            this.labelReferenceProtrusionMinWidth.AutoSize = true;
-            this.labelReferenceProtrusionMinWidth.Location = new System.Drawing.Point(16, 172);
-            this.labelReferenceProtrusionMinWidth.Name = "labelReferenceProtrusionMinWidth";
-            this.labelReferenceProtrusionMinWidth.Size = new System.Drawing.Size(87, 18);
-            this.labelReferenceProtrusionMinWidth.TabIndex = 7;
-            this.labelReferenceProtrusionMinWidth.Text = "最小凸出寬度";
-            // 
-            // numericReferenceProtrusionMinWidth
-            // 
-            this.numericReferenceProtrusionMinWidth.Location = new System.Drawing.Point(16, 194);
-            this.numericReferenceProtrusionMinWidth.Maximum = new decimal(new int[] {999, 0, 0, 0});
-            this.numericReferenceProtrusionMinWidth.Minimum = new decimal(new int[] {1, 0, 0, 0});
-            this.numericReferenceProtrusionMinWidth.Name = "numericReferenceProtrusionMinWidth";
-            this.numericReferenceProtrusionMinWidth.Size = new System.Drawing.Size(132, 25);
-            this.numericReferenceProtrusionMinWidth.TabIndex = 8;
-            this.numericReferenceProtrusionMinWidth.Value = new decimal(new int[] {20, 0, 0, 0});
-            this.numericReferenceProtrusionMinWidth.ValueChanged += new System.EventHandler(this.ReferenceCornerParameterChanged);
-            // 
-            // labelReferenceProtrusionMinHeight
-            // 
-            this.labelReferenceProtrusionMinHeight.AutoSize = true;
-            this.labelReferenceProtrusionMinHeight.Location = new System.Drawing.Point(168, 172);
-            this.labelReferenceProtrusionMinHeight.Name = "labelReferenceProtrusionMinHeight";
-            this.labelReferenceProtrusionMinHeight.Size = new System.Drawing.Size(87, 18);
-            this.labelReferenceProtrusionMinHeight.TabIndex = 9;
-            this.labelReferenceProtrusionMinHeight.Text = "最小凸出高度";
-            // 
-            // numericReferenceProtrusionMinHeight
-            // 
-            this.numericReferenceProtrusionMinHeight.Location = new System.Drawing.Point(168, 194);
-            this.numericReferenceProtrusionMinHeight.Maximum = new decimal(new int[] {999, 0, 0, 0});
-            this.numericReferenceProtrusionMinHeight.Minimum = new decimal(new int[] {1, 0, 0, 0});
-            this.numericReferenceProtrusionMinHeight.Name = "numericReferenceProtrusionMinHeight";
-            this.numericReferenceProtrusionMinHeight.Size = new System.Drawing.Size(120, 25);
-            this.numericReferenceProtrusionMinHeight.TabIndex = 10;
-            this.numericReferenceProtrusionMinHeight.Value = new decimal(new int[] {5, 0, 0, 0});
-            this.numericReferenceProtrusionMinHeight.ValueChanged += new System.EventHandler(this.ReferenceCornerParameterChanged);
-            // 
-            // labelReferenceProtrusionWidthIncreaseThreshold
-            // 
-            this.labelReferenceProtrusionWidthIncreaseThreshold.AutoSize = true;
-            this.labelReferenceProtrusionWidthIncreaseThreshold.Location = new System.Drawing.Point(16, 226);
-            this.labelReferenceProtrusionWidthIncreaseThreshold.Name = "labelReferenceProtrusionWidthIncreaseThreshold";
-            this.labelReferenceProtrusionWidthIncreaseThreshold.Size = new System.Drawing.Size(87, 18);
-            this.labelReferenceProtrusionWidthIncreaseThreshold.TabIndex = 11;
-            this.labelReferenceProtrusionWidthIncreaseThreshold.Text = "寬度增加門檻";
-            // 
-            // numericReferenceProtrusionWidthIncreaseThreshold
-            // 
-            this.numericReferenceProtrusionWidthIncreaseThreshold.Location = new System.Drawing.Point(16, 248);
-            this.numericReferenceProtrusionWidthIncreaseThreshold.Maximum = new decimal(new int[] {999, 0, 0, 0});
-            this.numericReferenceProtrusionWidthIncreaseThreshold.Name = "numericReferenceProtrusionWidthIncreaseThreshold";
-            this.numericReferenceProtrusionWidthIncreaseThreshold.Size = new System.Drawing.Size(132, 25);
-            this.numericReferenceProtrusionWidthIncreaseThreshold.TabIndex = 12;
-            this.numericReferenceProtrusionWidthIncreaseThreshold.Value = new decimal(new int[] {8, 0, 0, 0});
-            this.numericReferenceProtrusionWidthIncreaseThreshold.ValueChanged += new System.EventHandler(this.ReferenceCornerParameterChanged);
-            // 
-            // labelReferenceProtrusionConsecutiveRows
-            // 
-            this.labelReferenceProtrusionConsecutiveRows.AutoSize = true;
-            this.labelReferenceProtrusionConsecutiveRows.Location = new System.Drawing.Point(168, 226);
-            this.labelReferenceProtrusionConsecutiveRows.Name = "labelReferenceProtrusionConsecutiveRows";
-            this.labelReferenceProtrusionConsecutiveRows.Size = new System.Drawing.Size(71, 18);
-            this.labelReferenceProtrusionConsecutiveRows.TabIndex = 13;
-            this.labelReferenceProtrusionConsecutiveRows.Text = "連續列數";
-            // 
-            // numericReferenceProtrusionConsecutiveRows
-            // 
-            this.numericReferenceProtrusionConsecutiveRows.Location = new System.Drawing.Point(168, 248);
-            this.numericReferenceProtrusionConsecutiveRows.Maximum = new decimal(new int[] {20, 0, 0, 0});
-            this.numericReferenceProtrusionConsecutiveRows.Minimum = new decimal(new int[] {1, 0, 0, 0});
-            this.numericReferenceProtrusionConsecutiveRows.Name = "numericReferenceProtrusionConsecutiveRows";
-            this.numericReferenceProtrusionConsecutiveRows.Size = new System.Drawing.Size(120, 25);
-            this.numericReferenceProtrusionConsecutiveRows.TabIndex = 14;
-            this.numericReferenceProtrusionConsecutiveRows.Value = new decimal(new int[] {3, 0, 0, 0});
-            this.numericReferenceProtrusionConsecutiveRows.ValueChanged += new System.EventHandler(this.ReferenceCornerParameterChanged);
-            // 
             // buttonSaveReferenceRoi
             // 
             this.buttonSaveReferenceRoi.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
             this.buttonSaveReferenceRoi.FlatAppearance.BorderSize = 0;
             this.buttonSaveReferenceRoi.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSaveReferenceRoi.Location = new System.Drawing.Point(16, 270);
+            this.buttonSaveReferenceRoi.Location = new System.Drawing.Point(16, 178);
             this.buttonSaveReferenceRoi.Name = "buttonSaveReferenceRoi";
             this.buttonSaveReferenceRoi.Size = new System.Drawing.Size(280, 40);
             this.buttonSaveReferenceRoi.TabIndex = 3;

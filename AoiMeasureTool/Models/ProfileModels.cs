@@ -64,10 +64,6 @@ namespace AoiMeasureTool
         public Rectangle Roi { get; set; }
         public bool RoiSaved { get; set; }
         public bool CornerFound { get; set; }
-        public int ProtrusionMinWidth { get; set; } = 20;
-        public int ProtrusionMinHeight { get; set; } = 5;
-        public int ProtrusionWidthIncreaseThreshold { get; set; } = 8;
-        public int ProtrusionConsecutiveRows { get; set; } = 3;
     }
 
     internal enum ReferenceCornerPointMode

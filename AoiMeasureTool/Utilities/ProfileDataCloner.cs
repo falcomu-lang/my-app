@@ -35,11 +35,7 @@ namespace AoiMeasureTool
                 ScanLineThreshold = 200,
                 Roi = System.Drawing.Rectangle.Empty,
                 RoiSaved = false,
-                CornerFound = false,
-                ProtrusionMinWidth = 20,
-                ProtrusionMinHeight = 5,
-                ProtrusionWidthIncreaseThreshold = 8,
-                ProtrusionConsecutiveRows = 3
+                CornerFound = false
             };
         }
 
@@ -89,11 +85,7 @@ namespace AoiMeasureTool
                 ScanLineThreshold = snapshot.ScanLineThreshold,
                 Roi = snapshot.Roi,
                 RoiSaved = snapshot.RoiSaved,
-                CornerFound = snapshot.CornerFound,
-                ProtrusionMinWidth = snapshot.ProtrusionMinWidth,
-                ProtrusionMinHeight = snapshot.ProtrusionMinHeight,
-                ProtrusionWidthIncreaseThreshold = snapshot.ProtrusionWidthIncreaseThreshold,
-                ProtrusionConsecutiveRows = snapshot.ProtrusionConsecutiveRows
+                CornerFound = snapshot.CornerFound
             };
         }
 

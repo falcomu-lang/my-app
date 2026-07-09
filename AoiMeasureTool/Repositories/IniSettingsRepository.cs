@@ -209,10 +209,6 @@ namespace AoiMeasureTool
                     writer.WriteLine("ReferenceRoiWidth=" + referenceSnapshot.Roi.Width);
                     writer.WriteLine("ReferenceRoiHeight=" + referenceSnapshot.Roi.Height);
                     writer.WriteLine("ReferenceRoiSaved=" + referenceSnapshot.RoiSaved);
-                    writer.WriteLine("ReferenceProtrusionMinWidth=" + referenceSnapshot.ProtrusionMinWidth);
-                    writer.WriteLine("ReferenceProtrusionMinHeight=" + referenceSnapshot.ProtrusionMinHeight);
-                    writer.WriteLine("ReferenceProtrusionWidthIncreaseThreshold=" + referenceSnapshot.ProtrusionWidthIncreaseThreshold);
-                    writer.WriteLine("ReferenceProtrusionConsecutiveRows=" + referenceSnapshot.ProtrusionConsecutiveRows);
 
                     List<MeasureRecord> measureRecords;
                     if (!data.MeasureProfiles.TryGetValue(sectionKey, out measureRecords))
@@ -385,22 +381,6 @@ namespace AoiMeasureTool
             else if (name.Equals("ReferenceRoiSaved", StringComparison.OrdinalIgnoreCase))
             {
                 snapshot.RoiSaved = bool.Parse(value);
-            }
-            else if (name.Equals("ReferenceProtrusionMinWidth", StringComparison.OrdinalIgnoreCase))
-            {
-                snapshot.ProtrusionMinWidth = int.Parse(value);
-            }
-            else if (name.Equals("ReferenceProtrusionMinHeight", StringComparison.OrdinalIgnoreCase))
-            {
-                snapshot.ProtrusionMinHeight = int.Parse(value);
-            }
-            else if (name.Equals("ReferenceProtrusionWidthIncreaseThreshold", StringComparison.OrdinalIgnoreCase))
-            {
-                snapshot.ProtrusionWidthIncreaseThreshold = int.Parse(value);
-            }
-            else if (name.Equals("ReferenceProtrusionConsecutiveRows", StringComparison.OrdinalIgnoreCase))
-            {
-                snapshot.ProtrusionConsecutiveRows = int.Parse(value);
             }
         }
 
