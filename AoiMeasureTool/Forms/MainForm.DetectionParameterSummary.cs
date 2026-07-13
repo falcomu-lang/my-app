@@ -170,6 +170,28 @@ namespace AoiMeasureTool
             ApplyDetectionParameterReferenceSelection();
         }
 
+        private DetectionParameterReference EnsureDetectionParameterReference(string mainParameterName)
+        {
+            if (string.IsNullOrWhiteSpace(mainParameterName))
+            {
+                return null;
+            }
+
+            DetectionParameterReference reference;
+            if (_detectionParameterReferences.TryGetValue(mainParameterName, out reference))
+            {
+                return reference;
+            }
+
+            reference = new DetectionParameterReference
+            {
+                MainParameterName = mainParameterName,
+                InnerSettingsProfileIndex = 0
+            };
+            _detectionParameterReferences[mainParameterName] = reference;
+            return reference;
+        }
+
         private void SaveDetectionParameterReferenceList()
         {
             _parameterReferenceListRepository.Save(
@@ -258,26 +280,8 @@ namespace AoiMeasureTool
                 ? null
                 : _listBoxDetectionMainParameter.SelectedItem as string;
 
-            DetectionParameterReference reference = null;
-            if (!string.IsNullOrWhiteSpace(selectedMainParameter))
-            {
-                _detectionParameterReferences.TryGetValue(selectedMainParameter, out reference);
-            }
-
-            if (reference == null)
-            {
-                reference = new DetectionParameterReference
-                {
-                    MainParameterName = selectedMainParameter,
-                    InnerSettingsProfileIndex = 0
-                };
-                if (!string.IsNullOrWhiteSpace(selectedMainParameter))
-                {
-                    _detectionParameterReferences[selectedMainParameter] = reference;
-                    SaveDetectionParameterReferenceList();
-                }
-            }
-            else if (reference.InnerSettingsProfileIndex < 0)
+            var reference = EnsureDetectionParameterReference(selectedMainParameter);
+            if (reference != null && reference.InnerSettingsProfileIndex < 0)
             {
                 reference.InnerSettingsProfileIndex = 0;
                 SaveDetectionParameterReferenceList();

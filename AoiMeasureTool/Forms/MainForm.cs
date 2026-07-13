@@ -639,6 +639,7 @@ namespace AoiMeasureTool
         private void ContinuousInspectionMainParameterComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             _savedContinuousInspectionMainParameter = _comboBoxContinuousInspectionMainParameter?.SelectedItem as string;
+            EnsureDetectionParameterReference(_savedContinuousInspectionMainParameter);
             ApplyContinuousInspectionSubParameters();
             RefreshImageViewerCameraProfiles();
         }
@@ -1455,6 +1456,7 @@ namespace AoiMeasureTool
             try
             {
                 PersistActiveProductProfile();
+                SaveDetectionParameterReferenceList();
                 var currentProductKey = GetCurrentProductKeyOrDefault();
                 var settingsData = new AppSettingsData
                 {
