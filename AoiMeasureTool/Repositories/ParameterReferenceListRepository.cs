@@ -18,7 +18,8 @@ namespace AoiMeasureTool
             var sectionValues = LoadSectionValues(path);
             foreach (var pair in sectionValues)
             {
-                if (string.Equals(pair.Key, "listSort", StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(pair.Key, "listSort", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(pair.Key, "subParameterInnerSettings", StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
                 }
@@ -35,6 +36,31 @@ namespace AoiMeasureTool
             }
 
             return references;
+        }
+
+        public Dictionary<string, int> LoadSubParameterInnerSettings(string path)
+        {
+            var bindings = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+            if (!File.Exists(path))
+            {
+                return bindings;
+            }
+
+            Dictionary<string, string> section;
+            if (!LoadSectionValues(path).TryGetValue("subParameterInnerSettings", out section))
+            {
+                return bindings;
+            }
+
+            foreach (var pair in section)
+            {
+                if (!string.IsNullOrWhiteSpace(pair.Key))
+                {
+                    bindings[pair.Key.Trim()] = ParseInt(pair.Value, 0);
+                }
+            }
+
+            return bindings;
         }
 
         public List<string> Load(string path)
@@ -63,7 +89,11 @@ namespace AoiMeasureTool
             return items;
         }
 
-        public void Save(string path, IList<string> items, IDictionary<string, DetectionParameterReference> references = null)
+        public void Save(
+            string path,
+            IList<string> items,
+            IDictionary<string, DetectionParameterReference> references = null,
+            IDictionary<string, int> subParameterInnerSettings = null)
         {
             var directory = Path.GetDirectoryName(path);
             if (!string.IsNullOrEmpty(directory))
@@ -100,6 +130,19 @@ namespace AoiMeasureTool
                     writer.WriteLine("subParameter2=" + (reference?.SubParameter2 ?? string.Empty));
                     writer.WriteLine("subParameter3=" + (reference?.SubParameter3 ?? string.Empty));
                     writer.WriteLine("innerSettingsProfileIndex=" + Math.Max(0, reference?.InnerSettingsProfileIndex ?? 0));
+                }
+
+                if (subParameterInnerSettings != null && subParameterInnerSettings.Count > 0)
+                {
+                    writer.WriteLine();
+                    writer.WriteLine("[subParameterInnerSettings]");
+                    foreach (var pair in subParameterInnerSettings.OrderBy(p => p.Key, StringComparer.OrdinalIgnoreCase))
+                    {
+                        if (!string.IsNullOrWhiteSpace(pair.Key))
+                        {
+                            writer.WriteLine(pair.Key.Trim() + "=" + Math.Max(0, pair.Value));
+                        }
+                    }
                 }
             }
         }

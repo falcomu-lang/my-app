@@ -224,6 +224,8 @@ namespace AoiMeasureTool
         private readonly List<string> _detectionSubParameter1Items = new List<string>();
         private readonly Dictionary<string, DetectionParameterReference> _detectionParameterReferences =
             new Dictionary<string, DetectionParameterReference>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, int> _subParameterInnerSettingsProfileIndexes =
+            new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         private MeasureRecord _editingMeasureRecord;
         private DataGridViewRow _editingMeasureRow;
         private bool _isEditingMeasureRecord;
@@ -799,10 +801,14 @@ namespace AoiMeasureTool
             var originalImageIndex = _multiImageConfirmImageIndex;
             var originalImagePaths = new List<string>(_multiImageConfirmImagePaths);
             var originalJudgementCriteriaRules = CloneJudgementCriteriaRules(_judgementCriteriaRules);
+            var originalCcdXPrecision = _innerSettings.CcdXPrecision;
+            var originalCcdYPrecision = _innerSettings.CcdYPrecision;
+            var originalMeasurementScaleFactor = _innerSettings.MeasurementScaleFactor;
 
             try
             {
                 productKey = string.IsNullOrWhiteSpace(productKey) ? "DEFAULT" : productKey;
+                ApplyInnerSettingsProfileForSubParameter(productKey);
                 var profileState = _productProfileService.GetOrCreateState(productKey);
                 _judgementCriteriaRules = CloneJudgementCriteriaRules(profileState.JudgementCriteriaRules);
                 _multiImageConfirmBitmap = new Bitmap(imagePath);
@@ -825,6 +831,9 @@ namespace AoiMeasureTool
                 _multiImageConfirmImagePaths.Clear();
                 _multiImageConfirmImagePaths.AddRange(originalImagePaths);
                 _multiImageConfirmImageIndex = originalImageIndex;
+                _innerSettings.CcdXPrecision = originalCcdXPrecision;
+                _innerSettings.CcdYPrecision = originalCcdYPrecision;
+                _innerSettings.MeasurementScaleFactor = originalMeasurementScaleFactor;
             }
         }
 
@@ -940,9 +949,13 @@ namespace AoiMeasureTool
             var originalImageIndex = _multiImageConfirmImageIndex;
             var originalImagePaths = new List<string>(_multiImageConfirmImagePaths);
             var originalJudgementCriteriaRules = CloneJudgementCriteriaRules(_judgementCriteriaRules);
+            var originalCcdXPrecision = _innerSettings.CcdXPrecision;
+            var originalCcdYPrecision = _innerSettings.CcdYPrecision;
+            var originalMeasurementScaleFactor = _innerSettings.MeasurementScaleFactor;
 
             try
             {
+                ApplyInnerSettingsProfileForSubParameter(productKey);
                 var profileState = _productProfileService.GetOrCreateState(productKey);
                 _judgementCriteriaRules = CloneJudgementCriteriaRules(profileState.JudgementCriteriaRules);
                 _multiImageConfirmBitmap = new Bitmap(imagePath);
@@ -988,6 +1001,9 @@ namespace AoiMeasureTool
                 _multiImageConfirmImagePaths.Clear();
                 _multiImageConfirmImagePaths.AddRange(originalImagePaths);
                 _multiImageConfirmImageIndex = originalImageIndex;
+                _innerSettings.CcdXPrecision = originalCcdXPrecision;
+                _innerSettings.CcdYPrecision = originalCcdYPrecision;
+                _innerSettings.MeasurementScaleFactor = originalMeasurementScaleFactor;
             }
         }
 
@@ -1346,6 +1362,7 @@ namespace AoiMeasureTool
             {
                 ApplyProductState(_productProfileService.GetOrCreateState(productKey));
                 UpdateReferenceCornerPreview();
+                RefreshImageViewerCameraProfiles();
                 return;
             }
 
@@ -1364,6 +1381,7 @@ namespace AoiMeasureTool
             {
                 _isApplyingProductState = false;
             }
+            RefreshImageViewerCameraProfiles();
         }
 
         private void ApplyProductState(ProductProfileState state)
@@ -1568,12 +1586,7 @@ namespace AoiMeasureTool
                 return;
             }
 
-            var selectedMainParameter = GetSelectedMainParameterBindingName();
-            DetectionParameterReference parameterReference = null;
-            if (!string.IsNullOrWhiteSpace(selectedMainParameter))
-            {
-                _detectionParameterReferences.TryGetValue(selectedMainParameter, out parameterReference);
-            }
+            var selectedSubParameter = GetSelectedSubParameterBindingName();
 
             _comboBoxImageViewerCameraProfile.BeginUpdate();
             try
@@ -1604,7 +1617,7 @@ namespace AoiMeasureTool
                     _comboBoxImageViewerCameraProfile.Items.Add("Camera 3");
                 }
 
-                var targetIndex = parameterReference != null ? parameterReference.InnerSettingsProfileIndex : 0;
+                var targetIndex = GetInnerSettingsProfileIndexForSubParameter(selectedSubParameter);
                 if (targetIndex >= 0 && targetIndex < _comboBoxImageViewerCameraProfile.Items.Count)
                 {
                     _isSyncingImageViewerCameraProfile = true;
@@ -1632,25 +1645,39 @@ namespace AoiMeasureTool
                 return;
             }
 
-            var selectedMainParameter = GetSelectedMainParameterBindingName();
-            if (string.IsNullOrWhiteSpace(selectedMainParameter))
+            var selectedSubParameter = GetSelectedSubParameterBindingName();
+            if (string.IsNullOrWhiteSpace(selectedSubParameter))
             {
                 return;
             }
 
-            DetectionParameterReference parameterReference;
-            if (!_detectionParameterReferences.TryGetValue(selectedMainParameter, out parameterReference))
-            {
-                parameterReference = new DetectionParameterReference
-                {
-                    MainParameterName = selectedMainParameter
-                };
-                _detectionParameterReferences[selectedMainParameter] = parameterReference;
-            }
-
-            parameterReference.InnerSettingsProfileIndex = Math.Max(0, _comboBoxImageViewerCameraProfile.SelectedIndex);
+            _subParameterInnerSettingsProfileIndexes[selectedSubParameter] = Math.Max(0, _comboBoxImageViewerCameraProfile.SelectedIndex);
             ApplySelectedInnerSettingsProfile();
             SaveDetectionParameterReferenceList();
+        }
+
+        private string GetSelectedSubParameterBindingName()
+        {
+            var productKey = GetCurrentProductKeyOrDefault();
+            return string.Equals(productKey, "DEFAULT", StringComparison.OrdinalIgnoreCase) ? string.Empty : productKey;
+        }
+
+        private int GetInnerSettingsProfileIndexForSubParameter(string subParameterName)
+        {
+            if (string.IsNullOrWhiteSpace(subParameterName))
+            {
+                return 0;
+            }
+
+            int index;
+            return _subParameterInnerSettingsProfileIndexes.TryGetValue(subParameterName, out index)
+                ? Math.Max(0, index)
+                : 0;
+        }
+
+        private void ApplyInnerSettingsProfileForSubParameter(string subParameterName)
+        {
+            ApplyInnerSettingsProfileIndex(GetInnerSettingsProfileIndexForSubParameter(subParameterName));
         }
 
         private void ApplySelectedInnerSettingsProfile()
@@ -1663,6 +1690,26 @@ namespace AoiMeasureTool
             }
 
             var selectedIndex = _comboBoxImageViewerCameraProfile.SelectedIndex;
+            if (selectedIndex < 0 || selectedIndex >= _innerSettings.CameraProfiles.Count)
+            {
+                selectedIndex = 0;
+            }
+
+            if (selectedIndex < 0 || selectedIndex >= _innerSettings.CameraProfiles.Count)
+            {
+                return;
+            }
+
+            ApplyInnerSettingsProfileIndex(selectedIndex);
+        }
+
+        private void ApplyInnerSettingsProfileIndex(int selectedIndex)
+        {
+            if (_innerSettings == null || _innerSettings.CameraProfiles == null)
+            {
+                return;
+            }
+
             if (selectedIndex < 0 || selectedIndex >= _innerSettings.CameraProfiles.Count)
             {
                 selectedIndex = 0;

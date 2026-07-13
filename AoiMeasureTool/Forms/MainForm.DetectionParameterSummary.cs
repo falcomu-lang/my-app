@@ -158,11 +158,16 @@ namespace AoiMeasureTool
         {
             _detectionMainParameters.Clear();
             _detectionParameterReferences.Clear();
+            _subParameterInnerSettingsProfileIndexes.Clear();
             _detectionMainParameters.AddRange(
                 _parameterReferenceListRepository.Load(GetParameterReferenceListPath()));
             foreach (var pair in _parameterReferenceListRepository.LoadReferences(GetParameterReferenceListPath()))
             {
                 _detectionParameterReferences[pair.Key] = pair.Value;
+            }
+            foreach (var pair in _parameterReferenceListRepository.LoadSubParameterInnerSettings(GetParameterReferenceListPath()))
+            {
+                _subParameterInnerSettingsProfileIndexes[pair.Key] = pair.Value;
             }
 
             RefreshDetectionMainParameterList();
@@ -197,7 +202,8 @@ namespace AoiMeasureTool
             _parameterReferenceListRepository.Save(
                 GetParameterReferenceListPath(),
                 _detectionMainParameters,
-                _detectionParameterReferences);
+                _detectionParameterReferences,
+                _subParameterInnerSettingsProfileIndexes);
         }
 
         private void RefreshDetectionMainParameterList()

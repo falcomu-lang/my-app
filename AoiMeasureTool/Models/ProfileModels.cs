@@ -148,6 +148,12 @@ namespace AoiMeasureTool
         public int InnerSettingsProfileIndex { get; set; }
     }
 
+    internal sealed class SubParameterInnerSettingsBinding
+    {
+        public string SubParameterName { get; set; }
+        public int InnerSettingsProfileIndex { get; set; }
+    }
+
     internal sealed class InnerSettingsData
     {
         public InnerSettingsData()
