@@ -1682,9 +1682,12 @@ namespace AoiMeasureTool
         private bool TryGetMultiImageConfirmPreprocessParam(int preprocessIndex, out PreprocessParam preprocessParam)
         {
             preprocessParam = null;
+            var productKey = string.IsNullOrWhiteSpace(_multiImageConfirmProductKey)
+                ? GetCurrentProductKeyOrDefault()
+                : _multiImageConfirmProductKey;
             if (preprocessIndex == 4)
             {
-                var dualSnapshot = CaptureDualThresholdSnapshot();
+                var dualSnapshot = GetDualThresholdSnapshotForProduct(productKey);
                 preprocessParam = new PreprocessParam
                 {
                     Enabled = dualSnapshot.Enabled,
@@ -1704,10 +1707,6 @@ namespace AoiMeasureTool
             {
                 return false;
             }
-
-            var productKey = string.IsNullOrWhiteSpace(_multiImageConfirmProductKey)
-                ? GetCurrentProductKeyOrDefault()
-                : _multiImageConfirmProductKey;
             var snapshots = GetPreprocessSnapshotsForProduct(productKey);
             if (snapshots == null || preprocessIndex >= snapshots.Length)
             {
