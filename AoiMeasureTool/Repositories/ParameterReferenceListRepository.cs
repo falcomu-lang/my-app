@@ -28,7 +28,8 @@ namespace AoiMeasureTool
                     MainParameterName = pair.Key,
                     SubParameter1 = GetSectionValue(pair.Value, "subParameter1"),
                     SubParameter2 = GetSectionValue(pair.Value, "subParameter2"),
-                    SubParameter3 = GetSectionValue(pair.Value, "subParameter3")
+                    SubParameter3 = GetSectionValue(pair.Value, "subParameter3"),
+                    InnerSettingsProfileIndex = ParseInt(GetSectionValue(pair.Value, "innerSettingsProfileIndex"), 0)
                 };
                 references[pair.Key] = reference;
             }
@@ -98,6 +99,7 @@ namespace AoiMeasureTool
                     writer.WriteLine("subParameter1=" + (reference?.SubParameter1 ?? string.Empty));
                     writer.WriteLine("subParameter2=" + (reference?.SubParameter2 ?? string.Empty));
                     writer.WriteLine("subParameter3=" + (reference?.SubParameter3 ?? string.Empty));
+                    writer.WriteLine("innerSettingsProfileIndex=" + Math.Max(0, reference?.InnerSettingsProfileIndex ?? 0));
                 }
             }
         }
@@ -143,6 +145,12 @@ namespace AoiMeasureTool
         {
             string value;
             return values != null && values.TryGetValue(key, out value) ? value : string.Empty;
+        }
+
+        private static int ParseInt(string value, int defaultValue)
+        {
+            int parsed;
+            return int.TryParse(value, out parsed) ? parsed : defaultValue;
         }
 
         private static int ExtractTrailingNumber(string key)

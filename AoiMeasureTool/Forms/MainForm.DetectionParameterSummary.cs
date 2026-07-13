@@ -353,7 +353,8 @@ namespace AoiMeasureTool
                 MainParameterName = selectedMainParameter,
                 SubParameter1 = GetDetectionSubParameterValue(_checkBoxDetectionSubParameter1Enabled, _listBoxDetectionSubParameter1),
                 SubParameter2 = GetDetectionSubParameterValue(_checkBoxDetectionSubParameter2Enabled, _listBoxDetectionSubParameter2),
-                SubParameter3 = GetDetectionSubParameterValue(_checkBoxDetectionSubParameter3Enabled, _listBoxDetectionSubParameter3)
+                SubParameter3 = GetDetectionSubParameterValue(_checkBoxDetectionSubParameter3Enabled, _listBoxDetectionSubParameter3),
+                InnerSettingsProfileIndex = GetSelectedInnerSettingsProfileIndex()
             };
 
             SaveDetectionParameterReferenceList();
@@ -390,6 +391,16 @@ namespace AoiMeasureTool
         {
             SaveSettingListSortItems(_detectionSubParameter1Items);
             MessageBox.Show(this, "Sub-parameter order saved.", "Detection Parameter Summary", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private int GetSelectedInnerSettingsProfileIndex()
+        {
+            if (_comboBoxImageViewerCameraProfile == null)
+            {
+                return 0;
+            }
+
+            return _comboBoxImageViewerCameraProfile.SelectedIndex < 0 ? 0 : _comboBoxImageViewerCameraProfile.SelectedIndex;
         }
 
         private static string GetDetectionSubParameterValue(CheckBox checkBox, ListBox listBox)

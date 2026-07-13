@@ -84,6 +84,7 @@ namespace AoiMeasureTool
         private bool _isApplyingProductState;
         private bool _isApplyingReferenceCornerState;
         private InnerSettingsData _innerSettings = new InnerSettingsData();
+        private bool _isSyncingImageViewerCameraProfile;
         private float _savedActiveImageScale = 1f;
         private int _savedActiveImageLeft;
         private int _savedActiveImageTop;
@@ -107,6 +108,7 @@ namespace AoiMeasureTool
         private Panel _panelDualThresholdPreviewViewport;
         private Button _buttonDualThresholdLoadOriginal;
         private Button _buttonDualThresholdLoadBinary;
+        private ComboBox _comboBoxImageViewerCameraProfile;
         private NumericUpDown _numericDualThresholdLower;
         private NumericUpDown _numericDualThresholdUpper;
         private TrackBar _trackBarDualThresholdLower;
@@ -261,6 +263,7 @@ namespace AoiMeasureTool
             InitializeReferenceCornerControls();
             InitializeMeasureDistanceControls();
             InitializeInnerSettingsControls();
+            InitializeImageViewerControls();
             InitializeJudgementCriteriaControls();
             InitializeDetectionParameterSummaryControls();
             InitializeContinuousInspectionControls();
@@ -294,6 +297,16 @@ namespace AoiMeasureTool
         {
             ShowMainWorkspaceTabs();
             tabControlMain.SelectedTab = tabPageImageViewer;
+        }
+
+        private void InitializeImageViewerControls()
+        {
+            _comboBoxImageViewerCameraProfile = comboBoxImageViewerCameraProfile;
+            if (_comboBoxImageViewerCameraProfile != null)
+            {
+                _comboBoxImageViewerCameraProfile.SelectedIndexChanged += ImageViewerCameraProfileComboBox_SelectedIndexChanged;
+            }
+            RefreshImageViewerCameraProfiles();
         }
 
         private void LoadImageButton_Click(object sender, EventArgs e)
@@ -627,6 +640,7 @@ namespace AoiMeasureTool
         {
             _savedContinuousInspectionMainParameter = _comboBoxContinuousInspectionMainParameter?.SelectedItem as string;
             ApplyContinuousInspectionSubParameters();
+            RefreshImageViewerCameraProfiles();
         }
 
         private void ApplyContinuousInspectionSubParameters()
@@ -1540,6 +1554,98 @@ namespace AoiMeasureTool
                     _innerCameraMeasurementScaleFactors[i].Value = ClampNumericUpDown(_innerCameraMeasurementScaleFactors[i], (decimal)scale);
                 }
             }
+
+            RefreshImageViewerCameraProfiles();
+        }
+
+        private void RefreshImageViewerCameraProfiles()
+        {
+            if (_comboBoxImageViewerCameraProfile == null)
+            {
+                return;
+            }
+
+            var previousSelection = _comboBoxImageViewerCameraProfile.SelectedIndex;
+            var selectedMainParameter = _comboBoxContinuousInspectionMainParameter?.SelectedItem as string;
+            DetectionParameterReference parameterReference = null;
+            if (!string.IsNullOrWhiteSpace(selectedMainParameter))
+            {
+                _detectionParameterReferences.TryGetValue(selectedMainParameter, out parameterReference);
+            }
+
+            _comboBoxImageViewerCameraProfile.BeginUpdate();
+            try
+            {
+                _comboBoxImageViewerCameraProfile.Items.Clear();
+                var profiles = _innerSettings != null ? _innerSettings.CameraProfiles : null;
+                if (profiles != null && profiles.Count > 0)
+                {
+                    for (var i = 0; i < profiles.Count; i++)
+                    {
+                        var profile = profiles[i];
+                        var name = profile == null ? string.Empty : profile.CameraName;
+                        var usage = profile == null ? string.Empty : profile.UsageName;
+                        if (string.IsNullOrWhiteSpace(name))
+                        {
+                            name = "Camera " + (i + 1);
+                        }
+
+                        var itemText = string.IsNullOrWhiteSpace(usage) ? name : name + " - " + usage;
+                        _comboBoxImageViewerCameraProfile.Items.Add(itemText);
+                    }
+                }
+
+                if (_comboBoxImageViewerCameraProfile.Items.Count == 0)
+                {
+                    _comboBoxImageViewerCameraProfile.Items.Add("Camera 1");
+                    _comboBoxImageViewerCameraProfile.Items.Add("Camera 2");
+                    _comboBoxImageViewerCameraProfile.Items.Add("Camera 3");
+                }
+
+                var targetIndex = parameterReference != null ? parameterReference.InnerSettingsProfileIndex : previousSelection;
+                if (targetIndex >= 0 && targetIndex < _comboBoxImageViewerCameraProfile.Items.Count)
+                {
+                    _isSyncingImageViewerCameraProfile = true;
+                    _comboBoxImageViewerCameraProfile.SelectedIndex = targetIndex;
+                }
+                else if (_comboBoxImageViewerCameraProfile.Items.Count > 0)
+                {
+                    _isSyncingImageViewerCameraProfile = true;
+                    _comboBoxImageViewerCameraProfile.SelectedIndex = 0;
+                }
+            }
+            finally
+            {
+                _isSyncingImageViewerCameraProfile = false;
+                _comboBoxImageViewerCameraProfile.EndUpdate();
+            }
+        }
+
+        private void ImageViewerCameraProfileComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_isSyncingImageViewerCameraProfile)
+            {
+                return;
+            }
+
+            var selectedMainParameter = _comboBoxContinuousInspectionMainParameter?.SelectedItem as string;
+            if (string.IsNullOrWhiteSpace(selectedMainParameter))
+            {
+                return;
+            }
+
+            DetectionParameterReference parameterReference;
+            if (!_detectionParameterReferences.TryGetValue(selectedMainParameter, out parameterReference))
+            {
+                parameterReference = new DetectionParameterReference
+                {
+                    MainParameterName = selectedMainParameter
+                };
+                _detectionParameterReferences[selectedMainParameter] = parameterReference;
+            }
+
+            parameterReference.InnerSettingsProfileIndex = Math.Max(0, _comboBoxImageViewerCameraProfile.SelectedIndex);
+            SaveDetectionParameterReferenceList();
         }
 
         private static List<JudgementCriterionRule> CloneJudgementCriteriaRules(List<JudgementCriterionRule> rules)

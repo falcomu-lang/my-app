@@ -16,6 +16,8 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Label labelNavigation;
         private System.Windows.Forms.Button buttonLoadImage;
         private System.Windows.Forms.Button buttonLoadImageInViewer;
+        private System.Windows.Forms.Label labelImageViewerCameraProfile;
+        private System.Windows.Forms.ComboBox comboBoxImageViewerCameraProfile;
         private System.Windows.Forms.Button buttonReferenceCorner;
         private System.Windows.Forms.Button buttonMeasureDistance;
         private System.Windows.Forms.Button buttonMultiImageConfirm;
@@ -336,6 +338,8 @@ namespace AoiMeasureTool
             this.buttonContinuousInspection = new System.Windows.Forms.Button();
             this.labelOpenCvStatus = new System.Windows.Forms.Label();
             this.buttonLoadImageInViewer = new System.Windows.Forms.Button();
+            this.labelImageViewerCameraProfile = new System.Windows.Forms.Label();
+            this.comboBoxImageViewerCameraProfile = new System.Windows.Forms.ComboBox();
             this.panelMain = new System.Windows.Forms.Panel();
             this.panelHeader = new System.Windows.Forms.Panel();
             this.labelTitle = new System.Windows.Forms.Label();
@@ -962,6 +966,30 @@ namespace AoiMeasureTool
             this.labelOpenCvStatus.TabIndex = 5;
             this.labelOpenCvStatus.Text = "OpenCV 4.13 已就緒";
             // 
+            // labelImageViewerCameraProfile
+            // 
+            this.labelImageViewerCameraProfile.AutoSize = true;
+            this.labelImageViewerCameraProfile.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(115)))), ((int)(((byte)(120)))));
+            this.labelImageViewerCameraProfile.Location = new System.Drawing.Point(856, 524);
+            this.labelImageViewerCameraProfile.Name = "labelImageViewerCameraProfile";
+            this.labelImageViewerCameraProfile.Size = new System.Drawing.Size(88, 12);
+            this.labelImageViewerCameraProfile.TabIndex = 1;
+            this.labelImageViewerCameraProfile.Text = "內部參數選擇";
+            // 
+            // comboBoxImageViewerCameraProfile
+            // 
+            this.comboBoxImageViewerCameraProfile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxImageViewerCameraProfile.FormattingEnabled = true;
+            this.comboBoxImageViewerCameraProfile.Items.AddRange(new object[] {
+            "內部參數 1",
+            "內部參數 2",
+            "內部參數 3"});
+            this.comboBoxImageViewerCameraProfile.Location = new System.Drawing.Point(856, 540);
+            this.comboBoxImageViewerCameraProfile.Name = "comboBoxImageViewerCameraProfile";
+            this.comboBoxImageViewerCameraProfile.Size = new System.Drawing.Size(168, 20);
+            this.comboBoxImageViewerCameraProfile.TabIndex = 2;
+            this.comboBoxImageViewerCameraProfile.SelectedIndex = 0;
+            // 
             // buttonLoadImageInViewer
             // 
             this.buttonLoadImageInViewer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
@@ -970,7 +998,7 @@ namespace AoiMeasureTool
             this.buttonLoadImageInViewer.Location = new System.Drawing.Point(856, 575);
             this.buttonLoadImageInViewer.Name = "buttonLoadImageInViewer";
             this.buttonLoadImageInViewer.Size = new System.Drawing.Size(168, 40);
-            this.buttonLoadImageInViewer.TabIndex = 2;
+            this.buttonLoadImageInViewer.TabIndex = 3;
             this.buttonLoadImageInViewer.Text = "讀取圖片";
             this.buttonLoadImageInViewer.UseVisualStyleBackColor = false;
             this.buttonLoadImageInViewer.Click += new System.EventHandler(this.LoadImageButton_Click);
@@ -1040,6 +1068,8 @@ namespace AoiMeasureTool
             this.tabPageImageViewer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
             this.tabPageImageViewer.Controls.Add(this.labelWorkspace);
             this.tabPageImageViewer.Controls.Add(this.panelImageViewport);
+            this.tabPageImageViewer.Controls.Add(this.labelImageViewerCameraProfile);
+            this.tabPageImageViewer.Controls.Add(this.comboBoxImageViewerCameraProfile);
             this.tabPageImageViewer.Controls.Add(this.buttonLoadImageInViewer);
             this.tabPageImageViewer.Location = new System.Drawing.Point(4, 26);
             this.tabPageImageViewer.Name = "tabPageImageViewer";
