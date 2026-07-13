@@ -166,6 +166,7 @@ namespace AoiMeasureTool
             }
 
             RefreshDetectionMainParameterList();
+            RefreshContinuousInspectionMainParameterItems();
             ApplyDetectionParameterReferenceSelection();
         }
 

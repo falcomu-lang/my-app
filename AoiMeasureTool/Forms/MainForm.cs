@@ -1565,7 +1565,7 @@ namespace AoiMeasureTool
                 return;
             }
 
-            var selectedMainParameter = _comboBoxContinuousInspectionMainParameter?.SelectedItem as string;
+            var selectedMainParameter = GetSelectedMainParameterBindingName();
             DetectionParameterReference parameterReference = null;
             if (!string.IsNullOrWhiteSpace(selectedMainParameter))
             {
@@ -1627,7 +1627,7 @@ namespace AoiMeasureTool
                 return;
             }
 
-            var selectedMainParameter = _comboBoxContinuousInspectionMainParameter?.SelectedItem as string;
+            var selectedMainParameter = GetSelectedMainParameterBindingName();
             if (string.IsNullOrWhiteSpace(selectedMainParameter))
             {
                 return;
@@ -1645,6 +1645,17 @@ namespace AoiMeasureTool
 
             parameterReference.InnerSettingsProfileIndex = Math.Max(0, _comboBoxImageViewerCameraProfile.SelectedIndex);
             SaveDetectionParameterReferenceList();
+        }
+
+        private string GetSelectedMainParameterBindingName()
+        {
+            var selectedMainParameter = _comboBoxContinuousInspectionMainParameter?.SelectedItem as string;
+            if (!string.IsNullOrWhiteSpace(selectedMainParameter))
+            {
+                return selectedMainParameter;
+            }
+
+            return _savedContinuousInspectionMainParameter;
         }
 
         private static List<JudgementCriterionRule> CloneJudgementCriteriaRules(List<JudgementCriterionRule> rules)
