@@ -119,6 +119,7 @@ namespace AoiMeasureTool
         public string LastImagePath { get; set; }
         public string ActiveProductKey { get; set; }
         public string ContinuousInspectionMainParameter { get; set; }
+        public string UserRole { get; set; }
         public Dictionary<string, PreprocessSnapshot[]> PreprocessProfiles { get; }
         public Dictionary<string, ReferenceCornerSnapshot> ReferenceCornerProfiles { get; }
         public Dictionary<string, List<MeasureRecord>> MeasureProfiles { get; }

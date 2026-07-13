@@ -279,7 +279,6 @@ namespace AoiMeasureTool
             InitializeContinuousInspectionControls();
             EnableDoubleBuffering();
             LoadSavedAppSettings();
-            ApplyUserRole(UserRoleMode.Manager);
             LoadLastImageIfAvailable();
         }
 
@@ -455,7 +454,6 @@ namespace AoiMeasureTool
         private void ApplyUserRole(UserRoleMode role)
         {
             _currentUserRole = role;
-            ShowMainWorkspaceTabs();
             UpdateSidebarVisibilityForRole(role);
 
             switch (role)
@@ -464,9 +462,10 @@ namespace AoiMeasureTool
                     ShowContinuousInspectionWorkspace();
                     break;
                 case UserRoleMode.Engineer:
-                    ShowContinuousInspectionWorkspace();
+                    ShowEngineerWorkspace();
                     break;
                 default:
+                    ShowMainWorkspaceTabs();
                     tabControlMain.SelectedTab = tabPageImageViewer;
                     break;
             }
@@ -492,6 +491,38 @@ namespace AoiMeasureTool
             buttonDetectionParameterSummary.Visible = isManager;
             buttonContinuousInspection.Visible = isManager || isEngineer || isOperator;
             labelOpenCvStatus.Visible = isManager || isEngineer || isOperator;
+            buttonLoadImageInViewer.Visible = role != UserRoleMode.Operator;
+            labelImageViewerCameraProfile.Visible = role != UserRoleMode.Operator;
+            comboBoxImageViewerCameraProfile.Visible = role != UserRoleMode.Operator;
+            if (tabControlMain != null)
+            {
+                if (isManager)
+                {
+                    tabPageBinarization.Parent = tabControlMain;
+                    tabPageBinarization2.Parent = tabControlMain;
+                }
+                else
+                {
+                    tabPageBinarization.Parent = null;
+                    tabPageBinarization2.Parent = null;
+                }
+            }
+        }
+
+        private void ShowEngineerWorkspace()
+        {
+            if (tabControlMain == null)
+            {
+                return;
+            }
+
+            tabControlMain.TabPages.Clear();
+            tabControlMain.TabPages.Add(_tabPageImageViewer);
+            tabControlMain.TabPages.Add(_tabPageJudgementCriteria);
+            tabControlMain.TabPages.Add(_tabPageMultiImageConfirm);
+            tabControlMain.TabPages.Add(_tabPageMeasureDistance);
+            tabControlMain.TabPages.Add(_tabPageContinuousInspection);
+            tabControlMain.SelectedTab = _tabPageContinuousInspection;
         }
 
         private void RoleOperatorButton_Click(object sender, EventArgs e)
@@ -1495,6 +1526,14 @@ namespace AoiMeasureTool
 
                 _lastImagePath = loadedData.LastImagePath;
                 _activeProductKey = string.IsNullOrWhiteSpace(loadedData.ActiveProductKey) ? null : loadedData.ActiveProductKey;
+                if (!string.IsNullOrWhiteSpace(loadedData.UserRole))
+                {
+                    UserRoleMode parsedRole;
+                    if (Enum.TryParse(loadedData.UserRole, true, out parsedRole))
+                    {
+                        _currentUserRole = parsedRole;
+                    }
+                }
                 _savedContinuousInspectionMainParameter = string.IsNullOrWhiteSpace(loadedData.ContinuousInspectionMainParameter)
                     ? null
                     : loadedData.ContinuousInspectionMainParameter;
@@ -1528,6 +1567,7 @@ namespace AoiMeasureTool
                 ApplyInnerSettings(_innerSettings);
                 LoadDetectionSubParameter1List();
                 RestoreContinuousInspectionMainParameterSelection();
+                ApplyUserRole(_currentUserRole);
             }
             catch
             {
@@ -1547,7 +1587,8 @@ namespace AoiMeasureTool
                 {
                     LastImagePath = _lastImagePath,
                     ActiveProductKey = _activeProductKey,
-                    ContinuousInspectionMainParameter = _comboBoxContinuousInspectionMainParameter?.SelectedItem as string
+                    ContinuousInspectionMainParameter = _comboBoxContinuousInspectionMainParameter?.SelectedItem as string,
+                    UserRole = _currentUserRole.ToString()
                 };
                 settingsData.ListSortItems.AddRange(_detectionSubParameter1Items);
                 if (!string.IsNullOrWhiteSpace(currentProductKey) &&

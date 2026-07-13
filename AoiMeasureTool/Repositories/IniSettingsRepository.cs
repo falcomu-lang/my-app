@@ -46,6 +46,12 @@ namespace AoiMeasureTool
                     continue;
                 }
 
+                if (line.StartsWith("UserRole=", StringComparison.OrdinalIgnoreCase))
+                {
+                    data.UserRole = line.Substring("UserRole=".Length).Trim();
+                    continue;
+                }
+
                 if (line.StartsWith("[") && line.EndsWith("]"))
                 {
                     currentSection = line.Substring(1, line.Length - 2).Trim();
@@ -132,6 +138,11 @@ namespace AoiMeasureTool
                 if (!string.IsNullOrWhiteSpace(data.ContinuousInspectionMainParameter))
                 {
                     writer.WriteLine("ContinuousInspectionMainParameter=" + data.ContinuousInspectionMainParameter);
+                }
+
+                if (!string.IsNullOrWhiteSpace(data.UserRole))
+                {
+                    writer.WriteLine("UserRole=" + data.UserRole);
                 }
 
                 if (data.ListSortItems.Count > 0)
