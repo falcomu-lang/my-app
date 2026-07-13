@@ -110,6 +110,33 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Label labelInnerMeasurementScaleFactor;
         private System.Windows.Forms.NumericUpDown numericInnerMeasurementScaleFactor;
         private System.Windows.Forms.Button buttonSaveInnerSettings;
+        private System.Windows.Forms.GroupBox groupBoxInnerCamera1;
+        private System.Windows.Forms.GroupBox groupBoxInnerCamera2;
+        private System.Windows.Forms.GroupBox groupBoxInnerCamera3;
+        private System.Windows.Forms.Label labelInnerCamera1Name;
+        private System.Windows.Forms.TextBox textBoxInnerCamera1Name;
+        private System.Windows.Forms.Label labelInnerCamera1Usage;
+        private System.Windows.Forms.TextBox textBoxInnerCamera1Usage;
+        private System.Windows.Forms.Label labelInnerCamera2Name;
+        private System.Windows.Forms.TextBox textBoxInnerCamera2Name;
+        private System.Windows.Forms.Label labelInnerCamera2Usage;
+        private System.Windows.Forms.TextBox textBoxInnerCamera2Usage;
+        private System.Windows.Forms.Label labelInnerCamera2CcdXPrecision;
+        private System.Windows.Forms.NumericUpDown numericInnerCamera2CcdXPrecision;
+        private System.Windows.Forms.Label labelInnerCamera2CcdYPrecision;
+        private System.Windows.Forms.NumericUpDown numericInnerCamera2CcdYPrecision;
+        private System.Windows.Forms.Label labelInnerCamera2MeasurementScaleFactor;
+        private System.Windows.Forms.NumericUpDown numericInnerCamera2MeasurementScaleFactor;
+        private System.Windows.Forms.Label labelInnerCamera3Name;
+        private System.Windows.Forms.TextBox textBoxInnerCamera3Name;
+        private System.Windows.Forms.Label labelInnerCamera3Usage;
+        private System.Windows.Forms.TextBox textBoxInnerCamera3Usage;
+        private System.Windows.Forms.Label labelInnerCamera3CcdXPrecision;
+        private System.Windows.Forms.NumericUpDown numericInnerCamera3CcdXPrecision;
+        private System.Windows.Forms.Label labelInnerCamera3CcdYPrecision;
+        private System.Windows.Forms.NumericUpDown numericInnerCamera3CcdYPrecision;
+        private System.Windows.Forms.Label labelInnerCamera3MeasurementScaleFactor;
+        private System.Windows.Forms.NumericUpDown numericInnerCamera3MeasurementScaleFactor;
         private System.Windows.Forms.Label labelJudgementCriteriaTitle;
         private System.Windows.Forms.Button buttonJudgementSyntaxHelp;
         private System.Windows.Forms.Panel panelJudgementCriteria;
@@ -447,6 +474,33 @@ namespace AoiMeasureTool
             this.labelInnerMeasurementScaleFactor = new System.Windows.Forms.Label();
             this.numericInnerMeasurementScaleFactor = new System.Windows.Forms.NumericUpDown();
             this.buttonSaveInnerSettings = new System.Windows.Forms.Button();
+            this.groupBoxInnerCamera1 = new System.Windows.Forms.GroupBox();
+            this.groupBoxInnerCamera2 = new System.Windows.Forms.GroupBox();
+            this.groupBoxInnerCamera3 = new System.Windows.Forms.GroupBox();
+            this.labelInnerCamera1Name = new System.Windows.Forms.Label();
+            this.textBoxInnerCamera1Name = new System.Windows.Forms.TextBox();
+            this.labelInnerCamera1Usage = new System.Windows.Forms.Label();
+            this.textBoxInnerCamera1Usage = new System.Windows.Forms.TextBox();
+            this.labelInnerCamera2Name = new System.Windows.Forms.Label();
+            this.textBoxInnerCamera2Name = new System.Windows.Forms.TextBox();
+            this.labelInnerCamera2Usage = new System.Windows.Forms.Label();
+            this.textBoxInnerCamera2Usage = new System.Windows.Forms.TextBox();
+            this.labelInnerCamera2CcdXPrecision = new System.Windows.Forms.Label();
+            this.numericInnerCamera2CcdXPrecision = new System.Windows.Forms.NumericUpDown();
+            this.labelInnerCamera2CcdYPrecision = new System.Windows.Forms.Label();
+            this.numericInnerCamera2CcdYPrecision = new System.Windows.Forms.NumericUpDown();
+            this.labelInnerCamera2MeasurementScaleFactor = new System.Windows.Forms.Label();
+            this.numericInnerCamera2MeasurementScaleFactor = new System.Windows.Forms.NumericUpDown();
+            this.labelInnerCamera3Name = new System.Windows.Forms.Label();
+            this.textBoxInnerCamera3Name = new System.Windows.Forms.TextBox();
+            this.labelInnerCamera3Usage = new System.Windows.Forms.Label();
+            this.textBoxInnerCamera3Usage = new System.Windows.Forms.TextBox();
+            this.labelInnerCamera3CcdXPrecision = new System.Windows.Forms.Label();
+            this.numericInnerCamera3CcdXPrecision = new System.Windows.Forms.NumericUpDown();
+            this.labelInnerCamera3CcdYPrecision = new System.Windows.Forms.Label();
+            this.numericInnerCamera3CcdYPrecision = new System.Windows.Forms.NumericUpDown();
+            this.labelInnerCamera3MeasurementScaleFactor = new System.Windows.Forms.Label();
+            this.numericInnerCamera3MeasurementScaleFactor = new System.Windows.Forms.NumericUpDown();
             this.tabPageJudgementCriteria = new System.Windows.Forms.TabPage();
             this.tabPageDetectionParameterSummary = new System.Windows.Forms.TabPage();
             this.tabPageContinuousInspection = new System.Windows.Forms.TabPage();
@@ -645,6 +699,18 @@ namespace AoiMeasureTool
             this.groupBoxContinuousInspection3.SuspendLayout();
             this.panelContinuousInspectionPreview3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxContinuousInspection3)).BeginInit();
+            this.groupBoxInnerCamera1.SuspendLayout();
+            this.groupBoxInnerCamera2.SuspendLayout();
+            this.groupBoxInnerCamera3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInnerCcdXPrecision)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInnerCcdYPrecision)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInnerMeasurementScaleFactor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInnerCamera2CcdXPrecision)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInnerCamera2CcdYPrecision)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInnerCamera2MeasurementScaleFactor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInnerCamera3CcdXPrecision)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInnerCamera3CcdYPrecision)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInnerCamera3MeasurementScaleFactor)).BeginInit();
             this.tabPageMultiImageConfirm.SuspendLayout();
             this.groupBoxMultiImagePreviewSource.SuspendLayout();
             this.panelMultiImageInfo.SuspendLayout();
@@ -2448,77 +2514,349 @@ namespace AoiMeasureTool
             // 
             this.panelInnerSettings.BackColor = System.Drawing.Color.White;
             this.panelInnerSettings.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelInnerSettings.Controls.Add(this.labelInnerCcdXPrecision);
-            this.panelInnerSettings.Controls.Add(this.numericInnerCcdXPrecision);
-            this.panelInnerSettings.Controls.Add(this.labelInnerCcdYPrecision);
-            this.panelInnerSettings.Controls.Add(this.numericInnerCcdYPrecision);
-            this.panelInnerSettings.Controls.Add(this.labelInnerMeasurementScaleFactor);
-            this.panelInnerSettings.Controls.Add(this.numericInnerMeasurementScaleFactor);
+            this.panelInnerSettings.Controls.Add(this.groupBoxInnerCamera1);
+            this.panelInnerSettings.Controls.Add(this.groupBoxInnerCamera2);
+            this.panelInnerSettings.Controls.Add(this.groupBoxInnerCamera3);
             this.panelInnerSettings.Controls.Add(this.buttonSaveInnerSettings);
             this.panelInnerSettings.Location = new System.Drawing.Point(28, 46);
             this.panelInnerSettings.Name = "panelInnerSettings";
-            this.panelInnerSettings.Size = new System.Drawing.Size(420, 230);
+            this.panelInnerSettings.Size = new System.Drawing.Size(950, 280);
             this.panelInnerSettings.TabIndex = 1;
+            // 
+            // groupBoxInnerCamera1
+            // 
+            this.groupBoxInnerCamera1.Controls.Add(this.labelInnerCamera1Name);
+            this.groupBoxInnerCamera1.Controls.Add(this.textBoxInnerCamera1Name);
+            this.groupBoxInnerCamera1.Controls.Add(this.labelInnerCamera1Usage);
+            this.groupBoxInnerCamera1.Controls.Add(this.textBoxInnerCamera1Usage);
+            this.groupBoxInnerCamera1.Controls.Add(this.labelInnerCcdXPrecision);
+            this.groupBoxInnerCamera1.Controls.Add(this.numericInnerCcdXPrecision);
+            this.groupBoxInnerCamera1.Controls.Add(this.labelInnerCcdYPrecision);
+            this.groupBoxInnerCamera1.Controls.Add(this.numericInnerCcdYPrecision);
+            this.groupBoxInnerCamera1.Controls.Add(this.labelInnerMeasurementScaleFactor);
+            this.groupBoxInnerCamera1.Controls.Add(this.numericInnerMeasurementScaleFactor);
+            this.groupBoxInnerCamera1.Location = new System.Drawing.Point(18, 16);
+            this.groupBoxInnerCamera1.Name = "groupBoxInnerCamera1";
+            this.groupBoxInnerCamera1.Size = new System.Drawing.Size(290, 240);
+            this.groupBoxInnerCamera1.TabIndex = 0;
+            this.groupBoxInnerCamera1.TabStop = false;
+            this.groupBoxInnerCamera1.Text = "內部參數 1";
+            // 
+            // groupBoxInnerCamera2
+            // 
+            this.groupBoxInnerCamera2.Controls.Add(this.labelInnerCamera2Name);
+            this.groupBoxInnerCamera2.Controls.Add(this.textBoxInnerCamera2Name);
+            this.groupBoxInnerCamera2.Controls.Add(this.labelInnerCamera2Usage);
+            this.groupBoxInnerCamera2.Controls.Add(this.textBoxInnerCamera2Usage);
+            this.groupBoxInnerCamera2.Controls.Add(this.labelInnerCamera2CcdXPrecision);
+            this.groupBoxInnerCamera2.Controls.Add(this.numericInnerCamera2CcdXPrecision);
+            this.groupBoxInnerCamera2.Controls.Add(this.labelInnerCamera2CcdYPrecision);
+            this.groupBoxInnerCamera2.Controls.Add(this.numericInnerCamera2CcdYPrecision);
+            this.groupBoxInnerCamera2.Controls.Add(this.labelInnerCamera2MeasurementScaleFactor);
+            this.groupBoxInnerCamera2.Controls.Add(this.numericInnerCamera2MeasurementScaleFactor);
+            this.groupBoxInnerCamera2.Location = new System.Drawing.Point(330, 16);
+            this.groupBoxInnerCamera2.Name = "groupBoxInnerCamera2";
+            this.groupBoxInnerCamera2.Size = new System.Drawing.Size(290, 240);
+            this.groupBoxInnerCamera2.TabIndex = 1;
+            this.groupBoxInnerCamera2.TabStop = false;
+            this.groupBoxInnerCamera2.Text = "內部參數 2";
+            // 
+            // groupBoxInnerCamera3
+            // 
+            this.groupBoxInnerCamera3.Controls.Add(this.labelInnerCamera3Name);
+            this.groupBoxInnerCamera3.Controls.Add(this.textBoxInnerCamera3Name);
+            this.groupBoxInnerCamera3.Controls.Add(this.labelInnerCamera3Usage);
+            this.groupBoxInnerCamera3.Controls.Add(this.textBoxInnerCamera3Usage);
+            this.groupBoxInnerCamera3.Controls.Add(this.labelInnerCamera3CcdXPrecision);
+            this.groupBoxInnerCamera3.Controls.Add(this.numericInnerCamera3CcdXPrecision);
+            this.groupBoxInnerCamera3.Controls.Add(this.labelInnerCamera3CcdYPrecision);
+            this.groupBoxInnerCamera3.Controls.Add(this.numericInnerCamera3CcdYPrecision);
+            this.groupBoxInnerCamera3.Controls.Add(this.labelInnerCamera3MeasurementScaleFactor);
+            this.groupBoxInnerCamera3.Controls.Add(this.numericInnerCamera3MeasurementScaleFactor);
+            this.groupBoxInnerCamera3.Location = new System.Drawing.Point(642, 16);
+            this.groupBoxInnerCamera3.Name = "groupBoxInnerCamera3";
+            this.groupBoxInnerCamera3.Size = new System.Drawing.Size(290, 240);
+            this.groupBoxInnerCamera3.TabIndex = 2;
+            this.groupBoxInnerCamera3.TabStop = false;
+            this.groupBoxInnerCamera3.Text = "內部參數 3";
+            // 
+            // labelInnerCamera1Name
+            // 
+            this.labelInnerCamera1Name.AutoSize = true;
+            this.labelInnerCamera1Name.Location = new System.Drawing.Point(16, 30);
+            this.labelInnerCamera1Name.Name = "labelInnerCamera1Name";
+            this.labelInnerCamera1Name.Size = new System.Drawing.Size(82, 18);
+            this.labelInnerCamera1Name.TabIndex = 0;
+            this.labelInnerCamera1Name.Text = "攝影機 / 名稱";
+            // 
+            // textBoxInnerCamera1Name
+            // 
+            this.textBoxInnerCamera1Name.Location = new System.Drawing.Point(16, 52);
+            this.textBoxInnerCamera1Name.Name = "textBoxInnerCamera1Name";
+            this.textBoxInnerCamera1Name.Size = new System.Drawing.Size(250, 25);
+            this.textBoxInnerCamera1Name.TabIndex = 1;
+            // 
+            // labelInnerCamera1Usage
+            // 
+            this.labelInnerCamera1Usage.AutoSize = true;
+            this.labelInnerCamera1Usage.Location = new System.Drawing.Point(16, 84);
+            this.labelInnerCamera1Usage.Name = "labelInnerCamera1Usage";
+            this.labelInnerCamera1Usage.Size = new System.Drawing.Size(38, 18);
+            this.labelInnerCamera1Usage.TabIndex = 2;
+            this.labelInnerCamera1Usage.Text = "用途";
+            // 
+            // textBoxInnerCamera1Usage
+            // 
+            this.textBoxInnerCamera1Usage.Location = new System.Drawing.Point(16, 106);
+            this.textBoxInnerCamera1Usage.Name = "textBoxInnerCamera1Usage";
+            this.textBoxInnerCamera1Usage.Size = new System.Drawing.Size(250, 25);
+            this.textBoxInnerCamera1Usage.TabIndex = 3;
+            // 
+            // labelInnerCamera2Name
+            // 
+            this.labelInnerCamera2Name.AutoSize = true;
+            this.labelInnerCamera2Name.Location = new System.Drawing.Point(16, 30);
+            this.labelInnerCamera2Name.Name = "labelInnerCamera2Name";
+            this.labelInnerCamera2Name.Size = new System.Drawing.Size(82, 18);
+            this.labelInnerCamera2Name.TabIndex = 0;
+            this.labelInnerCamera2Name.Text = "攝影機 / 名稱";
+            // 
+            // textBoxInnerCamera2Name
+            // 
+            this.textBoxInnerCamera2Name.Location = new System.Drawing.Point(16, 52);
+            this.textBoxInnerCamera2Name.Name = "textBoxInnerCamera2Name";
+            this.textBoxInnerCamera2Name.Size = new System.Drawing.Size(250, 25);
+            this.textBoxInnerCamera2Name.TabIndex = 1;
+            // 
+            // labelInnerCamera2Usage
+            // 
+            this.labelInnerCamera2Usage.AutoSize = true;
+            this.labelInnerCamera2Usage.Location = new System.Drawing.Point(16, 84);
+            this.labelInnerCamera2Usage.Name = "labelInnerCamera2Usage";
+            this.labelInnerCamera2Usage.Size = new System.Drawing.Size(38, 18);
+            this.labelInnerCamera2Usage.TabIndex = 2;
+            this.labelInnerCamera2Usage.Text = "用途";
+            // 
+            // textBoxInnerCamera2Usage
+            // 
+            this.textBoxInnerCamera2Usage.Location = new System.Drawing.Point(16, 106);
+            this.textBoxInnerCamera2Usage.Name = "textBoxInnerCamera2Usage";
+            this.textBoxInnerCamera2Usage.Size = new System.Drawing.Size(250, 25);
+            this.textBoxInnerCamera2Usage.TabIndex = 3;
+            // 
+            // labelInnerCamera2CcdXPrecision
+            // 
+            this.labelInnerCamera2CcdXPrecision.AutoSize = true;
+            this.labelInnerCamera2CcdXPrecision.Location = new System.Drawing.Point(16, 144);
+            this.labelInnerCamera2CcdXPrecision.Name = "labelInnerCamera2CcdXPrecision";
+            this.labelInnerCamera2CcdXPrecision.Size = new System.Drawing.Size(87, 18);
+            this.labelInnerCamera2CcdXPrecision.TabIndex = 4;
+            this.labelInnerCamera2CcdXPrecision.Text = "CCD X向精度";
+            // 
+            // numericInnerCamera2CcdXPrecision
+            // 
+            this.numericInnerCamera2CcdXPrecision.DecimalPlaces = 5;
+            this.numericInnerCamera2CcdXPrecision.Increment = new decimal(new int[] {1, 0, 0, 131072});
+            this.numericInnerCamera2CcdXPrecision.Location = new System.Drawing.Point(120, 140);
+            this.numericInnerCamera2CcdXPrecision.Maximum = new decimal(new int[] {1000, 0, 0, 0});
+            this.numericInnerCamera2CcdXPrecision.Name = "numericInnerCamera2CcdXPrecision";
+            this.numericInnerCamera2CcdXPrecision.Size = new System.Drawing.Size(146, 25);
+            this.numericInnerCamera2CcdXPrecision.TabIndex = 5;
+            this.numericInnerCamera2CcdXPrecision.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // labelInnerCamera2CcdYPrecision
+            // 
+            this.labelInnerCamera2CcdYPrecision.AutoSize = true;
+            this.labelInnerCamera2CcdYPrecision.Location = new System.Drawing.Point(16, 172);
+            this.labelInnerCamera2CcdYPrecision.Name = "labelInnerCamera2CcdYPrecision";
+            this.labelInnerCamera2CcdYPrecision.Size = new System.Drawing.Size(86, 18);
+            this.labelInnerCamera2CcdYPrecision.TabIndex = 6;
+            this.labelInnerCamera2CcdYPrecision.Text = "CCD Y向精度";
+            // 
+            // numericInnerCamera2CcdYPrecision
+            // 
+            this.numericInnerCamera2CcdYPrecision.DecimalPlaces = 5;
+            this.numericInnerCamera2CcdYPrecision.Increment = new decimal(new int[] {1, 0, 0, 131072});
+            this.numericInnerCamera2CcdYPrecision.Location = new System.Drawing.Point(120, 168);
+            this.numericInnerCamera2CcdYPrecision.Maximum = new decimal(new int[] {1000, 0, 0, 0});
+            this.numericInnerCamera2CcdYPrecision.Name = "numericInnerCamera2CcdYPrecision";
+            this.numericInnerCamera2CcdYPrecision.Size = new System.Drawing.Size(146, 25);
+            this.numericInnerCamera2CcdYPrecision.TabIndex = 7;
+            this.numericInnerCamera2CcdYPrecision.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // labelInnerCamera2MeasurementScaleFactor
+            // 
+            this.labelInnerCamera2MeasurementScaleFactor.AutoSize = true;
+            this.labelInnerCamera2MeasurementScaleFactor.Location = new System.Drawing.Point(16, 200);
+            this.labelInnerCamera2MeasurementScaleFactor.Name = "labelInnerCamera2MeasurementScaleFactor";
+            this.labelInnerCamera2MeasurementScaleFactor.Size = new System.Drawing.Size(103, 18);
+            this.labelInnerCamera2MeasurementScaleFactor.TabIndex = 8;
+            this.labelInnerCamera2MeasurementScaleFactor.Text = "計算值倍率";
+            // 
+            // numericInnerCamera2MeasurementScaleFactor
+            // 
+            this.numericInnerCamera2MeasurementScaleFactor.DecimalPlaces = 5;
+            this.numericInnerCamera2MeasurementScaleFactor.Increment = new decimal(new int[] {1, 0, 0, 131072});
+            this.numericInnerCamera2MeasurementScaleFactor.Location = new System.Drawing.Point(120, 196);
+            this.numericInnerCamera2MeasurementScaleFactor.Maximum = new decimal(new int[] {1000, 0, 0, 0});
+            this.numericInnerCamera2MeasurementScaleFactor.Minimum = new decimal(new int[] {1, 0, 0, 262144});
+            this.numericInnerCamera2MeasurementScaleFactor.Name = "numericInnerCamera2MeasurementScaleFactor";
+            this.numericInnerCamera2MeasurementScaleFactor.Size = new System.Drawing.Size(146, 25);
+            this.numericInnerCamera2MeasurementScaleFactor.TabIndex = 9;
+            this.numericInnerCamera2MeasurementScaleFactor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // labelInnerCamera3Name
+            // 
+            this.labelInnerCamera3Name.AutoSize = true;
+            this.labelInnerCamera3Name.Location = new System.Drawing.Point(16, 30);
+            this.labelInnerCamera3Name.Name = "labelInnerCamera3Name";
+            this.labelInnerCamera3Name.Size = new System.Drawing.Size(82, 18);
+            this.labelInnerCamera3Name.TabIndex = 0;
+            this.labelInnerCamera3Name.Text = "攝影機 / 名稱";
+            // 
+            // textBoxInnerCamera3Name
+            // 
+            this.textBoxInnerCamera3Name.Location = new System.Drawing.Point(16, 52);
+            this.textBoxInnerCamera3Name.Name = "textBoxInnerCamera3Name";
+            this.textBoxInnerCamera3Name.Size = new System.Drawing.Size(250, 25);
+            this.textBoxInnerCamera3Name.TabIndex = 1;
+            // 
+            // labelInnerCamera3Usage
+            // 
+            this.labelInnerCamera3Usage.AutoSize = true;
+            this.labelInnerCamera3Usage.Location = new System.Drawing.Point(16, 84);
+            this.labelInnerCamera3Usage.Name = "labelInnerCamera3Usage";
+            this.labelInnerCamera3Usage.Size = new System.Drawing.Size(38, 18);
+            this.labelInnerCamera3Usage.TabIndex = 2;
+            this.labelInnerCamera3Usage.Text = "用途";
+            // 
+            // textBoxInnerCamera3Usage
+            // 
+            this.textBoxInnerCamera3Usage.Location = new System.Drawing.Point(16, 106);
+            this.textBoxInnerCamera3Usage.Name = "textBoxInnerCamera3Usage";
+            this.textBoxInnerCamera3Usage.Size = new System.Drawing.Size(250, 25);
+            this.textBoxInnerCamera3Usage.TabIndex = 3;
+            // 
+            // labelInnerCamera3CcdXPrecision
+            // 
+            this.labelInnerCamera3CcdXPrecision.AutoSize = true;
+            this.labelInnerCamera3CcdXPrecision.Location = new System.Drawing.Point(16, 144);
+            this.labelInnerCamera3CcdXPrecision.Name = "labelInnerCamera3CcdXPrecision";
+            this.labelInnerCamera3CcdXPrecision.Size = new System.Drawing.Size(87, 18);
+            this.labelInnerCamera3CcdXPrecision.TabIndex = 4;
+            this.labelInnerCamera3CcdXPrecision.Text = "CCD X向精度";
+            // 
+            // numericInnerCamera3CcdXPrecision
+            // 
+            this.numericInnerCamera3CcdXPrecision.DecimalPlaces = 5;
+            this.numericInnerCamera3CcdXPrecision.Increment = new decimal(new int[] {1, 0, 0, 131072});
+            this.numericInnerCamera3CcdXPrecision.Location = new System.Drawing.Point(120, 140);
+            this.numericInnerCamera3CcdXPrecision.Maximum = new decimal(new int[] {1000, 0, 0, 0});
+            this.numericInnerCamera3CcdXPrecision.Name = "numericInnerCamera3CcdXPrecision";
+            this.numericInnerCamera3CcdXPrecision.Size = new System.Drawing.Size(146, 25);
+            this.numericInnerCamera3CcdXPrecision.TabIndex = 5;
+            this.numericInnerCamera3CcdXPrecision.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // labelInnerCamera3CcdYPrecision
+            // 
+            this.labelInnerCamera3CcdYPrecision.AutoSize = true;
+            this.labelInnerCamera3CcdYPrecision.Location = new System.Drawing.Point(16, 172);
+            this.labelInnerCamera3CcdYPrecision.Name = "labelInnerCamera3CcdYPrecision";
+            this.labelInnerCamera3CcdYPrecision.Size = new System.Drawing.Size(86, 18);
+            this.labelInnerCamera3CcdYPrecision.TabIndex = 6;
+            this.labelInnerCamera3CcdYPrecision.Text = "CCD Y向精度";
+            // 
+            // numericInnerCamera3CcdYPrecision
+            // 
+            this.numericInnerCamera3CcdYPrecision.DecimalPlaces = 5;
+            this.numericInnerCamera3CcdYPrecision.Increment = new decimal(new int[] {1, 0, 0, 131072});
+            this.numericInnerCamera3CcdYPrecision.Location = new System.Drawing.Point(120, 168);
+            this.numericInnerCamera3CcdYPrecision.Maximum = new decimal(new int[] {1000, 0, 0, 0});
+            this.numericInnerCamera3CcdYPrecision.Name = "numericInnerCamera3CcdYPrecision";
+            this.numericInnerCamera3CcdYPrecision.Size = new System.Drawing.Size(146, 25);
+            this.numericInnerCamera3CcdYPrecision.TabIndex = 7;
+            this.numericInnerCamera3CcdYPrecision.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // labelInnerCamera3MeasurementScaleFactor
+            // 
+            this.labelInnerCamera3MeasurementScaleFactor.AutoSize = true;
+            this.labelInnerCamera3MeasurementScaleFactor.Location = new System.Drawing.Point(16, 200);
+            this.labelInnerCamera3MeasurementScaleFactor.Name = "labelInnerCamera3MeasurementScaleFactor";
+            this.labelInnerCamera3MeasurementScaleFactor.Size = new System.Drawing.Size(103, 18);
+            this.labelInnerCamera3MeasurementScaleFactor.TabIndex = 8;
+            this.labelInnerCamera3MeasurementScaleFactor.Text = "計算值倍率";
+            // 
+            // numericInnerCamera3MeasurementScaleFactor
+            // 
+            this.numericInnerCamera3MeasurementScaleFactor.DecimalPlaces = 5;
+            this.numericInnerCamera3MeasurementScaleFactor.Increment = new decimal(new int[] {1, 0, 0, 131072});
+            this.numericInnerCamera3MeasurementScaleFactor.Location = new System.Drawing.Point(120, 196);
+            this.numericInnerCamera3MeasurementScaleFactor.Maximum = new decimal(new int[] {1000, 0, 0, 0});
+            this.numericInnerCamera3MeasurementScaleFactor.Minimum = new decimal(new int[] {1, 0, 0, 262144});
+            this.numericInnerCamera3MeasurementScaleFactor.Name = "numericInnerCamera3MeasurementScaleFactor";
+            this.numericInnerCamera3MeasurementScaleFactor.Size = new System.Drawing.Size(146, 25);
+            this.numericInnerCamera3MeasurementScaleFactor.TabIndex = 9;
+            this.numericInnerCamera3MeasurementScaleFactor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // labelInnerCcdXPrecision
             // 
             this.labelInnerCcdXPrecision.AutoSize = true;
-            this.labelInnerCcdXPrecision.Location = new System.Drawing.Point(24, 32);
+            this.labelInnerCcdXPrecision.Location = new System.Drawing.Point(16, 144);
             this.labelInnerCcdXPrecision.Name = "labelInnerCcdXPrecision";
             this.labelInnerCcdXPrecision.Size = new System.Drawing.Size(87, 18);
-            this.labelInnerCcdXPrecision.TabIndex = 0;
+            this.labelInnerCcdXPrecision.TabIndex = 4;
             this.labelInnerCcdXPrecision.Text = "CCD X向精度";
             // 
             // numericInnerCcdXPrecision
             // 
             this.numericInnerCcdXPrecision.DecimalPlaces = 5;
             this.numericInnerCcdXPrecision.Increment = new decimal(new int[] {1, 0, 0, 131072});
-            this.numericInnerCcdXPrecision.Location = new System.Drawing.Point(160, 28);
+            this.numericInnerCcdXPrecision.Location = new System.Drawing.Point(120, 140);
             this.numericInnerCcdXPrecision.Maximum = new decimal(new int[] {1000, 0, 0, 0});
             this.numericInnerCcdXPrecision.Name = "numericInnerCcdXPrecision";
-            this.numericInnerCcdXPrecision.Size = new System.Drawing.Size(180, 25);
-            this.numericInnerCcdXPrecision.TabIndex = 1;
+            this.numericInnerCcdXPrecision.Size = new System.Drawing.Size(146, 25);
+            this.numericInnerCcdXPrecision.TabIndex = 5;
             this.numericInnerCcdXPrecision.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // labelInnerCcdYPrecision
             // 
             this.labelInnerCcdYPrecision.AutoSize = true;
-            this.labelInnerCcdYPrecision.Location = new System.Drawing.Point(24, 78);
+            this.labelInnerCcdYPrecision.Location = new System.Drawing.Point(16, 172);
             this.labelInnerCcdYPrecision.Name = "labelInnerCcdYPrecision";
             this.labelInnerCcdYPrecision.Size = new System.Drawing.Size(86, 18);
-            this.labelInnerCcdYPrecision.TabIndex = 2;
+            this.labelInnerCcdYPrecision.TabIndex = 6;
             this.labelInnerCcdYPrecision.Text = "CCD Y向精度";
             // 
             // numericInnerCcdYPrecision
             // 
             this.numericInnerCcdYPrecision.DecimalPlaces = 5;
             this.numericInnerCcdYPrecision.Increment = new decimal(new int[] {1, 0, 0, 131072});
-            this.numericInnerCcdYPrecision.Location = new System.Drawing.Point(160, 74);
+            this.numericInnerCcdYPrecision.Location = new System.Drawing.Point(120, 168);
             this.numericInnerCcdYPrecision.Maximum = new decimal(new int[] {1000, 0, 0, 0});
             this.numericInnerCcdYPrecision.Name = "numericInnerCcdYPrecision";
-            this.numericInnerCcdYPrecision.Size = new System.Drawing.Size(180, 25);
-            this.numericInnerCcdYPrecision.TabIndex = 3;
+            this.numericInnerCcdYPrecision.Size = new System.Drawing.Size(146, 25);
+            this.numericInnerCcdYPrecision.TabIndex = 7;
             this.numericInnerCcdYPrecision.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // labelInnerMeasurementScaleFactor
             // 
             this.labelInnerMeasurementScaleFactor.AutoSize = true;
-            this.labelInnerMeasurementScaleFactor.Location = new System.Drawing.Point(24, 124);
+            this.labelInnerMeasurementScaleFactor.Location = new System.Drawing.Point(16, 200);
             this.labelInnerMeasurementScaleFactor.Name = "labelInnerMeasurementScaleFactor";
             this.labelInnerMeasurementScaleFactor.Size = new System.Drawing.Size(103, 18);
-            this.labelInnerMeasurementScaleFactor.TabIndex = 4;
+            this.labelInnerMeasurementScaleFactor.TabIndex = 8;
             this.labelInnerMeasurementScaleFactor.Text = "計算值倍率";
             // 
             // numericInnerMeasurementScaleFactor
             // 
             this.numericInnerMeasurementScaleFactor.DecimalPlaces = 5;
             this.numericInnerMeasurementScaleFactor.Increment = new decimal(new int[] {1, 0, 0, 131072});
-            this.numericInnerMeasurementScaleFactor.Location = new System.Drawing.Point(160, 120);
+            this.numericInnerMeasurementScaleFactor.Location = new System.Drawing.Point(120, 196);
             this.numericInnerMeasurementScaleFactor.Maximum = new decimal(new int[] {1000, 0, 0, 0});
             this.numericInnerMeasurementScaleFactor.Minimum = new decimal(new int[] {1, 0, 0, 262144});
             this.numericInnerMeasurementScaleFactor.Name = "numericInnerMeasurementScaleFactor";
-            this.numericInnerMeasurementScaleFactor.Size = new System.Drawing.Size(180, 25);
-            this.numericInnerMeasurementScaleFactor.TabIndex = 5;
+            this.numericInnerMeasurementScaleFactor.Size = new System.Drawing.Size(146, 25);
+            this.numericInnerMeasurementScaleFactor.TabIndex = 9;
             this.numericInnerMeasurementScaleFactor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // buttonSaveInnerSettings
@@ -2526,10 +2864,10 @@ namespace AoiMeasureTool
             this.buttonSaveInnerSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
             this.buttonSaveInnerSettings.FlatAppearance.BorderSize = 0;
             this.buttonSaveInnerSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSaveInnerSettings.Location = new System.Drawing.Point(24, 198);
+            this.buttonSaveInnerSettings.Location = new System.Drawing.Point(18, 244);
             this.buttonSaveInnerSettings.Name = "buttonSaveInnerSettings";
-            this.buttonSaveInnerSettings.Size = new System.Drawing.Size(120, 36);
-            this.buttonSaveInnerSettings.TabIndex = 6;
+            this.buttonSaveInnerSettings.Size = new System.Drawing.Size(120, 30);
+            this.buttonSaveInnerSettings.TabIndex = 3;
             this.buttonSaveInnerSettings.Text = "儲存";
             this.buttonSaveInnerSettings.UseVisualStyleBackColor = false;
             this.buttonSaveInnerSettings.Click += new System.EventHandler(this.SaveInnerSettingsButton_Click);
@@ -3925,8 +4263,21 @@ namespace AoiMeasureTool
             this.tabPageInnerSettings.PerformLayout();
             this.panelInnerSettings.ResumeLayout(false);
             this.panelInnerSettings.PerformLayout();
+            this.groupBoxInnerCamera1.ResumeLayout(false);
+            this.groupBoxInnerCamera1.PerformLayout();
+            this.groupBoxInnerCamera2.ResumeLayout(false);
+            this.groupBoxInnerCamera2.PerformLayout();
+            this.groupBoxInnerCamera3.ResumeLayout(false);
+            this.groupBoxInnerCamera3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericInnerCcdXPrecision)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericInnerCcdYPrecision)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInnerMeasurementScaleFactor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInnerCamera2CcdXPrecision)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInnerCamera2CcdYPrecision)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInnerCamera2MeasurementScaleFactor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInnerCamera3CcdXPrecision)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInnerCamera3CcdYPrecision)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInnerCamera3MeasurementScaleFactor)).EndInit();
             this.tabPageJudgementCriteria.ResumeLayout(false);
             this.tabPageJudgementCriteria.PerformLayout();
             this.panelJudgementCriteria.ResumeLayout(false);

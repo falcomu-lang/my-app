@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace AoiMeasureTool
@@ -11,95 +10,31 @@ namespace AoiMeasureTool
             _tabPageInnerSettings = tabPageInnerSettings;
             _buttonSaveInnerSettings = buttonSaveInnerSettings;
 
-            if (panelInnerSettings != null)
-            {
-                panelInnerSettings.Controls.Clear();
-                panelInnerSettings.Size = new Size(950, 280);
-                CreateInnerSettingsBlocks(panelInnerSettings);
-            }
+            _innerCameraGroupBoxes[0] = groupBoxInnerCamera1;
+            _innerCameraGroupBoxes[1] = groupBoxInnerCamera2;
+            _innerCameraGroupBoxes[2] = groupBoxInnerCamera3;
+
+            _innerCameraNameTextBoxes[0] = textBoxInnerCamera1Name;
+            _innerCameraNameTextBoxes[1] = textBoxInnerCamera2Name;
+            _innerCameraNameTextBoxes[2] = textBoxInnerCamera3Name;
+
+            _innerCameraUsageTextBoxes[0] = textBoxInnerCamera1Usage;
+            _innerCameraUsageTextBoxes[1] = textBoxInnerCamera2Usage;
+            _innerCameraUsageTextBoxes[2] = textBoxInnerCamera3Usage;
+
+            _innerCameraCcdXPrecisions[0] = numericInnerCcdXPrecision;
+            _innerCameraCcdXPrecisions[1] = numericInnerCamera2CcdXPrecision;
+            _innerCameraCcdXPrecisions[2] = numericInnerCamera3CcdXPrecision;
+
+            _innerCameraCcdYPrecisions[0] = numericInnerCcdYPrecision;
+            _innerCameraCcdYPrecisions[1] = numericInnerCamera2CcdYPrecision;
+            _innerCameraCcdYPrecisions[2] = numericInnerCamera3CcdYPrecision;
+
+            _innerCameraMeasurementScaleFactors[0] = numericInnerMeasurementScaleFactor;
+            _innerCameraMeasurementScaleFactors[1] = numericInnerCamera2MeasurementScaleFactor;
+            _innerCameraMeasurementScaleFactors[2] = numericInnerCamera3MeasurementScaleFactor;
 
             ApplyInnerSettings(_innerSettings);
-        }
-
-        private void CreateInnerSettingsBlocks(Control host)
-        {
-            var blockWidth = 290;
-            var blockHeight = 220;
-            var left = 18;
-            var top = 16;
-            var gap = 18;
-
-            for (var i = 0; i < 3; i++)
-            {
-                var group = new GroupBox
-                {
-                    Location = new Point(left + i * (blockWidth + gap), top),
-                    Size = new Size(blockWidth, blockHeight),
-                    Text = "內部參數 " + (i + 1)
-                };
-
-                var labelCamera = new Label { AutoSize = true, Location = new Point(16, 32), Text = "攝影機 / 用途" };
-                var textCamera = new TextBox { Location = new Point(16, 54), Size = new Size(250, 25) };
-                var labelUsage = new Label { AutoSize = true, Location = new Point(16, 88), Text = "用途" };
-                var textUsage = new TextBox { Location = new Point(16, 110), Size = new Size(250, 25) };
-                var labelX = new Label { AutoSize = true, Location = new Point(16, 144), Text = "CCD X 精度" };
-                var numX = CreateInnerNumeric(new Point(120, 140));
-                var labelY = new Label { AutoSize = true, Location = new Point(16, 176), Text = "CCD Y 精度" };
-                var numY = CreateInnerNumeric(new Point(120, 172));
-                var labelScale = new Label { AutoSize = true, Location = new Point(16, 208), Text = "量測倍率" };
-                var numScale = CreateInnerNumeric(new Point(120, 204));
-
-                if (i == 0)
-                {
-                    _innerCameraNameTextBoxes[i] = textCamera;
-                    _innerCameraUsageTextBoxes[i] = textUsage;
-                    _innerCameraCcdXPrecisions[i] = numX;
-                    _innerCameraCcdYPrecisions[i] = numY;
-                    _innerCameraMeasurementScaleFactors[i] = numScale;
-                }
-                else
-                {
-                    _innerCameraNameTextBoxes[i] = textCamera;
-                    _innerCameraUsageTextBoxes[i] = textUsage;
-                    _innerCameraCcdXPrecisions[i] = numX;
-                    _innerCameraCcdYPrecisions[i] = numY;
-                    _innerCameraMeasurementScaleFactors[i] = numScale;
-                }
-
-                group.Controls.Add(labelCamera);
-                group.Controls.Add(textCamera);
-                group.Controls.Add(labelUsage);
-                group.Controls.Add(textUsage);
-                group.Controls.Add(labelX);
-                group.Controls.Add(numX);
-                group.Controls.Add(labelY);
-                group.Controls.Add(numY);
-                group.Controls.Add(labelScale);
-                group.Controls.Add(numScale);
-                host.Controls.Add(group);
-                _innerCameraGroupBoxes[i] = group;
-            }
-
-            if (_buttonSaveInnerSettings != null)
-            {
-                _buttonSaveInnerSettings.Location = new Point(28, 248);
-                host.Controls.Add(_buttonSaveInnerSettings);
-                _buttonSaveInnerSettings.BringToFront();
-            }
-        }
-
-        private NumericUpDown CreateInnerNumeric(Point location)
-        {
-            return new NumericUpDown
-            {
-                DecimalPlaces = 5,
-                Increment = new decimal(new int[] { 1, 0, 0, 131072 }),
-                Location = location,
-                Maximum = new decimal(new int[] { 1000, 0, 0, 0 }),
-                Minimum = new decimal(new int[] { 1, 0, 0, 262144 }),
-                Size = new Size(130, 25),
-                TextAlign = HorizontalAlignment.Right
-            };
         }
 
         private void SaveInnerSettingsButton_Click(object sender, EventArgs e)
@@ -111,7 +46,7 @@ namespace AoiMeasureTool
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, "無法儲存內部參數。\r\n\r\n" + ex.Message, "內部參數", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, "儲存內部參數時發生錯誤。\r\n\r\n" + ex.Message, "內部參數", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
