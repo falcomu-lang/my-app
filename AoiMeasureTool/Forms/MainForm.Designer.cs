@@ -25,6 +25,9 @@ namespace AoiMeasureTool
         private System.Windows.Forms.Button buttonJudgementCriteria;
         private System.Windows.Forms.Button buttonDetectionParameterSummary;
         private System.Windows.Forms.Button buttonContinuousInspection;
+        private System.Windows.Forms.Button buttonRoleOperator;
+        private System.Windows.Forms.Button buttonRoleEngineer;
+        private System.Windows.Forms.Button buttonRoleManager;
         private System.Windows.Forms.Label labelOpenCvStatus;
         private System.Windows.Forms.Panel panelMain;
         private System.Windows.Forms.Panel panelHeader;
@@ -336,6 +339,9 @@ namespace AoiMeasureTool
             this.buttonJudgementCriteria = new System.Windows.Forms.Button();
             this.buttonDetectionParameterSummary = new System.Windows.Forms.Button();
             this.buttonContinuousInspection = new System.Windows.Forms.Button();
+            this.buttonRoleOperator = new System.Windows.Forms.Button();
+            this.buttonRoleEngineer = new System.Windows.Forms.Button();
+            this.buttonRoleManager = new System.Windows.Forms.Button();
             this.labelOpenCvStatus = new System.Windows.Forms.Label();
             this.buttonLoadImageInViewer = new System.Windows.Forms.Button();
             this.labelImageViewerCameraProfile = new System.Windows.Forms.Label();
@@ -802,6 +808,9 @@ namespace AoiMeasureTool
             this.panelSidebar.Controls.Add(this.buttonJudgementCriteria);
             this.panelSidebar.Controls.Add(this.buttonDetectionParameterSummary);
             this.panelSidebar.Controls.Add(this.buttonContinuousInspection);
+            this.panelSidebar.Controls.Add(this.buttonRoleOperator);
+            this.panelSidebar.Controls.Add(this.buttonRoleEngineer);
+            this.panelSidebar.Controls.Add(this.buttonRoleManager);
             this.panelSidebar.Controls.Add(this.labelOpenCvStatus);
             this.panelSidebar.Location = new System.Drawing.Point(0, 42);
             this.panelSidebar.Name = "panelSidebar";
@@ -923,9 +932,9 @@ namespace AoiMeasureTool
             this.buttonJudgementCriteria.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonJudgementCriteria.UseVisualStyleBackColor = false;
             this.buttonJudgementCriteria.Click += new System.EventHandler(this.JudgementCriteriaButton_Click);
-            // 
+            //
             // buttonDetectionParameterSummary
-            // 
+            //
             this.buttonDetectionParameterSummary.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
             this.buttonDetectionParameterSummary.FlatAppearance.BorderSize = 0;
             this.buttonDetectionParameterSummary.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -941,7 +950,7 @@ namespace AoiMeasureTool
             this.buttonDetectionParameterSummary.Click += new System.EventHandler(this.DetectionParameterSummaryButton_Click);
             // 
             // buttonContinuousInspection
-            // 
+            //
             this.buttonContinuousInspection.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
             this.buttonContinuousInspection.FlatAppearance.BorderSize = 0;
             this.buttonContinuousInspection.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -955,6 +964,48 @@ namespace AoiMeasureTool
             this.buttonContinuousInspection.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonContinuousInspection.UseVisualStyleBackColor = false;
             this.buttonContinuousInspection.Click += new System.EventHandler(this.ContinuousInspectionButton_Click);
+            //
+            // buttonRoleOperator
+            //
+            this.buttonRoleOperator.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonRoleOperator.FlatAppearance.BorderSize = 0;
+            this.buttonRoleOperator.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonRoleOperator.Font = new System.Drawing.Font("Microsoft JhengHei UI", 8F);
+            this.buttonRoleOperator.Location = new System.Drawing.Point(16, 660);
+            this.buttonRoleOperator.Name = "buttonRoleOperator";
+            this.buttonRoleOperator.Size = new System.Drawing.Size(60, 26);
+            this.buttonRoleOperator.TabIndex = 11;
+            this.buttonRoleOperator.Text = "操作員";
+            this.buttonRoleOperator.UseVisualStyleBackColor = false;
+            this.buttonRoleOperator.Click += new System.EventHandler(this.RoleOperatorButton_Click);
+            //
+            // buttonRoleEngineer
+            //
+            this.buttonRoleEngineer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonRoleEngineer.FlatAppearance.BorderSize = 0;
+            this.buttonRoleEngineer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonRoleEngineer.Font = new System.Drawing.Font("Microsoft JhengHei UI", 8F);
+            this.buttonRoleEngineer.Location = new System.Drawing.Point(82, 660);
+            this.buttonRoleEngineer.Name = "buttonRoleEngineer";
+            this.buttonRoleEngineer.Size = new System.Drawing.Size(60, 26);
+            this.buttonRoleEngineer.TabIndex = 12;
+            this.buttonRoleEngineer.Text = "工程師";
+            this.buttonRoleEngineer.UseVisualStyleBackColor = false;
+            this.buttonRoleEngineer.Click += new System.EventHandler(this.RoleEngineerButton_Click);
+            //
+            // buttonRoleManager
+            //
+            this.buttonRoleManager.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
+            this.buttonRoleManager.FlatAppearance.BorderSize = 0;
+            this.buttonRoleManager.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonRoleManager.Font = new System.Drawing.Font("Microsoft JhengHei UI", 8F);
+            this.buttonRoleManager.Location = new System.Drawing.Point(148, 660);
+            this.buttonRoleManager.Name = "buttonRoleManager";
+            this.buttonRoleManager.Size = new System.Drawing.Size(60, 26);
+            this.buttonRoleManager.TabIndex = 13;
+            this.buttonRoleManager.Text = "管理者";
+            this.buttonRoleManager.UseVisualStyleBackColor = false;
+            this.buttonRoleManager.Click += new System.EventHandler(this.RoleManagerButton_Click);
             // 
             // labelOpenCvStatus
             // 

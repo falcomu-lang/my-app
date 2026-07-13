@@ -21,6 +21,13 @@ namespace AoiMeasureTool
             Hidden = 2
         }
 
+        private enum UserRoleMode
+        {
+            Operator = 0,
+            Engineer = 1,
+            Manager = 2
+        }
+
         private CvMat _sourceImage;
         private CvMat _grayImage;
         private readonly CvMat[] _preprocessImages = new CvMat[4];
@@ -41,6 +48,7 @@ namespace AoiMeasureTool
         private readonly System.Collections.Generic.Dictionary<string, DualThresholdSnapshot> _dualThresholdProfiles =
             new System.Collections.Generic.Dictionary<string, DualThresholdSnapshot>(System.StringComparer.OrdinalIgnoreCase);
         private readonly ProductProfileService _productProfileService;
+        private UserRoleMode _currentUserRole = UserRoleMode.Manager;
         private PictureBox[] _preprocessPictureBoxes;
         private CheckBox[] _preprocessEnabledChecks;
         private TrackBar[] _thresholdTrackBars;
@@ -271,6 +279,7 @@ namespace AoiMeasureTool
             InitializeContinuousInspectionControls();
             EnableDoubleBuffering();
             LoadSavedAppSettings();
+            ApplyUserRole(UserRoleMode.Manager);
             LoadLastImageIfAvailable();
         }
 
@@ -441,6 +450,63 @@ namespace AoiMeasureTool
             tabControlMain.TabPages.Add(tabPageBinarization2);
 
             tabControlMain.SelectedTab = tabPageImageViewer;
+        }
+
+        private void ApplyUserRole(UserRoleMode role)
+        {
+            _currentUserRole = role;
+            ShowMainWorkspaceTabs();
+            UpdateSidebarVisibilityForRole(role);
+
+            switch (role)
+            {
+                case UserRoleMode.Operator:
+                    ShowContinuousInspectionWorkspace();
+                    break;
+                case UserRoleMode.Engineer:
+                    ShowContinuousInspectionWorkspace();
+                    break;
+                default:
+                    tabControlMain.SelectedTab = tabPageImageViewer;
+                    break;
+            }
+        }
+
+        private void UpdateSidebarVisibilityForRole(UserRoleMode role)
+        {
+            if (buttonReferenceCorner == null)
+            {
+                return;
+            }
+
+            var isManager = role == UserRoleMode.Manager;
+            var isEngineer = role == UserRoleMode.Engineer;
+            var isOperator = role == UserRoleMode.Operator;
+
+            buttonLoadImage.Visible = isManager;
+            buttonReferenceCorner.Visible = isManager;
+            buttonMeasureDistance.Visible = isManager || isEngineer;
+            buttonMultiImageConfirm.Visible = isManager || isEngineer;
+            buttonInnerSettings.Visible = isManager;
+            buttonJudgementCriteria.Visible = isManager || isEngineer;
+            buttonDetectionParameterSummary.Visible = isManager;
+            buttonContinuousInspection.Visible = isManager || isEngineer || isOperator;
+            labelOpenCvStatus.Visible = isManager || isEngineer || isOperator;
+        }
+
+        private void RoleOperatorButton_Click(object sender, EventArgs e)
+        {
+            ApplyUserRole(UserRoleMode.Operator);
+        }
+
+        private void RoleEngineerButton_Click(object sender, EventArgs e)
+        {
+            ApplyUserRole(UserRoleMode.Engineer);
+        }
+
+        private void RoleManagerButton_Click(object sender, EventArgs e)
+        {
+            ApplyUserRole(UserRoleMode.Manager);
         }
 
         private void ShowInnerSettingsWorkspace()
