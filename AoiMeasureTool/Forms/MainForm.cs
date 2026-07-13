@@ -1455,6 +1455,7 @@ namespace AoiMeasureTool
         {
             try
             {
+                SaveInnerSettings();
                 PersistActiveProductProfile();
                 SaveDetectionParameterReferenceList();
                 var currentProductKey = GetCurrentProductKeyOrDefault();
@@ -1620,6 +1621,8 @@ namespace AoiMeasureTool
                 _isSyncingImageViewerCameraProfile = false;
                 _comboBoxImageViewerCameraProfile.EndUpdate();
             }
+
+            ApplySelectedInnerSettingsProfile();
         }
 
         private void ImageViewerCameraProfileComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -1646,7 +1649,39 @@ namespace AoiMeasureTool
             }
 
             parameterReference.InnerSettingsProfileIndex = Math.Max(0, _comboBoxImageViewerCameraProfile.SelectedIndex);
+            ApplySelectedInnerSettingsProfile();
             SaveDetectionParameterReferenceList();
+        }
+
+        private void ApplySelectedInnerSettingsProfile()
+        {
+            if (_innerSettings == null ||
+                _innerSettings.CameraProfiles == null ||
+                _comboBoxImageViewerCameraProfile == null)
+            {
+                return;
+            }
+
+            var selectedIndex = _comboBoxImageViewerCameraProfile.SelectedIndex;
+            if (selectedIndex < 0 || selectedIndex >= _innerSettings.CameraProfiles.Count)
+            {
+                selectedIndex = 0;
+            }
+
+            if (selectedIndex < 0 || selectedIndex >= _innerSettings.CameraProfiles.Count)
+            {
+                return;
+            }
+
+            var profile = _innerSettings.CameraProfiles[selectedIndex];
+            if (profile == null)
+            {
+                return;
+            }
+
+            _innerSettings.CcdXPrecision = profile.CcdXPrecision;
+            _innerSettings.CcdYPrecision = profile.CcdYPrecision;
+            _innerSettings.MeasurementScaleFactor = profile.MeasurementScaleFactor <= 0 ? 1.0 : profile.MeasurementScaleFactor;
         }
 
         private string GetSelectedMainParameterBindingName()
@@ -1692,6 +1727,7 @@ namespace AoiMeasureTool
                 _innerSettings.MeasurementScaleFactor = _innerSettings.CameraProfiles[0].MeasurementScaleFactor;
             }
             _innerSettingsRepository.Save(GetInnerSettingsPath(), _innerSettings);
+            RefreshImageViewerCameraProfiles();
         }
 
         private static decimal ClampNumericUpDown(NumericUpDown control, decimal value)
