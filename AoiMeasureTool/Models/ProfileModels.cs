@@ -149,6 +149,21 @@ namespace AoiMeasureTool
 
     internal sealed class InnerSettingsData
     {
+        public InnerSettingsData()
+        {
+            CameraProfiles = new List<InnerSettingsCameraProfile>();
+        }
+
+        public List<InnerSettingsCameraProfile> CameraProfiles { get; }
+        public double CcdXPrecision { get; set; }
+        public double CcdYPrecision { get; set; }
+        public double MeasurementScaleFactor { get; set; } = 1.0;
+    }
+
+    internal sealed class InnerSettingsCameraProfile
+    {
+        public string CameraName { get; set; }
+        public string UsageName { get; set; }
         public double CcdXPrecision { get; set; }
         public double CcdYPrecision { get; set; }
         public double MeasurementScaleFactor { get; set; } = 1.0;

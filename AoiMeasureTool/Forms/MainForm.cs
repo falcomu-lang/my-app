@@ -131,6 +131,12 @@ namespace AoiMeasureTool
         private Label _labelInnerCcdXPrecision;
         private Label _labelInnerCcdYPrecision;
         private Label _labelInnerMeasurementScaleFactor;
+        private readonly GroupBox[] _innerCameraGroupBoxes = new GroupBox[3];
+        private readonly TextBox[] _innerCameraNameTextBoxes = new TextBox[3];
+        private readonly TextBox[] _innerCameraUsageTextBoxes = new TextBox[3];
+        private readonly NumericUpDown[] _innerCameraCcdXPrecisions = new NumericUpDown[3];
+        private readonly NumericUpDown[] _innerCameraCcdYPrecisions = new NumericUpDown[3];
+        private readonly NumericUpDown[] _innerCameraMeasurementScaleFactors = new NumericUpDown[3];
         private Button _buttonSaveMeasurePoint;
         private Button _buttonClearMeasurePoint;
         private Button _buttonSaveMeasureRecords;
@@ -1487,20 +1493,52 @@ namespace AoiMeasureTool
 
             _innerSettings = data;
 
-            if (_numericInnerCcdXPrecision != null)
+            var profiles = data.CameraProfiles;
+            for (var i = 0; i < 3; i++)
             {
-                _numericInnerCcdXPrecision.Value = ClampNumericUpDown(_numericInnerCcdXPrecision, (decimal)data.CcdXPrecision);
-            }
+                InnerSettingsCameraProfile profile = null;
+                if (profiles != null && i < profiles.Count)
+                {
+                    profile = profiles[i];
+                }
 
-            if (_numericInnerCcdYPrecision != null)
-            {
-                _numericInnerCcdYPrecision.Value = ClampNumericUpDown(_numericInnerCcdYPrecision, (decimal)data.CcdYPrecision);
-            }
+                if (profile == null)
+                {
+                    profile = new InnerSettingsCameraProfile
+                    {
+                        CameraName = "Camera " + (i + 1),
+                        UsageName = string.Empty,
+                        CcdXPrecision = data.CcdXPrecision,
+                        CcdYPrecision = data.CcdYPrecision,
+                        MeasurementScaleFactor = data.MeasurementScaleFactor
+                    };
+                }
 
-            if (_numericInnerMeasurementScaleFactor != null)
-            {
-                var scale = data.MeasurementScaleFactor <= 0 ? 1.0 : data.MeasurementScaleFactor;
-                _numericInnerMeasurementScaleFactor.Value = ClampNumericUpDown(_numericInnerMeasurementScaleFactor, (decimal)scale);
+                if (_innerCameraNameTextBoxes[i] != null)
+                {
+                    _innerCameraNameTextBoxes[i].Text = profile.CameraName ?? string.Empty;
+                }
+
+                if (_innerCameraUsageTextBoxes[i] != null)
+                {
+                    _innerCameraUsageTextBoxes[i].Text = profile.UsageName ?? string.Empty;
+                }
+
+                if (_innerCameraCcdXPrecisions[i] != null)
+                {
+                    _innerCameraCcdXPrecisions[i].Value = ClampNumericUpDown(_innerCameraCcdXPrecisions[i], (decimal)profile.CcdXPrecision);
+                }
+
+                if (_innerCameraCcdYPrecisions[i] != null)
+                {
+                    _innerCameraCcdYPrecisions[i].Value = ClampNumericUpDown(_innerCameraCcdYPrecisions[i], (decimal)profile.CcdYPrecision);
+                }
+
+                if (_innerCameraMeasurementScaleFactors[i] != null)
+                {
+                    var scale = profile.MeasurementScaleFactor <= 0 ? 1.0 : profile.MeasurementScaleFactor;
+                    _innerCameraMeasurementScaleFactors[i].Value = ClampNumericUpDown(_innerCameraMeasurementScaleFactors[i], (decimal)scale);
+                }
             }
         }
 
@@ -1511,14 +1549,30 @@ namespace AoiMeasureTool
 
         private void SaveInnerSettings()
         {
-            if (_numericInnerCcdXPrecision == null || _numericInnerCcdYPrecision == null || _numericInnerMeasurementScaleFactor == null)
+            if (_innerCameraCcdXPrecisions[0] == null || _innerCameraCcdYPrecisions[0] == null || _innerCameraMeasurementScaleFactors[0] == null)
             {
                 return;
             }
 
-            _innerSettings.CcdXPrecision = (double)_numericInnerCcdXPrecision.Value;
-            _innerSettings.CcdYPrecision = (double)_numericInnerCcdYPrecision.Value;
-            _innerSettings.MeasurementScaleFactor = (double)_numericInnerMeasurementScaleFactor.Value;
+            _innerSettings.CameraProfiles.Clear();
+            for (var i = 0; i < 3; i++)
+            {
+                _innerSettings.CameraProfiles.Add(new InnerSettingsCameraProfile
+                {
+                    CameraName = _innerCameraNameTextBoxes[i] == null ? "Camera " + (i + 1) : _innerCameraNameTextBoxes[i].Text,
+                    UsageName = _innerCameraUsageTextBoxes[i] == null ? string.Empty : _innerCameraUsageTextBoxes[i].Text,
+                    CcdXPrecision = _innerCameraCcdXPrecisions[i] == null ? 0d : (double)_innerCameraCcdXPrecisions[i].Value,
+                    CcdYPrecision = _innerCameraCcdYPrecisions[i] == null ? 0d : (double)_innerCameraCcdYPrecisions[i].Value,
+                    MeasurementScaleFactor = _innerCameraMeasurementScaleFactors[i] == null ? 1.0 : (double)_innerCameraMeasurementScaleFactors[i].Value
+                });
+            }
+
+            if (_innerSettings.CameraProfiles.Count > 0)
+            {
+                _innerSettings.CcdXPrecision = _innerSettings.CameraProfiles[0].CcdXPrecision;
+                _innerSettings.CcdYPrecision = _innerSettings.CameraProfiles[0].CcdYPrecision;
+                _innerSettings.MeasurementScaleFactor = _innerSettings.CameraProfiles[0].MeasurementScaleFactor;
+            }
             _innerSettingsRepository.Save(GetInnerSettingsPath(), _innerSettings);
         }
 
