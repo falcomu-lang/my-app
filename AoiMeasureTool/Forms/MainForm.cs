@@ -1565,7 +1565,6 @@ namespace AoiMeasureTool
                 return;
             }
 
-            var previousSelection = _comboBoxImageViewerCameraProfile.SelectedIndex;
             var selectedMainParameter = _comboBoxContinuousInspectionMainParameter?.SelectedItem as string;
             DetectionParameterReference parameterReference = null;
             if (!string.IsNullOrWhiteSpace(selectedMainParameter))
@@ -1602,7 +1601,7 @@ namespace AoiMeasureTool
                     _comboBoxImageViewerCameraProfile.Items.Add("Camera 3");
                 }
 
-                var targetIndex = parameterReference != null ? parameterReference.InnerSettingsProfileIndex : previousSelection;
+                var targetIndex = parameterReference != null ? parameterReference.InnerSettingsProfileIndex : 0;
                 if (targetIndex >= 0 && targetIndex < _comboBoxImageViewerCameraProfile.Items.Count)
                 {
                     _isSyncingImageViewerCameraProfile = true;

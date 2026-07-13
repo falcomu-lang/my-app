@@ -263,6 +263,25 @@ namespace AoiMeasureTool
                 _detectionParameterReferences.TryGetValue(selectedMainParameter, out reference);
             }
 
+            if (reference == null)
+            {
+                reference = new DetectionParameterReference
+                {
+                    MainParameterName = selectedMainParameter,
+                    InnerSettingsProfileIndex = 0
+                };
+                if (!string.IsNullOrWhiteSpace(selectedMainParameter))
+                {
+                    _detectionParameterReferences[selectedMainParameter] = reference;
+                    SaveDetectionParameterReferenceList();
+                }
+            }
+            else if (reference.InnerSettingsProfileIndex < 0)
+            {
+                reference.InnerSettingsProfileIndex = 0;
+                SaveDetectionParameterReferenceList();
+            }
+
             ApplyDetectionSubParameterSelection(_checkBoxDetectionSubParameter1Enabled, _listBoxDetectionSubParameter1, reference?.SubParameter1);
             ApplyDetectionSubParameterSelection(_checkBoxDetectionSubParameter2Enabled, _listBoxDetectionSubParameter2, reference?.SubParameter2);
             ApplyDetectionSubParameterSelection(_checkBoxDetectionSubParameter3Enabled, _listBoxDetectionSubParameter3, reference?.SubParameter3);
