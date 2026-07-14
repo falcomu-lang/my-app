@@ -31,6 +31,48 @@ Keep the existing workspace flow, tab switching rules, and multi-image confirm i
 - Inner settings and judgement criteria remain designer-managed tabs.
 - Detection parameter summary remains a designer-managed tab.
 - Continuous inspection is functional.
+- Role-based sidebar and workspace switching is functional.
+
+## Role Modes
+
+Three role buttons exist at the lower-left of the sidebar:
+
+- `操作員`
+- `工程師`
+- `管理者`
+
+### Role Persistence
+
+- The selected role is stored in `setting.ini` as `UserRole=...`.
+- App restart restores the last selected role.
+
+### Operator Mode
+
+- Sidebar keeps only `連續檢測`.
+- The visible workspace is only `連續檢測`.
+
+### Engineer Mode
+
+- Sidebar keeps:
+  - `圖片檢視`
+  - `良品判斷條件`
+  - `多影像確認結果`
+  - `框選量測的距離`
+  - `連續檢測`
+- Switching into engineer mode initially shows only `連續檢測`.
+- In engineer mode, each sidebar button opens only its own single tabpage.
+- In engineer mode, `圖片檢視` is allowed.
+- In engineer mode, pressing `圖片檢視` shows only the image-viewer tabpage.
+- In engineer mode, `二值化處理` and `二值化處理-2` must not be shown or reachable.
+
+### Manager Mode
+
+- All sidebar work items are visible.
+- Pressing manager mode returns to `圖片檢視`.
+- Manager image-viewer workspace still shows:
+  - image viewer
+  - binarization
+  - binarization-2
 
 ## Detection Parameter Summary
 
@@ -129,12 +171,20 @@ The inner-settings tab contains three camera profile blocks.
 
 - `AoiMeasureTool/Forms/MainForm.cs`
 - `AoiMeasureTool/Forms/MainForm.DetectionParameterSummary.cs`
+- `AoiMeasureTool/Forms/MainForm.Designer.cs`
 - `AoiMeasureTool/Models/ProfileModels.cs`
+- `AoiMeasureTool/Repositories/IniSettingsRepository.cs`
 - `AoiMeasureTool/Repositories/ParameterReferenceListRepository.cs`
 - `PROJECT_HANDOFF.md`
 
 ## Recent Git History
 
+- `0547d0e` `Enable image viewer in engineer mode`
+- `9ebadd1` `Restrict engineer mode to single workspace tabs`
+- `8f66f1e` `Fix engineer workspace tab reference`
+- `fa7104a` `Remove unused inner settings fields`
+- `cc4ae62` `Persist user role across restarts`
+- `d283342` `Add role-based sidebar switching`
 - `5b22761` `Bind inner settings to sub parameters`
 - `918f84b` `Persist and apply selected inner settings`
 - `f493821` `Persist detection parameter camera bindings`
@@ -145,11 +195,19 @@ The inner-settings tab contains three camera profile blocks.
 - I could not run a full build in this environment because `dotnet` / `MSBuild.exe` were not available.
 - The current binding model is sub-parameter based.
 - If a later change touches continuous inspection image loading or judge flows, verify that the selected sub-parameter still maps to the expected inner-settings profile before running measurement logic.
+- A previous `CS0103` issue from an incorrect engineer-workspace image-viewer tab reference has already been fixed.
+- A previous `CS0169` issue from unused duplicated inner-settings fields in `MainForm.cs` has already been fixed.
+- `NU1100` for `OpenCvSharp4.runtime.win (>= 4.13.0.20260602)` has not been resolved in this environment. The csproj currently references:
+  - `OpenCvSharp4 4.13.0.20260602`
+  - `OpenCvSharp4.Extensions 4.13.0.20260602`
+  - `OpenCvSharp4.runtime.win 4.13.0.20260602`
+- `project.assets.json` in `AoiMeasureTool/obj` showed these packages had been restored at least once on one machine, so the remaining failure is likely a restore-source or package-availability issue rather than a C# source issue.
 
 ## Suggested Next Step
 
 Likely next work areas are:
 
 - verify the sub-parameter to inner-settings mapping on real A / B image cases
+- resolve the `NU1100` OpenCvSharp restore issue on the target build machine
 - decide whether the selected sub-parameter binding should also be surfaced more explicitly in the UI
 - decide whether yield / slot state should persist across restart
