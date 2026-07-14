@@ -135,9 +135,6 @@ namespace AoiMeasureTool
         private DataGridView _dataGridViewMultiImageJudgementResult;
         private Button _buttonExportMultiImageFolderCsv;
         private DataGridView _dataGridViewMeasureRecords;
-        private NumericUpDown _numericInnerCcdXPrecision;
-        private NumericUpDown _numericInnerCcdYPrecision;
-        private NumericUpDown _numericInnerMeasurementScaleFactor;
         private Label _labelInnerCcdXPrecision;
         private Label _labelInnerCcdYPrecision;
         private Label _labelInnerMeasurementScaleFactor;
