@@ -302,8 +302,7 @@ namespace AoiMeasureTool
 
         private void SidebarImageViewerButton_Click(object sender, EventArgs e)
         {
-            ShowMainWorkspaceTabs();
-            tabControlMain.SelectedTab = tabPageImageViewer;
+            ShowImageViewerWorkspace();
         }
 
         private void InitializeImageViewerControls()
@@ -448,6 +447,25 @@ namespace AoiMeasureTool
             tabControlMain.SelectedTab = tabPageImageViewer;
         }
 
+        private void ShowImageViewerWorkspace()
+        {
+            if (tabControlMain == null)
+            {
+                return;
+            }
+
+            if (_currentUserRole == UserRoleMode.Engineer)
+            {
+                tabControlMain.TabPages.Clear();
+                tabControlMain.TabPages.Add(tabPageImageViewer);
+                tabControlMain.SelectedTab = tabPageImageViewer;
+                return;
+            }
+
+            ShowMainWorkspaceTabs();
+            tabControlMain.SelectedTab = tabPageImageViewer;
+        }
+
         private void ApplyUserRole(UserRoleMode role)
         {
             _currentUserRole = role;
@@ -459,7 +477,7 @@ namespace AoiMeasureTool
                     ShowContinuousInspectionWorkspace();
                     break;
                 case UserRoleMode.Engineer:
-                    ShowEngineerWorkspace();
+                    ShowContinuousInspectionWorkspace();
                     break;
                 default:
                     ShowMainWorkspaceTabs();
@@ -504,22 +522,6 @@ namespace AoiMeasureTool
                     tabPageBinarization2.Parent = null;
                 }
             }
-        }
-
-        private void ShowEngineerWorkspace()
-        {
-            if (tabControlMain == null)
-            {
-                return;
-            }
-
-            tabControlMain.TabPages.Clear();
-            tabControlMain.TabPages.Add(tabPageImageViewer);
-            tabControlMain.TabPages.Add(_tabPageJudgementCriteria);
-            tabControlMain.TabPages.Add(_tabPageMultiImageConfirm);
-            tabControlMain.TabPages.Add(_tabPageMeasureDistance);
-            tabControlMain.TabPages.Add(_tabPageContinuousInspection);
-            tabControlMain.SelectedTab = _tabPageContinuousInspection;
         }
 
         private void RoleOperatorButton_Click(object sender, EventArgs e)
