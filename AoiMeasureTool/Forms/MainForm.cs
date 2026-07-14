@@ -514,7 +514,7 @@ namespace AoiMeasureTool
             }
 
             tabControlMain.TabPages.Clear();
-            tabControlMain.TabPages.Add(_tabPageImageViewer);
+            tabControlMain.TabPages.Add(tabPageImageViewer);
             tabControlMain.TabPages.Add(_tabPageJudgementCriteria);
             tabControlMain.TabPages.Add(_tabPageMultiImageConfirm);
             tabControlMain.TabPages.Add(_tabPageMeasureDistance);
