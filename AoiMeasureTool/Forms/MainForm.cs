@@ -497,7 +497,7 @@ namespace AoiMeasureTool
             var isEngineer = role == UserRoleMode.Engineer;
             var isOperator = role == UserRoleMode.Operator;
 
-            buttonLoadImage.Visible = isManager;
+            buttonLoadImage.Visible = isManager || isEngineer;
             buttonReferenceCorner.Visible = isManager;
             buttonMeasureDistance.Visible = isManager || isEngineer;
             buttonMultiImageConfirm.Visible = isManager || isEngineer;
