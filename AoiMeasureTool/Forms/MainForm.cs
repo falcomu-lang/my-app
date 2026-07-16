@@ -276,6 +276,7 @@ namespace AoiMeasureTool
         {
             _productProfileService = new ProductProfileService(_productProfiles, _referenceCornerProfiles, _measureProfiles, _judgementCriteriaProfiles, _dualThresholdProfiles);
             InitializeComponent();
+            HideLegacyMenuStrip();
             if (System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
             {
                 return;
@@ -296,6 +297,22 @@ namespace AoiMeasureTool
             LoadLastImageIfAvailable();
         }
 
+        private void HideLegacyMenuStrip()
+        {
+            if (menuStripMain == null)
+            {
+                return;
+            }
+
+            menuStripMain.Visible = false;
+            menuStripMain.Enabled = false;
+            MainMenuStrip = null;
+
+            panelSidebar.Location = new Point(panelSidebar.Location.X, 0);
+            panelSidebar.Height = ClientSize.Height;
+            panelMain.Location = new Point(panelMain.Location.X, 0);
+            panelMain.Height = ClientSize.Height;
+        }
         private void EnableDoubleBuffering()
         {
             SetControlDoubleBuffered(_panelMultiImageConfirmViewport, true);
