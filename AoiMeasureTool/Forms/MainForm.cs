@@ -191,6 +191,7 @@ namespace AoiMeasureTool
         private readonly Button[] _continuousInspectionJudgeButtons = new Button[3];
         private Button _buttonContinuousInspectionResetYield;
         private readonly string[] _continuousInspectionImageSourceNames = new string[3];
+        private readonly string[] _continuousInspectionWorkingImagePaths = new string[3];
         private readonly Bitmap[] _continuousInspectionSourceBitmaps = new Bitmap[3];
         private readonly float[] _continuousInspectionImageScales = new float[3];
         private readonly float[] _continuousInspectionFitScales = new float[3];
@@ -471,6 +472,7 @@ namespace AoiMeasureTool
         {
             _currentUserRole = role;
             UpdateSidebarVisibilityForRole(role);
+            UpdateRoleButtonStates(role);
 
             switch (role)
             {
@@ -523,6 +525,17 @@ namespace AoiMeasureTool
                     tabPageBinarization2.Parent = null;
                 }
             }
+        }
+        private void UpdateRoleButtonStates(UserRoleMode role)
+        {
+            if (buttonRoleOperator == null || buttonRoleEngineer == null || buttonRoleManager == null)
+            {
+                return;
+            }
+
+            buttonRoleOperator.Enabled = role != UserRoleMode.Operator;
+            buttonRoleEngineer.Enabled = role != UserRoleMode.Engineer;
+            buttonRoleManager.Enabled = role != UserRoleMode.Manager;
         }
 
         private void RoleOperatorButton_Click(object sender, EventArgs e)
@@ -918,6 +931,7 @@ namespace AoiMeasureTool
                 var rows = BuildContinuousInspectionJudgementResults(
                     sourceBitmap,
                     subParameterName,
+                    _continuousInspectionWorkingImagePaths[slotIndex],
                     _continuousInspectionImageSourceNames[slotIndex],
                     out annotatedBitmap);
                 var resultText = SummarizeContinuousInspectionJudgement(rows);
@@ -997,6 +1011,7 @@ namespace AoiMeasureTool
             _continuousInspectionSourceBitmaps[index]?.Dispose();
             _continuousInspectionSourceBitmaps[index] = sourceBitmap;
             _continuousInspectionImageSourceNames[index] = sourceName;
+            _continuousInspectionWorkingImagePaths[index] = SaveContinuousInspectionWorkingImage(index, sourceBitmap);
 
             SetPictureBoxImage(_continuousInspectionPictureBoxes[index], displayBitmap);
             ApplyContinuousInspectionImageLayout(index, !preserveTransform);
@@ -1017,6 +1032,7 @@ namespace AoiMeasureTool
         private List<MultiImageJudgementResultRow> BuildContinuousInspectionJudgementResults(
             Bitmap sourceBitmap,
             string productKey,
+            string workingImagePath,
             string sourceName,
             out Bitmap annotatedBitmap)
         {
@@ -1041,7 +1057,7 @@ namespace AoiMeasureTool
                 _multiImageConfirmSourceImageSize = _multiImageConfirmBitmap.Size;
                 _multiImageConfirmProductKey = profileState.ProductKey;
                 _multiImageConfirmImagePaths.Clear();
-                _multiImageConfirmImagePaths.Add(sourceName ?? "ContinuousInspection");
+                _multiImageConfirmImagePaths.Add(workingImagePath ?? sourceName ?? "ContinuousInspection");
                 _multiImageConfirmImageIndex = 0;
                 var rows = BuildMultiImageJudgementResults();
                 annotatedBitmap = BuildContinuousInspectionAnnotatedBitmap();
@@ -1061,6 +1077,25 @@ namespace AoiMeasureTool
                 _innerSettings.CcdYPrecision = originalCcdYPrecision;
                 _innerSettings.MeasurementScaleFactor = originalMeasurementScaleFactor;
             }
+        }
+
+        private string SaveContinuousInspectionWorkingImage(int index, Bitmap sourceBitmap)
+        {
+            if (index < 0 || sourceBitmap == null)
+            {
+                return null;
+            }
+
+            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            var targetDirectory = Path.Combine(baseDirectory, "continuous-inspection-cache");
+            Directory.CreateDirectory(targetDirectory);
+
+            var targetPath = Path.Combine(
+                targetDirectory,
+                string.Format(CultureInfo.InvariantCulture, "slot_{0}.png", index + 1));
+
+            sourceBitmap.Save(targetPath, System.Drawing.Imaging.ImageFormat.Png);
+            return targetPath;
         }
 
         private void SaveContinuousInspectionOriginalImageIfNeeded(int index, string subParameterName, Bitmap sourceBitmap)
@@ -1184,7 +1219,7 @@ namespace AoiMeasureTool
                 _multiImageConfirmSourceImageSize = _multiImageConfirmBitmap.Size;
                 _multiImageConfirmProductKey = profileState.ProductKey;
                 _multiImageConfirmImagePaths.Clear();
-                _multiImageConfirmImagePaths.Add(_continuousInspectionImageSourceNames[index] ?? "ContinuousInspection");
+                _multiImageConfirmImagePaths.Add(_continuousInspectionWorkingImagePaths[index] ?? _continuousInspectionImageSourceNames[index] ?? "ContinuousInspection");
                 _multiImageConfirmImageIndex = 0;
 
                 var referenceCandidate = GetMultiImageConfirmReferenceCandidate();
@@ -2290,5 +2325,9 @@ namespace AoiMeasureTool
         }
     }
 }
+
+
+
+
 
 
