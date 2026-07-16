@@ -21,6 +21,7 @@ namespace AoiMeasureTool
             tabControlMain.TabPages.Add(tabPageReferenceCorner);
 
             tabControlMain.SelectedTab = tabPageReferenceCorner;
+            SetCurrentWorkspaceButton(WorkspaceButtonMode.ReferenceCorner);
             if (_referenceRoiSaved)
             {
                 RefreshReferenceCornerCandidate();
@@ -680,6 +681,7 @@ namespace AoiMeasureTool
         }
     }
 }
+
 
 
 

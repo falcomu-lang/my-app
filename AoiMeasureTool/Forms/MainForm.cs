@@ -49,6 +49,7 @@ namespace AoiMeasureTool
             new System.Collections.Generic.Dictionary<string, DualThresholdSnapshot>(System.StringComparer.OrdinalIgnoreCase);
         private readonly ProductProfileService _productProfileService;
         private UserRoleMode _currentUserRole = UserRoleMode.Manager;
+        private WorkspaceButtonMode _currentWorkspaceButton = WorkspaceButtonMode.ImageViewer;
         private PictureBox[] _preprocessPictureBoxes;
         private CheckBox[] _preprocessEnabledChecks;
         private TrackBar[] _thresholdTrackBars;
@@ -447,6 +448,7 @@ namespace AoiMeasureTool
             tabControlMain.TabPages.Add(tabPageBinarization2);
 
             tabControlMain.SelectedTab = tabPageImageViewer;
+            SetCurrentWorkspaceButton(WorkspaceButtonMode.ImageViewer);
         }
 
         private void ShowImageViewerWorkspace()
@@ -461,6 +463,7 @@ namespace AoiMeasureTool
                 tabControlMain.TabPages.Clear();
                 tabControlMain.TabPages.Add(tabPageImageViewer);
                 tabControlMain.SelectedTab = tabPageImageViewer;
+                SetCurrentWorkspaceButton(WorkspaceButtonMode.ImageViewer);
                 return;
             }
 
@@ -538,6 +541,29 @@ namespace AoiMeasureTool
             buttonRoleManager.Enabled = role != UserRoleMode.Manager;
         }
 
+        private void SetCurrentWorkspaceButton(WorkspaceButtonMode workspace)
+        {
+            _currentWorkspaceButton = workspace;
+            UpdateWorkspaceButtonStates();
+        }
+
+        private void UpdateWorkspaceButtonStates()
+        {
+            if (buttonLoadImage == null)
+            {
+                return;
+            }
+
+            buttonLoadImage.Enabled = buttonLoadImage.Visible && _currentWorkspaceButton != WorkspaceButtonMode.ImageViewer;
+            buttonReferenceCorner.Enabled = buttonReferenceCorner.Visible && _currentWorkspaceButton != WorkspaceButtonMode.ReferenceCorner;
+            buttonMeasureDistance.Enabled = buttonMeasureDistance.Visible && _currentWorkspaceButton != WorkspaceButtonMode.MeasureDistance;
+            buttonMultiImageConfirm.Enabled = buttonMultiImageConfirm.Visible && _currentWorkspaceButton != WorkspaceButtonMode.MultiImageConfirm;
+            buttonInnerSettings.Enabled = buttonInnerSettings.Visible && _currentWorkspaceButton != WorkspaceButtonMode.InnerSettings;
+            buttonJudgementCriteria.Enabled = buttonJudgementCriteria.Visible && _currentWorkspaceButton != WorkspaceButtonMode.JudgementCriteria;
+            buttonDetectionParameterSummary.Enabled = buttonDetectionParameterSummary.Visible && _currentWorkspaceButton != WorkspaceButtonMode.DetectionParameterSummary;
+            buttonContinuousInspection.Enabled = buttonContinuousInspection.Visible && _currentWorkspaceButton != WorkspaceButtonMode.ContinuousInspection;
+        }
+
         private void RoleOperatorButton_Click(object sender, EventArgs e)
         {
             ApplyUserRole(UserRoleMode.Operator);
@@ -563,6 +589,7 @@ namespace AoiMeasureTool
             tabControlMain.TabPages.Clear();
             tabControlMain.TabPages.Add(_tabPageInnerSettings);
             tabControlMain.SelectedTab = _tabPageInnerSettings;
+            SetCurrentWorkspaceButton(WorkspaceButtonMode.InnerSettings);
         }
 
         private void ShowJudgementCriteriaWorkspace()
@@ -575,6 +602,7 @@ namespace AoiMeasureTool
             tabControlMain.TabPages.Clear();
             tabControlMain.TabPages.Add(_tabPageJudgementCriteria);
             tabControlMain.SelectedTab = _tabPageJudgementCriteria;
+            SetCurrentWorkspaceButton(WorkspaceButtonMode.JudgementCriteria);
             RefreshJudgementCriteriaView();
         }
 
@@ -588,6 +616,7 @@ namespace AoiMeasureTool
             tabControlMain.TabPages.Clear();
             tabControlMain.TabPages.Add(_tabPageDetectionParameterSummary);
             tabControlMain.SelectedTab = _tabPageDetectionParameterSummary;
+            SetCurrentWorkspaceButton(WorkspaceButtonMode.DetectionParameterSummary);
         }
 
         private void ShowContinuousInspectionWorkspace()
@@ -600,6 +629,7 @@ namespace AoiMeasureTool
             tabControlMain.TabPages.Clear();
             tabControlMain.TabPages.Add(_tabPageContinuousInspection);
             tabControlMain.SelectedTab = _tabPageContinuousInspection;
+            SetCurrentWorkspaceButton(WorkspaceButtonMode.ContinuousInspection);
             RefreshContinuousInspectionMainParameterItems();
         }
 
@@ -2325,6 +2355,10 @@ namespace AoiMeasureTool
         }
     }
 }
+
+
+
+
 
 
 

@@ -31,6 +31,7 @@ namespace AoiMeasureTool
             }
 
             tabControlMain.SelectedTab = _tabPageMeasureDistance;
+            SetCurrentWorkspaceButton(WorkspaceButtonMode.MeasureDistance);
             RefreshMeasureDistancePreview();
         }
 
@@ -48,6 +49,7 @@ namespace AoiMeasureTool
             }
 
             tabControlMain.SelectedTab = _tabPageMultiImageConfirm;
+            SetCurrentWorkspaceButton(WorkspaceButtonMode.MultiImageConfirm);
             EnsureMultiImagePreviewSourceItems();
         }
 
@@ -3464,3 +3466,4 @@ namespace AoiMeasureTool
         }
     }
 }
+
