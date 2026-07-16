@@ -64,6 +64,7 @@ namespace AoiMeasureTool
         private WorkspaceButtonMode _currentWorkspaceButton = WorkspaceButtonMode.ImageViewer;
         private string _engineerRolePassword = "0000";
         private string _adminRolePassword = "0000";
+        private bool _initialUserRoleApplied;
         private PictureBox[] _preprocessPictureBoxes;
         private CheckBox[] _preprocessEnabledChecks;
         private TrackBar[] _thresholdTrackBars;
@@ -294,9 +295,20 @@ namespace AoiMeasureTool
             EnableDoubleBuffering();
             LoadSavedAppSettings();
             LoadLastImageIfAvailable();
-            BeginInvoke(new Action(ApplyInitialUserRole));
         }
 
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+
+            if (_initialUserRoleApplied)
+            {
+                return;
+            }
+
+            _initialUserRoleApplied = true;
+            ApplyInitialUserRole();
+        }
         private void EnableDoubleBuffering()
         {
             SetControlDoubleBuffered(_panelMultiImageConfirmViewport, true);
