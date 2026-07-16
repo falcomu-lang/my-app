@@ -294,6 +294,7 @@ namespace AoiMeasureTool
             EnableDoubleBuffering();
             LoadSavedAppSettings();
             LoadLastImageIfAvailable();
+            BeginInvoke(new Action(ApplyInitialUserRole));
         }
 
         private void EnableDoubleBuffering()
@@ -1914,7 +1915,6 @@ namespace AoiMeasureTool
                 ApplyInnerSettings(_innerSettings);
                 LoadDetectionSubParameter1List();
                 RestoreContinuousInspectionMainParameterSelection();
-                ApplyInitialUserRole();
             }
             catch
             {
