@@ -62,6 +62,8 @@ namespace AoiMeasureTool
         private readonly ProductProfileService _productProfileService;
         private UserRoleMode _currentUserRole = UserRoleMode.Manager;
         private WorkspaceButtonMode _currentWorkspaceButton = WorkspaceButtonMode.ImageViewer;
+        private string _engineerRolePassword = "0000";
+        private string _adminRolePassword = "0000";
         private PictureBox[] _preprocessPictureBoxes;
         private CheckBox[] _preprocessEnabledChecks;
         private TrackBar[] _thresholdTrackBars;
@@ -583,12 +585,110 @@ namespace AoiMeasureTool
 
         private void RoleEngineerButton_Click(object sender, EventArgs e)
         {
-            ApplyUserRole(UserRoleMode.Engineer);
+            TryApplyProtectedUserRole(UserRoleMode.Engineer);
         }
 
         private void RoleManagerButton_Click(object sender, EventArgs e)
         {
-            ApplyUserRole(UserRoleMode.Manager);
+            TryApplyProtectedUserRole(UserRoleMode.Manager);
+        }
+
+        private void ApplyInitialUserRole()
+        {
+            if (RequiresRolePassword(_currentUserRole) && !TryApplyProtectedUserRole(_currentUserRole, false))
+            {
+                _currentUserRole = UserRoleMode.Operator;
+            }
+
+            ApplyUserRole(_currentUserRole);
+        }
+
+        private bool TryApplyProtectedUserRole(UserRoleMode role, bool switchImmediately = true)
+        {
+            if (!RequiresRolePassword(role))
+            {
+                if (switchImmediately)
+                {
+                    ApplyUserRole(role);
+                }
+
+                return true;
+            }
+
+            var expectedPassword = role == UserRoleMode.Engineer ? _engineerRolePassword : _adminRolePassword;
+            if (!PromptForRolePassword(role, expectedPassword))
+            {
+                return false;
+            }
+
+            if (switchImmediately)
+            {
+                ApplyUserRole(role);
+            }
+
+            return true;
+        }
+
+        private static bool RequiresRolePassword(UserRoleMode role)
+        {
+            return role == UserRoleMode.Engineer || role == UserRoleMode.Manager;
+        }
+
+        private bool PromptForRolePassword(UserRoleMode role, string expectedPassword)
+        {
+            using (var dialog = new Form())
+            using (var label = new Label())
+            using (var textBox = new TextBox())
+            using (var okButton = new Button())
+            using (var cancelButton = new Button())
+            {
+                dialog.Text = role == UserRoleMode.Engineer ? "工程師密碼" : "管理者密碼";
+                dialog.FormBorderStyle = FormBorderStyle.FixedDialog;
+                dialog.StartPosition = FormStartPosition.CenterParent;
+                dialog.ClientSize = new Size(320, 140);
+                dialog.MinimizeBox = false;
+                dialog.MaximizeBox = false;
+                dialog.ShowInTaskbar = false;
+
+                label.AutoSize = true;
+                label.Text = role == UserRoleMode.Engineer ? "請輸入工程師密碼" : "請輸入管理者密碼";
+                label.Location = new Point(18, 18);
+
+                textBox.Location = new Point(22, 48);
+                textBox.Size = new Size(276, 25);
+                textBox.UseSystemPasswordChar = true;
+
+                okButton.Text = "確定";
+                okButton.DialogResult = DialogResult.OK;
+                okButton.Location = new Point(142, 92);
+                okButton.Size = new Size(75, 28);
+
+                cancelButton.Text = "取消";
+                cancelButton.DialogResult = DialogResult.Cancel;
+                cancelButton.Location = new Point(223, 92);
+                cancelButton.Size = new Size(75, 28);
+
+                dialog.Controls.Add(label);
+                dialog.Controls.Add(textBox);
+                dialog.Controls.Add(okButton);
+                dialog.Controls.Add(cancelButton);
+                dialog.AcceptButton = okButton;
+                dialog.CancelButton = cancelButton;
+
+                if (dialog.ShowDialog(this) != DialogResult.OK)
+                {
+                    return false;
+                }
+
+                var passwordToCheck = string.IsNullOrWhiteSpace(expectedPassword) ? "0000" : expectedPassword;
+                if (!string.Equals(textBox.Text ?? string.Empty, passwordToCheck, StringComparison.Ordinal))
+                {
+                    MessageBox.Show(this, "密碼錯誤。", "角色切換", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return false;
+                }
+
+                return true;
+            }
         }
 
         private void ShowInnerSettingsWorkspace()
@@ -1728,6 +1828,8 @@ namespace AoiMeasureTool
 
                 _lastImagePath = loadedData.LastImagePath;
                 _activeProductKey = string.IsNullOrWhiteSpace(loadedData.ActiveProductKey) ? null : loadedData.ActiveProductKey;
+                _engineerRolePassword = string.IsNullOrWhiteSpace(loadedData.EngineerPassword) ? "0000" : loadedData.EngineerPassword;
+                _adminRolePassword = string.IsNullOrWhiteSpace(loadedData.AdminPassword) ? "0000" : loadedData.AdminPassword;
                 if (!string.IsNullOrWhiteSpace(loadedData.UserRole))
                 {
                     UserRoleMode parsedRole;
@@ -1769,7 +1871,7 @@ namespace AoiMeasureTool
                 ApplyInnerSettings(_innerSettings);
                 LoadDetectionSubParameter1List();
                 RestoreContinuousInspectionMainParameterSelection();
-                ApplyUserRole(_currentUserRole);
+                ApplyInitialUserRole();
             }
             catch
             {
@@ -1790,7 +1892,9 @@ namespace AoiMeasureTool
                     LastImagePath = _lastImagePath,
                     ActiveProductKey = _activeProductKey,
                     ContinuousInspectionMainParameter = _comboBoxContinuousInspectionMainParameter?.SelectedItem as string,
-                    UserRole = _currentUserRole.ToString()
+                    UserRole = _currentUserRole.ToString(),
+                    EngineerPassword = _engineerRolePassword,
+                    AdminPassword = _adminRolePassword
                 };
                 settingsData.ListSortItems.AddRange(_detectionSubParameter1Items);
                 if (!string.IsNullOrWhiteSpace(currentProductKey) &&
@@ -2367,6 +2471,11 @@ namespace AoiMeasureTool
         }
     }
 }
+
+
+
+
+
 
 
 

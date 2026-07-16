@@ -114,12 +114,16 @@ namespace AoiMeasureTool
             DualThresholdProfiles = new Dictionary<string, DualThresholdSnapshot>(System.StringComparer.OrdinalIgnoreCase);
             ListSortItems = new List<string>();
             DualThresholdSettings = new DualThresholdSnapshot();
+            EngineerPassword = "0000";
+            AdminPassword = "0000";
         }
 
         public string LastImagePath { get; set; }
         public string ActiveProductKey { get; set; }
         public string ContinuousInspectionMainParameter { get; set; }
         public string UserRole { get; set; }
+        public string EngineerPassword { get; set; }
+        public string AdminPassword { get; set; }
         public Dictionary<string, PreprocessSnapshot[]> PreprocessProfiles { get; }
         public Dictionary<string, ReferenceCornerSnapshot> ReferenceCornerProfiles { get; }
         public Dictionary<string, List<MeasureRecord>> MeasureProfiles { get; }
@@ -197,4 +201,7 @@ namespace AoiMeasureTool
         public string Judgement { get; set; }
     }
 }
+
+
+
 

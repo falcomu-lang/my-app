@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -72,6 +72,20 @@ namespace AoiMeasureTool
                 var name = line.Substring(0, equalsIndex).Trim();
                 var value = line.Substring(equalsIndex + 1).Trim();
 
+                if (string.Equals(currentSection, "password", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (string.Equals(name, "engineer", StringComparison.OrdinalIgnoreCase))
+                    {
+                        data.EngineerPassword = string.IsNullOrWhiteSpace(value) ? "0000" : value;
+                    }
+                    else if (string.Equals(name, "admin", StringComparison.OrdinalIgnoreCase))
+                    {
+                        data.AdminPassword = string.IsNullOrWhiteSpace(value) ? "0000" : value;
+                    }
+
+                    continue;
+                }
+
                 if (string.Equals(currentSection, "listSort", StringComparison.OrdinalIgnoreCase))
                 {
                     if (!string.IsNullOrWhiteSpace(value))
@@ -144,6 +158,11 @@ namespace AoiMeasureTool
                 {
                     writer.WriteLine("UserRole=" + data.UserRole);
                 }
+
+                writer.WriteLine("[password]");
+                writer.WriteLine("engineer=" + (string.IsNullOrWhiteSpace(data.EngineerPassword) ? "0000" : data.EngineerPassword));
+                writer.WriteLine("admin=" + (string.IsNullOrWhiteSpace(data.AdminPassword) ? "0000" : data.AdminPassword));
+                writer.WriteLine(string.Empty);
 
                 if (data.ListSortItems.Count > 0)
                 {
@@ -607,3 +626,6 @@ namespace AoiMeasureTool
         }
     }
 }
+
+
+
