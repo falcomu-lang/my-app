@@ -190,7 +190,8 @@ namespace AoiMeasureTool
         private readonly CheckBox[] _continuousInspectionSaveOriginalImageChecks = new CheckBox[3];
         private readonly Button[] _continuousInspectionJudgeButtons = new Button[3];
         private Button _buttonContinuousInspectionResetYield;
-        private readonly string[] _continuousInspectionImagePaths = new string[3];
+        private readonly string[] _continuousInspectionImageSourceNames = new string[3];
+        private readonly Bitmap[] _continuousInspectionSourceBitmaps = new Bitmap[3];
         private readonly float[] _continuousInspectionImageScales = new float[3];
         private readonly float[] _continuousInspectionFitScales = new float[3];
         private readonly bool[] _continuousInspectionDragging = new bool[3];
@@ -804,26 +805,7 @@ namespace AoiMeasureTool
 
             try
             {
-                using (var image = Image.FromFile(openFileDialogImage.FileName))
-                {
-                    var preserveTransform = _continuousInspectionPictureBoxes[index] != null &&
-                        _continuousInspectionPictureBoxes[index].Image != null;
-                    SetPictureBoxImage(_continuousInspectionPictureBoxes[index], new Bitmap(image));
-                    ApplyContinuousInspectionImageLayout(index, !preserveTransform);
-                }
-
-                _continuousInspectionImagePaths[index] = openFileDialogImage.FileName;
-                SaveContinuousInspectionOriginalImageIfNeeded(
-                    index,
-                    _continuousInspectionSubParameterLabels[index]?.Text,
-                    openFileDialogImage.FileName);
-                _continuousInspectionOverlayVisible[index] = false;
-                if (_continuousInspectionResultLabels[index] != null)
-                {
-                    _continuousInspectionResultLabels[index].Text = string.Empty;
-                    _continuousInspectionResultLabels[index].BackColor = Color.White;
-                }
-                _continuousInspectionPreviewPanels[index]?.Invalidate();
+                LoadContinuousInspectionImageFromFile(index, openFileDialogImage.FileName);
             }
             catch (Exception ex)
             {
@@ -835,60 +817,208 @@ namespace AoiMeasureTool
         {
             var button = sender as Button;
             var index = button?.Tag as int? ?? -1;
-            if (index < 0 || index >= _continuousInspectionSubParameterLabels.Length || _continuousInspectionResultLabels[index] == null)
+            JudgeContinuousInspectionSlot(index);
+        }
+
+        public void LoadContinuousInspectionImageFromFile(int slotIndex, string filePath)
+        {
+            if (slotIndex < 0 || slotIndex >= _continuousInspectionPictureBoxes.Length)
             {
-                return;
+                throw new ArgumentOutOfRangeException(nameof(slotIndex));
             }
 
-            var subParameterName = _continuousInspectionSubParameterLabels[index].Text.Trim();
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                throw new ArgumentException("File path is required.", nameof(filePath));
+            }
+
+            using (var image = Image.FromFile(filePath))
+            using (var bitmap = new Bitmap(image))
+            {
+                SetContinuousInspectionImage(slotIndex, new Bitmap(bitmap), filePath);
+            }
+        }
+
+        private void LoadContinuousInspectionImageFromMat(int slotIndex, CvMat imageMat, string sourceName = null)
+        {
+            if (slotIndex < 0 || slotIndex >= _continuousInspectionPictureBoxes.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(slotIndex));
+            }
+
+            if (imageMat == null)
+            {
+                throw new ArgumentNullException(nameof(imageMat));
+            }
+
+            if (imageMat.Empty())
+            {
+                throw new ArgumentException("Image mat is empty.", nameof(imageMat));
+            }
+
+            using (var bitmap = BitmapConverter.ToBitmap(imageMat))
+            {
+                SetContinuousInspectionImage(slotIndex, new Bitmap(bitmap), sourceName ?? "Camera");
+            }
+        }
+
+        public string LoadAndJudgeContinuousInspectionMat(int slotIndex, CvMat imageMat, string sourceName = null)
+        {
+            return LoadAndJudgeContinuousInspectionMatWithDetails(slotIndex, imageMat, sourceName).Summary;
+        }
+
+        public ContinuousInspectionResult LoadAndJudgeContinuousInspectionMatWithDetails(int slotIndex, CvMat imageMat, string sourceName = null)
+        {
+            LoadContinuousInspectionImageFromMat(slotIndex, imageMat, sourceName);
+            return JudgeContinuousInspectionSlotWithDetails(slotIndex);
+        }
+
+        private string JudgeContinuousInspectionSlot(int slotIndex)
+        {
+            return JudgeContinuousInspectionSlotWithDetails(slotIndex).Summary;
+        }
+
+        private ContinuousInspectionResult JudgeContinuousInspectionSlotWithDetails(int slotIndex)
+        {
+            var result = new ContinuousInspectionResult
+            {
+                SlotIndex = slotIndex,
+                SubParameterName = slotIndex >= 0 && slotIndex < _continuousInspectionSubParameterLabels.Length
+                    ? _continuousInspectionSubParameterLabels[slotIndex].Text.Trim()
+                    : string.Empty,
+                Summary = string.Empty
+            };
+
+            if (slotIndex < 0 || slotIndex >= _continuousInspectionSubParameterLabels.Length || _continuousInspectionResultLabels[slotIndex] == null)
+            {
+                return result;
+            }
+
+            var subParameterName = result.SubParameterName;
             if (string.IsNullOrWhiteSpace(subParameterName) || string.Equals(subParameterName, "未設定子參數", StringComparison.Ordinal))
             {
-                _continuousInspectionResultLabels[index].Text = "未設定條件";
-                _continuousInspectionResultLabels[index].BackColor = Color.White;
-                return;
+                _continuousInspectionResultLabels[slotIndex].Text = "未設定條件";
+                _continuousInspectionResultLabels[slotIndex].BackColor = Color.White;
+                result.Summary = _continuousInspectionResultLabels[slotIndex].Text;
+                return result;
             }
 
-            var imagePath = _continuousInspectionImagePaths[index];
-            if (string.IsNullOrWhiteSpace(imagePath) || !File.Exists(imagePath))
+            var sourceBitmap = _continuousInspectionSourceBitmaps[slotIndex];
+            if (sourceBitmap == null)
             {
-                _continuousInspectionResultLabels[index].Text = "未載入圖片";
-                _continuousInspectionResultLabels[index].BackColor = Color.White;
-                return;
+                _continuousInspectionResultLabels[slotIndex].Text = "未載入圖片";
+                _continuousInspectionResultLabels[slotIndex].BackColor = Color.White;
+                result.Summary = _continuousInspectionResultLabels[slotIndex].Text;
+                return result;
             }
 
             try
             {
                 Bitmap annotatedBitmap;
-                var rows = BuildContinuousInspectionJudgementResults(imagePath, subParameterName, out annotatedBitmap);
+                var rows = BuildContinuousInspectionJudgementResults(
+                    sourceBitmap,
+                    subParameterName,
+                    _continuousInspectionImageSourceNames[slotIndex],
+                    out annotatedBitmap);
                 var resultText = SummarizeContinuousInspectionJudgement(rows);
-                _continuousInspectionResultLabels[index].Text = resultText;
-                _continuousInspectionResultLabels[index].BackColor = GetContinuousInspectionResultBackColor(resultText);
-                _continuousInspectionJudgeCounts[index]++;
+                _continuousInspectionResultLabels[slotIndex].Text = resultText;
+                _continuousInspectionResultLabels[slotIndex].BackColor = GetContinuousInspectionResultBackColor(resultText);
+                _continuousInspectionJudgeCounts[slotIndex]++;
                 if (string.Equals(resultText, "A", StringComparison.Ordinal))
                 {
-                    _continuousInspectionPassCounts[index]++;
+                    _continuousInspectionPassCounts[slotIndex]++;
                 }
-                UpdateContinuousInspectionYieldLabel(index);
-                _continuousInspectionOverlayVisible[index] = true;
+
+                UpdateContinuousInspectionYieldLabel(slotIndex);
+                _continuousInspectionOverlayVisible[slotIndex] = true;
                 if (annotatedBitmap != null)
                 {
-                    SetPictureBoxImage(_continuousInspectionPictureBoxes[index], annotatedBitmap);
-                    ApplyContinuousInspectionImageLayout(index, false);
+                    SetPictureBoxImage(_continuousInspectionPictureBoxes[slotIndex], annotatedBitmap);
+                    ApplyContinuousInspectionImageLayout(slotIndex, false);
                 }
                 else
                 {
-                    _continuousInspectionPreviewPanels[index]?.Invalidate();
+                    _continuousInspectionPreviewPanels[slotIndex]?.Invalidate();
                 }
+
+                result.Summary = resultText;
+                AppendContinuousInspectionRuleResults(result, rows);
+                return result;
             }
             catch (Exception ex)
             {
-                _continuousInspectionResultLabels[index].Text = "不可判斷";
-                _continuousInspectionResultLabels[index].BackColor = Color.White;
+                _continuousInspectionResultLabels[slotIndex].Text = "不可判斷";
+                _continuousInspectionResultLabels[slotIndex].BackColor = Color.White;
                 MessageBox.Show(this, "無法執行判斷。\r\n\r\n" + ex.Message, "連續檢測", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                result.Summary = _continuousInspectionResultLabels[slotIndex].Text;
+                return result;
             }
         }
 
-        private List<MultiImageJudgementResultRow> BuildContinuousInspectionJudgementResults(string imagePath, string productKey, out Bitmap annotatedBitmap)
+        private static void AppendContinuousInspectionRuleResults(ContinuousInspectionResult result, List<MultiImageJudgementResultRow> rows)
+        {
+            if (result == null || rows == null)
+            {
+                return;
+            }
+
+            for (var i = 0; i < rows.Count; i++)
+            {
+                var row = rows[i];
+                result.Rules.Add(new ContinuousInspectionRuleResult
+                {
+                    RuleName = row == null ? string.Empty : row.Name ?? string.Empty,
+                    CalculationValue = row == null ? string.Empty : row.CalculationValueText ?? string.Empty,
+                    Judgement = row == null ? string.Empty : row.JudgementText ?? string.Empty
+                });
+            }
+        }
+
+        private void SetContinuousInspectionImage(int index, Bitmap bitmap, string sourceName)
+        {
+            if (index < 0 || index >= _continuousInspectionPictureBoxes.Length)
+            {
+                bitmap?.Dispose();
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            if (bitmap == null)
+            {
+                throw new ArgumentNullException(nameof(bitmap));
+            }
+
+            var preserveTransform = _continuousInspectionPictureBoxes[index] != null &&
+                _continuousInspectionPictureBoxes[index].Image != null;
+
+            var displayBitmap = new Bitmap(bitmap);
+            var sourceBitmap = new Bitmap(bitmap);
+            bitmap.Dispose();
+
+            _continuousInspectionSourceBitmaps[index]?.Dispose();
+            _continuousInspectionSourceBitmaps[index] = sourceBitmap;
+            _continuousInspectionImageSourceNames[index] = sourceName;
+
+            SetPictureBoxImage(_continuousInspectionPictureBoxes[index], displayBitmap);
+            ApplyContinuousInspectionImageLayout(index, !preserveTransform);
+            SaveContinuousInspectionOriginalImageIfNeeded(
+                index,
+                _continuousInspectionSubParameterLabels[index]?.Text,
+                sourceBitmap);
+            _continuousInspectionOverlayVisible[index] = false;
+            if (_continuousInspectionResultLabels[index] != null)
+            {
+                _continuousInspectionResultLabels[index].Text = string.Empty;
+                _continuousInspectionResultLabels[index].BackColor = Color.White;
+            }
+
+            _continuousInspectionPreviewPanels[index]?.Invalidate();
+        }
+
+        private List<MultiImageJudgementResultRow> BuildContinuousInspectionJudgementResults(
+            Bitmap sourceBitmap,
+            string productKey,
+            string sourceName,
+            out Bitmap annotatedBitmap)
         {
             annotatedBitmap = null;
             var originalBitmap = _multiImageConfirmBitmap;
@@ -907,11 +1037,11 @@ namespace AoiMeasureTool
                 ApplyInnerSettingsProfileForSubParameter(productKey);
                 var profileState = _productProfileService.GetOrCreateState(productKey);
                 _judgementCriteriaRules = CloneJudgementCriteriaRules(profileState.JudgementCriteriaRules);
-                _multiImageConfirmBitmap = new Bitmap(imagePath);
+                _multiImageConfirmBitmap = new Bitmap(sourceBitmap);
                 _multiImageConfirmSourceImageSize = _multiImageConfirmBitmap.Size;
                 _multiImageConfirmProductKey = profileState.ProductKey;
                 _multiImageConfirmImagePaths.Clear();
-                _multiImageConfirmImagePaths.Add(imagePath);
+                _multiImageConfirmImagePaths.Add(sourceName ?? "ContinuousInspection");
                 _multiImageConfirmImageIndex = 0;
                 var rows = BuildMultiImageJudgementResults();
                 annotatedBitmap = BuildContinuousInspectionAnnotatedBitmap();
@@ -933,7 +1063,7 @@ namespace AoiMeasureTool
             }
         }
 
-        private void SaveContinuousInspectionOriginalImageIfNeeded(int index, string subParameterName, string imagePath)
+        private void SaveContinuousInspectionOriginalImageIfNeeded(int index, string subParameterName, Bitmap sourceBitmap)
         {
             if (index < 0 ||
                 index >= _continuousInspectionSaveOriginalImageChecks.Length ||
@@ -943,7 +1073,7 @@ namespace AoiMeasureTool
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(subParameterName) || string.IsNullOrWhiteSpace(imagePath) || !File.Exists(imagePath))
+            if (string.IsNullOrWhiteSpace(subParameterName) || sourceBitmap == null)
             {
                 return;
             }
@@ -956,11 +1086,7 @@ namespace AoiMeasureTool
             var timestamp = DateTime.Now.ToString("MM_dd_HH_mm_ss", CultureInfo.InvariantCulture);
             var targetPath = Path.Combine(targetDirectory, safeSubParameterName + "_" + timestamp + ".png");
 
-            using (var image = Image.FromFile(imagePath))
-            using (var bitmap = new Bitmap(image))
-            {
-                bitmap.Save(targetPath, System.Drawing.Imaging.ImageFormat.Png);
-            }
+            sourceBitmap.Save(targetPath, System.Drawing.Imaging.ImageFormat.Png);
         }
 
         private static string SanitizeFileName(string value)
@@ -1032,9 +1158,9 @@ namespace AoiMeasureTool
                 return;
             }
 
-            var imagePath = _continuousInspectionImagePaths[index];
+            var sourceBitmap = _continuousInspectionSourceBitmaps[index];
             var productKey = _continuousInspectionSubParameterLabels[index]?.Text?.Trim();
-            if (string.IsNullOrWhiteSpace(imagePath) || !File.Exists(imagePath) || string.IsNullOrWhiteSpace(productKey) || string.Equals(productKey, "未設定子參數", StringComparison.Ordinal))
+            if (sourceBitmap == null || string.IsNullOrWhiteSpace(productKey) || string.Equals(productKey, "未設定子參數", StringComparison.Ordinal))
             {
                 return;
             }
@@ -1054,11 +1180,11 @@ namespace AoiMeasureTool
                 ApplyInnerSettingsProfileForSubParameter(productKey);
                 var profileState = _productProfileService.GetOrCreateState(productKey);
                 _judgementCriteriaRules = CloneJudgementCriteriaRules(profileState.JudgementCriteriaRules);
-                _multiImageConfirmBitmap = new Bitmap(imagePath);
+                _multiImageConfirmBitmap = new Bitmap(sourceBitmap);
                 _multiImageConfirmSourceImageSize = _multiImageConfirmBitmap.Size;
                 _multiImageConfirmProductKey = profileState.ProductKey;
                 _multiImageConfirmImagePaths.Clear();
-                _multiImageConfirmImagePaths.Add(imagePath);
+                _multiImageConfirmImagePaths.Add(_continuousInspectionImageSourceNames[index] ?? "ContinuousInspection");
                 _multiImageConfirmImageIndex = 0;
 
                 var referenceCandidate = GetMultiImageConfirmReferenceCandidate();
@@ -2164,3 +2290,5 @@ namespace AoiMeasureTool
         }
     }
 }
+
+

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 
 namespace AoiMeasureTool
@@ -176,4 +176,25 @@ namespace AoiMeasureTool
         public double CcdYPrecision { get; set; }
         public double MeasurementScaleFactor { get; set; } = 1.0;
     }
+
+    public sealed class ContinuousInspectionResult
+    {
+        public ContinuousInspectionResult()
+        {
+            Rules = new List<ContinuousInspectionRuleResult>();
+        }
+
+        public int SlotIndex { get; set; }
+        public string Summary { get; set; }
+        public string SubParameterName { get; set; }
+        public List<ContinuousInspectionRuleResult> Rules { get; }
+    }
+
+    public sealed class ContinuousInspectionRuleResult
+    {
+        public string RuleName { get; set; }
+        public string CalculationValue { get; set; }
+        public string Judgement { get; set; }
+    }
 }
+
