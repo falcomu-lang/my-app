@@ -3,14 +3,6 @@
     partial class MainForm
     {
         private System.ComponentModel.IContainer components = null;
-        private System.Windows.Forms.MenuStrip menuStripMain;
-        private System.Windows.Forms.ToolStripMenuItem menuFile;
-        private System.Windows.Forms.ToolStripMenuItem menuOpenImage;
-        private System.Windows.Forms.ToolStripSeparator menuFileSeparator;
-        private System.Windows.Forms.ToolStripMenuItem menuExit;
-        private System.Windows.Forms.ToolStripMenuItem menuEdit;
-        private System.Windows.Forms.ToolStripMenuItem menuView;
-        private System.Windows.Forms.ToolStripMenuItem menuHelp;
         private System.Windows.Forms.Panel panelSidebar;
         private System.Windows.Forms.Label labelAppName;
         private System.Windows.Forms.Label labelNavigation;
@@ -320,14 +312,6 @@
 
         private void InitializeComponent()
         {
-            this.menuStripMain = new System.Windows.Forms.MenuStrip();
-            this.menuFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuOpenImage = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuFileSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.menuExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuEdit = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuView = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.panelSidebar = new System.Windows.Forms.Panel();
             this.labelAppName = new System.Windows.Forms.Label();
             this.labelNavigation = new System.Windows.Forms.Label();
@@ -625,7 +609,6 @@
             this.panelMultiImageConfirmViewport = new System.Windows.Forms.Panel();
             this.pictureBoxMultiImageConfirm = new System.Windows.Forms.PictureBox();
             this.openFileDialogImage = new System.Windows.Forms.OpenFileDialog();
-            this.menuStripMain.SuspendLayout();
             this.panelSidebar.SuspendLayout();
             this.panelMain.SuspendLayout();
             this.panelHeader.SuspendLayout();
@@ -731,70 +714,7 @@
             this.panelMultiImageConfirmViewport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMultiImageConfirm)).BeginInit();
             this.SuspendLayout();
-            // 
-            // menuStripMain
-            // 
-            this.menuStripMain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(247)))), ((int)(((byte)(247)))));
-            this.menuStripMain.Font = new System.Drawing.Font("Microsoft JhengHei UI", 11F);
-            this.menuStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuFile,
-            this.menuEdit,
-            this.menuView,
-            this.menuHelp});
-            this.menuStripMain.Location = new System.Drawing.Point(0, 0);
-            this.menuStripMain.Name = "menuStripMain";
-            this.menuStripMain.Padding = new System.Windows.Forms.Padding(18, 8, 0, 8);
-            this.menuStripMain.Size = new System.Drawing.Size(1280, 39);
-            this.menuStripMain.TabIndex = 2;
-            // 
-            // menuFile
-            // 
-            this.menuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuOpenImage,
-            this.menuFileSeparator,
-            this.menuExit});
-            this.menuFile.Name = "menuFile";
-            this.menuFile.Size = new System.Drawing.Size(51, 23);
-            this.menuFile.Text = "檔案";
-            // 
-            // menuOpenImage
-            // 
-            this.menuOpenImage.Name = "menuOpenImage";
-            this.menuOpenImage.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.menuOpenImage.Size = new System.Drawing.Size(195, 24);
-            this.menuOpenImage.Text = "讀取圖片";
-            this.menuOpenImage.Click += new System.EventHandler(this.LoadImageButton_Click);
-            // 
-            // menuFileSeparator
-            // 
-            this.menuFileSeparator.Name = "menuFileSeparator";
-            this.menuFileSeparator.Size = new System.Drawing.Size(192, 6);
-            // 
-            // menuExit
-            // 
-            this.menuExit.Name = "menuExit";
-            this.menuExit.Size = new System.Drawing.Size(195, 24);
-            this.menuExit.Text = "結束";
-            this.menuExit.Click += new System.EventHandler(this.CloseButton_Click);
-            // 
-            // menuEdit
-            // 
-            this.menuEdit.Name = "menuEdit";
-            this.menuEdit.Size = new System.Drawing.Size(51, 23);
-            this.menuEdit.Text = "編輯";
-            // 
-            // menuView
-            // 
-            this.menuView.Name = "menuView";
-            this.menuView.Size = new System.Drawing.Size(51, 23);
-            this.menuView.Text = "檢視";
-            // 
-            // menuHelp
-            // 
-            this.menuHelp.Name = "menuHelp";
-            this.menuHelp.Size = new System.Drawing.Size(51, 23);
-            this.menuHelp.Text = "說明";
-            // 
+            //
             // panelSidebar
             // 
             this.panelSidebar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(243)))), ((int)(((byte)(245)))));
@@ -812,9 +732,9 @@
             this.panelSidebar.Controls.Add(this.buttonRoleEngineer);
             this.panelSidebar.Controls.Add(this.buttonRoleManager);
             this.panelSidebar.Controls.Add(this.labelOpenCvStatus);
-            this.panelSidebar.Location = new System.Drawing.Point(0, 42);
+            this.panelSidebar.Location = new System.Drawing.Point(0, 0);
             this.panelSidebar.Name = "panelSidebar";
-            this.panelSidebar.Size = new System.Drawing.Size(240, 758);
+            this.panelSidebar.Size = new System.Drawing.Size(240, 800);
             this.panelSidebar.TabIndex = 1;
             // 
             // labelAppName
@@ -1059,9 +979,9 @@
             this.panelMain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
             this.panelMain.Controls.Add(this.panelHeader);
             this.panelMain.Controls.Add(this.tabControlMain);
-            this.panelMain.Location = new System.Drawing.Point(240, 42);
+            this.panelMain.Location = new System.Drawing.Point(240, 0);
             this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(1040, 758);
+            this.panelMain.Size = new System.Drawing.Size(1040, 800);
             this.panelMain.TabIndex = 0;
             // 
             // panelHeader
@@ -4228,16 +4148,12 @@
             this.ClientSize = new System.Drawing.Size(1280, 800);
             this.Controls.Add(this.panelMain);
             this.Controls.Add(this.panelSidebar);
-            this.Controls.Add(this.menuStripMain);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.MainMenuStrip = this.menuStripMain;
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "AOI Image Viewer";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
-            this.menuStripMain.ResumeLayout(false);
-            this.menuStripMain.PerformLayout();
             this.panelSidebar.ResumeLayout(false);
             this.panelSidebar.PerformLayout();
             this.panelMain.ResumeLayout(false);
