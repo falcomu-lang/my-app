@@ -526,6 +526,7 @@ namespace AoiMeasureTool
             buttonDetectionParameterSummary.Visible = isManager;
             buttonContinuousInspection.Visible = isManager || isEngineer || isOperator;
             labelOpenCvStatus.Visible = isManager || isEngineer || isOperator;
+            UpdateContinuousInspectionActionStates(role);
             buttonLoadImageInViewer.Visible = role != UserRoleMode.Operator;
             labelImageViewerCameraProfile.Visible = role != UserRoleMode.Operator;
             comboBoxImageViewerCameraProfile.Visible = role != UserRoleMode.Operator;
@@ -553,6 +554,34 @@ namespace AoiMeasureTool
             buttonRoleOperator.Enabled = role != UserRoleMode.Operator;
             buttonRoleEngineer.Enabled = role != UserRoleMode.Engineer;
             buttonRoleManager.Enabled = role != UserRoleMode.Manager;
+        }
+
+        private void UpdateContinuousInspectionActionStates(UserRoleMode role)
+        {
+            var canEditContinuousInspection = role == UserRoleMode.Engineer || role == UserRoleMode.Manager;
+
+            if (buttonContinuousInspectionLoadImage1 != null)
+            {
+                buttonContinuousInspectionLoadImage1.Enabled = canEditContinuousInspection;
+            }
+
+            if (buttonContinuousInspectionLoadImage2 != null)
+            {
+                buttonContinuousInspectionLoadImage2.Enabled = canEditContinuousInspection;
+            }
+
+            if (buttonContinuousInspectionLoadImage3 != null)
+            {
+                buttonContinuousInspectionLoadImage3.Enabled = canEditContinuousInspection;
+            }
+
+            for (var i = 0; i < _continuousInspectionJudgeButtons.Length; i++)
+            {
+                if (_continuousInspectionJudgeButtons[i] != null)
+                {
+                    _continuousInspectionJudgeButtons[i].Enabled = canEditContinuousInspection;
+                }
+            }
         }
 
         private void SetCurrentWorkspaceButton(WorkspaceButtonMode workspace)
@@ -2471,6 +2500,8 @@ namespace AoiMeasureTool
         }
     }
 }
+
+
 
 
 
