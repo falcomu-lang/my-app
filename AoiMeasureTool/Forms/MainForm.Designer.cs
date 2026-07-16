@@ -1,16 +1,8 @@
-namespace AoiMeasureTool
+﻿namespace AoiMeasureTool
 {
     partial class MainForm
     {
         private System.ComponentModel.IContainer components = null;
-        private System.Windows.Forms.MenuStrip menuStripMain;
-        private System.Windows.Forms.ToolStripMenuItem menuFile;
-        private System.Windows.Forms.ToolStripMenuItem menuOpenImage;
-        private System.Windows.Forms.ToolStripSeparator menuFileSeparator;
-        private System.Windows.Forms.ToolStripMenuItem menuExit;
-        private System.Windows.Forms.ToolStripMenuItem menuEdit;
-        private System.Windows.Forms.ToolStripMenuItem menuView;
-        private System.Windows.Forms.ToolStripMenuItem menuHelp;
         private System.Windows.Forms.Panel panelSidebar;
         private System.Windows.Forms.Label labelAppName;
         private System.Windows.Forms.Label labelNavigation;
@@ -320,14 +312,6 @@ namespace AoiMeasureTool
 
         private void InitializeComponent()
         {
-            this.menuStripMain = new System.Windows.Forms.MenuStrip();
-            this.menuFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuOpenImage = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuFileSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.menuExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuEdit = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuView = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.panelSidebar = new System.Windows.Forms.Panel();
             this.labelAppName = new System.Windows.Forms.Label();
             this.labelNavigation = new System.Windows.Forms.Label();
@@ -625,7 +609,6 @@ namespace AoiMeasureTool
             this.panelMultiImageConfirmViewport = new System.Windows.Forms.Panel();
             this.pictureBoxMultiImageConfirm = new System.Windows.Forms.PictureBox();
             this.openFileDialogImage = new System.Windows.Forms.OpenFileDialog();
-            this.menuStripMain.SuspendLayout();
             this.panelSidebar.SuspendLayout();
             this.panelMain.SuspendLayout();
             this.panelHeader.SuspendLayout();
@@ -732,69 +715,6 @@ namespace AoiMeasureTool
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMultiImageConfirm)).BeginInit();
             this.SuspendLayout();
             // 
-            // menuStripMain
-            // 
-            this.menuStripMain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(247)))), ((int)(((byte)(247)))));
-            this.menuStripMain.Font = new System.Drawing.Font("Microsoft JhengHei UI", 11F);
-            this.menuStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuFile,
-            this.menuEdit,
-            this.menuView,
-            this.menuHelp});
-            this.menuStripMain.Location = new System.Drawing.Point(0, 0);
-            this.menuStripMain.Name = "menuStripMain";
-            this.menuStripMain.Padding = new System.Windows.Forms.Padding(18, 8, 0, 8);
-            this.menuStripMain.Size = new System.Drawing.Size(1280, 39);
-            this.menuStripMain.TabIndex = 2;
-            // 
-            // menuFile
-            // 
-            this.menuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuOpenImage,
-            this.menuFileSeparator,
-            this.menuExit});
-            this.menuFile.Name = "menuFile";
-            this.menuFile.Size = new System.Drawing.Size(51, 23);
-            this.menuFile.Text = "檔案";
-            // 
-            // menuOpenImage
-            // 
-            this.menuOpenImage.Name = "menuOpenImage";
-            this.menuOpenImage.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.menuOpenImage.Size = new System.Drawing.Size(195, 24);
-            this.menuOpenImage.Text = "讀取圖片";
-            this.menuOpenImage.Click += new System.EventHandler(this.LoadImageButton_Click);
-            // 
-            // menuFileSeparator
-            // 
-            this.menuFileSeparator.Name = "menuFileSeparator";
-            this.menuFileSeparator.Size = new System.Drawing.Size(192, 6);
-            // 
-            // menuExit
-            // 
-            this.menuExit.Name = "menuExit";
-            this.menuExit.Size = new System.Drawing.Size(195, 24);
-            this.menuExit.Text = "結束";
-            this.menuExit.Click += new System.EventHandler(this.CloseButton_Click);
-            // 
-            // menuEdit
-            // 
-            this.menuEdit.Name = "menuEdit";
-            this.menuEdit.Size = new System.Drawing.Size(51, 23);
-            this.menuEdit.Text = "編輯";
-            // 
-            // menuView
-            // 
-            this.menuView.Name = "menuView";
-            this.menuView.Size = new System.Drawing.Size(51, 23);
-            this.menuView.Text = "檢視";
-            // 
-            // menuHelp
-            // 
-            this.menuHelp.Name = "menuHelp";
-            this.menuHelp.Size = new System.Drawing.Size(51, 23);
-            this.menuHelp.Text = "說明";
-            // 
             // panelSidebar
             // 
             this.panelSidebar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(243)))), ((int)(((byte)(245)))));
@@ -835,7 +755,7 @@ namespace AoiMeasureTool
             this.labelNavigation.Name = "labelNavigation";
             this.labelNavigation.Size = new System.Drawing.Size(53, 12);
             this.labelNavigation.TabIndex = 1;
-            this.labelNavigation.Text = "工作項目";
+            this.labelNavigation.Text = "撌乩??";
             // 
             // buttonLoadImage
             // 
@@ -848,7 +768,7 @@ namespace AoiMeasureTool
             this.buttonLoadImage.Padding = new System.Windows.Forms.Padding(14, 0, 0, 0);
             this.buttonLoadImage.Size = new System.Drawing.Size(208, 48);
             this.buttonLoadImage.TabIndex = 2;
-            this.buttonLoadImage.Text = "+   圖片檢視";
+            this.buttonLoadImage.Text = "+   ??瑼Ｚ?";
             this.buttonLoadImage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonLoadImage.UseVisualStyleBackColor = false;
             this.buttonLoadImage.Click += new System.EventHandler(this.SidebarImageViewerButton_Click);
@@ -864,7 +784,7 @@ namespace AoiMeasureTool
             this.buttonReferenceCorner.Padding = new System.Windows.Forms.Padding(14, 0, 0, 0);
             this.buttonReferenceCorner.Size = new System.Drawing.Size(208, 48);
             this.buttonReferenceCorner.TabIndex = 3;
-            this.buttonReferenceCorner.Text = "+   參考角點";
+            this.buttonReferenceCorner.Text = "+   ??暺?;
             this.buttonReferenceCorner.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonReferenceCorner.UseVisualStyleBackColor = false;
             this.buttonReferenceCorner.Click += new System.EventHandler(this.ReferenceCornerButton_Click);
@@ -880,7 +800,7 @@ namespace AoiMeasureTool
             this.buttonMeasureDistance.Padding = new System.Windows.Forms.Padding(14, 0, 0, 0);
             this.buttonMeasureDistance.Size = new System.Drawing.Size(208, 48);
             this.buttonMeasureDistance.TabIndex = 4;
-            this.buttonMeasureDistance.Text = "+   框選量測的距離";
+            this.buttonMeasureDistance.Text = "+   獢?葫????;
             this.buttonMeasureDistance.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonMeasureDistance.UseVisualStyleBackColor = false;
             this.buttonMeasureDistance.Click += new System.EventHandler(this.MeasureDistanceButton_Click);
@@ -896,7 +816,7 @@ namespace AoiMeasureTool
             this.buttonMultiImageConfirm.Padding = new System.Windows.Forms.Padding(14, 0, 0, 0);
             this.buttonMultiImageConfirm.Size = new System.Drawing.Size(208, 48);
             this.buttonMultiImageConfirm.TabIndex = 5;
-            this.buttonMultiImageConfirm.Text = "+   多影像確認結果";
+            this.buttonMultiImageConfirm.Text = "+   憭蔣?Ⅱ隤???;
             this.buttonMultiImageConfirm.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonMultiImageConfirm.UseVisualStyleBackColor = false;
             this.buttonMultiImageConfirm.Click += new System.EventHandler(this.MultiImageConfirmButton_Click);
@@ -912,7 +832,7 @@ namespace AoiMeasureTool
             this.buttonInnerSettings.Padding = new System.Windows.Forms.Padding(14, 0, 0, 0);
             this.buttonInnerSettings.Size = new System.Drawing.Size(208, 48);
             this.buttonInnerSettings.TabIndex = 6;
-            this.buttonInnerSettings.Text = "+   內部參數";
+            this.buttonInnerSettings.Text = "+   ?折?";
             this.buttonInnerSettings.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonInnerSettings.UseVisualStyleBackColor = false;
             this.buttonInnerSettings.Click += new System.EventHandler(this.InnerSettingsButton_Click);
@@ -928,7 +848,7 @@ namespace AoiMeasureTool
             this.buttonJudgementCriteria.Padding = new System.Windows.Forms.Padding(14, 0, 0, 0);
             this.buttonJudgementCriteria.Size = new System.Drawing.Size(208, 48);
             this.buttonJudgementCriteria.TabIndex = 7;
-            this.buttonJudgementCriteria.Text = "+   良品判斷條件";
+            this.buttonJudgementCriteria.Text = "+   ?臬??斗璇辣";
             this.buttonJudgementCriteria.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonJudgementCriteria.UseVisualStyleBackColor = false;
             this.buttonJudgementCriteria.Click += new System.EventHandler(this.JudgementCriteriaButton_Click);
@@ -944,7 +864,7 @@ namespace AoiMeasureTool
             this.buttonDetectionParameterSummary.Padding = new System.Windows.Forms.Padding(14, 0, 0, 0);
             this.buttonDetectionParameterSummary.Size = new System.Drawing.Size(208, 48);
             this.buttonDetectionParameterSummary.TabIndex = 8;
-            this.buttonDetectionParameterSummary.Text = "+   檢測參數整理";
+            this.buttonDetectionParameterSummary.Text = "+   瑼Ｘ葫??渡?";
             this.buttonDetectionParameterSummary.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonDetectionParameterSummary.UseVisualStyleBackColor = false;
             this.buttonDetectionParameterSummary.Click += new System.EventHandler(this.DetectionParameterSummaryButton_Click);
@@ -960,7 +880,7 @@ namespace AoiMeasureTool
             this.buttonContinuousInspection.Padding = new System.Windows.Forms.Padding(14, 0, 0, 0);
             this.buttonContinuousInspection.Size = new System.Drawing.Size(208, 48);
             this.buttonContinuousInspection.TabIndex = 9;
-            this.buttonContinuousInspection.Text = "+   連續檢測";
+            this.buttonContinuousInspection.Text = "+   ???瑼Ｘ葫";
             this.buttonContinuousInspection.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonContinuousInspection.UseVisualStyleBackColor = false;
             this.buttonContinuousInspection.Click += new System.EventHandler(this.ContinuousInspectionButton_Click);
@@ -975,7 +895,7 @@ namespace AoiMeasureTool
             this.buttonRoleOperator.Name = "buttonRoleOperator";
             this.buttonRoleOperator.Size = new System.Drawing.Size(60, 26);
             this.buttonRoleOperator.TabIndex = 11;
-            this.buttonRoleOperator.Text = "操作員";
+            this.buttonRoleOperator.Text = "????;
             this.buttonRoleOperator.UseVisualStyleBackColor = false;
             this.buttonRoleOperator.Click += new System.EventHandler(this.RoleOperatorButton_Click);
             //
@@ -989,7 +909,7 @@ namespace AoiMeasureTool
             this.buttonRoleEngineer.Name = "buttonRoleEngineer";
             this.buttonRoleEngineer.Size = new System.Drawing.Size(60, 26);
             this.buttonRoleEngineer.TabIndex = 12;
-            this.buttonRoleEngineer.Text = "工程師";
+            this.buttonRoleEngineer.Text = "撌亦?撣?;
             this.buttonRoleEngineer.UseVisualStyleBackColor = false;
             this.buttonRoleEngineer.Click += new System.EventHandler(this.RoleEngineerButton_Click);
             //
@@ -1003,7 +923,7 @@ namespace AoiMeasureTool
             this.buttonRoleManager.Name = "buttonRoleManager";
             this.buttonRoleManager.Size = new System.Drawing.Size(60, 26);
             this.buttonRoleManager.TabIndex = 13;
-            this.buttonRoleManager.Text = "管理者";
+            this.buttonRoleManager.Text = "蝞∠???;
             this.buttonRoleManager.UseVisualStyleBackColor = false;
             this.buttonRoleManager.Click += new System.EventHandler(this.RoleManagerButton_Click);
             // 
@@ -1015,7 +935,7 @@ namespace AoiMeasureTool
             this.labelOpenCvStatus.Name = "labelOpenCvStatus";
             this.labelOpenCvStatus.Size = new System.Drawing.Size(109, 12);
             this.labelOpenCvStatus.TabIndex = 5;
-            this.labelOpenCvStatus.Text = "OpenCV 4.13 已就緒";
+            this.labelOpenCvStatus.Text = "OpenCV 4.13 撌脣停蝺?;
             // 
             // labelImageViewerCameraProfile
             // 
@@ -1025,16 +945,16 @@ namespace AoiMeasureTool
             this.labelImageViewerCameraProfile.Name = "labelImageViewerCameraProfile";
             this.labelImageViewerCameraProfile.Size = new System.Drawing.Size(88, 12);
             this.labelImageViewerCameraProfile.TabIndex = 1;
-            this.labelImageViewerCameraProfile.Text = "內部參數選擇";
+            this.labelImageViewerCameraProfile.Text = "?折??豢?";
             // 
             // comboBoxImageViewerCameraProfile
             // 
             this.comboBoxImageViewerCameraProfile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxImageViewerCameraProfile.FormattingEnabled = true;
             this.comboBoxImageViewerCameraProfile.Items.AddRange(new object[] {
-            "內部參數 1",
-            "內部參數 2",
-            "內部參數 3"});
+            "?折? 1",
+            "?折? 2",
+            "?折? 3"});
             this.comboBoxImageViewerCameraProfile.Location = new System.Drawing.Point(856, 540);
             this.comboBoxImageViewerCameraProfile.Name = "comboBoxImageViewerCameraProfile";
             this.comboBoxImageViewerCameraProfile.Size = new System.Drawing.Size(168, 20);
@@ -1050,7 +970,7 @@ namespace AoiMeasureTool
             this.buttonLoadImageInViewer.Name = "buttonLoadImageInViewer";
             this.buttonLoadImageInViewer.Size = new System.Drawing.Size(168, 40);
             this.buttonLoadImageInViewer.TabIndex = 3;
-            this.buttonLoadImageInViewer.Text = "讀取圖片";
+            this.buttonLoadImageInViewer.Text = "霈????;
             this.buttonLoadImageInViewer.UseVisualStyleBackColor = false;
             this.buttonLoadImageInViewer.Click += new System.EventHandler(this.LoadImageButton_Click);
             // 
@@ -1083,7 +1003,7 @@ namespace AoiMeasureTool
             this.labelTitle.Name = "labelTitle";
             this.labelTitle.Size = new System.Drawing.Size(127, 24);
             this.labelTitle.TabIndex = 0;
-            this.labelTitle.Text = "AOI 影像工具";
+            this.labelTitle.Text = "AOI 敶勗?撌亙";
             // 
             // labelImageInfo
             // 
@@ -1093,7 +1013,7 @@ namespace AoiMeasureTool
             this.labelImageInfo.Name = "labelImageInfo";
             this.labelImageInfo.Size = new System.Drawing.Size(77, 12);
             this.labelImageInfo.TabIndex = 1;
-            this.labelImageInfo.Text = "尚未讀取圖片";
+            this.labelImageInfo.Text = "撠霈????;
             // 
             // tabControlMain
             // 
@@ -1127,7 +1047,7 @@ namespace AoiMeasureTool
             this.tabPageImageViewer.Padding = new System.Windows.Forms.Padding(3);
             this.tabPageImageViewer.Size = new System.Drawing.Size(1032, 656);
             this.tabPageImageViewer.TabIndex = 0;
-            this.tabPageImageViewer.Text = "圖片檢視";
+            this.tabPageImageViewer.Text = "??瑼Ｚ?";
             // 
             // labelWorkspace
             // 
@@ -1137,7 +1057,7 @@ namespace AoiMeasureTool
             this.labelWorkspace.Name = "labelWorkspace";
             this.labelWorkspace.Size = new System.Drawing.Size(64, 18);
             this.labelWorkspace.TabIndex = 0;
-            this.labelWorkspace.Text = "原始圖片";
+            this.labelWorkspace.Text = "????";
             // 
             // panelImageViewport
             // 
@@ -1182,7 +1102,7 @@ namespace AoiMeasureTool
             this.tabPageBinarization.Padding = new System.Windows.Forms.Padding(3);
             this.tabPageBinarization.Size = new System.Drawing.Size(1032, 656);
             this.tabPageBinarization.TabIndex = 1;
-            this.tabPageBinarization.Text = "二值化處理";
+            this.tabPageBinarization.Text = "鈭澆???";
             // 
             // tabPageBinarization2
             // 
@@ -1196,7 +1116,7 @@ namespace AoiMeasureTool
             this.tabPageBinarization2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPageBinarization2.Size = new System.Drawing.Size(1032, 656);
             this.tabPageBinarization2.TabIndex = 6;
-            this.tabPageBinarization2.Text = "二值化處理-2";
+            this.tabPageBinarization2.Text = "鈭澆???-2";
             // 
             // panelDualThresholdOriginal
             // 
@@ -1217,7 +1137,7 @@ namespace AoiMeasureTool
             this.labelDualThresholdOriginal.Name = "labelDualThresholdOriginal";
             this.labelDualThresholdOriginal.Size = new System.Drawing.Size(64, 18);
             this.labelDualThresholdOriginal.TabIndex = 0;
-            this.labelDualThresholdOriginal.Text = "原始影像";
+            this.labelDualThresholdOriginal.Text = "??敶勗?";
             // 
             // panelDualThresholdOriginalViewport
             // 
@@ -1258,7 +1178,7 @@ namespace AoiMeasureTool
             this.labelDualThresholdPreview.Name = "labelDualThresholdPreview";
             this.labelDualThresholdPreview.Size = new System.Drawing.Size(286, 18);
             this.labelDualThresholdPreview.TabIndex = 0;
-            this.labelDualThresholdPreview.Text = "雙門檻結果｜滾輪縮放、左鍵拖曳、右鍵看原圖";
+            this.labelDualThresholdPreview.Text = "??瑼餌???皛曇憚蝮格?椰?菜??喋?萇???";
             // 
             // panelDualThresholdPreviewViewport
             // 
@@ -1313,7 +1233,7 @@ namespace AoiMeasureTool
             this.labelDualThresholdSettings.Name = "labelDualThresholdSettings";
             this.labelDualThresholdSettings.Size = new System.Drawing.Size(78, 18);
             this.labelDualThresholdSettings.TabIndex = 0;
-            this.labelDualThresholdSettings.Text = "雙門檻設定";
+            this.labelDualThresholdSettings.Text = "??瑼餉身摰?;
             // 
             // checkBoxDualThresholdEnabled
             // 
@@ -1324,7 +1244,7 @@ namespace AoiMeasureTool
             this.checkBoxDualThresholdEnabled.Name = "checkBoxDualThresholdEnabled";
             this.checkBoxDualThresholdEnabled.Size = new System.Drawing.Size(54, 22);
             this.checkBoxDualThresholdEnabled.TabIndex = 1;
-            this.checkBoxDualThresholdEnabled.Text = "啟用";
+            this.checkBoxDualThresholdEnabled.Text = "?";
             this.checkBoxDualThresholdEnabled.UseVisualStyleBackColor = true;
             // 
             // labelDualThresholdLower
@@ -1334,7 +1254,7 @@ namespace AoiMeasureTool
             this.labelDualThresholdLower.Name = "labelDualThresholdLower";
             this.labelDualThresholdLower.Size = new System.Drawing.Size(50, 18);
             this.labelDualThresholdLower.TabIndex = 2;
-            this.labelDualThresholdLower.Text = "下門檻";
+            this.labelDualThresholdLower.Text = "銝?瑼?;
             // 
             // trackBarDualThresholdLower
             // 
@@ -1371,7 +1291,7 @@ namespace AoiMeasureTool
             this.labelDualThresholdUpper.Name = "labelDualThresholdUpper";
             this.labelDualThresholdUpper.Size = new System.Drawing.Size(50, 18);
             this.labelDualThresholdUpper.TabIndex = 5;
-            this.labelDualThresholdUpper.Text = "上門檻";
+            this.labelDualThresholdUpper.Text = "銝?瑼?;
             // 
             // trackBarDualThresholdUpper
             // 
@@ -1408,7 +1328,7 @@ namespace AoiMeasureTool
             this.labelDualThresholdErode.Name = "labelDualThresholdErode";
             this.labelDualThresholdErode.Size = new System.Drawing.Size(36, 18);
             this.labelDualThresholdErode.TabIndex = 8;
-            this.labelDualThresholdErode.Text = "侵蝕";
+            this.labelDualThresholdErode.Text = "靘菔?";
             // 
             // numericDualThresholdErode
             // 
@@ -1429,7 +1349,7 @@ namespace AoiMeasureTool
             this.labelDualThresholdDilate.Name = "labelDualThresholdDilate";
             this.labelDualThresholdDilate.Size = new System.Drawing.Size(36, 18);
             this.labelDualThresholdDilate.TabIndex = 10;
-            this.labelDualThresholdDilate.Text = "膨脹";
+            this.labelDualThresholdDilate.Text = "?刻";
             // 
             // numericDualThresholdDilate
             // 
@@ -1450,7 +1370,7 @@ namespace AoiMeasureTool
             this.labelDualThresholdOpen.Name = "labelDualThresholdOpen";
             this.labelDualThresholdOpen.Size = new System.Drawing.Size(50, 18);
             this.labelDualThresholdOpen.TabIndex = 12;
-            this.labelDualThresholdOpen.Text = "開運算";
+            this.labelDualThresholdOpen.Text = "??蝞?;
             // 
             // numericDualThresholdOpen
             // 
@@ -1471,7 +1391,7 @@ namespace AoiMeasureTool
             this.labelDualThresholdClose.Name = "labelDualThresholdClose";
             this.labelDualThresholdClose.Size = new System.Drawing.Size(50, 18);
             this.labelDualThresholdClose.TabIndex = 14;
-            this.labelDualThresholdClose.Text = "閉運算";
+            this.labelDualThresholdClose.Text = "??蝞?;
             // 
             // numericDualThresholdClose
             // 
@@ -1504,7 +1424,7 @@ namespace AoiMeasureTool
             this.buttonDualThresholdLoadSettings.Name = "buttonDualThresholdLoadSettings";
             this.buttonDualThresholdLoadSettings.Size = new System.Drawing.Size(168, 40);
             this.buttonDualThresholdLoadSettings.TabIndex = 0;
-            this.buttonDualThresholdLoadSettings.Text = "讀取設定";
+            this.buttonDualThresholdLoadSettings.Text = "霈?身摰?;
             this.buttonDualThresholdLoadSettings.UseVisualStyleBackColor = false;
             // 
             // buttonDualThresholdSaveSettings
@@ -1516,7 +1436,7 @@ namespace AoiMeasureTool
             this.buttonDualThresholdSaveSettings.Name = "buttonDualThresholdSaveSettings";
             this.buttonDualThresholdSaveSettings.Size = new System.Drawing.Size(168, 40);
             this.buttonDualThresholdSaveSettings.TabIndex = 1;
-            this.buttonDualThresholdSaveSettings.Text = "儲存目前設定";
+            this.buttonDualThresholdSaveSettings.Text = "?脣??桀?閮剖?";
             this.buttonDualThresholdSaveSettings.UseVisualStyleBackColor = false;
             // 
             // panelBinaryOriginal
@@ -1538,7 +1458,7 @@ namespace AoiMeasureTool
             this.labelBinaryOriginal.Name = "labelBinaryOriginal";
             this.labelBinaryOriginal.Size = new System.Drawing.Size(36, 18);
             this.labelBinaryOriginal.TabIndex = 0;
-            this.labelBinaryOriginal.Text = "原圖";
+            this.labelBinaryOriginal.Text = "??";
             // 
             // pictureBoxBinaryOriginal
             // 
@@ -1569,7 +1489,7 @@ namespace AoiMeasureTool
             this.labelActivePreprocess.Name = "labelActivePreprocess";
             this.labelActivePreprocess.Size = new System.Drawing.Size(286, 18);
             this.labelActivePreprocess.TabIndex = 0;
-            this.labelActivePreprocess.Text = "前處理 1｜滾輪縮放、左鍵拖曳、右鍵看原圖";
+            this.labelActivePreprocess.Text = "????1嚚遝頛芰葬?整椰?菜??喋?萇???";
             // 
             // panelActiveViewport
             // 
@@ -1617,7 +1537,7 @@ namespace AoiMeasureTool
             this.labelPreprocess1Title.Name = "labelPreprocess1Title";
             this.labelPreprocess1Title.Size = new System.Drawing.Size(162, 18);
             this.labelPreprocess1Title.TabIndex = 0;
-            this.labelPreprocess1Title.Text = "處理 1  白物件  Gray > T";
+            this.labelPreprocess1Title.Text = "?? 1  ?賜隞? Gray > T";
             // 
             // pictureBoxPreprocess1
             // 
@@ -1651,7 +1571,7 @@ namespace AoiMeasureTool
             this.labelPreprocess2Title.Name = "labelPreprocess2Title";
             this.labelPreprocess2Title.Size = new System.Drawing.Size(162, 18);
             this.labelPreprocess2Title.TabIndex = 0;
-            this.labelPreprocess2Title.Text = "處理 2  白物件  Gray > T";
+            this.labelPreprocess2Title.Text = "?? 2  ?賜隞? Gray > T";
             // 
             // pictureBoxPreprocess2
             // 
@@ -1685,7 +1605,7 @@ namespace AoiMeasureTool
             this.labelPreprocess3Title.Name = "labelPreprocess3Title";
             this.labelPreprocess3Title.Size = new System.Drawing.Size(162, 18);
             this.labelPreprocess3Title.TabIndex = 0;
-            this.labelPreprocess3Title.Text = "處理 3  黑物件  Gray < T";
+            this.labelPreprocess3Title.Text = "?? 3  暺隞? Gray < T";
             // 
             // pictureBoxPreprocess3
             // 
@@ -1719,7 +1639,7 @@ namespace AoiMeasureTool
             this.labelPreprocess4Title.Name = "labelPreprocess4Title";
             this.labelPreprocess4Title.Size = new System.Drawing.Size(162, 18);
             this.labelPreprocess4Title.TabIndex = 0;
-            this.labelPreprocess4Title.Text = "處理 4  黑物件  Gray < T";
+            this.labelPreprocess4Title.Text = "?? 4  暺隞? Gray < T";
             // 
             // pictureBoxPreprocess4
             // 
@@ -1767,7 +1687,7 @@ namespace AoiMeasureTool
             this.tabPagePreprocess1.Name = "tabPagePreprocess1";
             this.tabPagePreprocess1.Size = new System.Drawing.Size(292, 224);
             this.tabPagePreprocess1.TabIndex = 0;
-            this.tabPagePreprocess1.Text = "前處理 1 - 白物件";
+            this.tabPagePreprocess1.Text = "????1 - ?賜隞?;
             // 
             // checkBoxPreprocess1Enabled
             // 
@@ -1778,7 +1698,7 @@ namespace AoiMeasureTool
             this.checkBoxPreprocess1Enabled.Name = "checkBoxPreprocess1Enabled";
             this.checkBoxPreprocess1Enabled.Size = new System.Drawing.Size(125, 22);
             this.checkBoxPreprocess1Enabled.TabIndex = 0;
-            this.checkBoxPreprocess1Enabled.Text = "啟用此組前處理";
+            this.checkBoxPreprocess1Enabled.Text = "?甇斤?????;
             this.checkBoxPreprocess1Enabled.CheckedChanged += new System.EventHandler(this.PreprocessEnabled_CheckedChanged);
             // 
             // labelThreshold1
@@ -1926,7 +1846,7 @@ namespace AoiMeasureTool
             this.tabPagePreprocess2.Name = "tabPagePreprocess2";
             this.tabPagePreprocess2.Size = new System.Drawing.Size(292, 224);
             this.tabPagePreprocess2.TabIndex = 1;
-            this.tabPagePreprocess2.Text = "前處理 2 - 白物件";
+            this.tabPagePreprocess2.Text = "????2 - ?賜隞?;
             // 
             // checkBoxPreprocess2Enabled
             // 
@@ -1937,7 +1857,7 @@ namespace AoiMeasureTool
             this.checkBoxPreprocess2Enabled.Name = "checkBoxPreprocess2Enabled";
             this.checkBoxPreprocess2Enabled.Size = new System.Drawing.Size(125, 22);
             this.checkBoxPreprocess2Enabled.TabIndex = 0;
-            this.checkBoxPreprocess2Enabled.Text = "啟用此組前處理";
+            this.checkBoxPreprocess2Enabled.Text = "?甇斤?????;
             this.checkBoxPreprocess2Enabled.CheckedChanged += new System.EventHandler(this.PreprocessEnabled_CheckedChanged);
             // 
             // labelThreshold2
@@ -2085,7 +2005,7 @@ namespace AoiMeasureTool
             this.tabPagePreprocess3.Name = "tabPagePreprocess3";
             this.tabPagePreprocess3.Size = new System.Drawing.Size(292, 224);
             this.tabPagePreprocess3.TabIndex = 2;
-            this.tabPagePreprocess3.Text = "前處理 3 - 黑物件";
+            this.tabPagePreprocess3.Text = "????3 - 暺隞?;
             // 
             // checkBoxPreprocess3Enabled
             // 
@@ -2096,7 +2016,7 @@ namespace AoiMeasureTool
             this.checkBoxPreprocess3Enabled.Name = "checkBoxPreprocess3Enabled";
             this.checkBoxPreprocess3Enabled.Size = new System.Drawing.Size(125, 22);
             this.checkBoxPreprocess3Enabled.TabIndex = 0;
-            this.checkBoxPreprocess3Enabled.Text = "啟用此組前處理";
+            this.checkBoxPreprocess3Enabled.Text = "?甇斤?????;
             this.checkBoxPreprocess3Enabled.CheckedChanged += new System.EventHandler(this.PreprocessEnabled_CheckedChanged);
             // 
             // labelThreshold3
@@ -2244,7 +2164,7 @@ namespace AoiMeasureTool
             this.tabPagePreprocess4.Name = "tabPagePreprocess4";
             this.tabPagePreprocess4.Size = new System.Drawing.Size(292, 224);
             this.tabPagePreprocess4.TabIndex = 3;
-            this.tabPagePreprocess4.Text = "前處理 4 - 黑物件";
+            this.tabPagePreprocess4.Text = "????4 - 暺隞?;
             // 
             // checkBoxPreprocess4Enabled
             // 
@@ -2255,7 +2175,7 @@ namespace AoiMeasureTool
             this.checkBoxPreprocess4Enabled.Name = "checkBoxPreprocess4Enabled";
             this.checkBoxPreprocess4Enabled.Size = new System.Drawing.Size(125, 22);
             this.checkBoxPreprocess4Enabled.TabIndex = 0;
-            this.checkBoxPreprocess4Enabled.Text = "啟用此組前處理";
+            this.checkBoxPreprocess4Enabled.Text = "?甇斤?????;
             this.checkBoxPreprocess4Enabled.CheckedChanged += new System.EventHandler(this.PreprocessEnabled_CheckedChanged);
             // 
             // labelThreshold4
@@ -2403,7 +2323,7 @@ namespace AoiMeasureTool
             this.buttonLoadSavedSettings.Name = "buttonLoadSavedSettings";
             this.buttonLoadSavedSettings.Size = new System.Drawing.Size(168, 40);
             this.buttonLoadSavedSettings.TabIndex = 0;
-            this.buttonLoadSavedSettings.Text = "讀取設定";
+            this.buttonLoadSavedSettings.Text = "霈?身摰?;
             this.buttonLoadSavedSettings.UseVisualStyleBackColor = false;
             this.buttonLoadSavedSettings.Click += new System.EventHandler(this.ButtonLoadSavedSettings_Click);
             // 
@@ -2416,7 +2336,7 @@ namespace AoiMeasureTool
             this.buttonSaveCurrentSettings.Name = "buttonSaveCurrentSettings";
             this.buttonSaveCurrentSettings.Size = new System.Drawing.Size(168, 40);
             this.buttonSaveCurrentSettings.TabIndex = 1;
-            this.buttonSaveCurrentSettings.Text = "儲存目前設定";
+            this.buttonSaveCurrentSettings.Text = "?脣??桀?閮剖?";
             this.buttonSaveCurrentSettings.UseVisualStyleBackColor = false;
             this.buttonSaveCurrentSettings.Click += new System.EventHandler(this.ButtonSaveCurrentSettings_Click);
             // 
@@ -2431,7 +2351,7 @@ namespace AoiMeasureTool
             this.tabPageReferenceCorner.Padding = new System.Windows.Forms.Padding(3);
             this.tabPageReferenceCorner.Size = new System.Drawing.Size(1032, 656);
             this.tabPageReferenceCorner.TabIndex = 0;
-            this.tabPageReferenceCorner.Text = "參考角點";
+            this.tabPageReferenceCorner.Text = "??暺?;
             // 
             // panelReferenceCornerControls
             // 
@@ -2457,7 +2377,7 @@ namespace AoiMeasureTool
             this.checkBoxReferenceCornerEnabled.Name = "checkBoxReferenceCornerEnabled";
             this.checkBoxReferenceCornerEnabled.Size = new System.Drawing.Size(139, 22);
             this.checkBoxReferenceCornerEnabled.TabIndex = 0;
-            this.checkBoxReferenceCornerEnabled.Text = "啟用參考角點";
+            this.checkBoxReferenceCornerEnabled.Text = "???暺?;
             this.checkBoxReferenceCornerEnabled.CheckedChanged += new System.EventHandler(this.ReferenceCornerEnabled_CheckedChanged);
             // 
             // labelReferenceSource
@@ -2467,7 +2387,7 @@ namespace AoiMeasureTool
             this.labelReferenceSource.Name = "labelReferenceSource";
             this.labelReferenceSource.Size = new System.Drawing.Size(106, 18);
             this.labelReferenceSource.TabIndex = 1;
-            this.labelReferenceSource.Text = "參考來源";
+            this.labelReferenceSource.Text = "??皞?;
             // 
             // comboBoxReferenceSource
             // 
@@ -2486,7 +2406,7 @@ namespace AoiMeasureTool
             this.labelReferencePointMode.Name = "labelReferencePointMode";
             this.labelReferencePointMode.Size = new System.Drawing.Size(105, 18);
             this.labelReferencePointMode.TabIndex = 3;
-            this.labelReferencePointMode.Text = "參考角點模式";
+            this.labelReferencePointMode.Text = "??暺芋撘?;
             // 
             // comboBoxReferencePointMode
             // 
@@ -2505,7 +2425,7 @@ namespace AoiMeasureTool
             this.labelReferenceScanLineThreshold.Name = "labelReferenceScanLineThreshold";
             this.labelReferenceScanLineThreshold.Size = new System.Drawing.Size(87, 18);
             this.labelReferenceScanLineThreshold.TabIndex = 5;
-            this.labelReferenceScanLineThreshold.Text = "掃描線長度門檻";
+            this.labelReferenceScanLineThreshold.Text = "??蝺摨阡?瑼?;
             // 
             // numericReferenceScanLineThreshold
             // 
@@ -2527,7 +2447,7 @@ namespace AoiMeasureTool
             this.buttonSaveReferenceRoi.Name = "buttonSaveReferenceRoi";
             this.buttonSaveReferenceRoi.Size = new System.Drawing.Size(280, 40);
             this.buttonSaveReferenceRoi.TabIndex = 3;
-            this.buttonSaveReferenceRoi.Text = "套用 ROI 範圍";
+            this.buttonSaveReferenceRoi.Text = "憟 ROI 蝭?";
             this.buttonSaveReferenceRoi.UseVisualStyleBackColor = false;
             this.buttonSaveReferenceRoi.Click += new System.EventHandler(this.SaveReferenceRoi_Click);
             // 
@@ -2567,7 +2487,7 @@ namespace AoiMeasureTool
             this.labelReferenceCornerStatus.Name = "labelReferenceCornerStatus";
             this.labelReferenceCornerStatus.Size = new System.Drawing.Size(540, 18);
             this.labelReferenceCornerStatus.TabIndex = 2;
-            this.labelReferenceCornerStatus.Text = "先框選 ROI，再按套用 ROI 範圍。";
+            this.labelReferenceCornerStatus.Text = "????ROI嚗?????ROI 蝭???;
             // 
             // tabPageInnerSettings
             // 
@@ -2579,7 +2499,7 @@ namespace AoiMeasureTool
             this.tabPageInnerSettings.Padding = new System.Windows.Forms.Padding(3);
             this.tabPageInnerSettings.Size = new System.Drawing.Size(1032, 656);
             this.tabPageInnerSettings.TabIndex = 4;
-            this.tabPageInnerSettings.Text = "內部參數";
+            this.tabPageInnerSettings.Text = "?折?";
             // 
             // labelInnerSettingsTitle
             // 
@@ -2589,7 +2509,7 @@ namespace AoiMeasureTool
             this.labelInnerSettingsTitle.Name = "labelInnerSettingsTitle";
             this.labelInnerSettingsTitle.Size = new System.Drawing.Size(64, 18);
             this.labelInnerSettingsTitle.TabIndex = 0;
-            this.labelInnerSettingsTitle.Text = "內部參數";
+            this.labelInnerSettingsTitle.Text = "?折?";
             // 
             // panelInnerSettings
             // 
@@ -2621,7 +2541,7 @@ namespace AoiMeasureTool
             this.groupBoxInnerCamera1.Size = new System.Drawing.Size(290, 240);
             this.groupBoxInnerCamera1.TabIndex = 0;
             this.groupBoxInnerCamera1.TabStop = false;
-            this.groupBoxInnerCamera1.Text = "內部參數 1";
+            this.groupBoxInnerCamera1.Text = "?折? 1";
             // 
             // groupBoxInnerCamera2
             // 
@@ -2640,7 +2560,7 @@ namespace AoiMeasureTool
             this.groupBoxInnerCamera2.Size = new System.Drawing.Size(290, 240);
             this.groupBoxInnerCamera2.TabIndex = 1;
             this.groupBoxInnerCamera2.TabStop = false;
-            this.groupBoxInnerCamera2.Text = "內部參數 2";
+            this.groupBoxInnerCamera2.Text = "?折? 2";
             // 
             // groupBoxInnerCamera3
             // 
@@ -2659,7 +2579,7 @@ namespace AoiMeasureTool
             this.groupBoxInnerCamera3.Size = new System.Drawing.Size(290, 240);
             this.groupBoxInnerCamera3.TabIndex = 2;
             this.groupBoxInnerCamera3.TabStop = false;
-            this.groupBoxInnerCamera3.Text = "內部參數 3";
+            this.groupBoxInnerCamera3.Text = "?折? 3";
             // 
             // labelInnerCamera1Name
             // 
@@ -2668,7 +2588,7 @@ namespace AoiMeasureTool
             this.labelInnerCamera1Name.Name = "labelInnerCamera1Name";
             this.labelInnerCamera1Name.Size = new System.Drawing.Size(82, 18);
             this.labelInnerCamera1Name.TabIndex = 0;
-            this.labelInnerCamera1Name.Text = "攝影機 / 名稱";
+            this.labelInnerCamera1Name.Text = "?蔣璈?/ ?迂";
             // 
             // textBoxInnerCamera1Name
             // 
@@ -2684,7 +2604,7 @@ namespace AoiMeasureTool
             this.labelInnerCamera1Usage.Name = "labelInnerCamera1Usage";
             this.labelInnerCamera1Usage.Size = new System.Drawing.Size(38, 18);
             this.labelInnerCamera1Usage.TabIndex = 2;
-            this.labelInnerCamera1Usage.Text = "用途";
+            this.labelInnerCamera1Usage.Text = "?券?;
             // 
             // textBoxInnerCamera1Usage
             // 
@@ -2700,7 +2620,7 @@ namespace AoiMeasureTool
             this.labelInnerCamera2Name.Name = "labelInnerCamera2Name";
             this.labelInnerCamera2Name.Size = new System.Drawing.Size(82, 18);
             this.labelInnerCamera2Name.TabIndex = 0;
-            this.labelInnerCamera2Name.Text = "攝影機 / 名稱";
+            this.labelInnerCamera2Name.Text = "?蔣璈?/ ?迂";
             // 
             // textBoxInnerCamera2Name
             // 
@@ -2716,7 +2636,7 @@ namespace AoiMeasureTool
             this.labelInnerCamera2Usage.Name = "labelInnerCamera2Usage";
             this.labelInnerCamera2Usage.Size = new System.Drawing.Size(38, 18);
             this.labelInnerCamera2Usage.TabIndex = 2;
-            this.labelInnerCamera2Usage.Text = "用途";
+            this.labelInnerCamera2Usage.Text = "?券?;
             // 
             // textBoxInnerCamera2Usage
             // 
@@ -2732,7 +2652,7 @@ namespace AoiMeasureTool
             this.labelInnerCamera2CcdXPrecision.Name = "labelInnerCamera2CcdXPrecision";
             this.labelInnerCamera2CcdXPrecision.Size = new System.Drawing.Size(87, 18);
             this.labelInnerCamera2CcdXPrecision.TabIndex = 4;
-            this.labelInnerCamera2CcdXPrecision.Text = "CCD X向精度";
+            this.labelInnerCamera2CcdXPrecision.Text = "CCD X?移摨?;
             // 
             // numericInnerCamera2CcdXPrecision
             // 
@@ -2752,7 +2672,7 @@ namespace AoiMeasureTool
             this.labelInnerCamera2CcdYPrecision.Name = "labelInnerCamera2CcdYPrecision";
             this.labelInnerCamera2CcdYPrecision.Size = new System.Drawing.Size(86, 18);
             this.labelInnerCamera2CcdYPrecision.TabIndex = 6;
-            this.labelInnerCamera2CcdYPrecision.Text = "CCD Y向精度";
+            this.labelInnerCamera2CcdYPrecision.Text = "CCD Y?移摨?;
             // 
             // numericInnerCamera2CcdYPrecision
             // 
@@ -2772,7 +2692,7 @@ namespace AoiMeasureTool
             this.labelInnerCamera2MeasurementScaleFactor.Name = "labelInnerCamera2MeasurementScaleFactor";
             this.labelInnerCamera2MeasurementScaleFactor.Size = new System.Drawing.Size(103, 18);
             this.labelInnerCamera2MeasurementScaleFactor.TabIndex = 8;
-            this.labelInnerCamera2MeasurementScaleFactor.Text = "計算值倍率";
+            this.labelInnerCamera2MeasurementScaleFactor.Text = "閮??澆?";
             // 
             // numericInnerCamera2MeasurementScaleFactor
             // 
@@ -2793,7 +2713,7 @@ namespace AoiMeasureTool
             this.labelInnerCamera3Name.Name = "labelInnerCamera3Name";
             this.labelInnerCamera3Name.Size = new System.Drawing.Size(82, 18);
             this.labelInnerCamera3Name.TabIndex = 0;
-            this.labelInnerCamera3Name.Text = "攝影機 / 名稱";
+            this.labelInnerCamera3Name.Text = "?蔣璈?/ ?迂";
             // 
             // textBoxInnerCamera3Name
             // 
@@ -2809,7 +2729,7 @@ namespace AoiMeasureTool
             this.labelInnerCamera3Usage.Name = "labelInnerCamera3Usage";
             this.labelInnerCamera3Usage.Size = new System.Drawing.Size(38, 18);
             this.labelInnerCamera3Usage.TabIndex = 2;
-            this.labelInnerCamera3Usage.Text = "用途";
+            this.labelInnerCamera3Usage.Text = "?券?;
             // 
             // textBoxInnerCamera3Usage
             // 
@@ -2825,7 +2745,7 @@ namespace AoiMeasureTool
             this.labelInnerCamera3CcdXPrecision.Name = "labelInnerCamera3CcdXPrecision";
             this.labelInnerCamera3CcdXPrecision.Size = new System.Drawing.Size(87, 18);
             this.labelInnerCamera3CcdXPrecision.TabIndex = 4;
-            this.labelInnerCamera3CcdXPrecision.Text = "CCD X向精度";
+            this.labelInnerCamera3CcdXPrecision.Text = "CCD X?移摨?;
             // 
             // numericInnerCamera3CcdXPrecision
             // 
@@ -2845,7 +2765,7 @@ namespace AoiMeasureTool
             this.labelInnerCamera3CcdYPrecision.Name = "labelInnerCamera3CcdYPrecision";
             this.labelInnerCamera3CcdYPrecision.Size = new System.Drawing.Size(86, 18);
             this.labelInnerCamera3CcdYPrecision.TabIndex = 6;
-            this.labelInnerCamera3CcdYPrecision.Text = "CCD Y向精度";
+            this.labelInnerCamera3CcdYPrecision.Text = "CCD Y?移摨?;
             // 
             // numericInnerCamera3CcdYPrecision
             // 
@@ -2865,7 +2785,7 @@ namespace AoiMeasureTool
             this.labelInnerCamera3MeasurementScaleFactor.Name = "labelInnerCamera3MeasurementScaleFactor";
             this.labelInnerCamera3MeasurementScaleFactor.Size = new System.Drawing.Size(103, 18);
             this.labelInnerCamera3MeasurementScaleFactor.TabIndex = 8;
-            this.labelInnerCamera3MeasurementScaleFactor.Text = "計算值倍率";
+            this.labelInnerCamera3MeasurementScaleFactor.Text = "閮??澆?";
             // 
             // numericInnerCamera3MeasurementScaleFactor
             // 
@@ -2886,7 +2806,7 @@ namespace AoiMeasureTool
             this.labelInnerCcdXPrecision.Name = "labelInnerCcdXPrecision";
             this.labelInnerCcdXPrecision.Size = new System.Drawing.Size(87, 18);
             this.labelInnerCcdXPrecision.TabIndex = 4;
-            this.labelInnerCcdXPrecision.Text = "CCD X向精度";
+            this.labelInnerCcdXPrecision.Text = "CCD X?移摨?;
             // 
             // numericInnerCcdXPrecision
             // 
@@ -2906,7 +2826,7 @@ namespace AoiMeasureTool
             this.labelInnerCcdYPrecision.Name = "labelInnerCcdYPrecision";
             this.labelInnerCcdYPrecision.Size = new System.Drawing.Size(86, 18);
             this.labelInnerCcdYPrecision.TabIndex = 6;
-            this.labelInnerCcdYPrecision.Text = "CCD Y向精度";
+            this.labelInnerCcdYPrecision.Text = "CCD Y?移摨?;
             // 
             // numericInnerCcdYPrecision
             // 
@@ -2926,7 +2846,7 @@ namespace AoiMeasureTool
             this.labelInnerMeasurementScaleFactor.Name = "labelInnerMeasurementScaleFactor";
             this.labelInnerMeasurementScaleFactor.Size = new System.Drawing.Size(103, 18);
             this.labelInnerMeasurementScaleFactor.TabIndex = 8;
-            this.labelInnerMeasurementScaleFactor.Text = "計算值倍率";
+            this.labelInnerMeasurementScaleFactor.Text = "閮??澆?";
             // 
             // numericInnerMeasurementScaleFactor
             // 
@@ -2949,7 +2869,7 @@ namespace AoiMeasureTool
             this.buttonSaveInnerSettings.Name = "buttonSaveInnerSettings";
             this.buttonSaveInnerSettings.Size = new System.Drawing.Size(120, 30);
             this.buttonSaveInnerSettings.TabIndex = 3;
-            this.buttonSaveInnerSettings.Text = "儲存";
+            this.buttonSaveInnerSettings.Text = "?脣?";
             this.buttonSaveInnerSettings.UseVisualStyleBackColor = false;
             this.buttonSaveInnerSettings.Click += new System.EventHandler(this.SaveInnerSettingsButton_Click);
             // 
@@ -2965,7 +2885,7 @@ namespace AoiMeasureTool
             this.tabPageJudgementCriteria.Padding = new System.Windows.Forms.Padding(3);
             this.tabPageJudgementCriteria.Size = new System.Drawing.Size(1032, 656);
             this.tabPageJudgementCriteria.TabIndex = 5;
-            this.tabPageJudgementCriteria.Text = "良品判斷條件";
+            this.tabPageJudgementCriteria.Text = "?臬??斗璇辣";
             // 
             // tabPageDetectionParameterSummary
             // 
@@ -2976,7 +2896,7 @@ namespace AoiMeasureTool
             this.tabPageDetectionParameterSummary.Padding = new System.Windows.Forms.Padding(3);
             this.tabPageDetectionParameterSummary.Size = new System.Drawing.Size(1032, 656);
             this.tabPageDetectionParameterSummary.TabIndex = 6;
-            this.tabPageDetectionParameterSummary.Text = "檢測參數整理";
+            this.tabPageDetectionParameterSummary.Text = "瑼Ｘ葫??渡?";
             // 
             // tabPageContinuousInspection
             // 
@@ -2987,7 +2907,7 @@ namespace AoiMeasureTool
             this.tabPageContinuousInspection.Padding = new System.Windows.Forms.Padding(3);
             this.tabPageContinuousInspection.Size = new System.Drawing.Size(1032, 656);
             this.tabPageContinuousInspection.TabIndex = 7;
-            this.tabPageContinuousInspection.Text = "連續檢測";
+            this.tabPageContinuousInspection.Text = "???瑼Ｘ葫";
             // 
             // buttonContinuousInspectionResetYield
             // 
@@ -2999,7 +2919,7 @@ namespace AoiMeasureTool
             this.buttonContinuousInspectionResetYield.Name = "buttonContinuousInspectionResetYield";
             this.buttonContinuousInspectionResetYield.Size = new System.Drawing.Size(156, 30);
             this.buttonContinuousInspectionResetYield.TabIndex = 8;
-            this.buttonContinuousInspectionResetYield.Text = "歸零良率計算";
+            this.buttonContinuousInspectionResetYield.Text = "甇賊?舐?閮?";
             this.buttonContinuousInspectionResetYield.UseVisualStyleBackColor = false;
             // 
             // panelContinuousInspection
@@ -3027,7 +2947,7 @@ namespace AoiMeasureTool
             this.labelContinuousInspectionTitle.Size = new System.Drawing.Size(100, 28);
             this.labelContinuousInspectionTitle.TabIndex = 0;
             this.labelContinuousInspectionTitle.Visible = false;
-            this.labelContinuousInspectionTitle.Text = "連續檢測";
+            this.labelContinuousInspectionTitle.Text = "???瑼Ｘ葫";
             // 
             // labelContinuousInspectionMainParameter
             // 
@@ -3036,7 +2956,7 @@ namespace AoiMeasureTool
             this.labelContinuousInspectionMainParameter.Name = "labelContinuousInspectionMainParameter";
             this.labelContinuousInspectionMainParameter.Size = new System.Drawing.Size(62, 18);
             this.labelContinuousInspectionMainParameter.TabIndex = 1;
-            this.labelContinuousInspectionMainParameter.Text = "主參數";
+            this.labelContinuousInspectionMainParameter.Text = "銝餃???;
             // 
             // comboBoxContinuousInspectionMainParameter
             // 
@@ -3062,7 +2982,7 @@ namespace AoiMeasureTool
             this.groupBoxContinuousInspection1.Size = new System.Drawing.Size(292, 520);
             this.groupBoxContinuousInspection1.TabIndex = 3;
             this.groupBoxContinuousInspection1.TabStop = false;
-            this.groupBoxContinuousInspection1.Text = "子參數 1";
+            this.groupBoxContinuousInspection1.Text = "摮???1";
             // 
             // checkBoxContinuousInspectionSaveOriginalImage1
             // 
@@ -3071,7 +2991,7 @@ namespace AoiMeasureTool
             this.checkBoxContinuousInspectionSaveOriginalImage1.Name = "checkBoxContinuousInspectionSaveOriginalImage1";
             this.checkBoxContinuousInspectionSaveOriginalImage1.Size = new System.Drawing.Size(125, 24);
             this.checkBoxContinuousInspectionSaveOriginalImage1.TabIndex = 6;
-            this.checkBoxContinuousInspectionSaveOriginalImage1.Text = "保存原始影像";
+            this.checkBoxContinuousInspectionSaveOriginalImage1.Text = "靽???敶勗?";
             this.checkBoxContinuousInspectionSaveOriginalImage1.UseVisualStyleBackColor = true;
             // 
             // labelContinuousInspectionYield1
@@ -3081,7 +3001,7 @@ namespace AoiMeasureTool
             this.labelContinuousInspectionYield1.Name = "labelContinuousInspectionYield1";
             this.labelContinuousInspectionYield1.Size = new System.Drawing.Size(258, 32);
             this.labelContinuousInspectionYield1.TabIndex = 5;
-            this.labelContinuousInspectionYield1.Text = "良率 0/0(0%)";
+            this.labelContinuousInspectionYield1.Text = "?舐? 0/0(0%)";
             this.labelContinuousInspectionYield1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // buttonContinuousInspectionJudge1
@@ -3093,7 +3013,7 @@ namespace AoiMeasureTool
             this.buttonContinuousInspectionJudge1.Name = "buttonContinuousInspectionJudge1";
             this.buttonContinuousInspectionJudge1.Size = new System.Drawing.Size(128, 36);
             this.buttonContinuousInspectionJudge1.TabIndex = 4;
-            this.buttonContinuousInspectionJudge1.Text = "判斷";
+            this.buttonContinuousInspectionJudge1.Text = "?斗";
             this.buttonContinuousInspectionJudge1.UseVisualStyleBackColor = false;
             // 
             // labelContinuousInspectionResult1
@@ -3114,7 +3034,7 @@ namespace AoiMeasureTool
             this.buttonContinuousInspectionLoadImage1.Name = "buttonContinuousInspectionLoadImage1";
             this.buttonContinuousInspectionLoadImage1.Size = new System.Drawing.Size(120, 36);
             this.buttonContinuousInspectionLoadImage1.TabIndex = 2;
-            this.buttonContinuousInspectionLoadImage1.Text = "讀取圖";
+            this.buttonContinuousInspectionLoadImage1.Text = "霈??";
             this.buttonContinuousInspectionLoadImage1.UseVisualStyleBackColor = false;
             // 
             // panelContinuousInspectionPreview1
@@ -3145,7 +3065,7 @@ namespace AoiMeasureTool
             this.labelContinuousInspectionSubParameter1.Name = "labelContinuousInspectionSubParameter1";
             this.labelContinuousInspectionSubParameter1.Size = new System.Drawing.Size(258, 36);
             this.labelContinuousInspectionSubParameter1.TabIndex = 0;
-            this.labelContinuousInspectionSubParameter1.Text = "未設定子參數";
+            this.labelContinuousInspectionSubParameter1.Text = "?芾身摰??";
             this.labelContinuousInspectionSubParameter1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // groupBoxContinuousInspection2
@@ -3163,7 +3083,7 @@ namespace AoiMeasureTool
             this.groupBoxContinuousInspection2.Size = new System.Drawing.Size(292, 520);
             this.groupBoxContinuousInspection2.TabIndex = 4;
             this.groupBoxContinuousInspection2.TabStop = false;
-            this.groupBoxContinuousInspection2.Text = "子參數 2";
+            this.groupBoxContinuousInspection2.Text = "摮???2";
             // 
             // checkBoxContinuousInspectionSaveOriginalImage2
             // 
@@ -3172,7 +3092,7 @@ namespace AoiMeasureTool
             this.checkBoxContinuousInspectionSaveOriginalImage2.Name = "checkBoxContinuousInspectionSaveOriginalImage2";
             this.checkBoxContinuousInspectionSaveOriginalImage2.Size = new System.Drawing.Size(125, 24);
             this.checkBoxContinuousInspectionSaveOriginalImage2.TabIndex = 6;
-            this.checkBoxContinuousInspectionSaveOriginalImage2.Text = "保存原始影像";
+            this.checkBoxContinuousInspectionSaveOriginalImage2.Text = "靽???敶勗?";
             this.checkBoxContinuousInspectionSaveOriginalImage2.UseVisualStyleBackColor = true;
             // 
             // labelContinuousInspectionYield2
@@ -3182,7 +3102,7 @@ namespace AoiMeasureTool
             this.labelContinuousInspectionYield2.Name = "labelContinuousInspectionYield2";
             this.labelContinuousInspectionYield2.Size = new System.Drawing.Size(258, 32);
             this.labelContinuousInspectionYield2.TabIndex = 5;
-            this.labelContinuousInspectionYield2.Text = "良率 0/0(0%)";
+            this.labelContinuousInspectionYield2.Text = "?舐? 0/0(0%)";
             this.labelContinuousInspectionYield2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // buttonContinuousInspectionJudge2
@@ -3194,7 +3114,7 @@ namespace AoiMeasureTool
             this.buttonContinuousInspectionJudge2.Name = "buttonContinuousInspectionJudge2";
             this.buttonContinuousInspectionJudge2.Size = new System.Drawing.Size(128, 36);
             this.buttonContinuousInspectionJudge2.TabIndex = 4;
-            this.buttonContinuousInspectionJudge2.Text = "判斷";
+            this.buttonContinuousInspectionJudge2.Text = "?斗";
             this.buttonContinuousInspectionJudge2.UseVisualStyleBackColor = false;
             // 
             // labelContinuousInspectionResult2
@@ -3215,7 +3135,7 @@ namespace AoiMeasureTool
             this.buttonContinuousInspectionLoadImage2.Name = "buttonContinuousInspectionLoadImage2";
             this.buttonContinuousInspectionLoadImage2.Size = new System.Drawing.Size(120, 36);
             this.buttonContinuousInspectionLoadImage2.TabIndex = 2;
-            this.buttonContinuousInspectionLoadImage2.Text = "讀取圖";
+            this.buttonContinuousInspectionLoadImage2.Text = "霈??";
             this.buttonContinuousInspectionLoadImage2.UseVisualStyleBackColor = false;
             // 
             // panelContinuousInspectionPreview2
@@ -3246,7 +3166,7 @@ namespace AoiMeasureTool
             this.labelContinuousInspectionSubParameter2.Name = "labelContinuousInspectionSubParameter2";
             this.labelContinuousInspectionSubParameter2.Size = new System.Drawing.Size(258, 36);
             this.labelContinuousInspectionSubParameter2.TabIndex = 0;
-            this.labelContinuousInspectionSubParameter2.Text = "未設定子參數";
+            this.labelContinuousInspectionSubParameter2.Text = "?芾身摰??";
             this.labelContinuousInspectionSubParameter2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // groupBoxContinuousInspection3
@@ -3264,7 +3184,7 @@ namespace AoiMeasureTool
             this.groupBoxContinuousInspection3.Size = new System.Drawing.Size(292, 520);
             this.groupBoxContinuousInspection3.TabIndex = 5;
             this.groupBoxContinuousInspection3.TabStop = false;
-            this.groupBoxContinuousInspection3.Text = "子參數 3";
+            this.groupBoxContinuousInspection3.Text = "摮???3";
             // 
             // checkBoxContinuousInspectionSaveOriginalImage3
             // 
@@ -3273,7 +3193,7 @@ namespace AoiMeasureTool
             this.checkBoxContinuousInspectionSaveOriginalImage3.Name = "checkBoxContinuousInspectionSaveOriginalImage3";
             this.checkBoxContinuousInspectionSaveOriginalImage3.Size = new System.Drawing.Size(125, 24);
             this.checkBoxContinuousInspectionSaveOriginalImage3.TabIndex = 6;
-            this.checkBoxContinuousInspectionSaveOriginalImage3.Text = "保存原始影像";
+            this.checkBoxContinuousInspectionSaveOriginalImage3.Text = "靽???敶勗?";
             this.checkBoxContinuousInspectionSaveOriginalImage3.UseVisualStyleBackColor = true;
             // 
             // labelContinuousInspectionYield3
@@ -3283,7 +3203,7 @@ namespace AoiMeasureTool
             this.labelContinuousInspectionYield3.Name = "labelContinuousInspectionYield3";
             this.labelContinuousInspectionYield3.Size = new System.Drawing.Size(258, 32);
             this.labelContinuousInspectionYield3.TabIndex = 5;
-            this.labelContinuousInspectionYield3.Text = "良率 0/0(0%)";
+            this.labelContinuousInspectionYield3.Text = "?舐? 0/0(0%)";
             this.labelContinuousInspectionYield3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // buttonContinuousInspectionJudge3
@@ -3295,7 +3215,7 @@ namespace AoiMeasureTool
             this.buttonContinuousInspectionJudge3.Name = "buttonContinuousInspectionJudge3";
             this.buttonContinuousInspectionJudge3.Size = new System.Drawing.Size(128, 36);
             this.buttonContinuousInspectionJudge3.TabIndex = 4;
-            this.buttonContinuousInspectionJudge3.Text = "判斷";
+            this.buttonContinuousInspectionJudge3.Text = "?斗";
             this.buttonContinuousInspectionJudge3.UseVisualStyleBackColor = false;
             // 
             // labelContinuousInspectionResult3
@@ -3316,7 +3236,7 @@ namespace AoiMeasureTool
             this.buttonContinuousInspectionLoadImage3.Name = "buttonContinuousInspectionLoadImage3";
             this.buttonContinuousInspectionLoadImage3.Size = new System.Drawing.Size(120, 36);
             this.buttonContinuousInspectionLoadImage3.TabIndex = 2;
-            this.buttonContinuousInspectionLoadImage3.Text = "讀取圖";
+            this.buttonContinuousInspectionLoadImage3.Text = "霈??";
             this.buttonContinuousInspectionLoadImage3.UseVisualStyleBackColor = false;
             // 
             // panelContinuousInspectionPreview3
@@ -3347,9 +3267,9 @@ namespace AoiMeasureTool
             this.labelContinuousInspectionSubParameter3.Name = "labelContinuousInspectionSubParameter3";
             this.labelContinuousInspectionSubParameter3.Size = new System.Drawing.Size(258, 36);
             this.labelContinuousInspectionSubParameter3.TabIndex = 0;
-            this.labelContinuousInspectionSubParameter3.Text = "未設定子參數";
+            this.labelContinuousInspectionSubParameter3.Text = "?芾身摰??";
             this.labelContinuousInspectionSubParameter3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.labelContinuousInspectionTitle.Text = "連續檢測";
+            this.labelContinuousInspectionTitle.Text = "???瑼Ｘ葫";
             // 
             // panelDetectionParameterSummary
             // 
@@ -3375,7 +3295,7 @@ namespace AoiMeasureTool
             this.groupBoxDetectionParameterCreate.Size = new System.Drawing.Size(180, 140);
             this.groupBoxDetectionParameterCreate.TabIndex = 0;
             this.groupBoxDetectionParameterCreate.TabStop = false;
-            this.groupBoxDetectionParameterCreate.Text = "建立主參數";
+            this.groupBoxDetectionParameterCreate.Text = "撱箇?銝餃???;
             // 
             // buttonDetectionMainParameterConfirm
             // 
@@ -3386,7 +3306,7 @@ namespace AoiMeasureTool
             this.buttonDetectionMainParameterConfirm.Name = "buttonDetectionMainParameterConfirm";
             this.buttonDetectionMainParameterConfirm.Size = new System.Drawing.Size(86, 30);
             this.buttonDetectionMainParameterConfirm.TabIndex = 1;
-            this.buttonDetectionMainParameterConfirm.Text = "確認";
+            this.buttonDetectionMainParameterConfirm.Text = "蝣箄?";
             this.buttonDetectionMainParameterConfirm.UseVisualStyleBackColor = false;
             // 
             // textBoxDetectionMainParameterName
@@ -3409,7 +3329,7 @@ namespace AoiMeasureTool
             this.groupBoxDetectionMainParameterList.Size = new System.Drawing.Size(180, 280);
             this.groupBoxDetectionMainParameterList.TabIndex = 1;
             this.groupBoxDetectionMainParameterList.TabStop = false;
-            this.groupBoxDetectionMainParameterList.Text = "主參數";
+            this.groupBoxDetectionMainParameterList.Text = "銝餃???;
             // 
             // listBoxDetectionMainParameter
             // 
@@ -3428,7 +3348,7 @@ namespace AoiMeasureTool
             this.buttonDetectionMainParameterMoveUp.Name = "buttonDetectionMainParameterMoveUp";
             this.buttonDetectionMainParameterMoveUp.Size = new System.Drawing.Size(34, 28);
             this.buttonDetectionMainParameterMoveUp.TabIndex = 1;
-            this.buttonDetectionMainParameterMoveUp.Text = "↑";
+            this.buttonDetectionMainParameterMoveUp.Text = "??;
             this.buttonDetectionMainParameterMoveUp.UseVisualStyleBackColor = true;
             // 
             // buttonDetectionMainParameterMoveDown
@@ -3439,7 +3359,7 @@ namespace AoiMeasureTool
             this.buttonDetectionMainParameterMoveDown.Name = "buttonDetectionMainParameterMoveDown";
             this.buttonDetectionMainParameterMoveDown.Size = new System.Drawing.Size(34, 28);
             this.buttonDetectionMainParameterMoveDown.TabIndex = 2;
-            this.buttonDetectionMainParameterMoveDown.Text = "↓";
+            this.buttonDetectionMainParameterMoveDown.Text = "??;
             this.buttonDetectionMainParameterMoveDown.UseVisualStyleBackColor = true;
             // 
             // buttonDetectionMainParameterSaveOrder
@@ -3450,7 +3370,7 @@ namespace AoiMeasureTool
             this.buttonDetectionMainParameterSaveOrder.Name = "buttonDetectionMainParameterSaveOrder";
             this.buttonDetectionMainParameterSaveOrder.Size = new System.Drawing.Size(76, 28);
             this.buttonDetectionMainParameterSaveOrder.TabIndex = 3;
-            this.buttonDetectionMainParameterSaveOrder.Text = "保存順序";
+            this.buttonDetectionMainParameterSaveOrder.Text = "靽???";
             this.buttonDetectionMainParameterSaveOrder.UseVisualStyleBackColor = true;
             // 
             // groupBoxDetectionSubParameter1List
@@ -3466,7 +3386,7 @@ namespace AoiMeasureTool
             this.groupBoxDetectionSubParameter1List.Size = new System.Drawing.Size(180, 280);
             this.groupBoxDetectionSubParameter1List.TabIndex = 2;
             this.groupBoxDetectionSubParameter1List.TabStop = false;
-            this.groupBoxDetectionSubParameter1List.Text = "子參數1";
+            this.groupBoxDetectionSubParameter1List.Text = "摮???";
             // 
             // listBoxDetectionSubParameter1
             // 
@@ -3485,7 +3405,7 @@ namespace AoiMeasureTool
             this.buttonDetectionSubParameter1MoveUp.Name = "buttonDetectionSubParameter1MoveUp";
             this.buttonDetectionSubParameter1MoveUp.Size = new System.Drawing.Size(34, 28);
             this.buttonDetectionSubParameter1MoveUp.TabIndex = 1;
-            this.buttonDetectionSubParameter1MoveUp.Text = "↑";
+            this.buttonDetectionSubParameter1MoveUp.Text = "??;
             this.buttonDetectionSubParameter1MoveUp.UseVisualStyleBackColor = true;
             // 
             // buttonDetectionSubParameter1MoveDown
@@ -3496,7 +3416,7 @@ namespace AoiMeasureTool
             this.buttonDetectionSubParameter1MoveDown.Name = "buttonDetectionSubParameter1MoveDown";
             this.buttonDetectionSubParameter1MoveDown.Size = new System.Drawing.Size(34, 28);
             this.buttonDetectionSubParameter1MoveDown.TabIndex = 2;
-            this.buttonDetectionSubParameter1MoveDown.Text = "↓";
+            this.buttonDetectionSubParameter1MoveDown.Text = "??;
             this.buttonDetectionSubParameter1MoveDown.UseVisualStyleBackColor = true;
             // 
             // buttonDetectionSubParameter1SaveOrder
@@ -3507,7 +3427,7 @@ namespace AoiMeasureTool
             this.buttonDetectionSubParameter1SaveOrder.Name = "buttonDetectionSubParameter1SaveOrder";
             this.buttonDetectionSubParameter1SaveOrder.Size = new System.Drawing.Size(76, 28);
             this.buttonDetectionSubParameter1SaveOrder.TabIndex = 3;
-            this.buttonDetectionSubParameter1SaveOrder.Text = "保存順序";
+            this.buttonDetectionSubParameter1SaveOrder.Text = "靽???";
             this.buttonDetectionSubParameter1SaveOrder.UseVisualStyleBackColor = true;
             // 
             // checkBoxDetectionSubParameter1Enabled
@@ -3532,7 +3452,7 @@ namespace AoiMeasureTool
             this.groupBoxDetectionSubParameter2List.Size = new System.Drawing.Size(180, 280);
             this.groupBoxDetectionSubParameter2List.TabIndex = 3;
             this.groupBoxDetectionSubParameter2List.TabStop = false;
-            this.groupBoxDetectionSubParameter2List.Text = "子參數2";
+            this.groupBoxDetectionSubParameter2List.Text = "摮???";
             // 
             // listBoxDetectionSubParameter2
             // 
@@ -3551,7 +3471,7 @@ namespace AoiMeasureTool
             this.buttonDetectionSubParameter2MoveUp.Name = "buttonDetectionSubParameter2MoveUp";
             this.buttonDetectionSubParameter2MoveUp.Size = new System.Drawing.Size(34, 28);
             this.buttonDetectionSubParameter2MoveUp.TabIndex = 1;
-            this.buttonDetectionSubParameter2MoveUp.Text = "↑";
+            this.buttonDetectionSubParameter2MoveUp.Text = "??;
             this.buttonDetectionSubParameter2MoveUp.UseVisualStyleBackColor = true;
             // 
             // buttonDetectionSubParameter2MoveDown
@@ -3562,7 +3482,7 @@ namespace AoiMeasureTool
             this.buttonDetectionSubParameter2MoveDown.Name = "buttonDetectionSubParameter2MoveDown";
             this.buttonDetectionSubParameter2MoveDown.Size = new System.Drawing.Size(34, 28);
             this.buttonDetectionSubParameter2MoveDown.TabIndex = 2;
-            this.buttonDetectionSubParameter2MoveDown.Text = "↓";
+            this.buttonDetectionSubParameter2MoveDown.Text = "??;
             this.buttonDetectionSubParameter2MoveDown.UseVisualStyleBackColor = true;
             // 
             // buttonDetectionSubParameter2SaveOrder
@@ -3573,7 +3493,7 @@ namespace AoiMeasureTool
             this.buttonDetectionSubParameter2SaveOrder.Name = "buttonDetectionSubParameter2SaveOrder";
             this.buttonDetectionSubParameter2SaveOrder.Size = new System.Drawing.Size(76, 28);
             this.buttonDetectionSubParameter2SaveOrder.TabIndex = 3;
-            this.buttonDetectionSubParameter2SaveOrder.Text = "保存順序";
+            this.buttonDetectionSubParameter2SaveOrder.Text = "靽???";
             this.buttonDetectionSubParameter2SaveOrder.UseVisualStyleBackColor = true;
             // 
             // checkBoxDetectionSubParameter2Enabled
@@ -3598,7 +3518,7 @@ namespace AoiMeasureTool
             this.groupBoxDetectionSubParameter3List.Size = new System.Drawing.Size(180, 280);
             this.groupBoxDetectionSubParameter3List.TabIndex = 4;
             this.groupBoxDetectionSubParameter3List.TabStop = false;
-            this.groupBoxDetectionSubParameter3List.Text = "子參數3";
+            this.groupBoxDetectionSubParameter3List.Text = "摮???";
             // 
             // listBoxDetectionSubParameter3
             // 
@@ -3617,7 +3537,7 @@ namespace AoiMeasureTool
             this.buttonDetectionSubParameter3MoveUp.Name = "buttonDetectionSubParameter3MoveUp";
             this.buttonDetectionSubParameter3MoveUp.Size = new System.Drawing.Size(34, 28);
             this.buttonDetectionSubParameter3MoveUp.TabIndex = 1;
-            this.buttonDetectionSubParameter3MoveUp.Text = "↑";
+            this.buttonDetectionSubParameter3MoveUp.Text = "??;
             this.buttonDetectionSubParameter3MoveUp.UseVisualStyleBackColor = true;
             // 
             // buttonDetectionSubParameter3MoveDown
@@ -3628,7 +3548,7 @@ namespace AoiMeasureTool
             this.buttonDetectionSubParameter3MoveDown.Name = "buttonDetectionSubParameter3MoveDown";
             this.buttonDetectionSubParameter3MoveDown.Size = new System.Drawing.Size(34, 28);
             this.buttonDetectionSubParameter3MoveDown.TabIndex = 2;
-            this.buttonDetectionSubParameter3MoveDown.Text = "↓";
+            this.buttonDetectionSubParameter3MoveDown.Text = "??;
             this.buttonDetectionSubParameter3MoveDown.UseVisualStyleBackColor = true;
             // 
             // buttonDetectionSubParameter3SaveOrder
@@ -3639,7 +3559,7 @@ namespace AoiMeasureTool
             this.buttonDetectionSubParameter3SaveOrder.Name = "buttonDetectionSubParameter3SaveOrder";
             this.buttonDetectionSubParameter3SaveOrder.Size = new System.Drawing.Size(76, 28);
             this.buttonDetectionSubParameter3SaveOrder.TabIndex = 3;
-            this.buttonDetectionSubParameter3SaveOrder.Text = "保存順序";
+            this.buttonDetectionSubParameter3SaveOrder.Text = "靽???";
             this.buttonDetectionSubParameter3SaveOrder.UseVisualStyleBackColor = true;
             // 
             // checkBoxDetectionSubParameter3Enabled
@@ -3659,7 +3579,7 @@ namespace AoiMeasureTool
             this.buttonDetectionSaveParameterReference.Name = "buttonDetectionSaveParameterReference";
             this.buttonDetectionSaveParameterReference.Size = new System.Drawing.Size(144, 32);
             this.buttonDetectionSaveParameterReference.TabIndex = 5;
-            this.buttonDetectionSaveParameterReference.Text = "儲存關聯";
+            this.buttonDetectionSaveParameterReference.Text = "?脣??";
             this.buttonDetectionSaveParameterReference.UseVisualStyleBackColor = true;
             // 
             // labelJudgementCriteriaTitle
@@ -3670,7 +3590,7 @@ namespace AoiMeasureTool
             this.labelJudgementCriteriaTitle.Name = "labelJudgementCriteriaTitle";
             this.labelJudgementCriteriaTitle.Size = new System.Drawing.Size(96, 18);
             this.labelJudgementCriteriaTitle.TabIndex = 0;
-            this.labelJudgementCriteriaTitle.Text = "良品判斷條件";
+            this.labelJudgementCriteriaTitle.Text = "?臬??斗璇辣";
             // 
             // buttonJudgementSyntaxHelp
             // 
@@ -3682,7 +3602,7 @@ namespace AoiMeasureTool
             this.buttonJudgementSyntaxHelp.Name = "buttonJudgementSyntaxHelp";
             this.buttonJudgementSyntaxHelp.Size = new System.Drawing.Size(72, 28);
             this.buttonJudgementSyntaxHelp.TabIndex = 1;
-            this.buttonJudgementSyntaxHelp.Text = "語法";
+            this.buttonJudgementSyntaxHelp.Text = "隤?";
             this.buttonJudgementSyntaxHelp.UseVisualStyleBackColor = false;
             this.buttonJudgementSyntaxHelp.Click += new System.EventHandler(this.JudgementSyntaxHelpButton_Click);
             // 
@@ -3718,7 +3638,7 @@ namespace AoiMeasureTool
             this.labelJudgementName.Name = "labelJudgementName";
             this.labelJudgementName.Size = new System.Drawing.Size(56, 18);
             this.labelJudgementName.TabIndex = 0;
-            this.labelJudgementName.Text = "規則名稱";
+            this.labelJudgementName.Text = "閬??迂";
             // 
             // textBoxJudgementName
             // 
@@ -3734,7 +3654,7 @@ namespace AoiMeasureTool
             this.labelJudgementCalculation.Name = "labelJudgementCalculation";
             this.labelJudgementCalculation.Size = new System.Drawing.Size(76, 18);
             this.labelJudgementCalculation.TabIndex = 2;
-            this.labelJudgementCalculation.Text = "A 規計算式";
+            this.labelJudgementCalculation.Text = "A 閬?蝞?";
             // 
             // textBoxJudgementCalculation
             // 
@@ -3750,7 +3670,7 @@ namespace AoiMeasureTool
             this.labelJudgementSpec.Name = "labelJudgementSpec";
             this.labelJudgementSpec.Size = new System.Drawing.Size(62, 18);
             this.labelJudgementSpec.TabIndex = 4;
-            this.labelJudgementSpec.Text = "A 規規格";
+            this.labelJudgementSpec.Text = "A 閬???;
             // 
             // textBoxJudgementSpec
             // 
@@ -3766,7 +3686,7 @@ namespace AoiMeasureTool
             this.labelJudgementCalculationB.Name = "labelJudgementCalculationB";
             this.labelJudgementCalculationB.Size = new System.Drawing.Size(76, 18);
             this.labelJudgementCalculationB.TabIndex = 6;
-            this.labelJudgementCalculationB.Text = "B 規計算式";
+            this.labelJudgementCalculationB.Text = "B 閬?蝞?";
             // 
             // textBoxJudgementCalculationB
             // 
@@ -3782,7 +3702,7 @@ namespace AoiMeasureTool
             this.labelJudgementSpecB.Name = "labelJudgementSpecB";
             this.labelJudgementSpecB.Size = new System.Drawing.Size(62, 18);
             this.labelJudgementSpecB.TabIndex = 8;
-            this.labelJudgementSpecB.Text = "B 規規格";
+            this.labelJudgementSpecB.Text = "B 閬???;
             // 
             // textBoxJudgementSpecB
             // 
@@ -3800,7 +3720,7 @@ namespace AoiMeasureTool
             this.buttonJudgementAdd.Name = "buttonJudgementAdd";
             this.buttonJudgementAdd.Size = new System.Drawing.Size(100, 36);
             this.buttonJudgementAdd.TabIndex = 10;
-            this.buttonJudgementAdd.Text = "新增";
+            this.buttonJudgementAdd.Text = "?啣?";
             this.buttonJudgementAdd.UseVisualStyleBackColor = false;
             this.buttonJudgementAdd.Click += new System.EventHandler(this.JudgementAddButton_Click);
             // 
@@ -3813,7 +3733,7 @@ namespace AoiMeasureTool
             this.buttonJudgementReset.Name = "buttonJudgementReset";
             this.buttonJudgementReset.Size = new System.Drawing.Size(100, 36);
             this.buttonJudgementReset.TabIndex = 11;
-            this.buttonJudgementReset.Text = "重新輸入";
+            this.buttonJudgementReset.Text = "?頛詨";
             this.buttonJudgementReset.UseVisualStyleBackColor = false;
             this.buttonJudgementReset.Click += new System.EventHandler(this.JudgementResetButton_Click);
             // 
@@ -3826,7 +3746,7 @@ namespace AoiMeasureTool
             this.buttonJudgementSave.Name = "buttonJudgementSave";
             this.buttonJudgementSave.Size = new System.Drawing.Size(140, 36);
             this.buttonJudgementSave.TabIndex = 12;
-            this.buttonJudgementSave.Text = "儲存判斷條件";
+            this.buttonJudgementSave.Text = "?脣??斗璇辣";
             this.buttonJudgementSave.UseVisualStyleBackColor = false;
             this.buttonJudgementSave.Click += new System.EventHandler(this.JudgementSaveButton_Click);
             // 
@@ -3839,7 +3759,7 @@ namespace AoiMeasureTool
             this.buttonJudgementMoveUp.Name = "buttonJudgementMoveUp";
             this.buttonJudgementMoveUp.Size = new System.Drawing.Size(68, 36);
             this.buttonJudgementMoveUp.TabIndex = 13;
-            this.buttonJudgementMoveUp.Text = "↑";
+            this.buttonJudgementMoveUp.Text = "??;
             this.buttonJudgementMoveUp.UseVisualStyleBackColor = false;
             this.buttonJudgementMoveUp.Click += new System.EventHandler(this.JudgementMoveUpButton_Click);
             // 
@@ -3852,7 +3772,7 @@ namespace AoiMeasureTool
             this.buttonJudgementMoveDown.Name = "buttonJudgementMoveDown";
             this.buttonJudgementMoveDown.Size = new System.Drawing.Size(68, 36);
             this.buttonJudgementMoveDown.TabIndex = 14;
-            this.buttonJudgementMoveDown.Text = "↓";
+            this.buttonJudgementMoveDown.Text = "??;
             this.buttonJudgementMoveDown.UseVisualStyleBackColor = false;
             this.buttonJudgementMoveDown.Click += new System.EventHandler(this.JudgementMoveDownButton_Click);
             // 
@@ -3883,7 +3803,7 @@ namespace AoiMeasureTool
             this.tabPageMeasureDistance.Padding = new System.Windows.Forms.Padding(3);
             this.tabPageMeasureDistance.Size = new System.Drawing.Size(1032, 656);
             this.tabPageMeasureDistance.TabIndex = 2;
-            this.tabPageMeasureDistance.Text = "框選量測的距離";
+            this.tabPageMeasureDistance.Text = "獢?葫????;
             // 
             // panelMeasureSource
             // 
@@ -3908,7 +3828,7 @@ namespace AoiMeasureTool
             this.labelMeasureSource.Name = "labelMeasureSource";
             this.labelMeasureSource.Size = new System.Drawing.Size(88, 18);
             this.labelMeasureSource.TabIndex = 0;
-            this.labelMeasureSource.Text = "前處理影像來源";
+            this.labelMeasureSource.Text = "???蔣??皞?;
             // 
             // comboBoxMeasureSource
             // 
@@ -3925,7 +3845,7 @@ namespace AoiMeasureTool
             this.buttonParallelMeasure.Name = "buttonParallelMeasure";
             this.buttonParallelMeasure.Size = new System.Drawing.Size(136, 36);
             this.buttonParallelMeasure.TabIndex = 2;
-            this.buttonParallelMeasure.Text = "平行";
+            this.buttonParallelMeasure.Text = "撟唾?";
             this.buttonParallelMeasure.UseVisualStyleBackColor = true;
             // 
             // buttonPerpendicularMeasure
@@ -3934,7 +3854,7 @@ namespace AoiMeasureTool
             this.buttonPerpendicularMeasure.Name = "buttonPerpendicularMeasure";
             this.buttonPerpendicularMeasure.Size = new System.Drawing.Size(136, 36);
             this.buttonPerpendicularMeasure.TabIndex = 3;
-            this.buttonPerpendicularMeasure.Text = "垂直";
+            this.buttonPerpendicularMeasure.Text = "?";
             this.buttonPerpendicularMeasure.UseVisualStyleBackColor = true;
             // 
             // buttonSaveMeasurePoint
@@ -3943,7 +3863,7 @@ namespace AoiMeasureTool
             this.buttonSaveMeasurePoint.Name = "buttonSaveMeasurePoint";
             this.buttonSaveMeasurePoint.Size = new System.Drawing.Size(280, 40);
             this.buttonSaveMeasurePoint.TabIndex = 4;
-            this.buttonSaveMeasurePoint.Text = "保存量測點";
+            this.buttonSaveMeasurePoint.Text = "靽??葫暺?;
             this.buttonSaveMeasurePoint.UseVisualStyleBackColor = true;
             // 
             // buttonClearMeasurePoint
@@ -3952,7 +3872,7 @@ namespace AoiMeasureTool
             this.buttonClearMeasurePoint.Name = "buttonClearMeasurePoint";
             this.buttonClearMeasurePoint.Size = new System.Drawing.Size(280, 40);
             this.buttonClearMeasurePoint.TabIndex = 5;
-            this.buttonClearMeasurePoint.Text = "清除量測點";
+            this.buttonClearMeasurePoint.Text = "皜?葫暺?;
             this.buttonClearMeasurePoint.UseVisualStyleBackColor = true;
             // 
             // labelMeasureStatus
@@ -3963,7 +3883,7 @@ namespace AoiMeasureTool
             this.labelMeasureStatus.Name = "labelMeasureStatus";
             this.labelMeasureStatus.Size = new System.Drawing.Size(188, 18);
             this.labelMeasureStatus.TabIndex = 6;
-            this.labelMeasureStatus.Text = "點兩下影像建立兩點量測";
+            this.labelMeasureStatus.Text = "暺銝蔣?遣蝡暺?皜?;
             // 
             // panelMeasurePreview
             // 
@@ -3998,7 +3918,7 @@ namespace AoiMeasureTool
             this.buttonSaveMeasureRecords.Name = "buttonSaveMeasureRecords";
             this.buttonSaveMeasureRecords.Size = new System.Drawing.Size(646, 42);
             this.buttonSaveMeasureRecords.TabIndex = 3;
-            this.buttonSaveMeasureRecords.Text = "保存紀錄";
+            this.buttonSaveMeasureRecords.Text = "靽?蝝??;
             this.buttonSaveMeasureRecords.UseVisualStyleBackColor = true;
             // 
             // tabPageMultiImageConfirm
@@ -4018,7 +3938,7 @@ namespace AoiMeasureTool
             this.tabPageMultiImageConfirm.Padding = new System.Windows.Forms.Padding(3);
             this.tabPageMultiImageConfirm.Size = new System.Drawing.Size(1032, 656);
             this.tabPageMultiImageConfirm.TabIndex = 3;
-            this.tabPageMultiImageConfirm.Text = "多影像確認結果";
+            this.tabPageMultiImageConfirm.Text = "憭蔣?Ⅱ隤???;
             // 
             // buttonLoadMultiImageFolder
             // 
@@ -4028,7 +3948,7 @@ namespace AoiMeasureTool
             this.buttonLoadMultiImageFolder.Name = "buttonLoadMultiImageFolder";
             this.buttonLoadMultiImageFolder.Size = new System.Drawing.Size(180, 36);
             this.buttonLoadMultiImageFolder.TabIndex = 1;
-            this.buttonLoadMultiImageFolder.Text = "讀取資料夾";
+            this.buttonLoadMultiImageFolder.Text = "霈???冗";
             this.buttonLoadMultiImageFolder.UseVisualStyleBackColor = false;
             this.buttonLoadMultiImageFolder.Click += new System.EventHandler(this.LoadMultiImageFolder_Click);
             // 
@@ -4042,7 +3962,7 @@ namespace AoiMeasureTool
             this.groupBoxMultiImagePreviewSource.Size = new System.Drawing.Size(440, 126);
             this.groupBoxMultiImagePreviewSource.TabIndex = 5;
             this.groupBoxMultiImagePreviewSource.TabStop = false;
-            this.groupBoxMultiImagePreviewSource.Text = "預覽來源";
+            this.groupBoxMultiImagePreviewSource.Text = "?汗靘?";
             // 
             // comboBoxMultiImagePreviewSource
             // 
@@ -4062,7 +3982,7 @@ namespace AoiMeasureTool
             this.buttonLoadMultiImagePreprocess.Name = "buttonLoadMultiImagePreprocess";
             this.buttonLoadMultiImagePreprocess.Size = new System.Drawing.Size(202, 36);
             this.buttonLoadMultiImagePreprocess.TabIndex = 1;
-            this.buttonLoadMultiImagePreprocess.Text = "讀取前處理影像";
+            this.buttonLoadMultiImagePreprocess.Text = "霈????敶勗?";
             this.buttonLoadMultiImagePreprocess.UseVisualStyleBackColor = false;
             this.buttonLoadMultiImagePreprocess.Click += new System.EventHandler(this.LoadMultiImagePreprocess_Click);
             // 
@@ -4074,7 +3994,7 @@ namespace AoiMeasureTool
             this.buttonLoadMultiImageOriginal.Name = "buttonLoadMultiImageOriginal";
             this.buttonLoadMultiImageOriginal.Size = new System.Drawing.Size(188, 74);
             this.buttonLoadMultiImageOriginal.TabIndex = 2;
-            this.buttonLoadMultiImageOriginal.Text = "原始影像";
+            this.buttonLoadMultiImageOriginal.Text = "??敶勗?";
             this.buttonLoadMultiImageOriginal.UseVisualStyleBackColor = false;
             this.buttonLoadMultiImageOriginal.Click += new System.EventHandler(this.LoadMultiImageOriginal_Click);
             // 
@@ -4096,7 +4016,7 @@ namespace AoiMeasureTool
             this.buttonMultiImagePrev.Name = "buttonMultiImagePrev";
             this.buttonMultiImagePrev.Size = new System.Drawing.Size(44, 36);
             this.buttonMultiImagePrev.TabIndex = 3;
-            this.buttonMultiImagePrev.Text = "←";
+            this.buttonMultiImagePrev.Text = "??;
             this.buttonMultiImagePrev.UseVisualStyleBackColor = false;
             this.buttonMultiImagePrev.Click += new System.EventHandler(this.MultiImageConfirmPrev_Click);
             // 
@@ -4108,7 +4028,7 @@ namespace AoiMeasureTool
             this.buttonMultiImageNext.Name = "buttonMultiImageNext";
             this.buttonMultiImageNext.Size = new System.Drawing.Size(44, 36);
             this.buttonMultiImageNext.TabIndex = 4;
-            this.buttonMultiImageNext.Text = "→";
+            this.buttonMultiImageNext.Text = "??;
             this.buttonMultiImageNext.UseVisualStyleBackColor = false;
             this.buttonMultiImageNext.Click += new System.EventHandler(this.MultiImageConfirmNext_Click);
             // 
@@ -4120,7 +4040,7 @@ namespace AoiMeasureTool
             this.buttonMultiImageLineSequence.Name = "buttonMultiImageLineSequence";
             this.buttonMultiImageLineSequence.Size = new System.Drawing.Size(94, 36);
             this.buttonMultiImageLineSequence.TabIndex = 7;
-            this.buttonMultiImageLineSequence.Text = "線序";
+            this.buttonMultiImageLineSequence.Text = "蝺?";
             this.buttonMultiImageLineSequence.UseVisualStyleBackColor = false;
             this.buttonMultiImageLineSequence.Click += new System.EventHandler(this.MultiImageLineSequence_Click);
             // 
@@ -4164,7 +4084,7 @@ namespace AoiMeasureTool
             this.tabPageMultiImageRawData.Padding = new System.Windows.Forms.Padding(3);
             this.tabPageMultiImageRawData.Size = new System.Drawing.Size(316, 368);
             this.tabPageMultiImageRawData.TabIndex = 0;
-            this.tabPageMultiImageRawData.Text = "原始資料";
+            this.tabPageMultiImageRawData.Text = "??鞈?";
             //
             // tabPageMultiImageJudgementResult
             //
@@ -4174,7 +4094,7 @@ namespace AoiMeasureTool
             this.tabPageMultiImageJudgementResult.Padding = new System.Windows.Forms.Padding(3);
             this.tabPageMultiImageJudgementResult.Size = new System.Drawing.Size(316, 368);
             this.tabPageMultiImageJudgementResult.TabIndex = 1;
-            this.tabPageMultiImageJudgementResult.Text = "判定結果";
+            this.tabPageMultiImageJudgementResult.Text = "?文?蝯?";
             // 
             // dataGridViewMultiImageInfo
             // 
@@ -4219,7 +4139,7 @@ namespace AoiMeasureTool
             // openFileDialogImage
             // 
             this.openFileDialogImage.Filter = "Image Files|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff|All Files|*.*";
-            this.openFileDialogImage.Title = "選擇圖片";
+            this.openFileDialogImage.Title = "?豢???";
             // 
             // MainForm
             // 
@@ -4228,16 +4148,12 @@ namespace AoiMeasureTool
             this.ClientSize = new System.Drawing.Size(1280, 800);
             this.Controls.Add(this.panelMain);
             this.Controls.Add(this.panelSidebar);
-            this.Controls.Add(this.menuStripMain);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.MainMenuStrip = this.menuStripMain;
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "AOI Image Viewer";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
-            this.menuStripMain.ResumeLayout(false);
-            this.menuStripMain.PerformLayout();
             this.panelSidebar.ResumeLayout(false);
             this.panelSidebar.PerformLayout();
             this.panelMain.ResumeLayout(false);
@@ -4387,3 +4303,4 @@ namespace AoiMeasureTool
 
     }
 }
+
