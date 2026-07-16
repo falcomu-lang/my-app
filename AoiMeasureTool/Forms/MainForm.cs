@@ -28,6 +28,18 @@ namespace AoiMeasureTool
             Manager = 2
         }
 
+        private enum WorkspaceButtonMode
+        {
+            ImageViewer = 0,
+            ReferenceCorner = 1,
+            MeasureDistance = 2,
+            MultiImageConfirm = 3,
+            InnerSettings = 4,
+            JudgementCriteria = 5,
+            DetectionParameterSummary = 6,
+            ContinuousInspection = 7
+        }
+
         private CvMat _sourceImage;
         private CvMat _grayImage;
         private readonly CvMat[] _preprocessImages = new CvMat[4];
@@ -2355,6 +2367,7 @@ namespace AoiMeasureTool
         }
     }
 }
+
 
 
 
