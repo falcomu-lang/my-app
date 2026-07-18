@@ -1,27 +1,34 @@
-# WinForms Image Viewer
+# my-app
 
-Simple C# WinForms and OpenCvSharp4 image viewer for Visual Studio 2019 and .NET Framework 4.8.
+WinForms AOI measurement application built with `.NET Framework 4.7.2`.
 
-## Features
+## Overview
 
-- Fixed 1280 x 800 interface with an 820 x 600 image preview.
-- Standard WinForms Designer controls with fixed locations and sizes.
-- Light desktop-tool layout with a top menu, left navigation, and main preview workspace.
-- Load BMP, JPG, PNG, and TIFF images through `Cv2.ImRead`.
-- Display the selected image with a standard WinForms `Panel` and `PictureBox` so the Visual Studio 2019 Designer can load it.
-- Fit the image when loaded, zoom with the mouse wheel, and pan by dragging with the left mouse button.
-- Display file name and image dimensions.
-- Keep the loaded OpenCV `Mat` ready for future image processing.
-- Build as x64 and copy the OpenCV native runtime beside the executable.
-- Show four independent binary preprocessing results at the same time.
-- Keep image viewing on the first main tab and binary preprocessing on the second main tab.
-- Arrange binarization as original image, active preview, settings, and four result thumbnails.
-- Zoom the active preprocess preview with the mouse wheel, pan with left-drag, and hold the right mouse button to compare the original image.
-- Preserve the active preview zoom and pan position when threshold or morphology parameters change.
-- Preprocess 1 and 2 detect bright objects with `Gray > Threshold`.
-- Preprocess 3 and 4 detect dark objects with `Gray < Threshold`.
-- Configure enable, threshold, erode, dilate, open, and close independently for every pipeline.
+This project is a desktop inspection tool for image viewing, preprocessing, measurement, judgement criteria, and continuous inspection workflows.
 
-## Open in Visual Studio
+## Start Here
 
-Open `AoiMeasureTool.sln` with Visual Studio 2019. In Solution Explorer, right-click `MainForm.cs` and select `View Designer`.
+Read [PROJECT_HANDOFF.md](./PROJECT_HANDOFF.md) first for the current baseline, rules, and next steps.
+
+## Current Highlights
+
+- WinForms UI with the left sidebar as the main workspace navigator.
+- Role-based access for `操作員`, `工程師`, and `管理者`.
+- Continuous inspection APIs for both manual and camera/`Mat` input.
+- Multi-image confirm and preprocessing workspaces are already in place.
+- The top `MenuStrip` is removed from both Designer and runtime UI.
+
+## Build
+
+Open `AoiMeasureTool.sln` with Visual Studio 2019 and build with the configured .NET Framework target.
+
+Known verified build command:
+
+```powershell
+& 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe' 'C:\Users\falcomu\Documents\Codex\程式撰寫 專案資料夾\量測程式\my-app\AoiMeasureTool.sln' /t:Rebuild /p:Configuration=Debug
+```
+
+## Repository Files
+
+- [`PROJECT_HANDOFF.md`](./PROJECT_HANDOFF.md): detailed handoff notes
+- [`README.md`](./README.md): short project overview

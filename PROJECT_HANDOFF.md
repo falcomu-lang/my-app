@@ -338,17 +338,11 @@ Last verified status:
 
 Most relevant recent commits:
 
-- `7300703` Add continuous inspection detail API
-- `385d208` Fix continuous inspection overlay and role buttons
-- `529b242` Disable active workspace buttons
-- `3b29537` Fix workspace button mode enum
-- `08ccce7` Add role password protection
-- `faf1ab0` Restrict continuous inspection actions by role
-- `7be3c1a` Remove top menu strip
-- `a18f511` Fix UI text encoding and hide legacy menu
-- `0fb65d6` Remove designer menu strip and fix startup role state
-- `edd1d4e` Defer startup role restore until form is ready
+- `b2cc9fa` Harden continuous inspection concurrency
+- `f154102` Update project handoff documentation
 - `b9bc227` Apply startup role after form shown
+- `edd1d4e` Defer startup role restore until form is ready
+- `0fb65d6` Remove designer menu strip and fix startup role state
 
 ## Important Cautions
 
@@ -367,8 +361,8 @@ Most relevant recent commits:
 
 ## Suggested Next Steps
 
-- Verify saved engineer/manager restart behavior on the actual production machine.
-- Verify `LoadAndJudgeContinuousInspectionMatWithDetails(...)` with real camera `Mat` inputs for all three slots.
-- Confirm whether save-original should happen on load, on judgement, or both; current behavior is on load.
-- Decide whether yield/slot state should persist across restart.
-- Consider adding a small wrapper/service layer if external camera integration will grow beyond direct `MainForm` method calls.
+1. Verify saved engineer/manager restart behavior on the actual production machine.
+2. Verify `LoadAndJudgeContinuousInspectionMatWithDetails(...)` with real camera `Mat` inputs for all three slots.
+3. Confirm whether save-original should happen on load, on judgement, or both; current behavior is on load.
+4. Decide whether yield/slot state should persist across restart.
+5. Consider adding a small wrapper/service layer if external camera integration will grow beyond direct `MainForm` method calls.
