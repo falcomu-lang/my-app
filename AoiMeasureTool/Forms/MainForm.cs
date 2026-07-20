@@ -553,11 +553,15 @@ namespace AoiMeasureTool
                 }
             }
 
+            bool shouldRefreshQueuedStatus;
+            int queuedCountAfterEnqueue;
+            Task<ContinuousInspectionResult> next;
+
             lock (_continuousInspectionSlotQueueLocks[slotIndex])
             {
                 var previous = _continuousInspectionSlotQueues[slotIndex];
                 _continuousInspectionPendingJobCounts[slotIndex]++;
-                var next = previous == null
+                next = previous == null
                     ? Task.Run((Func<ContinuousInspectionResult>)RunQueuedWork)
                     : previous.ContinueWith(
                         completed =>
@@ -567,17 +571,21 @@ namespace AoiMeasureTool
                         },
                         TaskScheduler.Default);
 
-                if (previous != null && !previous.IsCompleted)
-                {
-                    UpdateContinuousInspectionSlotState(
-                        slotIndex,
-                        ContinuousInspectionSlotState.Processing,
-                        Math.Max(0, _continuousInspectionPendingJobCounts[slotIndex] - 1));
-                }
+                shouldRefreshQueuedStatus = previous != null && !previous.IsCompleted;
+                queuedCountAfterEnqueue = Math.Max(0, _continuousInspectionPendingJobCounts[slotIndex] - 1);
 
                 _continuousInspectionSlotQueues[slotIndex] = next;
-                return next;
             }
+
+            if (shouldRefreshQueuedStatus)
+            {
+                UpdateContinuousInspectionSlotState(
+                    slotIndex,
+                    ContinuousInspectionSlotState.Processing,
+                    queuedCountAfterEnqueue);
+            }
+
+            return next;
         }
 
         private int GetContinuousInspectionQueuedCountForActiveJob(int slotIndex)
