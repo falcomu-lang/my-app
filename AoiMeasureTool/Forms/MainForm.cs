@@ -64,8 +64,7 @@ namespace AoiMeasureTool
             Idle = 0,
             Waiting = 1,
             Processing = 2,
-            Completed = 3,
-            Unavailable = 4
+            Unavailable = 3
         }
 
         private CvMat _sourceImage;
@@ -254,6 +253,7 @@ namespace AoiMeasureTool
             { new object(), new object(), new object() };
         private readonly Task<ContinuousInspectionResult>[] _continuousInspectionSlotQueues =
             new Task<ContinuousInspectionResult>[3];
+        private readonly int[] _continuousInspectionPendingJobCounts = new int[3];
         private readonly object _continuousInspectionJudgeEngineLock = new object();
         private string _savedContinuousInspectionMainParameter;
         private ContextMenuStrip _judgementCriteriaMenu;
@@ -423,16 +423,18 @@ namespace AoiMeasureTool
             };
         }
 
-        private static string GetContinuousInspectionSlotStateText(ContinuousInspectionSlotState state)
+        private static string GetContinuousInspectionSlotStateText(ContinuousInspectionSlotState state, int queuedCount)
         {
             switch (state)
             {
                 case ContinuousInspectionSlotState.Waiting:
-                    return "狀態：排隊中";
+                    return queuedCount > 0
+                        ? string.Format(CultureInfo.InvariantCulture, "狀態：排隊中（{0} 筆）", queuedCount)
+                        : "狀態：排隊中";
                 case ContinuousInspectionSlotState.Processing:
-                    return "狀態：處理中";
-                case ContinuousInspectionSlotState.Completed:
-                    return "狀態：已完成";
+                    return queuedCount > 0
+                        ? string.Format(CultureInfo.InvariantCulture, "狀態：處理中（排隊 {0} 筆）", queuedCount)
+                        : "狀態：處理中";
                 case ContinuousInspectionSlotState.Unavailable:
                     return "狀態：不可用";
                 default:
@@ -441,6 +443,11 @@ namespace AoiMeasureTool
         }
 
         private void UpdateContinuousInspectionSlotState(int slotIndex, ContinuousInspectionSlotState state)
+        {
+            UpdateContinuousInspectionSlotState(slotIndex, state, 0);
+        }
+
+        private void UpdateContinuousInspectionSlotState(int slotIndex, ContinuousInspectionSlotState state, int queuedCount)
         {
             if (slotIndex < 0 || slotIndex >= _continuousInspectionStatusLabels.Length)
             {
@@ -455,7 +462,7 @@ namespace AoiMeasureTool
 
             RunOnUiThread(() =>
             {
-                label.Text = GetContinuousInspectionSlotStateText(state);
+                label.Text = GetContinuousInspectionSlotStateText(state, queuedCount);
                 label.ForeColor = state == ContinuousInspectionSlotState.Unavailable
                     ? Color.FromArgb(160, 80, 80)
                     : state == ContinuousInspectionSlotState.Processing
@@ -505,31 +512,74 @@ namespace AoiMeasureTool
                 return Task.FromResult(CreateContinuousInspectionUnavailableResult(slotIndex));
             }
 
+            ContinuousInspectionResult RunQueuedWork()
+            {
+                var queuedCount = GetContinuousInspectionQueuedCountForActiveJob(slotIndex);
+                UpdateContinuousInspectionSlotState(slotIndex, ContinuousInspectionSlotState.Processing, queuedCount);
+
+                try
+                {
+                    return work();
+                }
+                finally
+                {
+                    var remainingCount = CompleteContinuousInspectionQueuedWork(slotIndex);
+                    if (remainingCount <= 0)
+                    {
+                        UpdateContinuousInspectionSlotState(slotIndex, ContinuousInspectionSlotState.Idle);
+                    }
+                    else
+                    {
+                        UpdateContinuousInspectionSlotState(slotIndex, ContinuousInspectionSlotState.Processing, remainingCount);
+                    }
+                }
+            }
+
             lock (_continuousInspectionSlotQueueLocks[slotIndex])
             {
                 var previous = _continuousInspectionSlotQueues[slotIndex];
+                _continuousInspectionPendingJobCounts[slotIndex]++;
                 var next = previous == null
-                    ? Task.Run(() =>
-                    {
-                        UpdateContinuousInspectionSlotState(slotIndex, ContinuousInspectionSlotState.Processing);
-                        return work();
-                    })
+                    ? Task.Run((Func<ContinuousInspectionResult>)RunQueuedWork)
                     : previous.ContinueWith(
                         completed =>
                         {
                             var ignored = completed.Exception;
-                            UpdateContinuousInspectionSlotState(slotIndex, ContinuousInspectionSlotState.Processing);
-                            return work();
+                            return RunQueuedWork();
                         },
                         TaskScheduler.Default);
 
                 if (previous != null && !previous.IsCompleted)
                 {
-                    UpdateContinuousInspectionSlotState(slotIndex, ContinuousInspectionSlotState.Waiting);
+                    UpdateContinuousInspectionSlotState(
+                        slotIndex,
+                        ContinuousInspectionSlotState.Processing,
+                        Math.Max(0, _continuousInspectionPendingJobCounts[slotIndex] - 1));
                 }
 
                 _continuousInspectionSlotQueues[slotIndex] = next;
                 return next;
+            }
+        }
+
+        private int GetContinuousInspectionQueuedCountForActiveJob(int slotIndex)
+        {
+            lock (_continuousInspectionSlotQueueLocks[slotIndex])
+            {
+                return Math.Max(0, _continuousInspectionPendingJobCounts[slotIndex] - 1);
+            }
+        }
+
+        private int CompleteContinuousInspectionQueuedWork(int slotIndex)
+        {
+            lock (_continuousInspectionSlotQueueLocks[slotIndex])
+            {
+                if (_continuousInspectionPendingJobCounts[slotIndex] > 0)
+                {
+                    _continuousInspectionPendingJobCounts[slotIndex]--;
+                }
+
+                return _continuousInspectionPendingJobCounts[slotIndex];
             }
         }
 
@@ -1588,8 +1638,6 @@ namespace AoiMeasureTool
                 {
                     _continuousInspectionPreviewPanels[slotIndex]?.Invalidate();
                 }
-
-                UpdateContinuousInspectionSlotState(slotIndex, ContinuousInspectionSlotState.Completed);
             }
 
             payload.AnnotatedBitmap?.Dispose();
