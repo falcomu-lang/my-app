@@ -232,6 +232,9 @@ namespace AoiMeasureTool
         private readonly Label[] _continuousInspectionResultLabels = new Label[3];
         private readonly Label[] _continuousInspectionYieldLabels = new Label[3];
         private readonly Label[] _continuousInspectionStatusLabels = new Label[3];
+        private readonly string[] _continuousInspectionLastStatusTexts = new string[3];
+        private readonly Color[] _continuousInspectionLastStatusColors = new Color[3];
+        private readonly object _continuousInspectionStatusUpdateLock = new object();
         private readonly CheckBox[] _continuousInspectionSaveOriginalImageChecks = new CheckBox[3];
         private readonly Button[] _continuousInspectionJudgeButtons = new Button[3];
         private Button _buttonContinuousInspectionResetYield;
@@ -460,16 +463,31 @@ namespace AoiMeasureTool
                 return;
             }
 
+            var statusText = GetContinuousInspectionSlotStateText(state, queuedCount);
+            var statusColor = state == ContinuousInspectionSlotState.Unavailable
+                ? Color.FromArgb(160, 80, 80)
+                : state == ContinuousInspectionSlotState.Processing
+                    ? Color.FromArgb(0, 102, 204)
+                    : state == ContinuousInspectionSlotState.Waiting
+                        ? Color.FromArgb(180, 120, 0)
+                        : Color.FromArgb(110, 115, 120);
+
+            lock (_continuousInspectionStatusUpdateLock)
+            {
+                if (string.Equals(_continuousInspectionLastStatusTexts[slotIndex], statusText, StringComparison.Ordinal) &&
+                    _continuousInspectionLastStatusColors[slotIndex].ToArgb() == statusColor.ToArgb())
+                {
+                    return;
+                }
+
+                _continuousInspectionLastStatusTexts[slotIndex] = statusText;
+                _continuousInspectionLastStatusColors[slotIndex] = statusColor;
+            }
+
             RunOnUiThread(() =>
             {
-                label.Text = GetContinuousInspectionSlotStateText(state, queuedCount);
-                label.ForeColor = state == ContinuousInspectionSlotState.Unavailable
-                    ? Color.FromArgb(160, 80, 80)
-                    : state == ContinuousInspectionSlotState.Processing
-                        ? Color.FromArgb(0, 102, 204)
-                        : state == ContinuousInspectionSlotState.Waiting
-                            ? Color.FromArgb(180, 120, 0)
-                            : Color.FromArgb(110, 115, 120);
+                label.Text = statusText;
+                label.ForeColor = statusColor;
             });
         }
 
