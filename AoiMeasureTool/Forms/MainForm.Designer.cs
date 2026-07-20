@@ -57,8 +57,11 @@
         private System.Windows.Forms.Button buttonContinuousInspectionLoadImage2;
         private System.Windows.Forms.Button buttonContinuousInspectionLoadImage3;
         private System.Windows.Forms.Label labelContinuousInspectionResult1;
+        private System.Windows.Forms.Label labelContinuousInspectionStatus1;
         private System.Windows.Forms.Label labelContinuousInspectionResult2;
+        private System.Windows.Forms.Label labelContinuousInspectionStatus2;
         private System.Windows.Forms.Label labelContinuousInspectionResult3;
+        private System.Windows.Forms.Label labelContinuousInspectionStatus3;
         private System.Windows.Forms.Button buttonContinuousInspectionJudge1;
         private System.Windows.Forms.Button buttonContinuousInspectionJudge2;
         private System.Windows.Forms.Button buttonContinuousInspectionJudge3;
@@ -508,6 +511,7 @@
             this.labelContinuousInspectionYield1 = new System.Windows.Forms.Label();
             this.buttonContinuousInspectionJudge1 = new System.Windows.Forms.Button();
             this.labelContinuousInspectionResult1 = new System.Windows.Forms.Label();
+            this.labelContinuousInspectionStatus1 = new System.Windows.Forms.Label();
             this.buttonContinuousInspectionResetYield = new System.Windows.Forms.Button();
             this.buttonContinuousInspectionLoadImage1 = new System.Windows.Forms.Button();
             this.panelContinuousInspectionPreview1 = new System.Windows.Forms.Panel();
@@ -518,6 +522,7 @@
             this.labelContinuousInspectionYield2 = new System.Windows.Forms.Label();
             this.buttonContinuousInspectionJudge2 = new System.Windows.Forms.Button();
             this.labelContinuousInspectionResult2 = new System.Windows.Forms.Label();
+            this.labelContinuousInspectionStatus2 = new System.Windows.Forms.Label();
             this.buttonContinuousInspectionLoadImage2 = new System.Windows.Forms.Button();
             this.panelContinuousInspectionPreview2 = new System.Windows.Forms.Panel();
             this.pictureBoxContinuousInspection2 = new System.Windows.Forms.PictureBox();
@@ -527,6 +532,7 @@
             this.labelContinuousInspectionYield3 = new System.Windows.Forms.Label();
             this.buttonContinuousInspectionJudge3 = new System.Windows.Forms.Button();
             this.labelContinuousInspectionResult3 = new System.Windows.Forms.Label();
+            this.labelContinuousInspectionStatus3 = new System.Windows.Forms.Label();
             this.buttonContinuousInspectionLoadImage3 = new System.Windows.Forms.Button();
             this.panelContinuousInspectionPreview3 = new System.Windows.Forms.Panel();
             this.pictureBoxContinuousInspection3 = new System.Windows.Forms.PictureBox();
@@ -2972,6 +2978,7 @@
             this.groupBoxContinuousInspection1.Controls.Add(this.checkBoxContinuousInspectionSaveOriginalImage1);
             this.groupBoxContinuousInspection1.Controls.Add(this.labelContinuousInspectionYield1);
             this.groupBoxContinuousInspection1.Controls.Add(this.buttonContinuousInspectionJudge1);
+            this.groupBoxContinuousInspection1.Controls.Add(this.labelContinuousInspectionStatus1);
             this.groupBoxContinuousInspection1.Controls.Add(this.labelContinuousInspectionResult1);
             this.groupBoxContinuousInspection1.Controls.Add(this.buttonContinuousInspectionLoadImage1);
             this.groupBoxContinuousInspection1.Controls.Add(this.panelContinuousInspectionPreview1);
@@ -3024,7 +3031,18 @@
             this.labelContinuousInspectionResult1.Size = new System.Drawing.Size(258, 40);
             this.labelContinuousInspectionResult1.TabIndex = 3;
             this.labelContinuousInspectionResult1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
+            //
+            // labelContinuousInspectionStatus1
+            //
+            this.labelContinuousInspectionStatus1.AutoSize = false;
+            this.labelContinuousInspectionStatus1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(115)))), ((int)(((byte)(120)))));
+            this.labelContinuousInspectionStatus1.Location = new System.Drawing.Point(16, 398);
+            this.labelContinuousInspectionStatus1.Name = "labelContinuousInspectionStatus1";
+            this.labelContinuousInspectionStatus1.Size = new System.Drawing.Size(258, 16);
+            this.labelContinuousInspectionStatus1.TabIndex = 7;
+            this.labelContinuousInspectionStatus1.Text = "狀態：空閒";
+            this.labelContinuousInspectionStatus1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            //
             // buttonContinuousInspectionLoadImage1
             // 
             this.buttonContinuousInspectionLoadImage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
@@ -3073,6 +3091,7 @@
             this.groupBoxContinuousInspection2.Controls.Add(this.checkBoxContinuousInspectionSaveOriginalImage2);
             this.groupBoxContinuousInspection2.Controls.Add(this.labelContinuousInspectionYield2);
             this.groupBoxContinuousInspection2.Controls.Add(this.buttonContinuousInspectionJudge2);
+            this.groupBoxContinuousInspection2.Controls.Add(this.labelContinuousInspectionStatus2);
             this.groupBoxContinuousInspection2.Controls.Add(this.labelContinuousInspectionResult2);
             this.groupBoxContinuousInspection2.Controls.Add(this.buttonContinuousInspectionLoadImage2);
             this.groupBoxContinuousInspection2.Controls.Add(this.panelContinuousInspectionPreview2);
@@ -3125,7 +3144,18 @@
             this.labelContinuousInspectionResult2.Size = new System.Drawing.Size(258, 40);
             this.labelContinuousInspectionResult2.TabIndex = 3;
             this.labelContinuousInspectionResult2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
+            //
+            // labelContinuousInspectionStatus2
+            //
+            this.labelContinuousInspectionStatus2.AutoSize = false;
+            this.labelContinuousInspectionStatus2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(115)))), ((int)(((byte)(120)))));
+            this.labelContinuousInspectionStatus2.Location = new System.Drawing.Point(16, 398);
+            this.labelContinuousInspectionStatus2.Name = "labelContinuousInspectionStatus2";
+            this.labelContinuousInspectionStatus2.Size = new System.Drawing.Size(258, 16);
+            this.labelContinuousInspectionStatus2.TabIndex = 7;
+            this.labelContinuousInspectionStatus2.Text = "狀態：空閒";
+            this.labelContinuousInspectionStatus2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            //
             // buttonContinuousInspectionLoadImage2
             // 
             this.buttonContinuousInspectionLoadImage2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
@@ -3174,6 +3204,7 @@
             this.groupBoxContinuousInspection3.Controls.Add(this.checkBoxContinuousInspectionSaveOriginalImage3);
             this.groupBoxContinuousInspection3.Controls.Add(this.labelContinuousInspectionYield3);
             this.groupBoxContinuousInspection3.Controls.Add(this.buttonContinuousInspectionJudge3);
+            this.groupBoxContinuousInspection3.Controls.Add(this.labelContinuousInspectionStatus3);
             this.groupBoxContinuousInspection3.Controls.Add(this.labelContinuousInspectionResult3);
             this.groupBoxContinuousInspection3.Controls.Add(this.buttonContinuousInspectionLoadImage3);
             this.groupBoxContinuousInspection3.Controls.Add(this.panelContinuousInspectionPreview3);
@@ -3226,9 +3257,20 @@
             this.labelContinuousInspectionResult3.Size = new System.Drawing.Size(258, 40);
             this.labelContinuousInspectionResult3.TabIndex = 3;
             this.labelContinuousInspectionResult3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
+            //
+            // labelContinuousInspectionStatus3
+            //
+            this.labelContinuousInspectionStatus3.AutoSize = false;
+            this.labelContinuousInspectionStatus3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(115)))), ((int)(((byte)(120)))));
+            this.labelContinuousInspectionStatus3.Location = new System.Drawing.Point(16, 398);
+            this.labelContinuousInspectionStatus3.Name = "labelContinuousInspectionStatus3";
+            this.labelContinuousInspectionStatus3.Size = new System.Drawing.Size(258, 16);
+            this.labelContinuousInspectionStatus3.TabIndex = 7;
+            this.labelContinuousInspectionStatus3.Text = "狀態：空閒";
+            this.labelContinuousInspectionStatus3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            //
             // buttonContinuousInspectionLoadImage3
-            // 
+            //
             this.buttonContinuousInspectionLoadImage3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(228)))), ((int)(((byte)(231)))));
             this.buttonContinuousInspectionLoadImage3.FlatAppearance.BorderSize = 0;
             this.buttonContinuousInspectionLoadImage3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;

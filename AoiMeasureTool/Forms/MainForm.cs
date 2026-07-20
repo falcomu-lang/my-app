@@ -59,6 +59,15 @@ namespace AoiMeasureTool
             public bool ShowOverlay { get; set; }
         }
 
+        private enum ContinuousInspectionSlotState
+        {
+            Idle = 0,
+            Waiting = 1,
+            Processing = 2,
+            Completed = 3,
+            Unavailable = 4
+        }
+
         private CvMat _sourceImage;
         private CvMat _grayImage;
         private readonly CvMat[] _preprocessImages = new CvMat[4];
@@ -223,6 +232,7 @@ namespace AoiMeasureTool
         private readonly PictureBox[] _continuousInspectionPictureBoxes = new PictureBox[3];
         private readonly Label[] _continuousInspectionResultLabels = new Label[3];
         private readonly Label[] _continuousInspectionYieldLabels = new Label[3];
+        private readonly Label[] _continuousInspectionStatusLabels = new Label[3];
         private readonly CheckBox[] _continuousInspectionSaveOriginalImageChecks = new CheckBox[3];
         private readonly Button[] _continuousInspectionJudgeButtons = new Button[3];
         private Button _buttonContinuousInspectionResetYield;
@@ -413,6 +423,49 @@ namespace AoiMeasureTool
             };
         }
 
+        private static string GetContinuousInspectionSlotStateText(ContinuousInspectionSlotState state)
+        {
+            switch (state)
+            {
+                case ContinuousInspectionSlotState.Waiting:
+                    return "狀態：排隊中";
+                case ContinuousInspectionSlotState.Processing:
+                    return "狀態：處理中";
+                case ContinuousInspectionSlotState.Completed:
+                    return "狀態：已完成";
+                case ContinuousInspectionSlotState.Unavailable:
+                    return "狀態：不可用";
+                default:
+                    return "狀態：空閒";
+            }
+        }
+
+        private void UpdateContinuousInspectionSlotState(int slotIndex, ContinuousInspectionSlotState state)
+        {
+            if (slotIndex < 0 || slotIndex >= _continuousInspectionStatusLabels.Length)
+            {
+                return;
+            }
+
+            var label = _continuousInspectionStatusLabels[slotIndex];
+            if (label == null)
+            {
+                return;
+            }
+
+            RunOnUiThread(() =>
+            {
+                label.Text = GetContinuousInspectionSlotStateText(state);
+                label.ForeColor = state == ContinuousInspectionSlotState.Unavailable
+                    ? Color.FromArgb(160, 80, 80)
+                    : state == ContinuousInspectionSlotState.Processing
+                        ? Color.FromArgb(0, 102, 204)
+                        : state == ContinuousInspectionSlotState.Waiting
+                            ? Color.FromArgb(180, 120, 0)
+                            : Color.FromArgb(110, 115, 120);
+            });
+        }
+
         private T RunContinuousInspectionSlotQueue<T>(int slotIndex, Func<T> work)
         {
             if (slotIndex < 0 || slotIndex >= _continuousInspectionSlotLocks.Length)
@@ -424,6 +477,10 @@ namespace AoiMeasureTool
             {
                 lock (_continuousInspectionSlotLocks[slotIndex])
                 {
+                    if (_continuousInspectionStatusLabels[slotIndex] != null)
+                    {
+                        UpdateContinuousInspectionSlotState(slotIndex, ContinuousInspectionSlotState.Processing);
+                    }
                     return work();
                 }
             });
@@ -452,14 +509,24 @@ namespace AoiMeasureTool
             {
                 var previous = _continuousInspectionSlotQueues[slotIndex];
                 var next = previous == null
-                    ? Task.Run(work)
+                    ? Task.Run(() =>
+                    {
+                        UpdateContinuousInspectionSlotState(slotIndex, ContinuousInspectionSlotState.Processing);
+                        return work();
+                    })
                     : previous.ContinueWith(
                         completed =>
                         {
                             var ignored = completed.Exception;
+                            UpdateContinuousInspectionSlotState(slotIndex, ContinuousInspectionSlotState.Processing);
                             return work();
                         },
                         TaskScheduler.Default);
+
+                if (previous != null && !previous.IsCompleted)
+                {
+                    UpdateContinuousInspectionSlotState(slotIndex, ContinuousInspectionSlotState.Waiting);
+                }
 
                 _continuousInspectionSlotQueues[slotIndex] = next;
                 return next;
@@ -997,6 +1064,9 @@ namespace AoiMeasureTool
             _continuousInspectionResultLabels[0] = labelContinuousInspectionResult1;
             _continuousInspectionResultLabels[1] = labelContinuousInspectionResult2;
             _continuousInspectionResultLabels[2] = labelContinuousInspectionResult3;
+            _continuousInspectionStatusLabels[0] = labelContinuousInspectionStatus1;
+            _continuousInspectionStatusLabels[1] = labelContinuousInspectionStatus2;
+            _continuousInspectionStatusLabels[2] = labelContinuousInspectionStatus3;
             _continuousInspectionYieldLabels[0] = labelContinuousInspectionYield1;
             _continuousInspectionYieldLabels[1] = labelContinuousInspectionYield2;
             _continuousInspectionYieldLabels[2] = labelContinuousInspectionYield3;
@@ -1054,6 +1124,7 @@ namespace AoiMeasureTool
                     _continuousInspectionResultLabels[i].BackColor = Color.White;
                 }
 
+                UpdateContinuousInspectionSlotState(i, ContinuousInspectionSlotState.Idle);
                 UpdateContinuousInspectionYieldLabel(i);
             }
         }
@@ -1064,6 +1135,7 @@ namespace AoiMeasureTool
             {
                 _continuousInspectionPassCounts[i] = 0;
                 _continuousInspectionJudgeCounts[i] = 0;
+                UpdateContinuousInspectionSlotState(i, ContinuousInspectionSlotState.Idle);
                 UpdateContinuousInspectionYieldLabel(i);
             }
         }
@@ -1238,6 +1310,7 @@ namespace AoiMeasureTool
             using (var bitmap = new Bitmap(image))
             {
                 RunOnUiThread(() => SetContinuousInspectionImage(slotIndex, new Bitmap(bitmap), filePath));
+                UpdateContinuousInspectionSlotState(slotIndex, ContinuousInspectionSlotState.Idle);
             }
         }
 
@@ -1261,6 +1334,7 @@ namespace AoiMeasureTool
             using (var bitmap = BitmapConverter.ToBitmap(imageMat))
             {
                 RunOnUiThread(() => SetContinuousInspectionImage(slotIndex, new Bitmap(bitmap), sourceName ?? "Camera"));
+                UpdateContinuousInspectionSlotState(slotIndex, ContinuousInspectionSlotState.Idle);
             }
         }
 
@@ -1278,6 +1352,7 @@ namespace AoiMeasureTool
 
             if (IsClosingOrDisposed())
             {
+                UpdateContinuousInspectionSlotState(slotIndex, ContinuousInspectionSlotState.Unavailable);
                 return CreateContinuousInspectionUnavailableResult(slotIndex);
             }
 
@@ -1319,6 +1394,7 @@ namespace AoiMeasureTool
 
             if (IsClosingOrDisposed())
             {
+                UpdateContinuousInspectionSlotState(slotIndex, ContinuousInspectionSlotState.Unavailable);
                 return CreateContinuousInspectionUnavailableResult(slotIndex);
             }
 
@@ -1512,6 +1588,8 @@ namespace AoiMeasureTool
                 {
                     _continuousInspectionPreviewPanels[slotIndex]?.Invalidate();
                 }
+
+                UpdateContinuousInspectionSlotState(slotIndex, ContinuousInspectionSlotState.Completed);
             }
 
             payload.AnnotatedBitmap?.Dispose();
