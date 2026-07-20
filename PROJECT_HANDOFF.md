@@ -163,6 +163,41 @@ Continuous inspection uses the selected sub-parameter as the runtime binding key
 - Continuous inspection reuses multi-image-confirm overlay style.
 - The green ROI rectangle is intentionally not drawn in continuous inspection.
 
+### Slot Queue / Status Behavior
+
+Continuous inspection is designed for up to three image sources.
+
+- Each slot has its own queue.
+- Requests for the same slot are processed sequentially.
+- Different slots can accept work independently.
+- Shared judgement engine access is protected by `_continuousInspectionJudgeEngineLock`.
+- Slot image/result/yield data is protected by `_continuousInspectionSlotLocks`.
+- Slot queue count/task chaining is protected by `_continuousInspectionSlotQueueLocks`.
+- Queue-lock sections should only update queue state and task chaining.
+- UI label updates should happen outside queue locks to avoid UI/background thread wait cycles.
+
+Slot status labels show the current queue state:
+
+- no pending work -> `狀態：空閒`
+- active work with no queued item -> `狀態：處理中`
+- active work with queued items -> `狀態：處理中（排隊 N 筆）`
+- form closing or unavailable -> `狀態：不可用`
+
+The UI no longer shows `狀態：已完成`.
+When the last queued job finishes, the status returns to `狀態：空閒`.
+
+Status label updates are cached:
+
+- if the next status text and color are identical to the last displayed values, no UI update is sent
+- this reduces repeated WinForms label redraws during frequent camera input
+
+Current known stability posture:
+
+- same-slot camera/manual requests should not overwrite each other because they go through the slot queue
+- three slots can receive images concurrently without sharing slot image state
+- large image display and overlay updates can still briefly occupy the UI thread
+- future UI-smoothness work should prefer non-blocking status updates or thumbnail-based preview updates
+
 ### Save Original Image Behavior
 
 Each slot has a `保存原始影像` checkbox.
@@ -338,6 +373,10 @@ Last verified status:
 
 Most relevant recent commits:
 
+- `d130920` Move queued status update outside queue lock
+- `540d9a2` Skip duplicate continuous inspection status updates
+- `52d0e17` Refine continuous inspection queue status
+- `ed30808` Show continuous inspection slot status
 - `b2cc9fa` Harden continuous inspection concurrency
 - `f154102` Update project handoff documentation
 - `b9bc227` Apply startup role after form shown
@@ -358,6 +397,12 @@ Most relevant recent commits:
   - `UpdateWorkspaceButtonStates()`
 - If continuous inspection judgement changes, verify that Mat API and manual UI flow still produce the same overlay and result behavior.
 - If save-original behavior changes, verify both manual load and Mat load paths.
+- Do not call synchronous UI updates while holding `_continuousInspectionSlotQueueLocks`.
+- If continuous-inspection queue behavior changes, verify:
+  - same-slot back-to-back Mat requests stay ordered
+  - different slots can still run without blocking each other beyond shared judgement-engine locking
+  - status text returns to `狀態：空閒` after the final queued job
+  - status text shows `狀態：處理中（排隊 N 筆）` while later jobs are waiting
 
 ## Suggested Next Steps
 
@@ -366,3 +411,4 @@ Most relevant recent commits:
 3. Confirm whether save-original should happen on load, on judgement, or both; current behavior is on load.
 4. Decide whether yield/slot state should persist across restart.
 5. Consider adding a small wrapper/service layer if external camera integration will grow beyond direct `MainForm` method calls.
+6. Consider changing simple status-label updates to non-blocking UI dispatch if high-frequency camera input causes visible UI delay.
