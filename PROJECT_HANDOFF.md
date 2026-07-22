@@ -148,6 +148,10 @@ Continuous inspection uses the selected sub-parameter as the runtime binding key
 - Each slot judges only its own image.
 - Judgement uses that slot's sub-parameter name as the product/profile key.
 - Continuous inspection reuses saved preprocess, reference-corner, measurement, and judgement-criteria data of the selected sub-parameter.
+- Mat/API judgement builds a per-slot `ContinuousInspectionJudgementContext` before judging.
+- The context contains the slot image, source `Mat` when provided, product key, judgement rules, measurement records, preprocess snapshots, reference-corner snapshot, dual-threshold snapshot, CCD precision, and measurement scale factor.
+- Different slots can judge independently using their own context.
+- Same-slot requests still stay ordered through that slot's queue.
 - If no sub-parameter is configured, the result label shows `未設定條件`.
 - If no image is loaded, the result label shows `未載入圖片`.
 - Result summary rules:
@@ -162,6 +166,10 @@ Continuous inspection uses the selected sub-parameter as the runtime binding key
 - Overlay drawing happens only after judging.
 - Continuous inspection reuses multi-image-confirm overlay style.
 - The green ROI rectangle is intentionally not drawn in continuous inspection.
+- Continuous-inspection overlay data is stored per slot in `_continuousInspectionOverlaySnapshots`.
+- Overlay paint now draws cached slot overlay data only.
+- Overlay paint should not re-run judgement, reload image files, or mutate `_multiImageConfirm...` shared state.
+- API/Mat overlay data contains the reference baseline and valid measured line endpoints produced during that slot's judgement.
 
 ### Slot Queue / Status Behavior
 
@@ -170,7 +178,9 @@ Continuous inspection is designed for up to three image sources.
 - Each slot has its own queue.
 - Requests for the same slot are processed sequentially.
 - Different slots can accept work independently.
-- Shared judgement engine access is protected by `_continuousInspectionJudgeEngineLock`.
+- API/Mat judgement no longer uses `_continuousInspectionJudgeEngineLock` for the main judgement path.
+- Different slots can run API/Mat judgement in parallel because judgement and overlay data are stored in per-slot context/snapshot objects.
+- `_continuousInspectionJudgeEngineLock` still exists for legacy/manual multi-image-confirm style paths; do not remove it casually without checking manual UI behavior.
 - Slot image/result/yield data is protected by `_continuousInspectionSlotLocks`.
 - Slot queue count/task chaining is protected by `_continuousInspectionSlotQueueLocks`.
 - Queue-lock sections should only update queue state and task chaining.
@@ -194,7 +204,8 @@ Status label updates are cached:
 Current known stability posture:
 
 - same-slot camera/manual requests should not overwrite each other because they go through the slot queue
-- three slots can receive images concurrently without sharing slot image state
+- three slots can receive images concurrently without sharing slot image, judgement context, or overlay snapshot state
+- API Mat judgement path avoids writing a working PNG and reading it back for judgement
 - large image display and overlay updates can still briefly occupy the UI thread
 - future UI-smoothness work should prefer non-blocking status updates or thumbnail-based preview updates
 
@@ -234,9 +245,12 @@ public string LoadAndJudgeContinuousInspectionMat(int slotIndex, CvMat imageMat,
 
 Behavior:
 
-- Converts the provided OpenCvSharp `Mat` into a slot image.
+- Clones the provided OpenCvSharp `Mat` for judgement so the caller can safely reuse/release the original Mat after the call begins.
+- Converts the Mat to a Bitmap only for slot preview display.
 - Updates the corresponding continuous-inspection preview slot.
 - Saves the source image if that slot's `保存原始影像` checkbox is checked.
+- Does not save a working PNG and then read it back for API judgement.
+- Judgement uses the cloned Mat directly, converting it to gray in memory.
 - Runs judgement for that slot.
 - Updates result label, yield count, and overlay.
 - Returns only the summary string, for example `A`, `B`, `NG`, `未設定條件`, or `不可判斷`.
@@ -287,10 +301,18 @@ Manual flow:
 Mat flow:
 
 1. External caller passes `Mat` to `LoadAndJudgeContinuousInspectionMat...`.
-2. Slot preview updates.
-3. Optional original image save happens if checkbox is checked.
-4. Judgement runs immediately.
-5. Result, yield, and overlay update.
+2. The API clones the `Mat` for judgement.
+3. Slot preview updates from a Bitmap conversion.
+4. No working PNG is written/read for judgement.
+5. Optional original image save happens if checkbox is checked.
+6. Judgement runs immediately using the cloned Mat in memory.
+7. Result, yield, and overlay update.
+
+Important performance note:
+
+- The Mat API path should not do `Mat -> Bitmap -> PNG -> Cv2.ImRead(...) -> judgement`.
+- The intended fast path is `Mat -> cloned Mat in context -> gray Mat -> judgement`.
+- Manual image loading can still use file paths where appropriate.
 
 ## Persistence Rules
 
@@ -373,6 +395,8 @@ Last verified status:
 
 Most relevant recent commits:
 
+- `52bea82` Align multi-image processing time measurement
+- `62caf40` Isolate continuous inspection slot judgement data
 - `d130920` Move queued status update outside queue lock
 - `540d9a2` Skip duplicate continuous inspection status updates
 - `52d0e17` Refine continuous inspection queue status
@@ -396,11 +420,12 @@ Most relevant recent commits:
   - `UpdateSidebarVisibilityForRole(...)`
   - `UpdateWorkspaceButtonStates()`
 - If continuous inspection judgement changes, verify that Mat API and manual UI flow still produce the same overlay and result behavior.
+- If Mat API performance regresses, verify the path still uses `ContinuousInspectionJudgementContext.SourceMat` and does not reintroduce working PNG save/read for judgement.
 - If save-original behavior changes, verify both manual load and Mat load paths.
 - Do not call synchronous UI updates while holding `_continuousInspectionSlotQueueLocks`.
 - If continuous-inspection queue behavior changes, verify:
   - same-slot back-to-back Mat requests stay ordered
-  - different slots can still run without blocking each other beyond shared judgement-engine locking
+  - different slots can still run without blocking each other through shared judgement state
   - status text returns to `狀態：空閒` after the final queued job
   - status text shows `狀態：處理中（排隊 N 筆）` while later jobs are waiting
 
@@ -412,3 +437,4 @@ Most relevant recent commits:
 4. Decide whether yield/slot state should persist across restart.
 5. Consider adding a small wrapper/service layer if external camera integration will grow beyond direct `MainForm` method calls.
 6. Consider changing simple status-label updates to non-blocking UI dispatch if high-frequency camera input causes visible UI delay.
+7. Add optional stopwatch logging around Mat clone, preview update, context creation, judgement, overlay creation, save-original, and UI apply if real camera timing still looks high.

@@ -48,6 +48,7 @@ namespace AoiMeasureTool
             public string WorkingImagePath { get; set; }
             public string SourceName { get; set; }
             public Bitmap SourceBitmap { get; set; }
+            public CvMat SourceMat { get; set; }
             public ContinuousInspectionJudgementContext JudgementContext { get; set; }
         }
 
@@ -79,6 +80,7 @@ namespace AoiMeasureTool
         {
             public int SlotIndex { get; set; }
             public Bitmap SourceBitmap { get; set; }
+            public CvMat SourceMat { get; set; }
             public string ProductKey { get; set; }
             public string WorkingImagePath { get; set; }
             public string SourceName { get; set; }
@@ -1480,9 +1482,10 @@ namespace AoiMeasureTool
             using (var bitmap = BitmapConverter.ToBitmap(imageMat))
             {
                 var slotBitmap = new Bitmap(bitmap);
+                var slotMat = imageMat.Clone();
                 var task = EnqueueContinuousInspectionSlotWork(
                     slotIndex,
-                    () => RunContinuousInspectionMatJob(slotIndex, slotBitmap, sourceName ?? "Camera"));
+                    () => RunContinuousInspectionMatJob(slotIndex, slotBitmap, slotMat, sourceName ?? "Camera"));
                 return WaitContinuousInspectionResult(task);
             }
         }
@@ -1515,7 +1518,7 @@ namespace AoiMeasureTool
             return WaitContinuousInspectionResult(task);
         }
 
-        private ContinuousInspectionResult RunContinuousInspectionMatJob(int slotIndex, Bitmap bitmap, string sourceName)
+        private ContinuousInspectionResult RunContinuousInspectionMatJob(int slotIndex, Bitmap bitmap, CvMat sourceMat, string sourceName)
         {
             ContinuousInspectionJobSnapshot snapshot = null;
             try
@@ -1524,9 +1527,13 @@ namespace AoiMeasureTool
                 {
                     lock (_continuousInspectionSlotLocks[slotIndex])
                     {
-                        SetContinuousInspectionImage(slotIndex, bitmap, sourceName);
+                        SetContinuousInspectionImage(slotIndex, bitmap, sourceName, saveWorkingImage: false);
                         bitmap = null;
-                        return CaptureContinuousInspectionJobSnapshot(slotIndex);
+                        var capturedSnapshot = CaptureContinuousInspectionJobSnapshot(slotIndex);
+                        capturedSnapshot.SourceMat = sourceMat;
+                        sourceMat = null;
+                        capturedSnapshot.JudgementContext = CreateContinuousInspectionJudgementContext(capturedSnapshot);
+                        return capturedSnapshot;
                     }
                 });
 
@@ -1537,7 +1544,9 @@ namespace AoiMeasureTool
             finally
             {
                 bitmap?.Dispose();
+                sourceMat?.Dispose();
                 snapshot?.SourceBitmap?.Dispose();
+                snapshot?.SourceMat?.Dispose();
             }
         }
 
@@ -1561,6 +1570,7 @@ namespace AoiMeasureTool
             finally
             {
                 snapshot?.SourceBitmap?.Dispose();
+                snapshot?.SourceMat?.Dispose();
             }
         }
 
@@ -1626,6 +1636,7 @@ namespace AoiMeasureTool
             {
                 SlotIndex = snapshot.SlotIndex,
                 SourceBitmap = snapshot.SourceBitmap,
+                SourceMat = snapshot.SourceMat,
                 ProductKey = resolvedProductKey,
                 WorkingImagePath = snapshot.WorkingImagePath,
                 SourceName = snapshot.SourceName,
@@ -1798,7 +1809,7 @@ namespace AoiMeasureTool
             }
         }
 
-        private void SetContinuousInspectionImage(int index, Bitmap bitmap, string sourceName)
+        private void SetContinuousInspectionImage(int index, Bitmap bitmap, string sourceName, bool saveWorkingImage = true)
         {
             if (index < 0 || index >= _continuousInspectionPictureBoxes.Length)
             {
@@ -1823,7 +1834,9 @@ namespace AoiMeasureTool
                 _continuousInspectionSourceBitmaps[index]?.Dispose();
                 _continuousInspectionSourceBitmaps[index] = sourceBitmap;
                 _continuousInspectionImageSourceNames[index] = sourceName;
-                _continuousInspectionWorkingImagePaths[index] = SaveContinuousInspectionWorkingImage(index, sourceBitmap);
+                _continuousInspectionWorkingImagePaths[index] = saveWorkingImage
+                    ? SaveContinuousInspectionWorkingImage(index, sourceBitmap)
+                    : null;
                 _continuousInspectionOverlaySnapshots[index] = null;
 
                 SetPictureBoxImage(_continuousInspectionPictureBoxes[index], displayBitmap);
@@ -1906,26 +1919,16 @@ namespace AoiMeasureTool
 
         private ReferenceCornerCandidate GetContinuousInspectionReferenceCandidate(ContinuousInspectionJudgementContext context)
         {
-            if (context == null || string.IsNullOrWhiteSpace(context.WorkingImagePath) || !File.Exists(context.WorkingImagePath))
+            if (context == null)
             {
                 return null;
             }
 
-            using (var sourceMat = Cv2.ImRead(context.WorkingImagePath, ImreadModes.Color))
-            using (var grayMat = new OpenCvSharp.Mat())
+            using (var grayMat = CreateContinuousInspectionGrayMat(context))
             {
-                if (sourceMat.Empty())
+                if (grayMat == null || grayMat.Empty())
                 {
                     return null;
-                }
-
-                if (sourceMat.Channels() == 1)
-                {
-                    sourceMat.CopyTo(grayMat);
-                }
-                else
-                {
-                    Cv2.CvtColor(sourceMat, grayMat, ColorConversionCodes.BGR2GRAY);
                 }
 
                 var referenceSnapshot = context.ReferenceCornerSnapshot;
@@ -1953,6 +1956,36 @@ namespace AoiMeasureTool
                     return ReferenceCornerDetectionService.FindCandidate(binaryMat, roi, center, referenceSnapshot);
                 }
             }
+        }
+
+        private OpenCvSharp.Mat CreateContinuousInspectionGrayMat(ContinuousInspectionJudgementContext context)
+        {
+            if (context == null)
+            {
+                return null;
+            }
+
+            if (context.SourceMat != null && !context.SourceMat.Empty())
+            {
+                var grayMat = new OpenCvSharp.Mat();
+                if (context.SourceMat.Channels() == 1)
+                {
+                    context.SourceMat.CopyTo(grayMat);
+                }
+                else
+                {
+                    Cv2.CvtColor(context.SourceMat, grayMat, ColorConversionCodes.BGR2GRAY);
+                }
+
+                return grayMat;
+            }
+
+            if (string.IsNullOrWhiteSpace(context.WorkingImagePath) || !File.Exists(context.WorkingImagePath))
+            {
+                return null;
+            }
+
+            return LoadMultiImageConfirmGrayImage(context.WorkingImagePath);
         }
 
         private Rectangle GetContinuousInspectionReferenceRoi(
@@ -2055,7 +2088,8 @@ namespace AoiMeasureTool
                 return results;
             }
 
-            if (string.IsNullOrWhiteSpace(context.WorkingImagePath))
+            if ((context.SourceMat == null || context.SourceMat.Empty()) &&
+                string.IsNullOrWhiteSpace(context.WorkingImagePath))
             {
                 return results;
             }
@@ -2067,7 +2101,7 @@ namespace AoiMeasureTool
                     : MeasurementRecordService.ReprojectForCurrentReference(record, referenceCandidate));
             }
 
-            using (var sourceGray = LoadMultiImageConfirmGrayImage(context.WorkingImagePath))
+            using (var sourceGray = CreateContinuousInspectionGrayMat(context))
             {
                 if (sourceGray == null || sourceGray.Empty())
                 {
