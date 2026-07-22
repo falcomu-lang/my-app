@@ -48,15 +48,48 @@ namespace AoiMeasureTool
             public string WorkingImagePath { get; set; }
             public string SourceName { get; set; }
             public Bitmap SourceBitmap { get; set; }
+            public ContinuousInspectionJudgementContext JudgementContext { get; set; }
         }
 
         private sealed class ContinuousInspectionJudgementPayload
         {
             public ContinuousInspectionResult Result { get; set; }
             public Bitmap AnnotatedBitmap { get; set; }
+            public ContinuousInspectionOverlaySnapshot OverlaySnapshot { get; set; }
             public bool CountAsJudgement { get; set; }
             public bool IsPass { get; set; }
             public bool ShowOverlay { get; set; }
+        }
+
+        private sealed class ContinuousInspectionOverlaySnapshot
+        {
+            public Size ImageSize { get; set; }
+            public ReferenceCornerCandidate ReferenceCandidate { get; set; }
+            public List<ContinuousInspectionOverlayLine> Lines { get; set; }
+        }
+
+        private sealed class ContinuousInspectionOverlayLine
+        {
+            public string SourceName { get; set; }
+            public Point StartPoint { get; set; }
+            public Point EndPoint { get; set; }
+        }
+
+        private sealed class ContinuousInspectionJudgementContext
+        {
+            public int SlotIndex { get; set; }
+            public Bitmap SourceBitmap { get; set; }
+            public string ProductKey { get; set; }
+            public string WorkingImagePath { get; set; }
+            public string SourceName { get; set; }
+            public List<JudgementCriterionRule> JudgementRules { get; set; }
+            public List<MeasureRecord> MeasureRecords { get; set; }
+            public PreprocessSnapshot[] PreprocessSnapshots { get; set; }
+            public ReferenceCornerSnapshot ReferenceCornerSnapshot { get; set; }
+            public DualThresholdSnapshot DualThresholdSnapshot { get; set; }
+            public double CcdXPrecision { get; set; }
+            public double CcdYPrecision { get; set; }
+            public double MeasurementScaleFactor { get; set; }
         }
 
         private enum ContinuousInspectionSlotState
@@ -241,6 +274,8 @@ namespace AoiMeasureTool
         private readonly string[] _continuousInspectionImageSourceNames = new string[3];
         private readonly string[] _continuousInspectionWorkingImagePaths = new string[3];
         private readonly Bitmap[] _continuousInspectionSourceBitmaps = new Bitmap[3];
+        private readonly ContinuousInspectionOverlaySnapshot[] _continuousInspectionOverlaySnapshots =
+            new ContinuousInspectionOverlaySnapshot[3];
         private readonly float[] _continuousInspectionImageScales = new float[3];
         private readonly float[] _continuousInspectionFitScales = new float[3];
         private readonly bool[] _continuousInspectionDragging = new bool[3];
@@ -1552,7 +1587,83 @@ namespace AoiMeasureTool
                 snapshot.SourceBitmap = new Bitmap(_continuousInspectionSourceBitmaps[slotIndex]);
             }
 
+            snapshot.JudgementContext = CreateContinuousInspectionJudgementContext(snapshot);
             return snapshot;
+        }
+
+        private ContinuousInspectionJudgementContext CreateContinuousInspectionJudgementContext(ContinuousInspectionJobSnapshot snapshot)
+        {
+            if (snapshot == null || snapshot.SourceBitmap == null)
+            {
+                return null;
+            }
+
+            var productKey = string.IsNullOrWhiteSpace(snapshot.SubParameterName)
+                ? "DEFAULT"
+                : snapshot.SubParameterName.Trim();
+            var profileState = _productProfileService.GetOrCreateState(productKey);
+            var resolvedProductKey = string.IsNullOrWhiteSpace(profileState.ProductKey)
+                ? productKey
+                : profileState.ProductKey;
+
+            var cameraProfileIndex = GetInnerSettingsProfileIndexForSubParameter(productKey);
+            var ccdXPrecision = _innerSettings == null ? 0D : _innerSettings.CcdXPrecision;
+            var ccdYPrecision = _innerSettings == null ? 0D : _innerSettings.CcdYPrecision;
+            var measurementScaleFactor = _innerSettings == null ? 1D : _innerSettings.MeasurementScaleFactor;
+            if (_innerSettings != null &&
+                _innerSettings.CameraProfiles != null &&
+                cameraProfileIndex >= 0 &&
+                cameraProfileIndex < _innerSettings.CameraProfiles.Count &&
+                _innerSettings.CameraProfiles[cameraProfileIndex] != null)
+            {
+                var cameraProfile = _innerSettings.CameraProfiles[cameraProfileIndex];
+                ccdXPrecision = cameraProfile.CcdXPrecision;
+                ccdYPrecision = cameraProfile.CcdYPrecision;
+                measurementScaleFactor = cameraProfile.MeasurementScaleFactor <= 0 ? 1D : cameraProfile.MeasurementScaleFactor;
+            }
+
+            return new ContinuousInspectionJudgementContext
+            {
+                SlotIndex = snapshot.SlotIndex,
+                SourceBitmap = snapshot.SourceBitmap,
+                ProductKey = resolvedProductKey,
+                WorkingImagePath = snapshot.WorkingImagePath,
+                SourceName = snapshot.SourceName,
+                JudgementRules = CloneJudgementCriteriaRules(profileState.JudgementCriteriaRules),
+                MeasureRecords = GetContinuousInspectionMeasureRecordsForProduct(resolvedProductKey),
+                PreprocessSnapshots = ProfileDataCloner.CloneSnapshots(GetPreprocessSnapshotsForProduct(resolvedProductKey)),
+                ReferenceCornerSnapshot = ProfileDataCloner.CloneReferenceCornerSnapshot(GetReferenceCornerSnapshotForProduct(resolvedProductKey)),
+                DualThresholdSnapshot = ProfileDataCloner.CloneDualThresholdSnapshot(GetDualThresholdSnapshotForProduct(resolvedProductKey)),
+                CcdXPrecision = ccdXPrecision,
+                CcdYPrecision = ccdYPrecision,
+                MeasurementScaleFactor = measurementScaleFactor <= 0 ? 1D : measurementScaleFactor
+            };
+        }
+
+        private List<MeasureRecord> GetContinuousInspectionMeasureRecordsForProduct(string productKey)
+        {
+            List<MeasureRecord> records = null;
+            if (!string.IsNullOrWhiteSpace(productKey) &&
+                string.Equals(productKey, GetCurrentProductKeyOrDefault(), StringComparison.OrdinalIgnoreCase) &&
+                _measureRecords.Count > 0)
+            {
+                records = CloneMeasureRecords(_measureRecords);
+            }
+            else if (!string.IsNullOrWhiteSpace(productKey))
+            {
+                List<MeasureRecord> profileRecords;
+                if (_measureProfiles.TryGetValue(productKey, out profileRecords) && profileRecords.Count > 0)
+                {
+                    records = CloneMeasureRecords(profileRecords);
+                }
+            }
+
+            if ((records == null || records.Count == 0) && _measureRecords.Count > 0)
+            {
+                records = CloneMeasureRecords(_measureRecords);
+            }
+
+            return records ?? new List<MeasureRecord>();
         }
 
         private ContinuousInspectionJudgementPayload BuildContinuousInspectionJudgementPayload(ContinuousInspectionJobSnapshot snapshot)
@@ -1586,16 +1697,11 @@ namespace AoiMeasureTool
             try
             {
                 Bitmap annotatedBitmap;
-                List<MultiImageJudgementResultRow> rows;
-                lock (_continuousInspectionJudgeEngineLock)
-                {
-                    rows = BuildContinuousInspectionJudgementResults(
-                        snapshot.SourceBitmap,
-                        snapshot.SubParameterName,
-                        snapshot.WorkingImagePath,
-                        snapshot.SourceName,
-                        out annotatedBitmap);
-                }
+                ContinuousInspectionOverlaySnapshot overlaySnapshot;
+                var rows = BuildContinuousInspectionJudgementResults(
+                    snapshot.JudgementContext,
+                    out overlaySnapshot,
+                    out annotatedBitmap);
 
                 var resultText = SummarizeContinuousInspectionJudgement(rows);
                 result.Summary = resultText;
@@ -1604,6 +1710,7 @@ namespace AoiMeasureTool
                 {
                     Result = result,
                     AnnotatedBitmap = annotatedBitmap,
+                    OverlaySnapshot = overlaySnapshot,
                     CountAsJudgement = true,
                     IsPass = string.Equals(resultText, "A", StringComparison.Ordinal),
                     ShowOverlay = true
@@ -1653,6 +1760,8 @@ namespace AoiMeasureTool
                     UpdateContinuousInspectionYieldLabel(slotIndex);
                 }
 
+                _continuousInspectionOverlaySnapshots[slotIndex] = payload.OverlaySnapshot;
+                payload.OverlaySnapshot = null;
                 _continuousInspectionOverlayVisible[slotIndex] = payload.ShowOverlay;
                 if (payload.AnnotatedBitmap != null)
                 {
@@ -1715,6 +1824,7 @@ namespace AoiMeasureTool
                 _continuousInspectionSourceBitmaps[index] = sourceBitmap;
                 _continuousInspectionImageSourceNames[index] = sourceName;
                 _continuousInspectionWorkingImagePaths[index] = SaveContinuousInspectionWorkingImage(index, sourceBitmap);
+                _continuousInspectionOverlaySnapshots[index] = null;
 
                 SetPictureBoxImage(_continuousInspectionPictureBoxes[index], displayBitmap);
                 ApplyContinuousInspectionImageLayout(index, !preserveTransform);
@@ -1731,6 +1841,377 @@ namespace AoiMeasureTool
 
                 _continuousInspectionPreviewPanels[index]?.Invalidate();
             }
+        }
+
+        private List<MultiImageJudgementResultRow> BuildContinuousInspectionJudgementResults(
+            ContinuousInspectionJudgementContext context,
+            out ContinuousInspectionOverlaySnapshot overlaySnapshot,
+            out Bitmap annotatedBitmap)
+        {
+            overlaySnapshot = null;
+            annotatedBitmap = null;
+            var rows = new List<MultiImageJudgementResultRow>();
+            if (context == null)
+            {
+                return rows;
+            }
+
+            if (context.SourceBitmap != null)
+            {
+                annotatedBitmap = new Bitmap(context.SourceBitmap);
+            }
+
+            if (context.JudgementRules == null || context.JudgementRules.Count == 0)
+            {
+                return rows;
+            }
+
+            var referenceCandidate = GetContinuousInspectionReferenceCandidate(context);
+            var lineMeasurements = BuildContinuousInspectionLineMeasurements(
+                context,
+                referenceCandidate,
+                out var measureRecords);
+            overlaySnapshot = BuildContinuousInspectionOverlaySnapshot(context, referenceCandidate, measureRecords, lineMeasurements);
+            if (lineMeasurements.Count == 0)
+            {
+                for (var i = 0; i < context.JudgementRules.Count; i++)
+                {
+                    rows.Add(new MultiImageJudgementResultRow
+                    {
+                        Name = context.JudgementRules[i]?.Name ?? string.Empty,
+                        CalculationValueText = string.Empty,
+                        JudgementText = "不可判斷"
+                    });
+                }
+
+                return rows;
+            }
+
+            var values = new Dictionary<int, double>();
+            for (var i = 0; i < lineMeasurements.Count; i++)
+            {
+                if (lineMeasurements[i] != null && lineMeasurements[i].IsValid)
+                {
+                    values[i + 1] = lineMeasurements[i].MillimeterDistance;
+                }
+            }
+
+            foreach (var rule in context.JudgementRules)
+            {
+                rows.Add(EvaluateJudgementRule(rule, values));
+            }
+
+            return rows;
+        }
+
+        private ReferenceCornerCandidate GetContinuousInspectionReferenceCandidate(ContinuousInspectionJudgementContext context)
+        {
+            if (context == null || string.IsNullOrWhiteSpace(context.WorkingImagePath) || !File.Exists(context.WorkingImagePath))
+            {
+                return null;
+            }
+
+            using (var sourceMat = Cv2.ImRead(context.WorkingImagePath, ImreadModes.Color))
+            using (var grayMat = new OpenCvSharp.Mat())
+            {
+                if (sourceMat.Empty())
+                {
+                    return null;
+                }
+
+                if (sourceMat.Channels() == 1)
+                {
+                    sourceMat.CopyTo(grayMat);
+                }
+                else
+                {
+                    Cv2.CvtColor(sourceMat, grayMat, ColorConversionCodes.BGR2GRAY);
+                }
+
+                var referenceSnapshot = context.ReferenceCornerSnapshot;
+                if (referenceSnapshot == null || !referenceSnapshot.Enabled)
+                {
+                    return null;
+                }
+
+                var roi = GetContinuousInspectionReferenceRoi(context, grayMat.Size());
+                if (roi.Width <= 0 || roi.Height <= 0)
+                {
+                    return null;
+                }
+
+                using (var binaryMat = BuildContinuousInspectionReferenceBinary(grayMat, context, referenceSnapshot.SourceIndex))
+                {
+                    if (binaryMat == null || binaryMat.Empty())
+                    {
+                        return null;
+                    }
+
+                    var center = new Point(
+                        roi.Left + roi.Width / 2,
+                        roi.Top + roi.Height / 2);
+                    return ReferenceCornerDetectionService.FindCandidate(binaryMat, roi, center, referenceSnapshot);
+                }
+            }
+        }
+
+        private Rectangle GetContinuousInspectionReferenceRoi(
+            ContinuousInspectionJudgementContext context,
+            OpenCvSharp.Size imageSize)
+        {
+            var referenceSnapshot = context == null ? null : context.ReferenceCornerSnapshot;
+            if (referenceSnapshot == null || !referenceSnapshot.RoiSaved)
+            {
+                return Rectangle.Empty;
+            }
+
+            var roi = ReferenceCornerSelectionService.NormalizeRectangle(referenceSnapshot.Roi);
+            if (roi.Width <= 0 || roi.Height <= 0)
+            {
+                return Rectangle.Empty;
+            }
+
+            var maxWidth = Math.Max(0, imageSize.Width);
+            var maxHeight = Math.Max(0, imageSize.Height);
+            if (maxWidth <= 0 || maxHeight <= 0)
+            {
+                return Rectangle.Empty;
+            }
+
+            var left = Math.Max(0, Math.Min(roi.Left, maxWidth - 1));
+            var top = Math.Max(0, Math.Min(roi.Top, maxHeight - 1));
+            var right = Math.Max(left + 1, Math.Min(roi.Right, maxWidth));
+            var bottom = Math.Max(top + 1, Math.Min(roi.Bottom, maxHeight));
+            return Rectangle.FromLTRB(left, top, right, bottom);
+        }
+
+        private OpenCvSharp.Mat BuildContinuousInspectionReferenceBinary(
+            OpenCvSharp.Mat grayMat,
+            ContinuousInspectionJudgementContext context,
+            int referenceSourceIndex)
+        {
+            if (grayMat == null || grayMat.Empty() || context == null)
+            {
+                return null;
+            }
+
+            if (referenceSourceIndex == 4)
+            {
+                var dualSnapshot = context.DualThresholdSnapshot;
+                if (dualSnapshot == null || !dualSnapshot.Enabled)
+                {
+                    return null;
+                }
+
+                var dualParam = new PreprocessParam
+                {
+                    Enabled = dualSnapshot.Enabled,
+                    WhiteObject = true,
+                    Threshold = dualSnapshot.LowerThreshold,
+                    UpperThreshold = dualSnapshot.UpperThreshold,
+                    UseDualThreshold = true,
+                    ErodeIterations = dualSnapshot.ErodeIterations,
+                    DilateIterations = dualSnapshot.DilateIterations,
+                    OpenIterations = dualSnapshot.OpenIterations,
+                    CloseIterations = dualSnapshot.CloseIterations
+                };
+                return PreprocessPipelineService.Build(grayMat, dualParam);
+            }
+
+            var snapshots = context.PreprocessSnapshots;
+            if (snapshots == null || referenceSourceIndex < 0 || referenceSourceIndex >= snapshots.Length)
+            {
+                return null;
+            }
+
+            var snapshot = snapshots[referenceSourceIndex];
+            if (snapshot == null || !snapshot.Enabled)
+            {
+                return null;
+            }
+
+            var preprocessParam = new PreprocessParam
+            {
+                Enabled = snapshot.Enabled,
+                WhiteObject = referenceSourceIndex < 2,
+                Threshold = snapshot.Threshold,
+                ErodeIterations = snapshot.ErodeIterations,
+                DilateIterations = snapshot.DilateIterations,
+                OpenIterations = snapshot.OpenIterations,
+                CloseIterations = snapshot.CloseIterations
+            };
+            return PreprocessPipelineService.Build(grayMat, preprocessParam);
+        }
+
+        private List<MultiImageLineMeasurementResult> BuildContinuousInspectionLineMeasurements(
+            ContinuousInspectionJudgementContext context,
+            ReferenceCornerCandidate referenceCandidate,
+            out List<MeasureRecord> measureRecords)
+        {
+            measureRecords = new List<MeasureRecord>();
+            var results = new List<MultiImageLineMeasurementResult>();
+            if (context == null || context.MeasureRecords == null || context.MeasureRecords.Count == 0)
+            {
+                return results;
+            }
+
+            if (string.IsNullOrWhiteSpace(context.WorkingImagePath))
+            {
+                return results;
+            }
+
+            foreach (var record in context.MeasureRecords)
+            {
+                measureRecords.Add(referenceCandidate == null
+                    ? record
+                    : MeasurementRecordService.ReprojectForCurrentReference(record, referenceCandidate));
+            }
+
+            using (var sourceGray = LoadMultiImageConfirmGrayImage(context.WorkingImagePath))
+            {
+                if (sourceGray == null || sourceGray.Empty())
+                {
+                    return results;
+                }
+
+                for (var i = 0; i < measureRecords.Count; i++)
+                {
+                    var record = measureRecords[i];
+                    var sourceIndex = GetMeasureSourceIndexFromName(record.SourceName);
+                    var preprocessParam = TryGetContinuousInspectionPreprocessParam(context, sourceIndex);
+                    if (preprocessParam == null || !preprocessParam.Enabled)
+                    {
+                        results.Add(MultiImageLineMeasurementResult.Invalid());
+                        continue;
+                    }
+
+                    using (var binary = PreprocessPipelineService.Build(sourceGray, preprocessParam))
+                    {
+                        var measurement = AnalyzeMultiImageLineMeasurement(
+                            binary,
+                            record.StartPoint,
+                            record.EndPoint,
+                            context.CcdXPrecision,
+                            context.CcdYPrecision);
+                        results.Add(ScaleContinuousInspectionLineMeasurementResult(measurement, context.MeasurementScaleFactor));
+                    }
+                }
+            }
+
+            return results;
+        }
+
+        private static ContinuousInspectionOverlaySnapshot BuildContinuousInspectionOverlaySnapshot(
+            ContinuousInspectionJudgementContext context,
+            ReferenceCornerCandidate referenceCandidate,
+            List<MeasureRecord> measureRecords,
+            List<MultiImageLineMeasurementResult> lineMeasurements)
+        {
+            if (context == null || context.SourceBitmap == null)
+            {
+                return null;
+            }
+
+            var snapshot = new ContinuousInspectionOverlaySnapshot
+            {
+                ImageSize = context.SourceBitmap.Size,
+                ReferenceCandidate = referenceCandidate,
+                Lines = new List<ContinuousInspectionOverlayLine>()
+            };
+
+            if (measureRecords == null || lineMeasurements == null)
+            {
+                return snapshot;
+            }
+
+            var count = Math.Min(measureRecords.Count, lineMeasurements.Count);
+            for (var i = 0; i < count; i++)
+            {
+                var record = measureRecords[i];
+                var measurement = lineMeasurements[i];
+                if (record == null || measurement == null || !measurement.IsValid)
+                {
+                    continue;
+                }
+
+                snapshot.Lines.Add(new ContinuousInspectionOverlayLine
+                {
+                    SourceName = record.SourceName,
+                    StartPoint = measurement.StartPoint,
+                    EndPoint = measurement.EndPoint
+                });
+            }
+
+            return snapshot;
+        }
+
+        private PreprocessParam TryGetContinuousInspectionPreprocessParam(
+            ContinuousInspectionJudgementContext context,
+            int preprocessIndex)
+        {
+            if (preprocessIndex == 4)
+            {
+                var dualSnapshot = context == null ? null : context.DualThresholdSnapshot;
+                if (dualSnapshot == null)
+                {
+                    return null;
+                }
+
+                return new PreprocessParam
+                {
+                    Enabled = dualSnapshot.Enabled,
+                    WhiteObject = true,
+                    Threshold = dualSnapshot.LowerThreshold,
+                    UpperThreshold = dualSnapshot.UpperThreshold,
+                    UseDualThreshold = true,
+                    ErodeIterations = dualSnapshot.ErodeIterations,
+                    DilateIterations = dualSnapshot.DilateIterations,
+                    OpenIterations = dualSnapshot.OpenIterations,
+                    CloseIterations = dualSnapshot.CloseIterations
+                };
+            }
+
+            if (preprocessIndex < 0 || preprocessIndex > 3)
+            {
+                return null;
+            }
+
+            var snapshots = context == null ? null : context.PreprocessSnapshots;
+            if (snapshots == null || preprocessIndex >= snapshots.Length)
+            {
+                return null;
+            }
+
+            var snapshot = snapshots[preprocessIndex];
+            if (snapshot == null)
+            {
+                return null;
+            }
+
+            return new PreprocessParam
+            {
+                Enabled = snapshot.Enabled,
+                WhiteObject = preprocessIndex < 2,
+                Threshold = snapshot.Threshold,
+                ErodeIterations = snapshot.ErodeIterations,
+                DilateIterations = snapshot.DilateIterations,
+                OpenIterations = snapshot.OpenIterations,
+                CloseIterations = snapshot.CloseIterations
+            };
+        }
+
+        private static MultiImageLineMeasurementResult ScaleContinuousInspectionLineMeasurementResult(
+            MultiImageLineMeasurementResult result,
+            double measurementScaleFactor)
+        {
+            if (result == null || !result.IsValid)
+            {
+                return result;
+            }
+
+            var scale = measurementScaleFactor <= 0 ? 1D : measurementScaleFactor;
+            result.MillimeterDistance *= scale;
+            return result;
         }
 
         private List<MultiImageJudgementResultRow> BuildContinuousInspectionJudgementResults(
@@ -1897,78 +2378,76 @@ namespace AoiMeasureTool
                 return;
             }
 
-            var sourceBitmap = _continuousInspectionSourceBitmaps[index];
-            var productKey = _continuousInspectionSubParameterLabels[index]?.Text?.Trim();
-            if (sourceBitmap == null || string.IsNullOrWhiteSpace(productKey) || string.Equals(productKey, "未設定子參數", StringComparison.Ordinal))
+            var overlaySnapshot = index >= 0 && index < _continuousInspectionOverlaySnapshots.Length
+                ? _continuousInspectionOverlaySnapshots[index]
+                : null;
+            if (overlaySnapshot == null || overlaySnapshot.ImageSize.Width <= 0 || overlaySnapshot.ImageSize.Height <= 0)
             {
                 return;
             }
 
-            lock (_continuousInspectionJudgeEngineLock)
+            if (overlaySnapshot.ReferenceCandidate != null)
             {
-                var originalBitmap = _multiImageConfirmBitmap;
-                var originalSourceImageSize = _multiImageConfirmSourceImageSize;
-                var originalProductKey = _multiImageConfirmProductKey;
-                var originalImageIndex = _multiImageConfirmImageIndex;
-                var originalImagePaths = new List<string>(_multiImageConfirmImagePaths);
-                var originalJudgementCriteriaRules = CloneJudgementCriteriaRules(_judgementCriteriaRules);
-                var originalCcdXPrecision = _innerSettings.CcdXPrecision;
-                var originalCcdYPrecision = _innerSettings.CcdYPrecision;
-                var originalMeasurementScaleFactor = _innerSettings.MeasurementScaleFactor;
+                DrawContinuousInspectionReferenceBaseline(
+                    graphics,
+                    overlaySnapshot.ReferenceCandidate,
+                    imageRect,
+                    overlaySnapshot.ImageSize);
+            }
 
-                try
+            if (overlaySnapshot.Lines == null || overlaySnapshot.Lines.Count == 0)
+            {
+                return;
+            }
+
+            for (var i = 0; i < overlaySnapshot.Lines.Count; i++)
+            {
+                var line = overlaySnapshot.Lines[i];
+                if (line == null)
                 {
-                    ApplyInnerSettingsProfileForSubParameter(productKey);
-                    var profileState = _productProfileService.GetOrCreateState(productKey);
-                    _judgementCriteriaRules = CloneJudgementCriteriaRules(profileState.JudgementCriteriaRules);
-                    _multiImageConfirmBitmap = new Bitmap(sourceBitmap);
-                    _multiImageConfirmSourceImageSize = _multiImageConfirmBitmap.Size;
-                    _multiImageConfirmProductKey = profileState.ProductKey;
-                    _multiImageConfirmImagePaths.Clear();
-                    _multiImageConfirmImagePaths.Add(_continuousInspectionWorkingImagePaths[index] ?? _continuousInspectionImageSourceNames[index] ?? "ContinuousInspection");
-                    _multiImageConfirmImageIndex = 0;
-
-                    var referenceCandidate = GetMultiImageConfirmReferenceCandidate();
-                    if (referenceCandidate != null)
-                    {
-                        DrawMultiImageConfirmReferenceBaseline(graphics, referenceCandidate, imageRect);
-                    }
-
-                    var measureRecords = GetMultiImageConfirmMeasureRecords(referenceCandidate);
-                    for (var i = 0; i < measureRecords.Count; i++)
-                    {
-                        var record = measureRecords[i];
-                        var color = MeasurementOverlayService.GetSourceColor(record.SourceName);
-                        using (var pen = new Pen(color, 2f))
-                        using (var brush = new SolidBrush(color))
-                        {
-                            var lineResult = GetCachedMultiImageLineMeasurement(record);
-                            if (lineResult == null || !lineResult.IsValid)
-                            {
-                                continue;
-                            }
-
-                            var startPoint = GetMultiImageConfirmDisplayPoint(lineResult.StartPoint, imageRect);
-                            var endPoint = GetMultiImageConfirmDisplayPoint(lineResult.EndPoint, imageRect);
-                            MeasurementOverlayService.DrawMeasureRecord(graphics, pen, brush, startPoint, endPoint);
-                        }
-                    }
+                    continue;
                 }
-                finally
+
+                var color = MeasurementOverlayService.GetSourceColor(line.SourceName);
+                using (var pen = new Pen(color, 2f))
+                using (var brush = new SolidBrush(color))
                 {
-                    _multiImageConfirmBitmap?.Dispose();
-                    _multiImageConfirmBitmap = originalBitmap;
-                    _multiImageConfirmSourceImageSize = originalSourceImageSize;
-                    _multiImageConfirmProductKey = originalProductKey;
-                    _judgementCriteriaRules = originalJudgementCriteriaRules;
-                    _multiImageConfirmImagePaths.Clear();
-                    _multiImageConfirmImagePaths.AddRange(originalImagePaths);
-                    _multiImageConfirmImageIndex = originalImageIndex;
-                    _innerSettings.CcdXPrecision = originalCcdXPrecision;
-                    _innerSettings.CcdYPrecision = originalCcdYPrecision;
-                    _innerSettings.MeasurementScaleFactor = originalMeasurementScaleFactor;
+                    var startPoint = GetContinuousInspectionDisplayPoint(line.StartPoint, imageRect, overlaySnapshot.ImageSize);
+                    var endPoint = GetContinuousInspectionDisplayPoint(line.EndPoint, imageRect, overlaySnapshot.ImageSize);
+                    MeasurementOverlayService.DrawMeasureRecord(graphics, pen, brush, startPoint, endPoint);
                 }
             }
+        }
+
+        private static void DrawContinuousInspectionReferenceBaseline(
+            Graphics graphics,
+            ReferenceCornerCandidate candidate,
+            Rectangle imageRect,
+            Size imageSize)
+        {
+            if (graphics == null || candidate == null || imageRect == Rectangle.Empty || imageSize.Width <= 0 || imageSize.Height <= 0)
+            {
+                return;
+            }
+
+            using (var topEdgePen = new Pen(Color.LimeGreen, 2f))
+            using (var pointBrush = new SolidBrush(Color.Yellow))
+            using (var pointOutlinePen = new Pen(Color.Black, 2f))
+            {
+                var displayTopLeft = GetContinuousInspectionDisplayPoint(candidate.TopLeft, imageRect, imageSize);
+                var displayTopRight = GetContinuousInspectionDisplayPoint(candidate.TopRight, imageRect, imageSize);
+                var displayCenter = GetContinuousInspectionDisplayPoint(candidate.CenterPoint, imageRect, imageSize);
+
+                graphics.DrawLine(topEdgePen, displayTopLeft, displayTopRight);
+                DrawReferencePoint(graphics, pointBrush, pointOutlinePen, displayTopLeft);
+                DrawReferencePoint(graphics, pointBrush, pointOutlinePen, displayTopRight);
+                DrawReferencePoint(graphics, pointBrush, pointOutlinePen, displayCenter);
+            }
+        }
+
+        private static Point GetContinuousInspectionDisplayPoint(Point imagePoint, Rectangle imageRect, Size imageSize)
+        {
+            return MeasurementOverlayService.ToDisplayPoint(imagePoint, imageRect, imageSize);
         }
 
         private static Color GetContinuousInspectionResultBackColor(string resultText)
