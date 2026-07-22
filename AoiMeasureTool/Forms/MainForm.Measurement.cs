@@ -542,6 +542,7 @@ namespace AoiMeasureTool
             if (lineMeasurements.Count == 0)
             {
                 AddMultiImageInfoRow("線段量測", "無可用結果");
+                BuildMultiImageJudgementResults(lineMeasurements);
                 stopwatch.Stop();
                 AddMultiImageInfoRow("處理時間", stopwatch.Elapsed.TotalSeconds.ToString("0.###", CultureInfo.InvariantCulture) + " 秒");
                 return;
@@ -557,6 +558,7 @@ namespace AoiMeasureTool
                     : (string.IsNullOrWhiteSpace(measurement.StatusText) ? "找不到物件" : measurement.StatusText));
             }
 
+            BuildMultiImageJudgementResults(lineMeasurements);
             stopwatch.Stop();
             AddMultiImageInfoRow("處理時間", stopwatch.Elapsed.TotalSeconds.ToString("0.###", CultureInfo.InvariantCulture) + " 秒");
         }
@@ -582,13 +584,20 @@ namespace AoiMeasureTool
 
         private List<MultiImageJudgementResultRow> BuildMultiImageJudgementResults()
         {
+            return BuildMultiImageJudgementResults(
+                BuildMultiImageConfirmLineMeasurements(GetMultiImageConfirmReferenceCandidate()));
+        }
+
+        private List<MultiImageJudgementResultRow> BuildMultiImageJudgementResults(
+            List<MultiImageLineMeasurementResult> lineMeasurements)
+        {
             var rows = new List<MultiImageJudgementResultRow>();
             if (_judgementCriteriaRules == null || _judgementCriteriaRules.Count == 0)
             {
                 return rows;
             }
 
-            var lineMeasurements = BuildMultiImageConfirmLineMeasurements(GetMultiImageConfirmReferenceCandidate());
+            lineMeasurements = lineMeasurements ?? new List<MultiImageLineMeasurementResult>();
             if (lineMeasurements.Count == 0)
             {
                 for (var i = 0; i < _judgementCriteriaRules.Count; i++)
